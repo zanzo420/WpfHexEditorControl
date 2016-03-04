@@ -20,7 +20,7 @@
         </Grid.RowDefinitions>
 
         <StackPanel x:Name="LinesInfoStackPanel" HorizontalAlignment="Left"
-                     Width="85" Grid.Row="1"/>
+                      Grid.Row="1"/>
 
         <!--<ScrollViewer Grid.Row="1" Grid.Column="2" Margin="0" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Auto">
             <StackPanel x:Name="HexDataStackPanel" />

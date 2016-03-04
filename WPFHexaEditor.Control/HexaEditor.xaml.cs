@@ -241,7 +241,7 @@ namespace WPFHexaEditor.Control
                             //TEMP WILL BE REPLACED BY BYTECONTROL
                             StringByteControl sbCtrl = new StringByteControl();
                             //sbCtrl.Padding = new Thickness(0);
-                            sbCtrl.Width = 12;
+                            //sbCtrl.Width = 12;
                             sbCtrl.Byte = (byte)_file.ReadByte();
                             //HexByteControl byteControl = new HexByteControl();
 

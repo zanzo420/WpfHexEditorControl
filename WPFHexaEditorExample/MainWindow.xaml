@@ -8,7 +8,7 @@
         mc:Ignorable="d" Loaded="Window_Loaded"
         Background="WhiteSmoke"
         Title="TestWindow - WPF HexaEditor Control (Alpha)" Height="418" Width="772">
-    <Grid>
+    <Grid >
         <Control:HexaEditor x:Name="HexEdit" Margin="10,70,10,10" Height="Auto" Width="Auto"/>
         <Button x:Name="SetPositionButton" Content="Set Position" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="127" Click="SetPositionButton_Click"/>
         <Button x:Name="button" Content="Test : BytePerLine=26" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="127" Click="button_Click"/>

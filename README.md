@@ -7,7 +7,7 @@ A WPF Hexadecimal editor for view/modify file.
 Not for now. When control is more powerful ;)
 
 ## Features
-- Alpha stage of this control. feature will be updated 
+- Alpha stage of development. feature will be updated...
 
 ##Release Notes
 New in version 0.1.0 

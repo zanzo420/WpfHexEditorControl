@@ -65,5 +65,15 @@ namespace WPFHexaEditorExample
         {
             HexEdit.ReadOnlyMode = true;
         }
+
+        private void SelectAllButton_Click(object sender, RoutedEventArgs e)
+        {
+            HexEdit.SelectAll();
+        }
+
+        private void UnSelectAllButton_Click(object sender, RoutedEventArgs e)
+        {
+            HexEdit.UnSelectAll();
+        }
     }
 }

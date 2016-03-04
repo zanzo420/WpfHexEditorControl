@@ -24,9 +24,12 @@ namespace WPFHexaEditor.Control
     {
         private byte? _byte;
         private bool _isByteModified;
+        private bool _isSelected = false;
         private bool _readOnlyMode = false;
 
         public event EventHandler ByteModified;
+        public event EventHandler MouseSelection;
+        public event EventHandler Click;
 
         public HexByteControl()
         {
@@ -71,10 +74,7 @@ namespace WPFHexaEditor.Control
             {
                 this._isByteModified = value;
 
-                if (value)
-                    this.Background = Brushes.LightGray;
-                else
-                    this.Background = Brushes.Transparent;
+                UpdateBackGround();
             }
         }
 
@@ -90,6 +90,7 @@ namespace WPFHexaEditor.Control
             }
         }
 
+
         /// <summary>
         /// Get the hex string representation of this byte
         /// </summary>
@@ -98,6 +99,44 @@ namespace WPFHexaEditor.Control
             get
             {
                 return ((string)FirstHexChar.Content + (string)SecondHexChar.Content).ToString();
+            }
+        }
+
+        public bool IsSelected
+        {
+            get
+            {
+                return _isSelected;
+            }
+
+            set
+            {
+                _isSelected = value;
+
+                UpdateBackGround();
+            }
+        }
+
+        private void UpdateBackGround()
+        {
+
+            if (_isSelected)
+            {
+                FirstHexChar.Foreground = Brushes.White;
+                SecondHexChar.Foreground = Brushes.White;
+                this.Background = Brushes.Blue;
+            }
+            else if (_isByteModified)
+            {
+                this.Background = Brushes.LightGray;
+                FirstHexChar.Foreground = Brushes.White;
+                SecondHexChar.Foreground = Brushes.White;
+            }
+            else
+            {
+                this.Background = Brushes.Transparent;
+                FirstHexChar.Foreground = Brushes.Black;
+                SecondHexChar.Foreground = Brushes.Black;
             }
         }
 
@@ -121,6 +160,9 @@ namespace WPFHexaEditor.Control
             Label label = sender as Label;
 
             label.Focus();
+
+            if (Click != null)
+                Click(this, e);
         }
 
         private void HexChar_KeyDown(object sender, KeyEventArgs e)
@@ -147,14 +189,18 @@ namespace WPFHexaEditor.Control
         private void UserControl_MouseEnter(object sender, MouseEventArgs e)
         {
             if (_byte != null)
-                if (!IsByteModified)
+                if (!IsByteModified && !_isSelected)
                     this.Background = Brushes.SlateGray;
+
+            if (e.LeftButton == MouseButtonState.Pressed)
+                if (MouseSelection != null)
+                    MouseSelection(this, e);
         }
 
         private void UserControl_MouseLeave(object sender, MouseEventArgs e)
         {
             if (_byte != null)
-                if (!IsByteModified)
+                if (!IsByteModified && !_isSelected)
                     this.Background = Brushes.Transparent;
         }
     }

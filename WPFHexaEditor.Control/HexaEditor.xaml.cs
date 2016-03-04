@@ -19,7 +19,7 @@ using WPFHexaEditor.Control.Core;
 namespace WPFHexaEditor.Control
 {
     /// <summary>
-    /// Interaction logic for UserControl1.xaml
+    /// Hexadecimal editor control
     /// </summary>
     public partial class HexaEditor : UserControl
     {
@@ -29,13 +29,12 @@ namespace WPFHexaEditor.Control
         private FileStream _file = null;
         private double _scrollLargeChange = 100;
         private bool _readOnlyMode = false;
+        private long _selectionStart = -1;
+        private long _selectionStop = -1;
 
         public HexaEditor()
         {
             InitializeComponent();
-
-            //Height = Double.NaN;
-            //Width = Double.NaN;
 
             RefreshView(true);
         }
@@ -115,6 +114,81 @@ namespace WPFHexaEditor.Control
         }
 
         /// <summary>
+        /// Index of position in file that the selection start
+        /// </summary>
+        public long SelectionStart
+        {
+            get
+            {
+                return _selectionStart;
+            }
+
+            set
+            {
+                if (_file == null)
+                    _selectionStart = -1;
+                else
+                    _selectionStart = value;
+
+                UpdateSelection();
+            }
+        }
+
+        /// <summary>
+        /// Reset selection to -1
+        /// </summary>
+        public void UnSelectAll()
+        {
+            SelectionStart = -1;
+            SelectionStop = -1;
+        }
+
+        /// <summary>
+        /// Select the entire file
+        /// If file are closed the selection will be set to -1
+        /// </summary>
+        public void SelectAll()
+        {
+
+            if (_file != null)
+            {
+                SelectionStart = 0;
+                SelectionStop = _file.Length;
+            }
+            else
+            {
+                SelectionStart = -1;
+                SelectionStop = -1;
+            }
+
+            UpdateSelection();
+        }
+
+        /// <summary>
+        /// Index of position in file that the selection stop
+        /// </summary>
+        public long SelectionStop
+        {
+            get
+            {
+                return _selectionStop;
+            }
+
+            set
+            {
+                if (_file != null)
+                {
+                    if (value > _file.Length)
+                        _selectionStop = _file.Length;
+                    else
+                        _selectionStop = value;
+                }
+                else
+                    _selectionStop = value;
+            }
+        }
+
+        /// <summary>
         /// Refresh currentview of hexeditor
         /// </summary>
         /// <param name="ControlResize"></param>
@@ -124,9 +198,36 @@ namespace WPFHexaEditor.Control
             UpdateVerticalScroll();
             UpdateHexHeader();
             UpdateStringDataViewer(ControlResize);
-            UpdateDataViewer(ControlResize);            
+            UpdateDataViewer(ControlResize);
+            UpdateSelection();           
         }
-        
+
+        private void UpdateSelection()
+        {
+            int stackIndex = 0;
+            foreach (Label infolabel in LinesInfoStackPanel.Children)
+            {                
+                foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
+                {
+                    //if (_selectionStop < _selectionStart)
+                    //{
+                    //    long tmp = -1;
+                    //    tmp = _selectionStart;
+                    //    _selectionStart = _selectionStop;
+                    //    _selectionStop = tmp;
+                    //}
+
+                    if (byteControl.BytePositionInFile >= SelectionStart && byteControl.BytePositionInFile <= SelectionStop)
+                        byteControl.IsSelected = true;
+                    else
+                        byteControl.IsSelected = false;
+                }
+
+                stackIndex++;                
+            }
+        }
+
+
         /// <summary>
         /// Update the dataviewer stackpanel
         /// </summary>
@@ -158,6 +259,8 @@ namespace WPFHexaEditor.Control
 
                             byteControl.BytePositionInFile = _file.Position;
                             byteControl.ReadOnlyMode = _readOnlyMode;
+                            byteControl.MouseSelection += ByteControl_Selected;
+                            byteControl.Click += ByteControl_Click;
                             byteControl.Byte = (byte)_file.ReadByte(); //Converters.ByteToHex((byte)_file.ReadByte());
 
                             dataLineStack.Children.Add(byteControl);                                                        
@@ -189,6 +292,7 @@ namespace WPFHexaEditor.Control
                             {
                                 byteControl.IsByteModified = false;
                                 byteControl.BytePositionInFile = -1;
+                                byteControl.IsSelected = false;
                                 byteControl.Byte = null; //Converters.ByteToHex((byte)_file.ReadByte());
                             }
                             else
@@ -209,6 +313,25 @@ namespace WPFHexaEditor.Control
             {
                 HexDataStackPanel.Children.Clear();
             }
+        }
+
+        private void ByteControl_Click(object sender, EventArgs e)
+        {
+            HexByteControl ctrl = sender as HexByteControl;
+
+            SelectionStart = ctrl.BytePositionInFile;
+            SelectionStop = ctrl.BytePositionInFile;
+
+            UpdateSelection();
+        }
+
+        private void ByteControl_Selected(object sender, EventArgs e)
+        {
+            HexByteControl ctrl = sender as HexByteControl;
+
+            SelectionStop = ctrl.BytePositionInFile;
+
+            UpdateSelection();
         }
 
         /// <summary>
@@ -237,17 +360,10 @@ namespace WPFHexaEditor.Control
                             
                             if (_file.Position >= _file.Length)
                                 break;
-
-                            //TEMP WILL BE REPLACED BY BYTECONTROL
+                                                        
                             StringByteControl sbCtrl = new StringByteControl();
-                            //sbCtrl.Padding = new Thickness(0);
-                            //sbCtrl.Width = 12;
                             sbCtrl.Byte = (byte)_file.ReadByte();
-                            //HexByteControl byteControl = new HexByteControl();
 
-                            //byteControl.BytePositionInFile = _file.Position;
-                            //byteControl.Byte = (byte)_file.ReadByte(); //Converters.ByteToHex((byte)_file.ReadByte());
-                            
                             dataLineStack.Children.Add(sbCtrl);
                         }
 
@@ -376,6 +492,7 @@ namespace WPFHexaEditor.Control
                 VerticalScrollBar.Value = 0;
             }
 
+            UnSelectAll();
             RefreshView();
         }
 
@@ -398,8 +515,13 @@ namespace WPFHexaEditor.Control
                   
         }
 
+        /// <summary>
+        /// Set position of cursor
+        /// </summary>
         public void SetPosition(long position)
         {
+            //TODO : selected hexbytecontrol
+
             if (_file != null)
             {
                 VerticalScrollBar.Value = position / _bytePerLine;
@@ -408,6 +530,9 @@ namespace WPFHexaEditor.Control
                 VerticalScrollBar.Value = 0;
         }
 
+        /// <summary>
+        /// Set position of cursor
+        /// </summary>
         public void SetPosition(string HexLiteralPosition)
         {
             SetPosition(Converters.HexLiteralToLong(HexLiteralPosition));

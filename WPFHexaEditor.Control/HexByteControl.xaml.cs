@@ -24,6 +24,7 @@ namespace WPFHexaEditor.Control
     {
         private byte? _byte;
         private bool _isByteModified;
+        private bool _readOnlyMode = false;
 
         public event EventHandler ByteModified;
 
@@ -75,8 +76,20 @@ namespace WPFHexaEditor.Control
                 else
                     this.Background = Brushes.Transparent;
             }
-        } 
-        
+        }
+
+        public bool ReadOnlyMode
+        {
+            get
+            {
+                return _readOnlyMode;
+            }
+            set
+            {
+                _readOnlyMode = value;
+            }
+        }
+
         private void UpdateLabelFromByte()
         {
             string hexabyte = Converters.ByteToHex(_byte.Value);
@@ -96,21 +109,21 @@ namespace WPFHexaEditor.Control
         {
             Label label = sender as Label;
 
-            if (KeyValidator.IsHexKey(e.Key))
-            {
-                string key;
-                if (KeyValidator.IsNumericKey(e.Key))
-                    key = KeyValidator.GetDigitFromKey(e.Key).ToString();
-                else
-                    key = e.Key.ToString().ToLower();
+            if (!ReadOnlyMode)
+                if (KeyValidator.IsHexKey(e.Key))
+                {
+                    string key;
+                    if (KeyValidator.IsNumericKey(e.Key))
+                        key = KeyValidator.GetDigitFromKey(e.Key).ToString();
+                    else
+                        key = e.Key.ToString().ToLower();
 
-                label.Content = key;
-                IsByteModified = true;
-                Byte = Converters.HexToByte(FirstHexChar.Content.ToString() + SecondHexChar.Content.ToString())[0];
+                    label.Content = key;
+                    IsByteModified = true;
+                    Byte = Converters.HexToByte(FirstHexChar.Content.ToString() + SecondHexChar.Content.ToString())[0];
 
-                //Move focus
-                
-            }
+                    //Move focus
+                }
         }
 
         private void UserControl_MouseEnter(object sender, MouseEventArgs e)

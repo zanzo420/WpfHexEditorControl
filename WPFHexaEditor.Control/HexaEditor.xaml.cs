@@ -27,6 +27,8 @@ namespace WPFHexaEditor.Control
         private const double _lineInfoHeight = 22;
         private int _bytePerLine = 16;
         private FileStream _file = null;
+        private double _scrollLargeChange = 100;
+        private bool _readOnlyMode = false;
 
         public HexaEditor()
         {
@@ -38,6 +40,9 @@ namespace WPFHexaEditor.Control
             RefreshView(true);
         }
 
+        /// <summary>
+        /// Set or Get the file with the control will show hex
+        /// </summary>
         public string FileName
         {
             get
@@ -47,6 +52,7 @@ namespace WPFHexaEditor.Control
 
             set
             {
+                //TODO: make open method
                 this._fileName = value;
 
                 if (File.Exists(value))
@@ -76,6 +82,41 @@ namespace WPFHexaEditor.Control
             }
         }
 
+        public double ScrollLargeChange {
+            get
+            {
+                return _scrollLargeChange;
+            }
+            set
+            {
+                this._scrollLargeChange = value;
+
+                UpdateVerticalScroll();
+            }
+        }
+
+        /// <summary>
+        /// Put the control on readonly mode.
+        /// </summary>
+        public bool ReadOnlyMode
+        {
+            get
+            {
+                return _readOnlyMode;
+            }
+
+            set
+            {
+                _readOnlyMode = value;
+
+                RefreshView(true);
+            }
+        }
+
+        /// <summary>
+        /// Refresh currentview of hexeditor
+        /// </summary>
+        /// <param name="ControlResize"></param>
         private void RefreshView(bool ControlResize = false)
         {
             UpdateLinesInfo();
@@ -113,6 +154,7 @@ namespace WPFHexaEditor.Control
                             HexByteControl byteControl = new HexByteControl();
 
                             byteControl.BytePositionInFile = _file.Position;
+                            byteControl.ReadOnlyMode = _readOnlyMode;
                             byteControl.Byte = (byte)_file.ReadByte(); //Converters.ByteToHex((byte)_file.ReadByte());
 
                             dataLineStack.Children.Add(byteControl);
@@ -154,7 +196,7 @@ namespace WPFHexaEditor.Control
             }
             else
             {
-                
+                HexDataStackPanel.Children.Clear();
             }
         }
 
@@ -234,7 +276,7 @@ namespace WPFHexaEditor.Control
             }
             else
             {
-
+                StringDataStackPanel.Children.Clear();
             }
         }
 
@@ -308,6 +350,23 @@ namespace WPFHexaEditor.Control
             }
         }
 
+        /// <summary>
+        /// Close file and clear control
+        /// </summary>
+        public void CloseFile()
+        {
+            if (this._file != null)
+            {
+                this._file.Close();
+                this._file = null;
+            }
+
+            RefreshView();
+        }
+
+        /// <summary>
+        /// Update vertical scrollbar with file info
+        /// </summary>
         public void UpdateVerticalScroll()
         {
             VerticalScrollBar.Visibility = Visibility.Collapsed;
@@ -318,9 +377,10 @@ namespace WPFHexaEditor.Control
                 VerticalScrollBar.Visibility = Visibility.Visible;
 
                 VerticalScrollBar.SmallChange = 1;
-                VerticalScrollBar.LargeChange = 100;
+                VerticalScrollBar.LargeChange = ScrollLargeChange;
                 VerticalScrollBar.Maximum = GetMaxLine() - GetMaxVisibleLine() + 1;
-            }            
+            }     
+                  
         }
 
         public void SetPosition(long position)

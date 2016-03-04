@@ -55,5 +55,15 @@ namespace WPFHexaEditorExample
                     HexEdit.FileName = fileDialog.FileName;
             }
         }
+
+        private void CloseFileButton_Click(object sender, RoutedEventArgs e)
+        {
+            HexEdit.CloseFile();
+        }
+
+        private void ReadOnlybutton_Click(object sender, RoutedEventArgs e)
+        {
+            HexEdit.ReadOnlyMode = true;
+        }
     }
 }

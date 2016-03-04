@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFHexaEditor.Control", "WPFHexaEditor.Control\WPFHexaEditor.Control.csproj", "{CF6AC02D-02FA-4EE9-A507-BD94F489972E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFHexaEditorExample", "WPFHexaEditorExample\WPFHexaEditorExample.csproj", "{001BD673-EF33-4FD2-AB7F-57F40FD54D53}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CF6AC02D-02FA-4EE9-A507-BD94F489972E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF6AC02D-02FA-4EE9-A507-BD94F489972E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF6AC02D-02FA-4EE9-A507-BD94F489972E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF6AC02D-02FA-4EE9-A507-BD94F489972E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{001BD673-EF33-4FD2-AB7F-57F40FD54D53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{001BD673-EF33-4FD2-AB7F-57F40FD54D53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{001BD673-EF33-4FD2-AB7F-57F40FD54D53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{001BD673-EF33-4FD2-AB7F-57F40FD54D53}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 3
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs40
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = WPFHexaEditor.Control\\WPFHexaEditor.Control.csproj
+		SccProjectName1 = WPFHexaEditor.Control
+		SccLocalPath1 = WPFHexaEditor.Control
+		SccProjectUniqueName2 = WPFHexaEditorExample\\WPFHexaEditorExample.csproj
+		SccProjectName2 = WPFHexaEditorExample
+		SccLocalPath2 = WPFHexaEditorExample
+	EndGlobalSection
+EndGlobal

@@ -10,8 +10,16 @@
         <ToolTip x:Key="ByteToolTip">
             <StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <Label Content="Byte :" Width="120"/>
+                    <Label Content="Byte value:" Width="120"/>
                     <Label Content="{Binding Byte, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Hexadecimal :" Width="120"/>
+                    <Label Content="{Binding HexString, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="File position (byte):" Width="120"/>
+                    <Label Content="{Binding BytePositionInFile, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
             </StackPanel>            
         </ToolTip>

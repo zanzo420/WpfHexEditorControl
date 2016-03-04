@@ -151,14 +151,16 @@ namespace WPFHexaEditor.Control
                         {
                             _file.Position = position + i;
 
-                            //TEMP WILL BE REPLACED BY BYTECONTROL
+                            if (_file.Position >= _file.Length)
+                                break;
+
                             HexByteControl byteControl = new HexByteControl();
 
                             byteControl.BytePositionInFile = _file.Position;
                             byteControl.ReadOnlyMode = _readOnlyMode;
                             byteControl.Byte = (byte)_file.ReadByte(); //Converters.ByteToHex((byte)_file.ReadByte());
 
-                            dataLineStack.Children.Add(byteControl);
+                            dataLineStack.Children.Add(byteControl);                                                        
                         }
 
                         HexDataStackPanel.Children.Add(dataLineStack);
@@ -183,10 +185,18 @@ namespace WPFHexaEditor.Control
                             //TEMP WILL BE REPLACED BY BYTECONTROL
                             //HexByteControl byteControl = new HexByteControl();
 
-                            byteControl.IsByteModified = false;
-                            byteControl.BytePositionInFile = _file.Position;
-                            byteControl.Byte = (byte)_file.ReadByte(); //Converters.ByteToHex((byte)_file.ReadByte());
-
+                            if (_file.Position >= _file.Length)
+                            {
+                                byteControl.IsByteModified = false;
+                                byteControl.BytePositionInFile = -1;
+                                byteControl.Byte = null; //Converters.ByteToHex((byte)_file.ReadByte());
+                            }
+                            else
+                            {
+                                byteControl.IsByteModified = false;
+                                byteControl.BytePositionInFile = _file.Position;
+                                byteControl.Byte = (byte)_file.ReadByte(); //Converters.ByteToHex((byte)_file.ReadByte());
+                            }
                             //dataLineStack.Children.Add(byteControl);
                         }
 
@@ -224,6 +234,9 @@ namespace WPFHexaEditor.Control
                         for (int i = 0; i < _bytePerLine; i++)
                         {
                             _file.Position = position + i;
+                            
+                            if (_file.Position >= _file.Length)
+                                break;
 
                             //TEMP WILL BE REPLACED BY BYTECONTROL
                             Label label = new Label();
@@ -234,7 +247,7 @@ namespace WPFHexaEditor.Control
 
                             //byteControl.BytePositionInFile = _file.Position;
                             //byteControl.Byte = (byte)_file.ReadByte(); //Converters.ByteToHex((byte)_file.ReadByte());
-
+                            
                             dataLineStack.Children.Add(label);
                         }
 
@@ -253,22 +266,29 @@ namespace WPFHexaEditor.Control
 
                         long position = Converters.HexLiteralToLong(infolabel.Content.ToString());
 
-                        foreach (Label byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
+                        try
                         {
-                            _file.Position = position++;
+                            foreach (Label byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
+                            {
+                                _file.Position = position++;
 
-                            //TEMP WILL BE REPLACED BY BYTECONTROL
-                            //HexByteControl byteControl = new HexByteControl();
+                                if (_file.Position >= _file.Length)
+                                {
+                                    byteControl.Content = "";
 
-                            byteControl.Content = Converters.ByteToChar((byte)_file.ReadByte());
+                                }
+                                else
+                                {
+                                    //TEMP WILL BE REPLACED BY BYTECONTROL
+                                    //HexByteControl byteControl = new HexByteControl();
 
+                                    byteControl.Content = Converters.ByteToChar((byte)_file.ReadByte());
 
-                            //byteControl.IsByteModified = false;
-                            //byteControl.BytePositionInFile = _file.Position;
-                            //byteControl.Byte = (byte)_file.ReadByte(); //Converters.ByteToHex((byte)_file.ReadByte());
-
-                            //dataLineStack.Children.Add(byteControl);
+                                }
+                                
+                            }
                         }
+                        catch { }
 
                         stackIndex++;
                         HexDataStackPanel.Children.Add(dataLineStack);
@@ -360,6 +380,7 @@ namespace WPFHexaEditor.Control
             {
                 this._file.Close();
                 this._file = null;
+                VerticalScrollBar.Value = 0;
             }
 
             RefreshView();

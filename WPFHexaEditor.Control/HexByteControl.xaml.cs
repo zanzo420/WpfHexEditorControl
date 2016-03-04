@@ -90,12 +90,30 @@ namespace WPFHexaEditor.Control
             }
         }
 
+        /// <summary>
+        /// Get the hex string representation of this byte
+        /// </summary>
+        public string HexString
+        {
+            get
+            {
+                return ((string)FirstHexChar.Content + (string)SecondHexChar.Content).ToString();
+            }
+        }
+
         private void UpdateLabelFromByte()
         {
-            string hexabyte = Converters.ByteToHex(_byte.Value);
+            if (_byte != null)
+            {
+                string hexabyte = Converters.ByteToHex(_byte.Value);
 
-            FirstHexChar.Content = hexabyte.Substring(0, 1);
-            SecondHexChar.Content = hexabyte.Substring(1, 1);
+                FirstHexChar.Content = hexabyte.Substring(0, 1);
+                SecondHexChar.Content = hexabyte.Substring(1, 1);
+            }else
+            {
+                FirstHexChar.Content = "";
+                SecondHexChar.Content = "";
+            }
         }
 
         private void HexChar_MouseDown(object sender, MouseButtonEventArgs e)
@@ -128,14 +146,16 @@ namespace WPFHexaEditor.Control
 
         private void UserControl_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (!IsByteModified)
-                this.Background = Brushes.SlateGray;
+            if (_byte != null)
+                if (!IsByteModified)
+                    this.Background = Brushes.SlateGray;
         }
 
         private void UserControl_MouseLeave(object sender, MouseEventArgs e)
         {
-            if (!IsByteModified)
-                this.Background = Brushes.Transparent;
+            if (_byte != null)
+                if (!IsByteModified)
+                    this.Background = Brushes.Transparent;
         }
     }
 }

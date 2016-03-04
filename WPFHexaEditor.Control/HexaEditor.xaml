@@ -28,7 +28,7 @@
 
         <StackPanel x:Name="HexDataStackPanel" Grid.Row="1" Grid.Column="1" Margin="10,0"/>
 
-        <ScrollBar x:Name="VerticalScrollBar" HorizontalAlignment="Right" 
+        <ScrollBar x:Name="VerticalScrollBar" HorizontalAlignment="Right" Width="20"
                    ValueChanged="VerticalScrollBar_ValueChanged" 
                    SmallChange="1" LargeChange="100" Grid.Column="4" Grid.Row="0" Grid.RowSpan="2"/>
         <StackPanel x:Name="HexHeaderStackPanel" Orientation="Horizontal" Grid.Column="1" Grid.Row="0" Margin="10,0"/>

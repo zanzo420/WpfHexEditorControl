@@ -325,7 +325,12 @@ namespace WPFHexaEditor.Control
 
         public void SetPosition(long position)
         {
-            VerticalScrollBar.Value = position / _bytePerLine;
+            if (_file != null)
+            {
+                VerticalScrollBar.Value = position / _bytePerLine;
+            }
+            else
+                VerticalScrollBar.Value = 0;
         }
 
         public void SetPosition(string HexLiteralPosition)

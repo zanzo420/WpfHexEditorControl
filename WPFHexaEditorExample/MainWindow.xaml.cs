@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Win32;
+using System.IO;
 
 namespace WPFHexaEditorExample
 {
@@ -20,6 +22,8 @@ namespace WPFHexaEditorExample
     /// </summary>
     public partial class MainWindow : Window
     {
+        private object fileName;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -28,7 +32,7 @@ namespace WPFHexaEditorExample
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             //TEMPS
-            HexEdit.FileName = @"C:\Test\NETwsw01.sys";
+            //HexEdit.FileName = @"C:\Test\NETwsw01.sys";
         }
 
         private void SetPositionButton_Click(object sender, RoutedEventArgs e)
@@ -39,6 +43,17 @@ namespace WPFHexaEditorExample
         private void button_Click(object sender, RoutedEventArgs e)
         {
             HexEdit.BytePerLine = 26;
+        }
+
+        private void OpenFileButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog fileDialog = new OpenFileDialog();
+
+            if (fileDialog.ShowDialog() != null)
+            {
+                if (File.Exists(fileDialog.FileName))
+                    HexEdit.FileName = fileDialog.FileName;
+            }
         }
     }
 }

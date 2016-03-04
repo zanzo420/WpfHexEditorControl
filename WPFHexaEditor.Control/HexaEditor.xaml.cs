@@ -32,6 +32,8 @@ namespace WPFHexaEditor.Control
         private long _selectionStart = -1;
         private long _selectionStop = -1;
 
+        private List<ByteModified> _byteModifiedList = new List<ByteModified>();
+
         public HexaEditor()
         {
             InitializeComponent();
@@ -165,6 +167,14 @@ namespace WPFHexaEditor.Control
         }
 
         /// <summary>
+        /// Clear modification
+        /// </summary>
+        private void ClearBytesModifiedsList()
+        {
+            _byteModifiedList.Clear();
+        }
+
+        /// <summary>
         /// Index of position in file that the selection stop
         /// </summary>
         public long SelectionStop
@@ -185,6 +195,8 @@ namespace WPFHexaEditor.Control
                 }
                 else
                     _selectionStop = value;
+
+                UpdateSelection();
             }
         }
 
@@ -221,10 +233,27 @@ namespace WPFHexaEditor.Control
                         byteControl.IsSelected = true;
                     else
                         byteControl.IsSelected = false;
+
+                    byteControl.IsByteModified = CheckIfIsByteModified(byteControl.BytePositionInFile) != null ? true : false;
+                    
                 }
 
                 stackIndex++;                
             }
+        }
+
+        /// <summary>
+        /// Check if the byte in parameter are modified
+        /// </summary>
+        private ByteModified CheckIfIsByteModified(long bytePositionInFile)
+        {
+            foreach (ByteModified byteModified in _byteModifiedList)
+            {
+                if (byteModified.BytePositionInFile == bytePositionInFile)
+                    return byteModified;
+            }
+
+            return null;
         }
 
 
@@ -261,6 +290,8 @@ namespace WPFHexaEditor.Control
                             byteControl.ReadOnlyMode = _readOnlyMode;
                             byteControl.MouseSelection += ByteControl_Selected;
                             byteControl.Click += ByteControl_Click;
+                            byteControl.MoveNext += ByteControl_MoveNext;
+                            byteControl.ByteModified += ByteControl_ByteModified;
                             byteControl.Byte = (byte)_file.ReadByte(); //Converters.ByteToHex((byte)_file.ReadByte());
 
                             dataLineStack.Children.Add(byteControl);                                                        
@@ -284,12 +315,10 @@ namespace WPFHexaEditor.Control
                         foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
                         {
                             _file.Position = position++;
-
-                            //TEMP WILL BE REPLACED BY BYTECONTROL
-                            //HexByteControl byteControl = new HexByteControl();
-
+                                                        
                             if (_file.Position >= _file.Length)
                             {
+                                byteControl.ExternalByteChange = true;
                                 byteControl.IsByteModified = false;
                                 byteControl.BytePositionInFile = -1;
                                 byteControl.IsSelected = false;
@@ -315,14 +344,79 @@ namespace WPFHexaEditor.Control
             }
         }
 
+        private void ByteControl_ByteModified(object sender, EventArgs e)
+        {
+            HexByteControl ctrl = sender as HexByteControl;
+
+            AddByteModified(ctrl.Byte, ctrl.BytePositionInFile, ByteAction.Modified);
+        }
+
+        /// <summary>
+        /// Add a bytemodifed in list of byte change
+        /// </summary>        
+        private void AddByteModified(byte? @byte, long bytePositionInFile, ByteAction action)
+        {
+            ByteModified bytemodified = CheckIfIsByteModified(bytePositionInFile);
+
+            if (bytemodified == null)
+            {
+                ByteModified byteModified = new ByteModified();
+
+                byteModified.Action = action;
+                byteModified.Byte = @byte;
+                byteModified.BytePositionInFile = bytePositionInFile;
+
+                _byteModifiedList.Add(byteModified);
+            }
+            else
+            {
+                bytemodified.Byte = @byte;
+                bytemodified.BytePositionInFile = bytePositionInFile;
+                bytemodified.Action = action;
+            }
+        }
+
+        private void ByteControl_MoveNext(object sender, EventArgs e)
+        {
+            HexByteControl ctrl = sender as HexByteControl;
+
+            ctrl.IsSelected = false;
+
+            SetFocus(ctrl.BytePositionInFile + 1);
+
+            SelectionStart++;
+            SelectionStop++;
+            
+        }
+
+        private void SetFocus(long bytePositionInFile)
+        {
+            int stackIndex = 0;
+            foreach (Label infolabel in LinesInfoStackPanel.Children)
+            {
+                foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
+                {
+                    if (byteControl.BytePositionInFile == bytePositionInFile)
+                    {
+                        byteControl.Focus();
+                        return;
+                    }
+                }
+
+                stackIndex++;
+            }
+
+            VerticalScrollBar.Value++;
+            SetFocus(bytePositionInFile);
+        }
+
         private void ByteControl_Click(object sender, EventArgs e)
         {
             HexByteControl ctrl = sender as HexByteControl;
 
             SelectionStart = ctrl.BytePositionInFile;
             SelectionStop = ctrl.BytePositionInFile;
-
-            UpdateSelection();
+            
         }
 
         private void ByteControl_Selected(object sender, EventArgs e)
@@ -521,6 +615,9 @@ namespace WPFHexaEditor.Control
         public void SetPosition(long position)
         {
             //TODO : selected hexbytecontrol
+            SelectionStart = position;
+            SelectionStop = position;
+
 
             if (_file != null)
             {
@@ -528,6 +625,8 @@ namespace WPFHexaEditor.Control
             }
             else
                 VerticalScrollBar.Value = 0;
+
+            UpdateSelection();
         }
 
         /// <summary>

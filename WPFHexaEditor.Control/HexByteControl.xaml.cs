@@ -26,10 +26,20 @@ namespace WPFHexaEditor.Control
         private bool _isByteModified;
         private bool _isSelected = false;
         private bool _readOnlyMode = false;
+        private bool _externalByteChange = false;
+        private KeyDownLabel _keyDownLabel = KeyDownLabel.FirstChar;
 
         public event EventHandler ByteModified;
         public event EventHandler MouseSelection;
         public event EventHandler Click;
+        public event EventHandler MoveNext;
+
+        private enum KeyDownLabel
+        {
+            FirstChar,
+            SecondChar,
+            NextPosition
+        }
 
         public HexByteControl()
         {
@@ -46,17 +56,17 @@ namespace WPFHexaEditor.Control
             }
             set
             {
+                this._byte = value;
+
+                UpdateLabelFromByte();
+
                 bool modified = false;
 
                 if (_byte.HasValue)
                     if (value != _byte)
                         modified = true;
 
-                this._byte = value;
-
-                UpdateLabelFromByte();
-
-                if (modified)
+                if (modified && !ExternalByteChange)
                     if (ByteModified != null)
                         ByteModified(this, new EventArgs());
             }
@@ -113,13 +123,27 @@ namespace WPFHexaEditor.Control
             {
                 _isSelected = value;
 
+                _keyDownLabel = KeyDownLabel.FirstChar;
+
                 UpdateBackGround();
+            }
+        }
+
+        public bool ExternalByteChange
+        {
+            get
+            {
+                return _externalByteChange;
+            }
+
+            set
+            {
+                _externalByteChange = value;
             }
         }
 
         private void UpdateBackGround()
         {
-
             if (_isSelected)
             {
                 FirstHexChar.Foreground = Brushes.White;
@@ -129,8 +153,8 @@ namespace WPFHexaEditor.Control
             else if (_isByteModified)
             {
                 this.Background = Brushes.LightGray;
-                FirstHexChar.Foreground = Brushes.White;
-                SecondHexChar.Foreground = Brushes.White;
+                FirstHexChar.Foreground = Brushes.Black;
+                SecondHexChar.Foreground = Brushes.Black;
             }
             else
             {
@@ -157,17 +181,15 @@ namespace WPFHexaEditor.Control
 
         private void HexChar_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            Label label = sender as Label;
-
-            label.Focus();
+            this.Focus();
 
             if (Click != null)
                 Click(this, e);
         }
 
-        private void HexChar_KeyDown(object sender, KeyEventArgs e)
+        private void UserControl_KeyDown(object sender, KeyEventArgs e)
         {
-            Label label = sender as Label;
+            //Label label = sender as Label;
 
             if (!ReadOnlyMode)
                 if (KeyValidator.IsHexKey(e.Key))
@@ -178,11 +200,25 @@ namespace WPFHexaEditor.Control
                     else
                         key = e.Key.ToString().ToLower();
 
-                    label.Content = key;
-                    IsByteModified = true;
-                    Byte = Converters.HexToByte(FirstHexChar.Content.ToString() + SecondHexChar.Content.ToString())[0];
+                    switch (_keyDownLabel)
+                    {
+                        case KeyDownLabel.FirstChar:
+                            FirstHexChar.Content = key;
+                            _keyDownLabel = KeyDownLabel.SecondChar;
+                            break;
+                        case KeyDownLabel.SecondChar:
+                            SecondHexChar.Content = key;
+                            _keyDownLabel = KeyDownLabel.NextPosition;
 
-                    //Move focus
+                            //Move focus event
+                            if (MoveNext != null)
+                                MoveNext(this, new EventArgs());
+                            break;
+                    }
+                    
+                    IsByteModified = true;
+                    ExternalByteChange = false;
+                    Byte = Converters.HexToByte(FirstHexChar.Content.ToString() + SecondHexChar.Content.ToString())[0];                    
                 }
         }
 

@@ -52,6 +52,10 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="StringByteControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="HexaEditor.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -59,6 +63,9 @@
     <Compile Include="Core\Converters.cs" />
     <Compile Include="Core\Constant.cs" />
     <Compile Include="Core\KeyValidator.cs" />
+    <Compile Include="StringByteControl.xaml.cs">
+      <DependentUpon>StringByteControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="HexaEditor.xaml.cs">
       <DependentUpon>HexaEditor.xaml</DependentUpon>
       <SubType>Code</SubType>

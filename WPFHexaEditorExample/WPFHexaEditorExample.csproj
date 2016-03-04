@@ -100,9 +100,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WPFHexaEditor.Control\WPFHexaEditor.Control.csproj">
+    <ProjectReference Include="..\WPFHexaEditor.Control\WPFHexaEditor.csproj">
       <Project>{CF6AC02D-02FA-4EE9-A507-BD94F489972E}</Project>
-      <Name>WPFHexaEditor.Control</Name>
+      <Name>WPFHexaEditor</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

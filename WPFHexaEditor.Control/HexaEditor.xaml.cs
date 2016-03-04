@@ -239,16 +239,16 @@ namespace WPFHexaEditor.Control
                                 break;
 
                             //TEMP WILL BE REPLACED BY BYTECONTROL
-                            Label label = new Label();
-                            label.Padding = new Thickness(0);
-                            label.Width = 12;
-                            label.Content = Converters.ByteToChar((byte)_file.ReadByte());
+                            StringByteControl sbCtrl = new StringByteControl();
+                            //sbCtrl.Padding = new Thickness(0);
+                            sbCtrl.Width = 12;
+                            sbCtrl.Byte = (byte)_file.ReadByte();
                             //HexByteControl byteControl = new HexByteControl();
 
                             //byteControl.BytePositionInFile = _file.Position;
                             //byteControl.Byte = (byte)_file.ReadByte(); //Converters.ByteToHex((byte)_file.ReadByte());
                             
-                            dataLineStack.Children.Add(label);
+                            dataLineStack.Children.Add(sbCtrl);
                         }
 
                         StringDataStackPanel.Children.Add(dataLineStack);
@@ -262,30 +262,23 @@ namespace WPFHexaEditor.Control
                         StackPanel dataLineStack = new StackPanel();
                         dataLineStack.Height = _lineInfoHeight;
                         dataLineStack.Orientation = Orientation.Horizontal;
-                        //dataLineStack.Background = Brushes.Aqua;
-
+                        
                         long position = Converters.HexLiteralToLong(infolabel.Content.ToString());
 
                         try
                         {
-                            foreach (Label byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
+                            foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
                             {
                                 _file.Position = position++;
 
                                 if (_file.Position >= _file.Length)
                                 {
-                                    byteControl.Content = "";
-
+                                    byteControl.Byte = null;
                                 }
                                 else
-                                {
-                                    //TEMP WILL BE REPLACED BY BYTECONTROL
-                                    //HexByteControl byteControl = new HexByteControl();
-
-                                    byteControl.Content = Converters.ByteToChar((byte)_file.ReadByte());
-
-                                }
-                                
+                                {                                    
+                                    byteControl.Byte = (byte)_file.ReadByte();
+                                }                                
                             }
                         }
                         catch { }

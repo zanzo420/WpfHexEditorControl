@@ -54,9 +54,10 @@ namespace WPFHexaEditor.Control
             {
                 //TODO: make open method
                 this._fileName = value;
-
+                
                 if (File.Exists(value))
                 {
+                    CloseFile();
                     _file = new FileStream(value, FileMode.Open, FileAccess.ReadWrite);
 
                     RefreshView(true);

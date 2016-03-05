@@ -151,16 +151,28 @@ namespace WPFHexaEditor.Control
             //        if (MoveNext != null)
             //            MoveNext(this, new EventArgs());                    
             //    }
-            
-                StringByteLabel.Content = e.Key.ToString();
+            bool isok = false;
 
-                //Move focus event
+            if (Keyboard.Modifiers != ModifierKeys.Shift && e.Key != Key.RightShift && e.Key != Key.LeftShift)
+            {
+                StringByteLabel.Content = Converters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key)).ToString().ToLower();//e.Key.ToString();
+                isok = true;
+            }
+            else if (Keyboard.Modifiers == ModifierKeys.Shift && e.Key != Key.RightShift && e.Key != Key.LeftShift)
+            {
+                isok = true;
+                StringByteLabel.Content = Converters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key));//e.Key.ToString();    
+            }
+
+            //Move focus event
+            if (isok)
                 if (MoveNext != null)
+                {
                     MoveNext(this, new EventArgs());
-            
 
-            IsByteModified = true;
-            Byte = Converters.CharToByte(StringByteLabel.Content.ToString()[0]);
+                    IsByteModified = true;
+                    Byte = Converters.CharToByte(StringByteLabel.Content.ToString()[0]);
+                }
         }
     
 

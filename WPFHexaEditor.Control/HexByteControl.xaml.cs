@@ -26,7 +26,6 @@ namespace WPFHexaEditor.Control
         private bool _isByteModified;
         private bool _isSelected = false;
         private bool _readOnlyMode = false;
-        private bool _externalByteChange = false;
         private KeyDownLabel _keyDownLabel = KeyDownLabel.FirstChar;
 
         public event EventHandler ByteModified;
@@ -59,14 +58,8 @@ namespace WPFHexaEditor.Control
                 this._byte = value;
 
                 UpdateLabelFromByte();
-
-                bool modified = false;
-
-                if (_byte.HasValue)
-                    if (value != _byte)
-                        modified = true;
-
-                if (modified && !ExternalByteChange)
+                
+                if (IsByteModified)
                     if (ByteModified != null)
                         ByteModified(this, new EventArgs());
             }
@@ -128,20 +121,10 @@ namespace WPFHexaEditor.Control
                 UpdateBackGround();
             }
         }
-
-        public bool ExternalByteChange
-        {
-            get
-            {
-                return _externalByteChange;
-            }
-
-            set
-            {
-                _externalByteChange = value;
-            }
-        }
-
+        
+        /// <summary>
+        /// Update Background
+        /// </summary>
         private void UpdateBackGround()
         {
             if (_isSelected)
@@ -189,7 +172,6 @@ namespace WPFHexaEditor.Control
 
         private void UserControl_KeyDown(object sender, KeyEventArgs e)
         {
-            //Label label = sender as Label;
 
             if (!ReadOnlyMode)
                 if (KeyValidator.IsHexKey(e.Key))
@@ -217,7 +199,6 @@ namespace WPFHexaEditor.Control
                     }
                     
                     IsByteModified = true;
-                    ExternalByteChange = false;
                     Byte = Converters.HexToByte(FirstHexChar.Content.ToString() + SecondHexChar.Content.ToString())[0];                    
                 }
         }

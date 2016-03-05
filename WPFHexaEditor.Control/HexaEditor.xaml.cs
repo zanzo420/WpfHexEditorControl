@@ -264,17 +264,18 @@ namespace WPFHexaEditor.Control
         {
             if (_file != null)
             {
+                ByteModified byteModified = null;
+
                 if (ControlResize)
                 {
-                    HexDataStackPanel.Children.Clear();
+                    HexDataStackPanel.Children.Clear();                    
 
                     foreach (Label infolabel in LinesInfoStackPanel.Children)
                     {
                         StackPanel dataLineStack = new StackPanel();
                         dataLineStack.Height = _lineInfoHeight;
                         dataLineStack.Orientation = Orientation.Horizontal;
-                        //dataLineStack.Background = Brushes.Aqua;
-
+                        
                         long position = Converters.HexLiteralToLong(infolabel.Content.ToString());
 
                         for (int i = 0; i < _bytePerLine; i++)
@@ -292,7 +293,21 @@ namespace WPFHexaEditor.Control
                             byteControl.Click += ByteControl_Click;
                             byteControl.MoveNext += ByteControl_MoveNext;
                             byteControl.ByteModified += ByteControl_ByteModified;
-                            byteControl.Byte = (byte)_file.ReadByte(); //Converters.ByteToHex((byte)_file.ReadByte());
+
+                            byteModified = CheckIfIsByteModified(_file.Position);
+
+                            if (byteModified != null)
+                            {
+                                switch (byteModified.Action)
+                                {
+                                    case ByteAction.Modified:
+                                        byteControl.Byte = byteModified.Byte;
+                                        byteControl.IsByteModified = true;
+                                        break;
+                                }                                
+                            }
+                            else
+                                byteControl.Byte = (byte)_file.ReadByte();
 
                             dataLineStack.Children.Add(byteControl);                                                        
                         }
@@ -308,7 +323,7 @@ namespace WPFHexaEditor.Control
                         StackPanel dataLineStack = new StackPanel();
                         dataLineStack.Height = _lineInfoHeight;
                         dataLineStack.Orientation = Orientation.Horizontal;
-                        //dataLineStack.Background = Brushes.Aqua;
+                        
 
                         long position = Converters.HexLiteralToLong(infolabel.Content.ToString());
 
@@ -317,20 +332,31 @@ namespace WPFHexaEditor.Control
                             _file.Position = position++;
                                                         
                             if (_file.Position >= _file.Length)
-                            {
-                                byteControl.ExternalByteChange = true;
+                            {                                
                                 byteControl.IsByteModified = false;
                                 byteControl.BytePositionInFile = -1;
                                 byteControl.IsSelected = false;
-                                byteControl.Byte = null; //Converters.ByteToHex((byte)_file.ReadByte());
+                                byteControl.Byte = null; 
                             }
                             else
                             {
                                 byteControl.IsByteModified = false;
                                 byteControl.BytePositionInFile = _file.Position;
-                                byteControl.Byte = (byte)_file.ReadByte(); //Converters.ByteToHex((byte)_file.ReadByte());
-                            }
-                            //dataLineStack.Children.Add(byteControl);
+
+                                byteModified = CheckIfIsByteModified(_file.Position);
+                                if (byteModified != null)
+                                {
+                                    switch (byteModified.Action)
+                                    {
+                                        case ByteAction.Modified:
+                                            byteControl.Byte = byteModified.Byte;
+                                            byteControl.IsByteModified = true;
+                                            break;
+                                    }
+                                }
+                                else
+                                    byteControl.Byte = (byte)_file.ReadByte();                                
+                            }                            
                         }
 
                         stackIndex++;

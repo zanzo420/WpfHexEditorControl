@@ -420,8 +420,8 @@ namespace WPFHexaEditor.Control
                             byteControl.BytePositionInFile = _file.Position;
                             byteControl.ReadOnlyMode = _readOnlyMode;
                             byteControl.MouseSelection += ByteControl_Selected;
-                            byteControl.Click += ByteControl_Click;
-                            byteControl.MoveNext += ByteControl_MoveNext;
+                            byteControl.Click += Control_Click;
+                            byteControl.MoveNext += Ctrl_MoveNext;
                             byteControl.ByteModified += ByteControl_ByteModified;
 
                             byteModified = CheckIfIsByteModified(_file.Position);
@@ -531,21 +531,8 @@ namespace WPFHexaEditor.Control
                 bytemodified.Action = action;
             }
         }
-
-        private void ByteControl_MoveNext(object sender, EventArgs e)
-        {
-            HexByteControl ctrl = sender as HexByteControl;
-
-            ctrl.IsSelected = false;
-
-            SetFocus(ctrl.BytePositionInFile + 1);
-
-            SelectionStart++;
-            SelectionStop++;
-            
-        }
-
-        private void SetFocus(long bytePositionInFile)
+        
+        private void SetFocusHexDataPanel(long bytePositionInFile)
         {
             int stackIndex = 0;
             foreach (Label infolabel in LinesInfoStackPanel.Children)
@@ -563,16 +550,46 @@ namespace WPFHexaEditor.Control
             }
 
             VerticalScrollBar.Value++;
-            SetFocus(bytePositionInFile);
+            SetFocusHexDataPanel(bytePositionInFile);
         }
 
-        private void ByteControl_Click(object sender, EventArgs e)
+        private void SetFocusStringDataPanel(long bytePositionInFile)
         {
+            int stackIndex = 0;
+            foreach (Label infolabel in LinesInfoStackPanel.Children)
+            {
+                foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
+                {
+                    if (byteControl.BytePositionInFile == bytePositionInFile)
+                    {
+                        byteControl.Focus();
+                        return;
+                    }
+                }
+
+                stackIndex++;
+            }
+
+            VerticalScrollBar.Value++;
+            SetFocusStringDataPanel(bytePositionInFile);
+        }
+
+        private void Control_Click(object sender, EventArgs e)
+        {
+            StringByteControl sbCtrl = sender as StringByteControl;
             HexByteControl ctrl = sender as HexByteControl;
 
-            SelectionStart = ctrl.BytePositionInFile;
-            SelectionStop = ctrl.BytePositionInFile;
-            
+            if (ctrl != null)
+            {
+                SelectionStart = ctrl.BytePositionInFile;
+                SelectionStop = ctrl.BytePositionInFile;
+            }
+
+            if (sbCtrl != null)
+            {
+                SelectionStart = sbCtrl.BytePositionInFile;
+                SelectionStop = sbCtrl.BytePositionInFile;
+            }
         }
 
         private void ByteControl_Selected(object sender, EventArgs e)
@@ -615,14 +632,18 @@ namespace WPFHexaEditor.Control
                                                         
                             StringByteControl sbCtrl = new StringByteControl();
 
+                            sbCtrl.BytePositionInFile = _file.Position;
+                            sbCtrl.StringByteModified += SbCtrl_StringByteModified;
+                            sbCtrl.MoveNext += Ctrl_MoveNext;
+                            sbCtrl.Click += Control_Click;
+
                             byteModified = CheckIfIsByteModified(_file.Position);
                             if (byteModified != null)
                             {
                                 switch (byteModified.Action)
                                 {
                                     case ByteAction.Modified:
-                                        sbCtrl.Byte = byteModified.Byte;
-                                        sbCtrl.BytePositionInFile = byteModified.BytePositionInFile;
+                                        sbCtrl.Byte = byteModified.Byte;                                        
                                         sbCtrl.IsByteModified = true;
                                         break;
                                 }
@@ -676,14 +697,14 @@ namespace WPFHexaEditor.Control
                                     else
                                     {
                                         sbCtrl.Byte = (byte)_file.ReadByte();
-                                        sbCtrl.BytePositionInFile = byteModified.BytePositionInFile;
+                                        sbCtrl.BytePositionInFile = _file.Position;
                                     }
-                                }                           
+                                }
                             }
                         }
                         catch { }
 
-                        stackIndex++;
+                    stackIndex++;
                         HexDataStackPanel.Children.Add(dataLineStack);
                     }
                 }
@@ -692,6 +713,37 @@ namespace WPFHexaEditor.Control
             {
                 StringDataStackPanel.Children.Clear();
             }
+        }
+
+        private void Ctrl_MoveNext(object sender, EventArgs e)
+        {
+            HexByteControl hexByteCtrl = sender as HexByteControl;
+            StringByteControl sbCtrl = sender as StringByteControl;
+
+            if (sbCtrl != null)
+            {
+                sbCtrl.IsSelected = false;
+                SetFocusStringDataPanel(sbCtrl.BytePositionInFile + 1);
+            }
+
+            if (hexByteCtrl != null)
+            {
+                hexByteCtrl.IsSelected = false;
+                SetFocusHexDataPanel(hexByteCtrl.BytePositionInFile + 1);
+            }
+
+            if (hexByteCtrl != null || sbCtrl != null)
+            {
+                SelectionStart++;
+                SelectionStop++;
+            }
+        }
+        
+        private void SbCtrl_StringByteModified(object sender, EventArgs e)
+        {
+            StringByteControl ctrl = sender as StringByteControl;
+
+            AddByteModified(ctrl.Byte, ctrl.BytePositionInFile, ByteAction.Modified);
         }
 
         /// <summary>

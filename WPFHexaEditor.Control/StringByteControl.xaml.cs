@@ -29,6 +29,7 @@ namespace WPFHexaEditor.Control
         public event EventHandler Click;
         public event EventHandler MouseSelection;
         public event EventHandler StringByteModified;
+        public event EventHandler MoveNext;
 
         public StringByteControl()
         {
@@ -45,17 +46,11 @@ namespace WPFHexaEditor.Control
             }
             set
             {
-                bool modified = false;
-
-                if (_byte.HasValue)
-                    if (value != _byte)
-                        modified = true;
-
                 this._byte = value;
 
                 UpdateLabelFromByte();
 
-                if (modified)
+                if (IsByteModified)
                     if (StringByteModified != null)
                         StringByteModified(this, new EventArgs());
             }
@@ -67,12 +62,12 @@ namespace WPFHexaEditor.Control
         private void UpdateLabelFromByte()
         {
             if (_byte != null)
-            {                
+            {
                 StringByteLabel.Content = Converters.ByteToChar(_byte.Value);
             }
             else
             {
-                StringByteLabel.Content = "";                
+                StringByteLabel.Content = "";
             }
         }
 
@@ -141,8 +136,33 @@ namespace WPFHexaEditor.Control
 
         private void UserControl_KeyDown(object sender, KeyEventArgs e)
         {
+            //if (!ReadOnlyMode)
+            //    if (KeyValidator.IsHexKey(e.Key))
+            //    {
+            //        string key;
+            //        if (KeyValidator.IsNumericKey(e.Key))
+            //            key = KeyValidator.GetDigitFromKey(e.Key).ToString();
+            //        else
+            //            key = e.Key.ToString().ToLower();
 
+            //        StringByteLabel.Content = key;
+
+            //        //Move focus event
+            //        if (MoveNext != null)
+            //            MoveNext(this, new EventArgs());                    
+            //    }
+            
+                StringByteLabel.Content = e.Key.ToString();
+
+                //Move focus event
+                if (MoveNext != null)
+                    MoveNext(this, new EventArgs());
+            
+
+            IsByteModified = true;
+            Byte = Converters.CharToByte(StringByteLabel.Content.ToString()[0]);
         }
+    
 
 
         private void UserControl_MouseEnter(object sender, MouseEventArgs e)

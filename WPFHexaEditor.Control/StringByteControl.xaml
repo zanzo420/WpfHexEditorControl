@@ -5,9 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WPFHexaEditor.Control"
              mc:Ignorable="d"  KeyDown="UserControl_KeyDown" MouseEnter="UserControl_MouseEnter" MouseLeave="UserControl_MouseLeave"
-             Width="12" Height="22">
+             Width="12" Height="22" Focusable="True">
     
     <Grid>
-        <Label x:Name="StringByteLabel" Padding="0" MouseDown="StringByteLabel_MouseDown" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <Label x:Name="StringByteLabel" Padding="0" MouseDown="StringByteLabel_MouseDown" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Focusable="True"/>
     </Grid>
 </UserControl>

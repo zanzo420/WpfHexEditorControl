@@ -22,13 +22,20 @@ namespace WPFHexaEditor.Control
     public partial class StringByteControl : UserControl
     {
         private byte? _byte = null;
+        private bool _isSelected = false;
+        private bool _isByteModified = false;
+        private bool _readOnlyMode;
 
+        public event EventHandler Click;
+        public event EventHandler MouseSelection;
         public event EventHandler StringByteModified;
 
         public StringByteControl()
         {
             InitializeComponent();
         }
+
+        public long BytePositionInFile { get; set; } = -1;
 
         public byte? Byte
         {
@@ -68,5 +75,103 @@ namespace WPFHexaEditor.Control
                 StringByteLabel.Content = "";                
             }
         }
+
+        public bool IsSelected
+        {
+            get
+            {
+                return _isSelected;
+            }
+
+            set
+            {
+                _isSelected = value;
+
+                UpdateBackGround();
+            }
+        }
+
+        /// <summary>
+        /// Update Background
+        /// </summary>
+        private void UpdateBackGround()
+        {
+            if (_isSelected)
+            {
+                StringByteLabel.Foreground = Brushes.White;
+                this.Background = Brushes.Blue;
+            }
+            else if (_isByteModified)
+            {
+                this.Background = Brushes.LightGray;
+                StringByteLabel.Foreground = Brushes.Black;
+            }
+            else
+            {
+                this.Background = Brushes.Transparent;
+                StringByteLabel.Foreground = Brushes.Black;
+            }
+        }
+
+        public bool IsByteModified
+        {
+            get
+            {
+                return this._isByteModified;
+            }
+            set
+            {
+                this._isByteModified = value;
+
+                UpdateBackGround();
+            }
+        }
+
+        public bool ReadOnlyMode
+        {
+            get
+            {
+                return _readOnlyMode;
+            }
+            set
+            {
+                _readOnlyMode = value;
+            }
+        }
+
+        private void UserControl_KeyDown(object sender, KeyEventArgs e)
+        {
+
+        }
+
+
+        private void UserControl_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if (_byte != null)
+                if (!IsByteModified && !_isSelected)
+                    this.Background = Brushes.SlateGray;
+
+            if (e.LeftButton == MouseButtonState.Pressed)
+                if (MouseSelection != null)
+                    MouseSelection(this, e);
+        }
+
+        private void UserControl_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (_byte != null)
+                if (!IsByteModified && !_isSelected)
+                    this.Background = Brushes.Transparent;
+        }
+
+        private void StringByteLabel_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                this.Focus();
+
+                if (Click != null)
+                    Click(this, e);
+            }
+        }        
     }
 }

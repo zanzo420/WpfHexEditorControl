@@ -164,15 +164,17 @@ namespace WPFHexaEditor.Control
 
         private void HexChar_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            this.Focus();
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                this.Focus();
 
-            if (Click != null)
-                Click(this, e);
+                if (Click != null)
+                    Click(this, e);
+            }
         }
 
         private void UserControl_KeyDown(object sender, KeyEventArgs e)
         {
-
             if (!ReadOnlyMode)
                 if (KeyValidator.IsHexKey(e.Key))
                 {

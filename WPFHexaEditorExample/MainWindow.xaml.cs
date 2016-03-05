@@ -63,7 +63,7 @@ namespace WPFHexaEditorExample
 
         private void ReadOnlybutton_Click(object sender, RoutedEventArgs e)
         {
-            HexEdit.ReadOnlyMode = true;
+            HexEdit.ReadOnlyMode = !HexEdit.ReadOnlyMode;
         }
 
         private void SelectAllButton_Click(object sender, RoutedEventArgs e)
@@ -74,6 +74,31 @@ namespace WPFHexaEditorExample
         private void UnSelectAllButton_Click(object sender, RoutedEventArgs e)
         {
             HexEdit.UnSelectAll();
+        }
+        
+        private void HexDataVisibilityButton_Click(object sender, RoutedEventArgs e)
+        {
+            HexEdit.HexDataVisibility = !HexEdit.HexDataVisibility;
+        }
+
+        private void HexHeaderVisibilityButton_Click(object sender, RoutedEventArgs e)
+        {
+            HexEdit.HeaderVisibility = !HexEdit.HeaderVisibility;
+        }
+
+        private void ScrollVisibilityButton_Click(object sender, RoutedEventArgs e)
+        {
+            HexEdit.VerticalScrollBarVisibility = !HexEdit.VerticalScrollBarVisibility;
+        }
+
+        private void StringDataVisibilityButton_Click(object sender, RoutedEventArgs e)
+        {
+            HexEdit.StringDataVisibility = !HexEdit.StringDataVisibility;
+        }
+
+        private void StatusBarVisibilityButton_Click(object sender, RoutedEventArgs e)
+        {
+            HexEdit.StatusBarVisibility = !HexEdit.StatusBarVisibility;
         }
     }
 }

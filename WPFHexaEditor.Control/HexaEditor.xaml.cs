@@ -162,7 +162,7 @@ namespace WPFHexaEditor.Control
                     _selectionStart = -1;
                 else
                     _selectionStart = value;
-                                
+                                                
                 UpdateSelection();
                 UpdateStatusPanel();
 
@@ -412,24 +412,42 @@ namespace WPFHexaEditor.Control
             int stackIndex = 0;
             foreach (Label infolabel in LinesInfoStackPanel.Children)
             {
-                //Stringbyte panel
-                foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
-                    if (byteControl.BytePositionInFile >= SelectionStart && byteControl.BytePositionInFile <= SelectionStop)
-                        byteControl.IsSelected = true;
-                    else
-                        byteControl.IsSelected = false;
+                if (SelectionStart <= SelectionStop)
+                {
+                    //Stringbyte panel
+                    foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
+                        if (byteControl.BytePositionInFile >= SelectionStart && byteControl.BytePositionInFile <= SelectionStop)
+                            byteControl.IsSelected = true;
+                        else
+                            byteControl.IsSelected = false;
 
-                //HexByte panel
-                foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
-                    if (byteControl.BytePositionInFile >= SelectionStart && byteControl.BytePositionInFile <= SelectionStop)
-                        byteControl.IsSelected = true;
-                    else
-                        byteControl.IsSelected = false;
+                    //HexByte panel
+                    foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
+                        if (byteControl.BytePositionInFile >= SelectionStart && byteControl.BytePositionInFile <= SelectionStop)
+                            byteControl.IsSelected = true;
+                        else
+                            byteControl.IsSelected = false;
+                }
+                else 
+                {
+                    //Stringbyte panel
+                    foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
+                        if (byteControl.BytePositionInFile >= SelectionStop && byteControl.BytePositionInFile <= SelectionStart)
+                            byteControl.IsSelected = true;
+                        else
+                            byteControl.IsSelected = false;
 
+                    //HexByte panel
+                    foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
+                        if (byteControl.BytePositionInFile >= SelectionStop && byteControl.BytePositionInFile <= SelectionStart)
+                            byteControl.IsSelected = true;
+                        else
+                            byteControl.IsSelected = false;
+                }
                 stackIndex++;
             }
         }
-
+        
         /// <summary>
         /// Check if the byte in parameter are modified and return original Bytemodified from list
         /// </summary>

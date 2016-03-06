@@ -80,5 +80,28 @@ namespace WPFHexaEditor.Control.Core
             _action = ByteAction.Nothing;
             _position = -1;
         }
+
+        /// <summary>
+        /// Copy Current instance to another
+        /// </summary>
+        /// <returns></returns>
+        public ByteModified GetCopy()
+        {
+            ByteModified newByteModified = new ByteModified();
+            object copied = null;
+
+            newByteModified.Action = this.Action;
+            newByteModified.Byte = this.Byte.Value;
+            newByteModified.BytePositionInFile = this.BytePositionInFile;
+
+            copied = newByteModified;
+            
+            return (ByteModified)copied;
+        }
+
+        public override string ToString()
+        {
+            return $"ByteModified - Action:{Action} Position:{BytePositionInFile} Byte:{Byte}";
+        }
     }
 }

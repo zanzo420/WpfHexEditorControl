@@ -37,9 +37,9 @@ namespace WPFHexaEditor.Control
         private bool _isVerticalScrollBarVisible = true;
         private bool _isHeaderVisible = true;
         private bool _isShowStatusBar = false;
-
+        
         private List<ByteModified> _byteModifiedList = new List<ByteModified>();
-
+        
         public HexaEditor()
         {
             InitializeComponent();
@@ -326,8 +326,9 @@ namespace WPFHexaEditor.Control
             UpdateSelectionHexDataPanel();
             UpdateSelectionStringDataPanel();
 
+            UpdateByteModifiedStringData();
             UpdateByteModifiedHexData();
-            //UpdateByteModifiedStringData();
+            
         }
 
         /// <summary>
@@ -371,14 +372,14 @@ namespace WPFHexaEditor.Control
         }
 
         /// <summary>
-        /// Check if the byte in parameter are modified
+        /// Check if the byte in parameter are modified and return original Bytemodified from list
         /// </summary>
         private ByteModified CheckIfIsByteModified(long bytePositionInFile)
         {
             foreach (ByteModified byteModified in _byteModifiedList)
             {
                 if (byteModified.BytePositionInFile == bytePositionInFile)
-                    return byteModified;
+                    return byteModified; //.GetCopy();
             }
 
             return null;
@@ -468,18 +469,19 @@ namespace WPFHexaEditor.Control
             foreach (ByteModified byteModified in _byteModifiedList)
             {
                 int stackIndex = 0;
+                ByteModified byteModifiedCopy = byteModified.GetCopy();
 
                 foreach (Label infolabel in LinesInfoStackPanel.Children)
                 {
                     foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
                     {                        
-                        if (byteModified.BytePositionInFile == byteControl.BytePositionInFile)
+                        if (byteModifiedCopy.BytePositionInFile == byteControl.BytePositionInFile)
                         {
-                            switch (byteModified.Action)
+                            switch (byteModifiedCopy.Action)
                             {
                                 case ByteAction.Modified:
                                     byteControl.InternalChange = true;
-                                    byteControl.Byte = byteModified.Byte;
+                                    byteControl.Byte = byteModifiedCopy.Byte;
                                     byteControl.IsByteModified = true;
                                     byteControl.InternalChange = false;
                                     break;
@@ -497,18 +499,19 @@ namespace WPFHexaEditor.Control
             foreach (ByteModified byteModified in _byteModifiedList)
             {
                 int stackIndex = 0;
+                ByteModified byteModifiedCopy = byteModified.GetCopy();
 
                 foreach (Label infolabel in LinesInfoStackPanel.Children)
                 {
                     foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
                     {
-                        if (byteModified.BytePositionInFile == byteControl.BytePositionInFile)
+                        if (byteModifiedCopy.BytePositionInFile == byteControl.BytePositionInFile)
                         {
-                            switch (byteModified.Action)
+                            switch (byteModifiedCopy.Action)
                             {
                                 case ByteAction.Modified:
                                     byteControl.InternalChange = true;
-                                    byteControl.Byte = byteModified.Byte;
+                                    byteControl.Byte = byteModifiedCopy.Byte;
                                     byteControl.IsByteModified = true;
                                     byteControl.InternalChange = false;
                                     break;
@@ -537,9 +540,9 @@ namespace WPFHexaEditor.Control
         /// </summary>        
         private void AddByteModified(byte? @byte, long bytePositionInFile, ByteAction action)
         {
-            ByteModified bytemodified = CheckIfIsByteModified(bytePositionInFile);
-
-            if (bytemodified == null)
+            ByteModified bytemodifiedOriginal = CheckIfIsByteModified(bytePositionInFile);
+            
+            if (bytemodifiedOriginal == null)
             {
                 ByteModified byteModified = new ByteModified();
 
@@ -548,12 +551,25 @@ namespace WPFHexaEditor.Control
                 byteModified.BytePositionInFile = bytePositionInFile;
 
                 _byteModifiedList.Add(byteModified);
+
+                Debug.Print("ADDED : " + byteModified.ToString());
             }
             else
             {
-                bytemodified.Byte = @byte;
-                bytemodified.BytePositionInFile = bytePositionInFile;
-                bytemodified.Action = action;
+                if (_byteModifiedList.Remove(bytemodifiedOriginal))
+                {
+                    Debug.Print("REMOVED OK!!");
+                }
+                
+                ByteModified byteModified = new ByteModified();
+
+                byteModified.Byte = @byte;
+                byteModified.BytePositionInFile = bytePositionInFile;
+                byteModified.Action = action;
+
+                _byteModifiedList.Add(byteModified);
+
+                Debug.Print("MODIFIED : " + byteModified.ToString());
             }
         }
         
@@ -681,24 +697,26 @@ namespace WPFHexaEditor.Control
 
                         //try
                         //{
-                            foreach (StringByteControl sbCtrl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
-                            {
-                                _file.Position = position++;
+                        foreach (StringByteControl sbCtrl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
+                        {
+                            _file.Position = position++;
 
-                                if (_file.Position >= _file.Length)
-                                {
-                                    sbCtrl.Byte = null;
-                                    sbCtrl.BytePositionInFile = -1;
-                                    sbCtrl.IsByteModified = false;
-                                    sbCtrl.IsSelected = false;
-                                }
-                                else
-                                {
-                                    sbCtrl.Byte = (byte)_file.ReadByte();
-                                    sbCtrl.BytePositionInFile = _file.Position;
-                                    sbCtrl.IsByteModified = false;
-                                }
+                            if (_file.Position >= _file.Length)
+                            {
+                                sbCtrl.Byte = null;
+                                sbCtrl.BytePositionInFile = -1;
+                                sbCtrl.IsByteModified = false;
+                                sbCtrl.IsSelected = false;
                             }
+                            else
+                            {
+                                sbCtrl.InternalChange = true;
+                                sbCtrl.Byte = (byte)_file.ReadByte();
+                                sbCtrl.BytePositionInFile = _file.Position;
+                                sbCtrl.IsByteModified = false;
+                                sbCtrl.InternalChange = false;
+                            }
+                        }
                         //}
                         //catch
                         //{

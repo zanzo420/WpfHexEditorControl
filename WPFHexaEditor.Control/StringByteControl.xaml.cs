@@ -39,6 +39,7 @@ namespace WPFHexaEditor.Control
         }
 
         public long BytePositionInFile { get; set; } = -1;
+        public bool StringByteFirstSelected { get; set; } = true;
 
         public byte? Byte
         {
@@ -110,18 +111,25 @@ namespace WPFHexaEditor.Control
         {
             if (_isSelected)
             {
+                this.FontWeight = (FontWeight)TryFindResource("NormalFontWeight");
                 StringByteLabel.Foreground = Brushes.White;
-                this.Background = Brushes.Blue;
+                
+                if (StringByteFirstSelected)
+                    this.Background = (SolidColorBrush)TryFindResource("FirstColor");
+                else
+                    this.Background = (SolidColorBrush)TryFindResource("SecondColor");
             }
             else if (_isByteModified)
             {
-                this.Background = Brushes.LightGray;
-                StringByteLabel.Foreground = Brushes.Black;
+                this.FontWeight = (FontWeight)TryFindResource("BoldFontWeight");
+                this.Background = (SolidColorBrush)TryFindResource("ByteModifiedColor");
+                StringByteLabel.Foreground = Brushes.Black;                
             }
             else
             {
+                this.FontWeight = (FontWeight)TryFindResource("NormalFontWeight");
                 this.Background = Brushes.Transparent;
-                StringByteLabel.Foreground = Brushes.Black;
+                StringByteLabel.Foreground = Brushes.Black;                
             }
         }
 

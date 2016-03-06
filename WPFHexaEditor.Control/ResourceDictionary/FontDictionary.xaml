@@ -2,8 +2,6 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:WPFHexaEditor.Control.ResourceDictionary">
 
-    <SolidColorBrush x:Key="FirstColor" Color="#CC0014FF"/>
-    <SolidColorBrush x:Key="SecondColor" Color="#CC0078FF"/>
-    <SolidColorBrush x:Key="ByteModifiedColor" Color="#CC68717C"/>
-    <SolidColorBrush x:Key="MouseOverColor" Color="#FF5F636C"/>
+    <FontWeight x:Key="BoldFontWeight">Bold</FontWeight>
+    <FontWeight x:Key="NormalFontWeight">Normal</FontWeight>
 </ResourceDictionary>

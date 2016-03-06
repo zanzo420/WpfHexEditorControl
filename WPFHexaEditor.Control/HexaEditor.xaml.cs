@@ -380,6 +380,7 @@ namespace WPFHexaEditor.Control
             {                
                 foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
                 {
+
                     if (byteControl.BytePositionInFile >= SelectionStart && byteControl.BytePositionInFile <= SelectionStop)
                         byteControl.IsSelected = true;
                     else
@@ -387,6 +388,44 @@ namespace WPFHexaEditor.Control
                 }
 
                 stackIndex++;                
+            }
+        }
+
+        /// <summary>
+        /// Update the selection of byte in hexadecimal panel
+        /// </summary>
+        private void UpdateSelectionColorMode(FirstColor coloring)
+        {
+            int stackIndex = 0;
+
+            switch (coloring)
+            {
+                case FirstColor.HexByteData:
+                    stackIndex = 0;
+                    foreach (Label infolabel in LinesInfoStackPanel.Children)
+                    {
+                        foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
+                            byteControl.HexByteFirstSelected = true;
+
+                        foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
+                            byteControl.StringByteFirstSelected = false;
+
+                        stackIndex++;
+                    }
+                    break;
+                case FirstColor.StringByteData:
+                    stackIndex = 0;
+                    foreach (Label infolabel in LinesInfoStackPanel.Children)
+                    {
+                        foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
+                            byteControl.HexByteFirstSelected = false;
+
+                        foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
+                            byteControl.StringByteFirstSelected = true;
+
+                        stackIndex++;
+                    }
+                    break;
             }
         }
 
@@ -662,11 +701,13 @@ namespace WPFHexaEditor.Control
 
             if (hbCtrl != null)
             {
+                UpdateSelectionColorMode(FirstColor.HexByteData);
                 SelectionStop = hbCtrl.BytePositionInFile;
             }
 
             if (sbCtrl != null)
             {
+                UpdateSelectionColorMode(FirstColor.StringByteData);
                 SelectionStop = sbCtrl.BytePositionInFile;
             }
 

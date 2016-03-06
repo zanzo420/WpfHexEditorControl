@@ -66,6 +66,7 @@ namespace WPFHexaEditor.Control
         }
 
         public long BytePositionInFile { get; set; } = -1;
+        public bool HexByteFirstSelected { get; set; } = true;
 
         public bool IsByteModified
         {
@@ -131,18 +132,25 @@ namespace WPFHexaEditor.Control
         {
             if (_isSelected)
             {
+                this.FontWeight = (FontWeight)TryFindResource("NormalFontWeight");
                 FirstHexChar.Foreground = Brushes.White;
                 SecondHexChar.Foreground = Brushes.White;
-                this.Background = (SolidColorBrush)TryFindResource("FirstColor"); // Brushes.Blue;
+
+                if (HexByteFirstSelected)
+                    this.Background = (SolidColorBrush)TryFindResource("FirstColor"); 
+                else
+                    this.Background = (SolidColorBrush)TryFindResource("SecondColor");
             }
             else if (_isByteModified)
             {
-                this.Background = Brushes.LightGray;
+                this.FontWeight = (FontWeight)TryFindResource("BoldFontWeight");
+                this.Background = (SolidColorBrush)TryFindResource("ByteModifiedColor");
                 FirstHexChar.Foreground = Brushes.Black;
                 SecondHexChar.Foreground = Brushes.Black;
             }
             else
             {
+                this.FontWeight = (FontWeight)TryFindResource("NormalFontWeight");
                 this.Background = Brushes.Transparent;
                 FirstHexChar.Foreground = Brushes.Black;
                 SecondHexChar.Foreground = Brushes.Black;
@@ -215,7 +223,7 @@ namespace WPFHexaEditor.Control
         {
             if (_byte != null)
                 if (!IsByteModified && !_isSelected)
-                    this.Background = Brushes.SlateGray;
+                    this.Background = (SolidColorBrush)TryFindResource("MouseOverColor");
 
             if (e.LeftButton == MouseButtonState.Pressed)
                 if (MouseSelection != null)

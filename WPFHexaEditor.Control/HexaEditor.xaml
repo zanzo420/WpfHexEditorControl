@@ -6,7 +6,16 @@
              xmlns:local="clr-namespace:WPFHexaEditor.Control"
              mc:Ignorable="d" BorderBrush="#FF443E3E" BorderThickness="1"
              Height="350" Width="800">
-    
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="./ResourceDictionary/BrushesDictionary.xaml"/>
+                <ResourceDictionary Source="./ResourceDictionary/ToolTipDictionary.xaml"/>
+                <ResourceDictionary Source="./ResourceDictionary/FontDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid SizeChanged="Grid_SizeChanged" Background="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -36,8 +45,8 @@
         <StackPanel x:Name="HexHeaderStackPanel" Orientation="Horizontal" Grid.Column="1" Grid.Row="0" Margin="10,0"/>
         <StackPanel x:Name="StringDataStackPanel" Grid.Row="1" Grid.Column="2" Margin="10,0,0,0"/>
 
-        <Grid x:Name="StatusBarGrid" Grid.Row="3" Grid.ColumnSpan="4" Height="30" Visibility="Visible" >
-            
+        <Grid x:Name="StatusBarGrid" Grid.Row="3" Grid.ColumnSpan="4" Height="30" Visibility="Collapsed" >
+            <Label Content="StatusBar are not implemented now..."/>
         </Grid>
     </Grid>
 </UserControl>

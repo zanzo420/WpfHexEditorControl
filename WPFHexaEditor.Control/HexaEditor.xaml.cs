@@ -89,6 +89,8 @@ namespace WPFHexaEditor.Control
 
                     RefreshView(true);
 
+                    UpdateSelectionColorMode(FirstColor.HexByteData);
+
                     if (readOnlyMode)
                         ReadOnlyMode = true;
                 }
@@ -160,9 +162,8 @@ namespace WPFHexaEditor.Control
                     _selectionStart = -1;
                 else
                     _selectionStart = value;
-
-                UpdateSelectionHexDataPanel();
-                UpdateSelectionStringDataPanel();
+                                
+                UpdateSelection();
                 UpdateStatusPanel();
 
                 if (SelectionStartChanged != null)
@@ -205,7 +206,7 @@ namespace WPFHexaEditor.Control
                 SelectionStop = -1;
             }
 
-            UpdateSelectionHexDataPanel();
+            UpdateSelection();
         }
 
         /// <summary>
@@ -237,9 +238,8 @@ namespace WPFHexaEditor.Control
                 }
                 else
                     _selectionStop = value;
-
-                UpdateSelectionHexDataPanel();
-                UpdateSelectionStringDataPanel();
+                                
+                UpdateSelection();
                 UpdateStatusPanel();
                 
                 if (SelectionStopChanged != null)
@@ -362,35 +362,10 @@ namespace WPFHexaEditor.Control
             UpdateHexHeader();
             UpdateStringDataViewer(ControlResize);
             UpdateDataViewer(ControlResize);
-            UpdateSelectionHexDataPanel();
-            UpdateSelectionStringDataPanel();
-
-            UpdateByteModifiedStringData();
-            UpdateByteModifiedHexData();
-            
+            UpdateSelection();
+            UpdateByteModified();
         }
-
-        /// <summary>
-        /// Update the selection of byte in hexadecimal panel
-        /// </summary>
-        private void UpdateSelectionHexDataPanel()
-        {
-            int stackIndex = 0;
-            foreach (Label infolabel in LinesInfoStackPanel.Children)
-            {                
-                foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
-                {
-
-                    if (byteControl.BytePositionInFile >= SelectionStart && byteControl.BytePositionInFile <= SelectionStop)
-                        byteControl.IsSelected = true;
-                    else
-                        byteControl.IsSelected = false;
-                }
-
-                stackIndex++;                
-            }
-        }
-
+        
         /// <summary>
         /// Update the selection of byte in hexadecimal panel
         /// </summary>
@@ -430,20 +405,26 @@ namespace WPFHexaEditor.Control
         }
 
         /// <summary>
-        /// Update the selection of byte in string panel
+        /// Update the selection of byte
         /// </summary>
-        private void UpdateSelectionStringDataPanel()
+        private void UpdateSelection()
         {
             int stackIndex = 0;
             foreach (Label infolabel in LinesInfoStackPanel.Children)
             {
+                //Stringbyte panel
                 foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
-                {
                     if (byteControl.BytePositionInFile >= SelectionStart && byteControl.BytePositionInFile <= SelectionStop)
                         byteControl.IsSelected = true;
                     else
-                        byteControl.IsSelected = false;                    
-                }
+                        byteControl.IsSelected = false;
+
+                //HexByte panel
+                foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
+                    if (byteControl.BytePositionInFile >= SelectionStart && byteControl.BytePositionInFile <= SelectionStop)
+                        byteControl.IsSelected = true;
+                    else
+                        byteControl.IsSelected = false;
 
                 stackIndex++;
             }
@@ -543,18 +524,20 @@ namespace WPFHexaEditor.Control
                 HexDataStackPanel.Children.Clear();
             }
         }
-
-        private void UpdateByteModifiedHexData()
-        {            
+            
+        private void UpdateByteModified()
+        {
+            int stackIndex = 0;
+            ByteModified byteModifiedCopy = null;
             foreach (ByteModified byteModified in _byteModifiedList)
             {
-                int stackIndex = 0;
-                ByteModified byteModifiedCopy = byteModified.GetCopy();
+                stackIndex = 0;
+                byteModifiedCopy = byteModified.GetCopy();
 
                 foreach (Label infolabel in LinesInfoStackPanel.Children)
                 {
-                    foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
-                    {                        
+                    foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
+                    {
                         if (byteModifiedCopy.BytePositionInFile == byteControl.BytePositionInFile)
                         {
                             switch (byteModifiedCopy.Action)
@@ -569,21 +552,7 @@ namespace WPFHexaEditor.Control
                         }
                     }
 
-                    stackIndex++;
-                }
-            }            
-        }
-
-        private void UpdateByteModifiedStringData()
-        {
-            foreach (ByteModified byteModified in _byteModifiedList)
-            {
-                int stackIndex = 0;
-                ByteModified byteModifiedCopy = byteModified.GetCopy();
-
-                foreach (Label infolabel in LinesInfoStackPanel.Children)
-                {
-                    foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
+                    foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
                     {
                         if (byteModifiedCopy.BytePositionInFile == byteControl.BytePositionInFile)
                         {
@@ -685,12 +654,14 @@ namespace WPFHexaEditor.Control
             {
                 SelectionStart = ctrl.BytePositionInFile;
                 SelectionStop = ctrl.BytePositionInFile;
+                UpdateSelectionColorMode(FirstColor.HexByteData);
             }
 
             if (sbCtrl != null)
             {
                 SelectionStart = sbCtrl.BytePositionInFile;
                 SelectionStop = sbCtrl.BytePositionInFile;
+                UpdateSelectionColorMode(FirstColor.StringByteData);
             }
         }
 
@@ -711,8 +682,7 @@ namespace WPFHexaEditor.Control
                 SelectionStop = sbCtrl.BytePositionInFile;
             }
 
-            UpdateSelectionHexDataPanel();
-            UpdateSelectionStringDataPanel();
+            UpdateSelection();
         }
 
         /// <summary>
@@ -811,21 +781,20 @@ namespace WPFHexaEditor.Control
             if (sbCtrl != null)
             {
                 sbCtrl.IsSelected = false;
-                SetFocusStringDataPanel(sbCtrl.BytePositionInFile + 1);
-                UpdateByteModifiedHexData();
+                SetFocusStringDataPanel(sbCtrl.BytePositionInFile + 1);                
             }
 
             if (hexByteCtrl != null)
             {
                 hexByteCtrl.IsSelected = false;
-                SetFocusHexDataPanel(hexByteCtrl.BytePositionInFile + 1);
-                UpdateByteModifiedStringData();
+                SetFocusHexDataPanel(hexByteCtrl.BytePositionInFile + 1);            
             }
 
             if (hexByteCtrl != null || sbCtrl != null)
             {
                 SelectionStart++;
-                SelectionStop++;                
+                SelectionStop++;
+                UpdateByteModified();
             }
         }
 

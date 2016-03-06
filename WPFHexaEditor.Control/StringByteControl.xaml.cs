@@ -34,6 +34,8 @@ namespace WPFHexaEditor.Control
         public StringByteControl()
         {
             InitializeComponent();
+
+            DataContext = this;
         }
 
         public long BytePositionInFile { get; set; } = -1;
@@ -50,9 +52,24 @@ namespace WPFHexaEditor.Control
 
                 UpdateLabelFromByte();
 
-                if (IsByteModified)
+                if (IsByteModified && InternalChange == false)
                     if (StringByteModified != null)
                         StringByteModified(this, new EventArgs());
+            }
+        }
+
+
+        /// <summary>
+        /// Get the hex string representation of this byte
+        /// </summary>
+        public string HexString
+        {
+            get
+            {
+                if (Byte != null)
+                    return Converters.ByteToHex(Byte.Value);
+                else
+                    return "";
             }
         }
 
@@ -134,45 +151,36 @@ namespace WPFHexaEditor.Control
             }
         }
 
+        public bool InternalChange { get; set; } = false;
+
         private void UserControl_KeyDown(object sender, KeyEventArgs e)
         {
-            //if (!ReadOnlyMode)
-            //    if (KeyValidator.IsHexKey(e.Key))
-            //    {
-            //        string key;
-            //        if (KeyValidator.IsNumericKey(e.Key))
-            //            key = KeyValidator.GetDigitFromKey(e.Key).ToString();
-            //        else
-            //            key = e.Key.ToString().ToLower();
-
-            //        StringByteLabel.Content = key;
-
-            //        //Move focus event
-            //        if (MoveNext != null)
-            //            MoveNext(this, new EventArgs());                    
-            //    }
-            bool isok = false;
-
-            if (Keyboard.Modifiers != ModifierKeys.Shift && e.Key != Key.RightShift && e.Key != Key.LeftShift)
+            if (!ReadOnlyMode)
             {
-                StringByteLabel.Content = Converters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key)).ToString().ToLower();//e.Key.ToString();
-                isok = true;
-            }
-            else if (Keyboard.Modifiers == ModifierKeys.Shift && e.Key != Key.RightShift && e.Key != Key.LeftShift)
-            {
-                isok = true;
-                StringByteLabel.Content = Converters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key));//e.Key.ToString();    
-            }
+                //TODO : MAKE BETTER KEYDETECTION AND EXPORT IN KEYVALIDATOR
+                bool isok = false;
 
-            //Move focus event
-            if (isok)
-                if (MoveNext != null)
+                if (Keyboard.Modifiers != ModifierKeys.Shift && e.Key != Key.RightShift && e.Key != Key.LeftShift)
                 {
-                    MoveNext(this, new EventArgs());
-
-                    IsByteModified = true;
-                    Byte = Converters.CharToByte(StringByteLabel.Content.ToString()[0]);
+                    StringByteLabel.Content = Converters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key)).ToString().ToLower();//e.Key.ToString();
+                    isok = true;
                 }
+                else if (Keyboard.Modifiers == ModifierKeys.Shift && e.Key != Key.RightShift && e.Key != Key.LeftShift)
+                {
+                    isok = true;
+                    StringByteLabel.Content = Converters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key));//e.Key.ToString();    
+                }
+
+                //Move focus event
+                if (isok)
+                    if (MoveNext != null)
+                    {
+                        IsByteModified = true;
+                        Byte = Converters.CharToByte(StringByteLabel.Content.ToString()[0]);
+
+                        MoveNext(this, new EventArgs());
+                    }
+            }
         }
     
 

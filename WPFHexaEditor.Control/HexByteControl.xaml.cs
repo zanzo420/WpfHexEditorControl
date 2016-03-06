@@ -59,7 +59,7 @@ namespace WPFHexaEditor.Control
 
                 UpdateLabelFromByte();
                 
-                if (IsByteModified)
+                if (IsByteModified && InternalChange == false)
                     if (ByteModified != null)
                         ByteModified(this, new EventArgs());
             }
@@ -121,7 +121,9 @@ namespace WPFHexaEditor.Control
                 UpdateBackGround();
             }
         }
-        
+
+        public bool InternalChange { get; set; } = false;
+
         /// <summary>
         /// Update Background
         /// </summary>
@@ -155,7 +157,8 @@ namespace WPFHexaEditor.Control
 
                 FirstHexChar.Content = hexabyte.Substring(0, 1);
                 SecondHexChar.Content = hexabyte.Substring(1, 1);
-            }else
+            }
+            else
             {
                 FirstHexChar.Content = "";
                 SecondHexChar.Content = "";
@@ -189,19 +192,22 @@ namespace WPFHexaEditor.Control
                         case KeyDownLabel.FirstChar:
                             FirstHexChar.Content = key;
                             _keyDownLabel = KeyDownLabel.SecondChar;
+
+                            IsByteModified = true;
+                            Byte = Converters.HexToByte(FirstHexChar.Content.ToString() + SecondHexChar.Content.ToString())[0];
                             break;
                         case KeyDownLabel.SecondChar:
                             SecondHexChar.Content = key;
                             _keyDownLabel = KeyDownLabel.NextPosition;
 
+                            IsByteModified = true;                            
+                            Byte = Converters.HexToByte(FirstHexChar.Content.ToString() + SecondHexChar.Content.ToString())[0];
+                            
                             //Move focus event
                             if (MoveNext != null)
                                 MoveNext(this, new EventArgs());
                             break;
                     }
-                    
-                    IsByteModified = true;
-                    Byte = Converters.HexToByte(FirstHexChar.Content.ToString() + SecondHexChar.Content.ToString())[0];                    
                 }
         }
 

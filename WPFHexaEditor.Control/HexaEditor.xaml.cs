@@ -841,8 +841,8 @@ namespace WPFHexaEditor.Control
                 for(int i = 0; i < GetMaxVisibleLine(); i++)
                 {
                     long fds = GetMaxVisibleLine();
-                    //LineInfo 
-                    //TODO: Fix last line to EOF.
+                    //LineInfo
+                    
                     long firstLineByte = ((long)VerticalScrollBar.Value + i) * _bytePerLine; 
                     string info = "0x" +  firstLineByte.ToString(Constant.HexLineInfoStringFormat, Thread.CurrentThread.CurrentCulture);
 
@@ -853,6 +853,8 @@ namespace WPFHexaEditor.Control
                         LineInfoLabel.Height = _lineInfoHeight;
                         LineInfoLabel.Padding = new Thickness(0, 0, 10, 0);
                         LineInfoLabel.Foreground = Brushes.Gray;
+                        LineInfoLabel.MouseDown += LineInfoLabel_MouseDown;
+                        LineInfoLabel.MouseMove += LineInfoLabel_MouseMove;
                         LineInfoLabel.HorizontalContentAlignment = HorizontalAlignment.Right;
                         LineInfoLabel.VerticalContentAlignment = VerticalAlignment.Center;
                         LineInfoLabel.Content = info;
@@ -866,6 +868,26 @@ namespace WPFHexaEditor.Control
             {
 
             }
+        }
+
+        private void LineInfoLabel_MouseMove(object sender, MouseEventArgs e)
+        {
+            Label line = sender as Label;
+
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                SelectionStop = Converters.HexLiteralToLong(line.Content.ToString()) + BytePerLine - 1;
+            }
+        }
+
+        private void LineInfoLabel_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            //TODO: Multiline selection
+
+            Label line = sender as Label;
+
+            SelectionStart = Converters.HexLiteralToLong(line.Content.ToString());
+            SelectionStop = SelectionStart + BytePerLine - 1;
         }
 
         /// <summary>
@@ -959,6 +981,7 @@ namespace WPFHexaEditor.Control
                 throw new InvalidCastException("Invalid hexa string");
             }
         }
+               
 
         /// <summary>
         /// Obtain the max line for verticalscrollbar
@@ -987,6 +1010,18 @@ namespace WPFHexaEditor.Control
         private void VerticalScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             RefreshView(false);
+        }
+
+        private void BottomRectangle_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+                VerticalScrollBar.Value++;            
+        }
+
+        private void TopRectangle_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+                VerticalScrollBar.Value--;            
         }
     }
 }

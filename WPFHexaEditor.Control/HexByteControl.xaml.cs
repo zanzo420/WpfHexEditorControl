@@ -43,7 +43,7 @@ namespace WPFHexaEditor.Control
         public HexByteControl()
         {
             InitializeComponent();
-
+            
             DataContext = this;
         }
         

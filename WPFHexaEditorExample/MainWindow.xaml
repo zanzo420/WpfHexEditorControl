@@ -11,10 +11,10 @@
         Title="TestWindow - WPF HexaEditor Control (Alpha)" Height="518" Width="850">
     <Grid >
         <Control:HexaEditor x:Name="HexEdit" Margin="10,147,10,10" Height="Auto" Width="Auto" StatusBarVisibility="False" SelectionStartChanged="HexEdit_SelectionStartChanged" SelectionStopChanged="HexEdit_SelectionStopChanged"/>
-        <Button x:Name="SetPositionButton" HorizontalAlignment="Left" Margin="682,35,0,0" VerticalAlignment="Top" Width="150" Click="SetPositionButton_Click" Height="45">
+        <Button x:Name="SetPositionButton" Margin="0,35,10,0" VerticalAlignment="Top" Click="SetPositionButton_Click" Height="45" HorizontalAlignment="Right" Width="150">
             <TextBlock TextWrapping="Wrap"><Run Text="Test : SetPosition"/><LineBreak/><Run Text="0x20FF (lenght 10 byte)"/></TextBlock>
         </Button>
-        <Button x:Name="button" Content="Test : BytePerLine=26" HorizontalAlignment="Left" Margin="682,11,0,0" VerticalAlignment="Top" Width="150" Click="button_Click"/>
+        <Button x:Name="button" Content="Test : BytePerLine=26" Margin="682,11,10,0" VerticalAlignment="Top" Click="button_Click"/>
         <Button x:Name="OpenFileButton" Content="Open" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="OpenFileButton_Click"/>
         <Button x:Name="CloseFileButton" Content="CloseFile" HorizontalAlignment="Left" Margin="10,60,0,0" VerticalAlignment="Top" Width="75" Click="CloseFileButton_Click"/>
         <Button x:Name="ReadOnlybutton" Content="ReadOnly" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="75" Click="ReadOnlybutton_Click"/>

@@ -22,8 +22,6 @@ namespace WPFHexaEditorExample
     /// </summary>
     public partial class MainWindow : Window
     {
-        private object fileName;
-
         public MainWindow()
         {
             InitializeComponent();
@@ -37,7 +35,7 @@ namespace WPFHexaEditorExample
 
         private void SetPositionButton_Click(object sender, RoutedEventArgs e)
         {
-            HexEdit.SetPosition("0x20FF");
+            HexEdit.SetPosition("0x20FF", 10);
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
@@ -99,6 +97,16 @@ namespace WPFHexaEditorExample
         private void StatusBarVisibilityButton_Click(object sender, RoutedEventArgs e)
         {
             HexEdit.StatusBarVisibility = !HexEdit.StatusBarVisibility;
+        }
+
+        private void HexEdit_SelectionStartChanged(object sender, EventArgs e)
+        {
+            SelectionStartLabel.Content = HexEdit.SelectionStart;
+        }
+
+        private void HexEdit_SelectionStopChanged(object sender, EventArgs e)
+        {
+            SelectionStopLabel.Content = HexEdit.SelectionStop;
         }
     }
 }

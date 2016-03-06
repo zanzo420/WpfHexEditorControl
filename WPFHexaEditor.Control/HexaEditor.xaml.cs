@@ -20,14 +20,15 @@ using WPFHexaEditor.Control.Core;
 namespace WPFHexaEditor.Control
 {
     /// <summary>
-    /// Hexadecimal editor control
+    /// 2016 - Derek Tremblay (derektremblay666@gmail.com)
+    /// WPF Hexadecimal editor control
     /// </summary>
     public partial class HexaEditor : UserControl
     {
         private string _fileName = "";
         private const double _lineInfoHeight = 22;
         private int _bytePerLine = 16;
-        private FileStream _file = null;
+        private Stream _file = null;
         private double _scrollLargeChange = 100;
         private bool _readOnlyMode = false;
         private long _selectionStart = -1;
@@ -38,8 +39,14 @@ namespace WPFHexaEditor.Control
         private bool _isHeaderVisible = true;
         private bool _isShowStatusBar = false;
         
+        /// <summary>
+        /// ByteModified list for save/modify data
+        /// </summary>
         private List<ByteModified> _byteModifiedList = new List<ByteModified>();
-        
+
+        public event EventHandler SelectionStartChanged;
+        public event EventHandler SelectionStopChanged;
+
         public HexaEditor()
         {
             InitializeComponent();
@@ -65,9 +72,25 @@ namespace WPFHexaEditor.Control
                 if (File.Exists(value))
                 {
                     CloseFile();
-                    _file = new FileStream(value, FileMode.Open, FileAccess.ReadWrite);
+                    bool readOnlyMode = false;
+                                        
+                    try
+                    {
+                        _file = File.Open(value, FileMode.Open, FileAccess.ReadWrite, FileShare.Read); ;
+                    }
+                    catch
+                    {
+                        if (MessageBox.Show("The file is locked. Do you want to open it in read-only mode?", "", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                        {
+                            _file = File.Open(value, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                            readOnlyMode = true;
+                        }
+                    }
 
                     RefreshView(true);
+
+                    if (readOnlyMode)
+                        ReadOnlyMode = true;
                 }
                 else
                 {
@@ -140,7 +163,19 @@ namespace WPFHexaEditor.Control
 
                 UpdateSelectionHexDataPanel();
                 UpdateSelectionStringDataPanel();
+                UpdateStatusPanel();
+
+                if (SelectionStartChanged != null)
+                    SelectionStartChanged(this, new EventArgs());
             }
+        }
+
+        /// <summary>
+        /// Update de StatusPanel
+        /// </summary>
+        private void UpdateStatusPanel()
+        {
+            
         }
 
         /// <summary>
@@ -205,6 +240,10 @@ namespace WPFHexaEditor.Control
 
                 UpdateSelectionHexDataPanel();
                 UpdateSelectionStringDataPanel();
+                UpdateStatusPanel();
+                
+                if (SelectionStopChanged != null)
+                    SelectionStopChanged(this, new EventArgs());
             }
         }
         
@@ -443,12 +482,14 @@ namespace WPFHexaEditor.Control
                             {                                
                                 byteControl.IsByteModified = false;
                                 byteControl.BytePositionInFile = -1;
+                                byteControl.ReadOnlyMode = _readOnlyMode;
                                 byteControl.IsSelected = false;
                                 byteControl.Byte = null; 
                             }
                             else
                             {
                                 byteControl.IsByteModified = false;
+                                byteControl.ReadOnlyMode = _readOnlyMode;
                                 byteControl.BytePositionInFile = _file.Position;
                                 byteControl.Byte = (byte)_file.ReadByte();                                
                             }
@@ -536,41 +577,22 @@ namespace WPFHexaEditor.Control
         }
 
         /// <summary>
-        /// Add a bytemodifed in list of byte change
+        /// Add/Modifiy a ByteModifed in the list of byte changed
         /// </summary>        
         private void AddByteModified(byte? @byte, long bytePositionInFile, ByteAction action)
         {
             ByteModified bytemodifiedOriginal = CheckIfIsByteModified(bytePositionInFile);
+
+            if (bytemodifiedOriginal != null)
+                _byteModifiedList.Remove(bytemodifiedOriginal);
             
-            if (bytemodifiedOriginal == null)
-            {
-                ByteModified byteModified = new ByteModified();
+            ByteModified byteModified = new ByteModified();
 
-                byteModified.Action = action;
-                byteModified.Byte = @byte;
-                byteModified.BytePositionInFile = bytePositionInFile;
+            byteModified.Byte = @byte;
+            byteModified.BytePositionInFile = bytePositionInFile;
+            byteModified.Action = action;
 
-                _byteModifiedList.Add(byteModified);
-
-                Debug.Print("ADDED : " + byteModified.ToString());
-            }
-            else
-            {
-                if (_byteModifiedList.Remove(bytemodifiedOriginal))
-                {
-                    Debug.Print("REMOVED OK!!");
-                }
-                
-                ByteModified byteModified = new ByteModified();
-
-                byteModified.Byte = @byte;
-                byteModified.BytePositionInFile = bytePositionInFile;
-                byteModified.Action = action;
-
-                _byteModifiedList.Add(byteModified);
-
-                Debug.Print("MODIFIED : " + byteModified.ToString());
-            }
+            _byteModifiedList.Add(byteModified);
         }
         
         private void SetFocusHexDataPanel(long bytePositionInFile)
@@ -673,6 +695,7 @@ namespace WPFHexaEditor.Control
 
                             sbCtrl.BytePositionInFile = _file.Position;
                             sbCtrl.StringByteModified += Control_ByteModified;
+                            sbCtrl.ReadOnlyMode = _readOnlyMode;
                             sbCtrl.MoveNext += Control_MoveNext;
                             sbCtrl.Click += Control_Click;
                             sbCtrl.BytePositionInFile = _file.Position;
@@ -695,8 +718,6 @@ namespace WPFHexaEditor.Control
 
                         long position = Converters.HexLiteralToLong(infolabel.Content.ToString());
 
-                        //try
-                        //{
                         foreach (StringByteControl sbCtrl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
                         {
                             _file.Position = position++;
@@ -706,6 +727,7 @@ namespace WPFHexaEditor.Control
                                 sbCtrl.Byte = null;
                                 sbCtrl.BytePositionInFile = -1;
                                 sbCtrl.IsByteModified = false;
+                                sbCtrl.ReadOnlyMode = _readOnlyMode;
                                 sbCtrl.IsSelected = false;
                             }
                             else
@@ -714,15 +736,11 @@ namespace WPFHexaEditor.Control
                                 sbCtrl.Byte = (byte)_file.ReadByte();
                                 sbCtrl.BytePositionInFile = _file.Position;
                                 sbCtrl.IsByteModified = false;
+                                sbCtrl.ReadOnlyMode = _readOnlyMode;
                                 sbCtrl.InternalChange = false;
                             }
                         }
-                        //}
-                        //catch
-                        //{
-                        //    int d = 1;
-                        //}
-
+                        
                         stackIndex++;
                         HexDataStackPanel.Children.Add(dataLineStack);
                     }
@@ -743,12 +761,14 @@ namespace WPFHexaEditor.Control
             {
                 sbCtrl.IsSelected = false;
                 SetFocusStringDataPanel(sbCtrl.BytePositionInFile + 1);
+                UpdateByteModifiedHexData();
             }
 
             if (hexByteCtrl != null)
             {
                 hexByteCtrl.IsSelected = false;
                 SetFocusHexDataPanel(hexByteCtrl.BytePositionInFile + 1);
+                UpdateByteModifiedStringData();
             }
 
             if (hexByteCtrl != null || sbCtrl != null)
@@ -757,8 +777,6 @@ namespace WPFHexaEditor.Control
                 SelectionStop++;                
             }
         }
-        
-        
 
         /// <summary>
         /// Update the position info panel at left of the control
@@ -832,6 +850,7 @@ namespace WPFHexaEditor.Control
 
         /// <summary>
         /// Close file and clear control
+        /// ReadOnlyMode is reset to false
         /// </summary>
         public void CloseFile()
         {
@@ -839,6 +858,7 @@ namespace WPFHexaEditor.Control
             {
                 this._file.Close();
                 this._file = null;
+                ReadOnlyMode = false;
                 VerticalScrollBar.Value = 0;
             }
 
@@ -869,22 +889,25 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Set position of cursor
         /// </summary>
-        public void SetPosition(long position)
+        public void SetPosition(long position, long byteLenght)
         {
             //TODO : selected hexbytecontrol
             SelectionStart = position;
-            SelectionStop = position;
-
-
+            SelectionStop = position + byteLenght - 1;
+            
             if (_file != null)
-            {
+            {                
                 VerticalScrollBar.Value = position / _bytePerLine;
             }
             else
                 VerticalScrollBar.Value = 0;
 
-            UpdateSelectionHexDataPanel();
-            UpdateSelectionStringDataPanel();
+            RefreshView(true);            
+        }
+
+        public void SetPosition(long position)
+        {
+            SetPosition(position, 0);
         }
 
         /// <summary>
@@ -892,7 +915,29 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public void SetPosition(string HexLiteralPosition)
         {
-            SetPosition(Converters.HexLiteralToLong(HexLiteralPosition));
+            try
+            {
+                SetPosition(Converters.HexLiteralToLong(HexLiteralPosition));
+            }
+            catch
+            {
+                throw new InvalidCastException("Invalid hexa string");
+            }
+        }
+
+        /// <summary>
+        /// Set position of cursor
+        /// </summary>
+        public void SetPosition(string HexLiteralPosition, long byteLenght)
+        {
+            try
+            {
+                SetPosition(Converters.HexLiteralToLong(HexLiteralPosition), byteLenght);
+            }
+            catch
+            {
+                throw new InvalidCastException("Invalid hexa string");
+            }
         }
 
         /// <summary>

@@ -133,7 +133,7 @@ namespace WPFHexaEditor.Control
             {
                 FirstHexChar.Foreground = Brushes.White;
                 SecondHexChar.Foreground = Brushes.White;
-                this.Background = Brushes.Blue;
+                this.Background = (SolidColorBrush)TryFindResource("FirstColor"); // Brushes.Blue;
             }
             else if (_isByteModified)
             {

@@ -455,7 +455,7 @@ namespace WPFHexaEditor.Control
 
                             byteControl.BytePositionInFile = _file.Position;
                             byteControl.ReadOnlyMode = _readOnlyMode;
-                            byteControl.MouseSelection += ByteControl_Selected;
+                            byteControl.MouseSelection += Control_Selected;
                             byteControl.Click += Control_Click;
                             byteControl.MoveNext += Control_MoveNext;
                             byteControl.ByteModified += Control_ByteModified;
@@ -655,11 +655,20 @@ namespace WPFHexaEditor.Control
             }
         }
 
-        private void ByteControl_Selected(object sender, EventArgs e)
+        private void Control_Selected(object sender, EventArgs e)
         {
-            HexByteControl ctrl = sender as HexByteControl;
+            HexByteControl hbCtrl = sender as HexByteControl;
+            StringByteControl sbCtrl = sender as StringByteControl;
 
-            SelectionStop = ctrl.BytePositionInFile;
+            if (hbCtrl != null)
+            {
+                SelectionStop = hbCtrl.BytePositionInFile;
+            }
+
+            if (sbCtrl != null)
+            {
+                SelectionStop = sbCtrl.BytePositionInFile;
+            }
 
             UpdateSelectionHexDataPanel();
             UpdateSelectionStringDataPanel();
@@ -697,6 +706,7 @@ namespace WPFHexaEditor.Control
                             sbCtrl.StringByteModified += Control_ByteModified;
                             sbCtrl.ReadOnlyMode = _readOnlyMode;
                             sbCtrl.MoveNext += Control_MoveNext;
+                            sbCtrl.MouseSelection += Control_Selected;
                             sbCtrl.Click += Control_Click;
                             sbCtrl.BytePositionInFile = _file.Position;
                             sbCtrl.Byte = (byte)_file.ReadByte();
@@ -751,7 +761,7 @@ namespace WPFHexaEditor.Control
                 StringDataStackPanel.Children.Clear();
             }
         }
-
+        
         private void Control_MoveNext(object sender, EventArgs e)
         {
             HexByteControl hexByteCtrl = sender as HexByteControl;

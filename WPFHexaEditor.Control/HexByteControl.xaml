@@ -9,22 +9,12 @@
              MouseEnter="UserControl_MouseEnter" MouseLeave="UserControl_MouseLeave"
              Width="25" Height="22" Focusable="True"> 
     <UserControl.Resources>
-        <ToolTip x:Key="ByteToolTip">
-            <StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <Label Content="Byte value" FontWeight="Bold" Width="120"/>
-                    <Label Content="{Binding Byte, UpdateSourceTrigger=PropertyChanged}"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <Label Content="Hexadecimal value" FontWeight="Bold" Width="120"/>
-                    <Label Content="{Binding HexString, UpdateSourceTrigger=PropertyChanged}"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <Label Content="File position (byte)" FontWeight="Bold" Width="120"/>
-                    <Label Content="{Binding BytePositionInFile, UpdateSourceTrigger=PropertyChanged}"/>
-                </StackPanel>
-            </StackPanel>            
-        </ToolTip>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="./ResourceDictionary/BrushesDictionary.xaml"/>
+                <ResourceDictionary Source="./ResourceDictionary/ToolTipDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
     
     <Grid ToolTip="{Binding Source={StaticResource ByteToolTip}}">

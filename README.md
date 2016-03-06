@@ -1,7 +1,7 @@
 # WPF Hexadecimal Editor control
 A WPF Hexadecimal editor for view/modify file.
 
-![example](WPFHexEditorControlSample.png?raw=true)
+![example](WPFHexEditorControlSample2.png?raw=true)
 
 ##NUGET
 Not for now. When control is more powerful ;)
@@ -25,5 +25,5 @@ xmlns:Control="clr-namespace:WPFHexaEditor.Control;assembly=WPFHexaEditor.Contro
 Insert the control like this:
 
 ```xaml
-<currency:CurrencyTextBox />
+<Control:HexaEditor />
 ```

@@ -53,6 +53,15 @@ namespace WPFHexaEditor.Control.Core
                 sB = "0" + sB;
             return sB;
         }
+
+        /// <summary>
+        /// Convert byte to ASCII string
+        /// </summary>
+        public static string BytesToASCIIString(byte[] buffer)
+        {
+            return Encoding.ASCII.GetString(buffer, 0, buffer.Length);
+        }
+
         /// <summary>
         /// Converts the hex string to an byte array. The hex string must be separated by a space char ' '. If there is any invalid hex information in the string the result will be null.
         /// </summary>

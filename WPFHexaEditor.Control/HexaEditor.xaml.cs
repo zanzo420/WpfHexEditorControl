@@ -1106,7 +1106,7 @@ namespace WPFHexaEditor.Control
             //set position
             _file.Position = byteStartPosition;
 
-            _file.ReadAsync(buffer, 0, Convert.ToInt32(SelectionLenght));
+            _file.Read(buffer, 0, Convert.ToInt32(SelectionLenght));
 
             return buffer;
         }
@@ -1135,7 +1135,7 @@ namespace WPFHexaEditor.Control
             switch (copypastemode)
             {
                 case CopyPasteMode.ASCIIString:
-                    sBuffer = System.Text.Encoding.ASCII.GetString(buffer, 0, buffer.Length);
+                    sBuffer = Converters.BytesToASCIIString(buffer);
                     da.SetText(sBuffer, TextDataFormat.Text);
                     break;
                 case CopyPasteMode.HexaString:
@@ -1143,7 +1143,7 @@ namespace WPFHexaEditor.Control
                     da.SetText(sBuffer, TextDataFormat.Text);
                     break;
                 case CopyPasteMode.Byte:
-                    break;
+                    throw new NotImplementedException();
             }
             
             //set memorystream (BinaryData) clipboard data

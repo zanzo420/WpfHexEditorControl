@@ -117,9 +117,12 @@ namespace WPFHexaEditorExample
         private void CopyButton_Click(object sender, RoutedEventArgs e)
         {
             if (HexEdit.CanCopy())
-                HexEdit.CopyToClipboard(WPFHexaEditor.Control.Core.CopyPasteMode.HexaString);
+            {
+                HexEdit.CopyToClipboard();
+                MessageBox.Show(Clipboard.GetText());
+            }
             else
-                MessageBox.Show("Can't copy right now !");
+                MessageBox.Show("Can't copy right now !");            
         }
     }
 }

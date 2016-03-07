@@ -10,7 +10,11 @@
         Background="WhiteSmoke"
         Title="TestWindow - WPF HexaEditor Control (Alpha)" Height="518" Width="850">
     <Grid >
-        <Control:HexaEditor x:Name="HexEdit" Margin="10,147,10,10" Height="Auto" Width="Auto" StatusBarVisibility="False" SelectionStartChanged="HexEdit_SelectionStartChanged" SelectionStopChanged="HexEdit_SelectionStopChanged"/>
+        <Control:HexaEditor x:Name="HexEdit" Margin="10,147,10,10" Height="Auto" Width="Auto" 
+                            StatusBarVisibility="False" 
+                            SelectionStartChanged="HexEdit_SelectionStartChanged" 
+                            SelectionStopChanged="HexEdit_SelectionStopChanged"
+                            SelectionLenghtChanged="HexEdit_SelectionLenghtChanged"/>
         <Button x:Name="SetPositionButton" Margin="0,35,10,0" VerticalAlignment="Top" Click="SetPositionButton_Click" Height="45" HorizontalAlignment="Right" Width="150">
             <TextBlock TextWrapping="Wrap"><Run Text="Test : SetPosition"/><LineBreak/><Run Text="0x20FF (lenght 10 byte)"/></TextBlock>
         </Button>
@@ -25,11 +29,14 @@
         <Button x:Name="ScrollVisibilityButton" Content="ScrollVisibility" HorizontalAlignment="Left" Margin="170,35,0,0" VerticalAlignment="Top" Width="103" Click="ScrollVisibilityButton_Click"/>
         <Button x:Name="StringDataVisibilityButton" Content="StringDataVisibility" HorizontalAlignment="Left" Margin="170,85,0,0" VerticalAlignment="Top" Width="103" Click="StringDataVisibilityButton_Click"/>
         <Button x:Name="StatusBarVisibilityButton" Content="StatusBarVisibility" HorizontalAlignment="Left" Margin="170,110,0,0" VerticalAlignment="Top" Width="103" Click="StatusBarVisibilityButton_Click"/>
-        <Grid Margin="10,85,687,309">
-            <Label x:Name="SelectionStartLabel" Content="#SelTart" HorizontalAlignment="Left" Margin="88,0,0,0" VerticalAlignment="Top"/>
-            <Label x:Name="SelectionStopLabel" Content="#SelStop" HorizontalAlignment="Left" Margin="88,31,0,0" VerticalAlignment="Top"/>
+        <Grid Margin="495,10,0,0" Height="93" VerticalAlignment="Top" HorizontalAlignment="Left" Width="182">
+            <Label x:Name="SelectionStartLabel" Content="#SelTart" HorizontalAlignment="Left" Margin="107,0,0,0" VerticalAlignment="Top"/>
+            <Label x:Name="SelectionStopLabel" Content="#SelStop" HorizontalAlignment="Left" Margin="107,31,0,0" VerticalAlignment="Top"/>
             <Label x:Name="label" Content="SelectionStart" HorizontalAlignment="Left" VerticalAlignment="Top"/>
             <Label x:Name="label1" Content="SelectionStop" HorizontalAlignment="Left" Margin="1,31,0,0" VerticalAlignment="Top"/>
+            <Label x:Name="SelectionLenghtLabel" Content="#SelLenght" HorizontalAlignment="Left" Margin="107,62,0,0" VerticalAlignment="Top"/>
+            <Label x:Name="label1_Copy" Content="SelectionLenght" HorizontalAlignment="Left" Margin="1,62,0,0" VerticalAlignment="Top"/>
         </Grid>
+        <Button x:Name="CopyButton" Content="CopyToClipboard" HorizontalAlignment="Left" Margin="278,10,0,0" VerticalAlignment="Top" Width="100" Click="CopyButton_Click"/>
     </Grid>
 </Window>

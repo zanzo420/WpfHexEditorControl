@@ -108,5 +108,18 @@ namespace WPFHexaEditorExample
         {
             SelectionStopLabel.Content = HexEdit.SelectionStop;
         }
+
+        private void HexEdit_SelectionLenghtChanged(object sender, EventArgs e)
+        {
+            SelectionLenghtLabel.Content = HexEdit.SelectionLenght;
+        }
+
+        private void CopyButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (HexEdit.CanCopy())
+                HexEdit.CopyToClipboard(WPFHexaEditor.Control.Core.CopyPasteMode.HexaString);
+            else
+                MessageBox.Show("Can't copy right now !");
+        }
     }
 }

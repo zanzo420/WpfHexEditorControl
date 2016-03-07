@@ -25,4 +25,14 @@ namespace WPFHexaEditor.Control.Core
         HexByteData,
         StringByteData
     }
+
+    /// <summary>
+    /// Mode of Copy/Paste
+    /// </summary>
+    public enum CopyPasteMode
+    {
+        Byte,
+        HexaString,
+        ASCIIString
+    }
 }

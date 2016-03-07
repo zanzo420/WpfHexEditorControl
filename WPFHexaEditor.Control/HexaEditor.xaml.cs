@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -39,6 +40,7 @@ namespace WPFHexaEditor.Control
         private bool _isHeaderVisible = true;
         private bool _isShowStatusBar = false;
         
+        
         /// <summary>
         /// ByteModified list for save/modify data
         /// </summary>
@@ -46,6 +48,8 @@ namespace WPFHexaEditor.Control
 
         public event EventHandler SelectionStartChanged;
         public event EventHandler SelectionStopChanged;
+        public event EventHandler SelectionLenghtChanged;
+        public event EventHandler DataCopied;
 
         public HexaEditor()
         {
@@ -168,6 +172,9 @@ namespace WPFHexaEditor.Control
 
                 if (SelectionStartChanged != null)
                     SelectionStartChanged(this, new EventArgs());
+                
+                if (SelectionLenghtChanged != null)
+                    SelectionLenghtChanged(this, new EventArgs());
             }
         }
 
@@ -244,6 +251,9 @@ namespace WPFHexaEditor.Control
                 
                 if (SelectionStopChanged != null)
                     SelectionStopChanged(this, new EventArgs());
+
+                if (SelectionLenghtChanged != null)
+                    SelectionLenghtChanged(this, new EventArgs());
             }
         }
         
@@ -862,7 +872,7 @@ namespace WPFHexaEditor.Control
                     //LineInfo
                     
                     long firstLineByte = ((long)VerticalScrollBar.Value + i) * _bytePerLine; 
-                    string info = "0x" +  firstLineByte.ToString(Constant.HexLineInfoStringFormat, Thread.CurrentThread.CurrentCulture);
+                    string info = "0x" +  firstLineByte.ToString(Constant.HexLineInfoStringFormat, CultureInfo.InvariantCulture);
 
                     if (firstLineByte < _file.Length)
                     {
@@ -1040,6 +1050,110 @@ namespace WPFHexaEditor.Control
         {
             if (e.LeftButton == MouseButtonState.Pressed)
                 VerticalScrollBar.Value--;            
+        }
+
+        /// <summary>
+        /// Get the lenght of byte are selected (base 1)
+        /// </summary>
+        public long SelectionLenght
+        {
+            get
+            {
+                if (SelectionStop == -1 || SelectionStop == -1)
+                    return 0;
+                else if (SelectionStart == SelectionStop)
+                    return 1;
+                else if (SelectionStart > SelectionStop)
+                    return SelectionStart - SelectionStop + 1;
+                else
+                    return SelectionStop - SelectionStart + 1;
+            }
+        }
+
+        /// <summary>
+		/// Return true if Copy method could be invoked.
+		/// </summary>
+		public bool CanCopy()
+        {
+
+            if (SelectionLenght < 1 || _file == null)
+                return false;
+
+            return true;
+        }
+
+        /// <summary>
+		/// Copies the current selection in the hex box to the Clipboard.
+		/// </summary>
+        private byte[] GetCopyData()
+        {
+            //Validation
+            if (!CanCopy()) return new byte[0];
+            if (SelectionStop == -1 || SelectionStop == -1) return new byte[0];
+
+            //Variable
+            long byteStartPosition = -1;            
+            byte[] buffer = new byte[SelectionLenght];
+
+            //Set start position
+            if (SelectionStart == SelectionStop)
+                byteStartPosition = SelectionStart;
+            else if (SelectionStart > SelectionStop)
+                byteStartPosition = SelectionStop;
+            else
+                byteStartPosition = SelectionStart;
+
+            //set position
+            _file.Position = byteStartPosition;
+
+            _file.ReadAsync(buffer, 0, Convert.ToInt32(SelectionLenght));
+
+            return buffer;
+        }
+
+        /// <summary>
+        /// Copy to clipboard with default CopyPasteMode.ASCIIString
+        /// </summary>
+        public void CopyToClipboard()
+        {
+            CopyToClipboard(CopyPasteMode.ASCIIString);
+        }
+
+        /// <summary>
+        /// Copy to clipboard
+        /// </summary>        
+        public void CopyToClipboard(CopyPasteMode copypastemode)
+        {
+            if (!CanCopy()) return;
+
+            //Variables
+            byte[] buffer = GetCopyData();
+            string sBuffer = "";
+
+            DataObject da = new DataObject();
+
+            switch (copypastemode)
+            {
+                case CopyPasteMode.ASCIIString:
+                    sBuffer = System.Text.Encoding.ASCII.GetString(buffer, 0, buffer.Length);
+                    da.SetText(sBuffer, TextDataFormat.Text);
+                    break;
+                case CopyPasteMode.HexaString:
+                    sBuffer = Converters.ByteToHex(buffer);
+                    da.SetText(sBuffer, TextDataFormat.Text);
+                    break;
+                case CopyPasteMode.Byte:
+                    break;
+            }
+            
+            //set memorystream (BinaryData) clipboard data
+            System.IO.MemoryStream ms = new System.IO.MemoryStream(buffer, 0, buffer.Length, false, true);
+            da.SetData("BinaryData", ms);
+
+            Clipboard.SetDataObject(da, true);
+
+            if (DataCopied != null)
+                DataCopied(this, new EventArgs());
         }
     }
 }

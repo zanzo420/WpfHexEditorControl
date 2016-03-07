@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace WPFHexaEditor.Control.Core
@@ -47,7 +48,7 @@ namespace WPFHexaEditor.Control.Core
         /// </summary>
         public static string ByteToHex(byte b)
         {
-            string sB = b.ToString(Constant.HexStringFormat, System.Threading.Thread.CurrentThread.CurrentCulture);
+            string sB = b.ToString(Constant.HexStringFormat, CultureInfo.InvariantCulture );//System.Threading.Thread.CurrentThread.CurrentCulture);
             if (sB.Length == 1)
                 sB = "0" + sB;
             return sB;
@@ -79,7 +80,8 @@ namespace WPFHexaEditor.Control.Core
 
         public static bool HexToByte(string hex, out byte b)
         {
-            bool isByte = byte.TryParse(hex, System.Globalization.NumberStyles.HexNumber, System.Threading.Thread.CurrentThread.CurrentCulture, out b);
+            //bool isByte = byte.TryParse(hex, System.Globalization.NumberStyles.HexNumber, System.Threading.Thread.CurrentThread.CurrentCulture, out b);
+            bool isByte = byte.TryParse(hex, System.Globalization.NumberStyles.HexNumber, CultureInfo.InvariantCulture, out b);
             return isByte;
         }
 

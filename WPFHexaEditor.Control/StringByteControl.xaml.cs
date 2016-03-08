@@ -50,13 +50,24 @@ namespace WPFHexaEditor.Control
             set
             {
                 this._byte = value;
-
-                UpdateLabelFromByte();
-
+                
                 if (IsByteModified && InternalChange == false)
                     if (StringByteModified != null)
                         StringByteModified(this, new EventArgs());
+
+                UpdateLabelFromByte();
+                UpdateBinding();
             }
+        }
+
+        /// <summary>
+        /// Updates somes bindings
+        /// TEMPS METHOD
+        /// TODO: Remplace by dependency property
+        /// </summary>
+        private void UpdateBinding()
+        {
+            BindingOperations.GetBindingExpression(this, UserControl.ToolTipProperty);
         }
 
 
@@ -190,14 +201,12 @@ namespace WPFHexaEditor.Control
                     }
             }
         }
-    
-
 
         private void UserControl_MouseEnter(object sender, MouseEventArgs e)
         {
             if (_byte != null)
                 if (!IsByteModified && !_isSelected)
-                    this.Background = Brushes.SlateGray;
+                    this.Background = (SolidColorBrush)TryFindResource("MouseOverColor");
 
             if (e.LeftButton == MouseButtonState.Pressed)
                 if (MouseSelection != null)

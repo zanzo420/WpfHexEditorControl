@@ -56,13 +56,24 @@ namespace WPFHexaEditor.Control
             set
             {
                 this._byte = value;
-
-                UpdateLabelFromByte();
                 
                 if (IsByteModified && InternalChange == false)
                     if (ByteModified != null)
                         ByteModified(this, new EventArgs());
+
+                UpdateLabelFromByte();
+                UpdateBinding();
             }
+        }
+
+        /// <summary>
+        /// Updates somes bindings
+        /// TEMPS METHOD
+        /// TODO: Remplace by dependency property
+        /// </summary>
+        private void UpdateBinding()
+        {
+            BindingOperations.GetBindingExpression(this, UserControl.ToolTipProperty);
         }
 
         public long BytePositionInFile { get; set; } = -1;
@@ -200,7 +211,6 @@ namespace WPFHexaEditor.Control
                         case KeyDownLabel.FirstChar:
                             FirstHexChar.Content = key;
                             _keyDownLabel = KeyDownLabel.SecondChar;
-
                             IsByteModified = true;
                             Byte = Converters.HexToByte(FirstHexChar.Content.ToString() + SecondHexChar.Content.ToString())[0];
                             break;
@@ -216,7 +226,7 @@ namespace WPFHexaEditor.Control
                                 MoveNext(this, new EventArgs());
                             break;
                     }
-                }
+                }            
         }
 
         private void UserControl_MouseEnter(object sender, MouseEventArgs e)

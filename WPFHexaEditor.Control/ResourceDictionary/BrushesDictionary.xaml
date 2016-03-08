@@ -5,5 +5,5 @@
     <SolidColorBrush x:Key="FirstColor" Color="#CC0014FF"/>
     <SolidColorBrush x:Key="SecondColor" Color="#CC0078FF"/>
     <SolidColorBrush x:Key="ByteModifiedColor" Color="#CC68717C"/>
-    <SolidColorBrush x:Key="MouseOverColor" Color="#FF5F636C"/>
+    <SolidColorBrush x:Key="MouseOverColor" Color="#B20081FF"/>
 </ResourceDictionary>

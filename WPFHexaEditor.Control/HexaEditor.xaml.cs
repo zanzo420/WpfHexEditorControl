@@ -38,8 +38,7 @@ namespace WPFHexaEditor.Control
         private bool _isStringDataVisible = true;
         private bool _isVerticalScrollBarVisible = true;
         private bool _isHeaderVisible = true;
-        private bool _isShowStatusBar = false;
-        
+        private bool _isShowStatusBar = false;        
         
         /// <summary>
         /// ByteModified list for save/modify data
@@ -93,10 +92,12 @@ namespace WPFHexaEditor.Control
 
                     RefreshView(true);
 
+                    UnSelectAll();
+                    
                     UpdateSelectionColorMode(FirstColor.HexByteData);
 
                     if (readOnlyMode)
-                        ReadOnlyMode = true;
+                        ReadOnlyMode = true;                    
                 }
                 else
                 {

@@ -35,4 +35,16 @@ namespace WPFHexaEditor.Control.Core
         HexaString,
         ASCIIString
     }
+
+    /// <summary>
+    /// Used for check label are selected et next label to select...
+    /// </summary>
+    public enum KeyDownLabel
+    {
+        FirstChar,
+        SecondChar,
+        NextPosition
+    }
+
+
 }

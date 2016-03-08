@@ -38,8 +38,33 @@ namespace WPFHexaEditor.Control
             DataContext = this;
         }
 
-        public long BytePositionInFile { get; set; } = -1;
-        public bool StringByteFirstSelected { get; set; } = true;
+        #region DependencyProperty
+        /// <summary>
+        /// Position in file
+        /// </summary>
+        public long BytePositionInFile
+        {
+            get { return (long)GetValue(BytePositionInFileProperty); }
+            set { SetValue(BytePositionInFileProperty, value); }
+        }
+
+        public static readonly DependencyProperty BytePositionInFileProperty =
+            DependencyProperty.Register("BytePositionInFile", typeof(long), typeof(StringByteControl), new PropertyMetadata(-1L));
+
+        /// <summary>
+        /// Used for selection coloring
+        /// </summary>
+        public bool StringByteFirstSelected
+        {
+            get { return (bool)GetValue(StringByteFirstSelectedProperty); }
+            set { SetValue(StringByteFirstSelectedProperty, value); }
+        }
+
+        public static readonly DependencyProperty StringByteFirstSelectedProperty =
+            DependencyProperty.Register("StringByteFirstSelected", typeof(bool), typeof(StringByteControl), new PropertyMetadata(true));
+
+
+        #endregion
 
         public byte? Byte
         {

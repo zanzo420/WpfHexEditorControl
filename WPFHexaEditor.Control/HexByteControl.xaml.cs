@@ -32,21 +32,43 @@ namespace WPFHexaEditor.Control
         public event EventHandler MouseSelection;
         public event EventHandler Click;
         public event EventHandler MoveNext;
-
-        private enum KeyDownLabel
-        {
-            FirstChar,
-            SecondChar,
-            NextPosition
-        }
-
+        
         public HexByteControl()
         {
             InitializeComponent();
             
             DataContext = this;
         }
-        
+
+        #region DependencyProperty
+
+        /// <summary>
+        /// Position in file
+        /// </summary>
+        public long BytePositionInFile
+        {
+            get { return (long)GetValue(BytePositionInFileProperty); }
+            set { SetValue(BytePositionInFileProperty, value); }
+        }
+
+        public static readonly DependencyProperty BytePositionInFileProperty =
+            DependencyProperty.Register("BytePositionInFile", typeof(long), typeof(HexByteControl), new PropertyMetadata(-1L));
+                
+        /// <summary>
+        /// Used for selection coloring
+        /// </summary>
+        public bool HexByteFirstSelected
+        {
+            get { return (bool)GetValue(HexByteFirstSelectedProperty); }
+            set { SetValue(HexByteFirstSelectedProperty, value); }
+        }
+
+        public static readonly DependencyProperty HexByteFirstSelectedProperty =
+            DependencyProperty.Register("HexByteFirstSelected", typeof(bool), typeof(HexByteControl), new PropertyMetadata(true));
+
+
+        #endregion
+
         public byte? Byte
         {
             get
@@ -75,10 +97,7 @@ namespace WPFHexaEditor.Control
         {
             BindingOperations.GetBindingExpression(this, UserControl.ToolTipProperty);
         }
-
-        public long BytePositionInFile { get; set; } = -1;
-        public bool HexByteFirstSelected { get; set; } = true;
-
+        
         public bool IsByteModified
         {
             get

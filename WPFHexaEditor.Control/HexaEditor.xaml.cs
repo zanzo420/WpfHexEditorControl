@@ -761,11 +761,7 @@ namespace WPFHexaEditor.Control
                 {
                     int stackIndex = 0;
                     foreach (Label infolabel in LinesInfoStackPanel.Children)
-                    {
-                        StackPanel dataLineStack = new StackPanel();
-                        dataLineStack.Height = _lineInfoHeight;
-                        dataLineStack.Orientation = Orientation.Horizontal;
-
+                    {                        
                         long position = Converters.HexLiteralToLong(infolabel.Content.ToString());
 
                         foreach (StringByteControl sbCtrl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
@@ -784,15 +780,14 @@ namespace WPFHexaEditor.Control
                             {
                                 sbCtrl.InternalChange = true;
                                 sbCtrl.Byte = (byte)_file.ReadByte();
-                                sbCtrl.BytePositionInFile = _file.Position;
+                                sbCtrl.BytePositionInFile = _file.Position - 1;
                                 sbCtrl.IsByteModified = false;
                                 sbCtrl.ReadOnlyMode = _readOnlyMode;
                                 sbCtrl.InternalChange = false;
                             }
                         }
                         
-                        stackIndex++;
-                        HexDataStackPanel.Children.Add(dataLineStack);
+                        stackIndex++;                        
                     }
                 }
             }

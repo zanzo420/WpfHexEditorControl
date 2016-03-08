@@ -21,7 +21,7 @@ namespace WPFHexaEditor.Control
     /// </summary>
     public partial class StringByteControl : UserControl
     {
-        private byte? _byte = null;
+        //private byte? _byte = null;
         private bool _isSelected = false;
         private bool _isByteModified = false;
         private bool _readOnlyMode;
@@ -63,38 +63,49 @@ namespace WPFHexaEditor.Control
         public static readonly DependencyProperty StringByteFirstSelectedProperty =
             DependencyProperty.Register("StringByteFirstSelected", typeof(bool), typeof(StringByteControl), new PropertyMetadata(true));
 
-
-        #endregion
-
+        /// <summary>
+        /// Byte used for this instance
+        /// </summary>
         public byte? Byte
         {
-            get
-            {
-                return this._byte;
-            }
-            set
-            {
-                this._byte = value;
-                
-                if (IsByteModified && InternalChange == false)
-                    if (StringByteModified != null)
-                        StringByteModified(this, new EventArgs());
-
-                UpdateLabelFromByte();
-                UpdateBinding();
-            }
+            get { return (byte?)GetValue(ByteProperty); }
+            set { SetValue(ByteProperty, value); }
         }
 
-        /// <summary>
-        /// Updates somes bindings
-        /// TEMPS METHOD
-        /// TODO: Remplace by dependency property
-        /// </summary>
-        private void UpdateBinding()
+        public static readonly DependencyProperty ByteProperty =
+            DependencyProperty.Register("Byte", typeof(byte?), typeof(StringByteControl),
+                new FrameworkPropertyMetadata(null, new PropertyChangedCallback(Byte_PropertyChangedCallBack)));
+
+        private static void Byte_PropertyChangedCallBack(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            BindingOperations.GetBindingExpression(this, UserControl.ToolTipProperty);
-        }
+            StringByteControl ctrl = d as StringByteControl;
 
+            if (ctrl.IsByteModified && ctrl.InternalChange == false)
+                if (ctrl.StringByteModified != null)
+                    ctrl.StringByteModified(ctrl, new EventArgs());
+
+            ctrl.UpdateLabelFromByte();
+        }
+        #endregion
+
+        //public byte? ByteOLD
+        //{
+        //    get
+        //    {
+        //        return this._byte;
+        //    }
+        //    set
+        //    {
+        //        this._byte = value;
+
+        //        if (IsByteModified && InternalChange == false)
+        //            if (StringByteModified != null)
+        //                StringByteModified(this, new EventArgs());
+
+        //        UpdateLabelFromByte();
+        //        UpdateBinding();
+        //    }
+        //}
 
         /// <summary>
         /// Get the hex string representation of this byte
@@ -115,9 +126,9 @@ namespace WPFHexaEditor.Control
         /// </summary>
         private void UpdateLabelFromByte()
         {
-            if (_byte != null)
+            if (Byte != null)
             {
-                StringByteLabel.Content = Converters.ByteToChar(_byte.Value);
+                StringByteLabel.Content = Converters.ByteToChar(Byte.Value);
             }
             else
             {
@@ -149,7 +160,7 @@ namespace WPFHexaEditor.Control
             {
                 this.FontWeight = (FontWeight)TryFindResource("NormalFontWeight");
                 StringByteLabel.Foreground = Brushes.White;
-                
+
                 if (StringByteFirstSelected)
                     this.Background = (SolidColorBrush)TryFindResource("FirstColor");
                 else
@@ -159,13 +170,13 @@ namespace WPFHexaEditor.Control
             {
                 this.FontWeight = (FontWeight)TryFindResource("BoldFontWeight");
                 this.Background = (SolidColorBrush)TryFindResource("ByteModifiedColor");
-                StringByteLabel.Foreground = Brushes.Black;                
+                StringByteLabel.Foreground = Brushes.Black;
             }
             else
             {
                 this.FontWeight = (FontWeight)TryFindResource("NormalFontWeight");
                 this.Background = Brushes.Transparent;
-                StringByteLabel.Foreground = Brushes.Black;                
+                StringByteLabel.Foreground = Brushes.Black;
             }
         }
 
@@ -229,7 +240,7 @@ namespace WPFHexaEditor.Control
 
         private void UserControl_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (_byte != null)
+            if (Byte != null)
                 if (!IsByteModified && !_isSelected)
                     this.Background = (SolidColorBrush)TryFindResource("MouseOverColor");
 
@@ -240,7 +251,7 @@ namespace WPFHexaEditor.Control
 
         private void UserControl_MouseLeave(object sender, MouseEventArgs e)
         {
-            if (_byte != null)
+            if (Byte != null)
                 if (!IsByteModified && !_isSelected)
                     this.Background = Brushes.Transparent;
         }
@@ -254,6 +265,6 @@ namespace WPFHexaEditor.Control
                 if (Click != null)
                     Click(this, e);
             }
-        }        
+        }
     }
 }

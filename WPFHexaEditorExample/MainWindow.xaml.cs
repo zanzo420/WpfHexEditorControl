@@ -98,17 +98,7 @@ namespace WPFHexaEditorExample
         {
             HexEdit.StatusBarVisibility = !HexEdit.StatusBarVisibility;
         }
-
-        private void HexEdit_SelectionStartChanged(object sender, EventArgs e)
-        {
-            SelectionStartLabel.Content = HexEdit.SelectionStart;
-        }
-
-        private void HexEdit_SelectionStopChanged(object sender, EventArgs e)
-        {
-            SelectionStopLabel.Content = HexEdit.SelectionStop;
-        }
-
+        
         private void HexEdit_SelectionLenghtChanged(object sender, EventArgs e)
         {
             SelectionLenghtLabel.Content = HexEdit.SelectionLenght;

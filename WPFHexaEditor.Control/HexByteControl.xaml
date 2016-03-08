@@ -18,7 +18,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid ToolTip="{Binding Source={StaticResource ByteToolTip}}">
+    <Grid ToolTip="{Binding Source={StaticResource ByteToolTip}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
         <Label x:Name="FirstHexChar" Content="X" HorizontalAlignment="Left" Padding="0" Width="9" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" MouseDown="HexChar_MouseDown" Focusable="True"/>
         <Label x:Name="SecondHexChar" Content="X" Padding="0" VerticalContentAlignment="Center" Margin="9,0,0,0" MouseDown="HexChar_MouseDown" Focusable="True"/>
 

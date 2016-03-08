@@ -116,7 +116,7 @@ namespace WPFHexaEditor.Control
             {
                 _bytePerLine = value;
 
-                RefreshView(true);
+                RefreshView(true);                
             }
         }
 
@@ -152,69 +152,11 @@ namespace WPFHexaEditor.Control
         }
 
         /// <summary>
-        /// Index of position in file that the selection start
-        /// </summary>
-        public long SelectionStart
-        {
-            get
-            {
-                return _selectionStart;
-            }
-
-            set
-            {
-                if (_file == null)
-                    _selectionStart = -1;
-                else
-                    _selectionStart = value;
-                                                
-                UpdateSelection();
-                UpdateStatusPanel();
-
-                if (SelectionStartChanged != null)
-                    SelectionStartChanged(this, new EventArgs());
-                
-                if (SelectionLenghtChanged != null)
-                    SelectionLenghtChanged(this, new EventArgs());
-            }
-        }
-
-        /// <summary>
         /// Update de StatusPanel
         /// </summary>
         private void UpdateStatusPanel()
         {
             
-        }
-
-        /// <summary>
-        /// Reset selection to -1
-        /// </summary>
-        public void UnSelectAll()
-        {
-            SelectionStart = -1;
-            SelectionStop = -1;
-        }
-
-        /// <summary>
-        /// Select the entire file
-        /// If file are closed the selection will be set to -1
-        /// </summary>
-        public void SelectAll()
-        {
-
-            if (_file != null)
-            {
-                SelectionStart = 0;
-                SelectionStop = _file.Length;
-            }
-            else
-            {
-                SelectionStart = -1;
-                SelectionStop = -1;
-            }
-
-            UpdateSelection();
         }
 
         /// <summary>
@@ -225,39 +167,6 @@ namespace WPFHexaEditor.Control
             _byteModifiedList.Clear();
         }
 
-        /// <summary>
-        /// Index of position in file that the selection stop
-        /// </summary>
-        public long SelectionStop
-        {
-            get
-            {
-                return _selectionStop;
-            }
-
-            set
-            {
-                if (_file != null)
-                {
-                    if (value > _file.Length)
-                        _selectionStop = _file.Length;
-                    else
-                        _selectionStop = value;
-                }
-                else
-                    _selectionStop = value;
-                                
-                UpdateSelection();
-                UpdateStatusPanel();
-                
-                if (SelectionStopChanged != null)
-                    SelectionStopChanged(this, new EventArgs());
-
-                if (SelectionLenghtChanged != null)
-                    SelectionLenghtChanged(this, new EventArgs());
-            }
-        }
-        
         public bool HexDataVisibility
         {
             get
@@ -968,7 +877,7 @@ namespace WPFHexaEditor.Control
             else
                 VerticalScrollBar.Value = 0;
 
-            RefreshView(true);            
+            RefreshView(true);                      
         }
 
         public void SetPosition(long position)
@@ -1048,6 +957,125 @@ namespace WPFHexaEditor.Control
                 VerticalScrollBar.Value--;            
         }
 
+        #region Selection Property/Methods
+        /// <summary>
+        /// Set the start byte position of selection
+        /// </summary>
+        public long SelectionStart
+        {
+            get { return (long)GetValue(SelectionStartProperty); }
+            set { SetValue(SelectionStartProperty, value); }
+        }
+                
+        public static readonly DependencyProperty SelectionStartProperty =
+            DependencyProperty.Register("SelectionStart", typeof(long), typeof(HexaEditor),
+                new FrameworkPropertyMetadata(-1L, new PropertyChangedCallback(SelectionStart_ChangedCallBack),
+                    new CoerceValueCallback(SelectionStart_CoerceValueCallBack)));
+
+        private static object SelectionStart_CoerceValueCallBack(DependencyObject d, object baseValue)
+        {
+            HexaEditor ctrl = d as HexaEditor;
+            long value = (long)baseValue;
+
+            if (value < -1)
+                return -1;
+
+            if (ctrl._file == null)
+                return -1L;
+            else
+                return baseValue;
+        }
+
+        private static void SelectionStart_ChangedCallBack(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            HexaEditor ctrl = d as HexaEditor;
+            
+            ctrl.UpdateSelection();
+            ctrl.UpdateStatusPanel();
+
+            if (ctrl.SelectionStartChanged != null)
+                ctrl.SelectionStartChanged(ctrl, new EventArgs());
+
+            if (ctrl.SelectionLenghtChanged != null)
+                ctrl.SelectionLenghtChanged(ctrl, new EventArgs());
+        }
+        //////////////
+
+        /// <summary>
+        /// Set the start byte position of selection
+        /// </summary>
+        public long SelectionStop
+        {
+            get { return (long)GetValue(SelectionStopProperty); }
+            set { SetValue(SelectionStopProperty, value); }
+        }
+
+        public static readonly DependencyProperty SelectionStopProperty =
+            DependencyProperty.Register("SelectionStop", typeof(long), typeof(HexaEditor),
+                new FrameworkPropertyMetadata(-1L, new PropertyChangedCallback(SelectionStop_ChangedCallBack),
+                    new CoerceValueCallback(SelectionStop_CoerceValueCallBack)));
+
+        private static object SelectionStop_CoerceValueCallBack(DependencyObject d, object baseValue)
+        {
+            HexaEditor ctrl = d as HexaEditor;
+            long value = (long)baseValue;
+
+            if (value < -1)
+                return -1;
+
+            if (ctrl._file == null)
+                return -1L;
+
+            if (value > ctrl._file.Length)
+                return ctrl.FileName.Length;
+
+            return baseValue;            
+        }
+
+        private static void SelectionStop_ChangedCallBack(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            HexaEditor ctrl = d as HexaEditor;
+
+            ctrl.UpdateSelection();
+            ctrl.UpdateStatusPanel();
+
+            if (ctrl.SelectionStopChanged != null)
+                ctrl.SelectionStopChanged(ctrl, new EventArgs());
+
+            if (ctrl.SelectionLenghtChanged != null)
+                ctrl.SelectionLenghtChanged(ctrl, new EventArgs());            
+        }
+
+        /// <summary>
+        /// Reset selection to -1
+        /// </summary>
+        public void UnSelectAll()
+        {
+            SelectionStart = -1;
+            SelectionStop = -1;
+        }
+
+        /// <summary>
+        /// Select the entire file
+        /// If file are closed the selection will be set to -1
+        /// </summary>
+        public void SelectAll()
+        {
+            if (_file != null)
+            {
+                SelectionStart = 0;
+                SelectionStop = _file.Length;
+            }
+            else
+            {
+                SelectionStart = -1;
+                SelectionStop = -1;
+            }
+
+            UpdateSelection();
+        }
+                
+
         /// <summary>
         /// Get the lenght of byte are selected (base 1)
         /// </summary>
@@ -1065,11 +1093,14 @@ namespace WPFHexaEditor.Control
                     return SelectionStop - SelectionStart + 1;
             }
         }
+       
+        #endregion
 
+        #region Copy/Paste/Cut Methods
         /// <summary>
-		/// Return true if Copy method could be invoked.
-		/// </summary>
-		public bool CanCopy()
+        /// Return true if Copy method could be invoked.
+        /// </summary>
+        public bool CanCopy()
         {
 
             if (SelectionLenght < 1 || _file == null)
@@ -1151,5 +1182,7 @@ namespace WPFHexaEditor.Control
             if (DataCopied != null)
                 DataCopied(this, new EventArgs());
         }
+
+        #endregion
     }
 }

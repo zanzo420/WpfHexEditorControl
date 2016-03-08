@@ -21,8 +21,6 @@ namespace WPFHexaEditor.Control
     /// </summary>
     public partial class StringByteControl : UserControl
     {
-        //private byte? _byte = null;
-        private bool _isSelected = false;
         private bool _isByteModified = false;
         private bool _readOnlyMode;
 
@@ -86,27 +84,31 @@ namespace WPFHexaEditor.Control
 
             ctrl.UpdateLabelFromByte();
         }
+
+        /// <summary>
+        /// Get or set if control as selected
+        /// </summary>
+        public bool IsSelected
+        {
+            get { return (bool)GetValue(IsSelectedProperty); }
+            set { SetValue(IsSelectedProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsSelectedProperty =
+            DependencyProperty.Register("IsSelected", typeof(bool), typeof(StringByteControl), 
+                new FrameworkPropertyMetadata(false, new PropertyChangedCallback(IsSelected_PropertyChangedCallBack)));
+
+        private static void IsSelected_PropertyChangedCallBack(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            StringByteControl ctrl = d as StringByteControl;
+
+            ctrl.UpdateBackGround();
+        }
+
+
         #endregion
 
-        //public byte? ByteOLD
-        //{
-        //    get
-        //    {
-        //        return this._byte;
-        //    }
-        //    set
-        //    {
-        //        this._byte = value;
-
-        //        if (IsByteModified && InternalChange == false)
-        //            if (StringByteModified != null)
-        //                StringByteModified(this, new EventArgs());
-
-        //        UpdateLabelFromByte();
-        //        UpdateBinding();
-        //    }
-        //}
-
+        #region Standard property
         /// <summary>
         /// Get the hex string representation of this byte
         /// </summary>
@@ -120,6 +122,9 @@ namespace WPFHexaEditor.Control
                     return "";
             }
         }
+
+
+        #endregion
 
         /// <summary>
         /// Update control label from byte property
@@ -135,28 +140,13 @@ namespace WPFHexaEditor.Control
                 StringByteLabel.Content = "";
             }
         }
-
-        public bool IsSelected
-        {
-            get
-            {
-                return _isSelected;
-            }
-
-            set
-            {
-                _isSelected = value;
-
-                UpdateBackGround();
-            }
-        }
-
+        
         /// <summary>
         /// Update Background
         /// </summary>
         private void UpdateBackGround()
         {
-            if (_isSelected)
+            if (IsSelected)
             {
                 this.FontWeight = (FontWeight)TryFindResource("NormalFontWeight");
                 StringByteLabel.Foreground = Brushes.White;
@@ -241,7 +231,7 @@ namespace WPFHexaEditor.Control
         private void UserControl_MouseEnter(object sender, MouseEventArgs e)
         {
             if (Byte != null)
-                if (!IsByteModified && !_isSelected)
+                if (!IsByteModified && !IsSelected)
                     this.Background = (SolidColorBrush)TryFindResource("MouseOverColor");
 
             if (e.LeftButton == MouseButtonState.Pressed)
@@ -252,7 +242,7 @@ namespace WPFHexaEditor.Control
         private void UserControl_MouseLeave(object sender, MouseEventArgs e)
         {
             if (Byte != null)
-                if (!IsByteModified && !_isSelected)
+                if (!IsByteModified && !IsSelected)
                     this.Background = Brushes.Transparent;
         }
 

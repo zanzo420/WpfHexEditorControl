@@ -417,6 +417,8 @@ namespace WPFHexaEditor.Control
                             byteControl.Click += Control_Click;
                             byteControl.MoveNext += Control_MoveNext;
                             byteControl.ByteModified += Control_ByteModified;
+                            byteControl.MoveUp += Control_MoveUp;
+
                             byteControl.Byte = (byte)_file.ReadByte();
                             
                             dataLineStack.Children.Add(byteControl);                                                        
@@ -462,7 +464,29 @@ namespace WPFHexaEditor.Control
                 HexDataStackPanel.Children.Clear();
             }
         }
-            
+
+        private void Control_MoveUp(object sender, EventArgs e)
+        {
+            long test = SelectionStart - BytePerLine;
+
+            //TODO : Validation
+            if (Keyboard.Modifiers == ModifierKeys.Shift)
+            {
+                if (test > -1)
+                    SelectionStart -= BytePerLine;
+                else
+                    SelectionStart = 0;
+            }
+            else
+            {
+                if (test > -1)
+                {
+                    SelectionStart -= BytePerLine;
+                    SelectionStop -= BytePerLine;
+                }
+            }
+        }
+
         private void UpdateByteModified()
         {
             int stackIndex = 0;
@@ -658,6 +682,7 @@ namespace WPFHexaEditor.Control
                             sbCtrl.MouseSelection += Control_Selected;
                             sbCtrl.Click += Control_Click;
                             sbCtrl.BytePositionInFile = _file.Position;
+                            sbCtrl.MoveUp += Control_MoveUp;
                             sbCtrl.Byte = (byte)_file.ReadByte();
                                                         
                             dataLineStack.Children.Add(sbCtrl);
@@ -978,7 +1003,7 @@ namespace WPFHexaEditor.Control
             long value = (long)baseValue;
 
             if (value < -1)
-                return -1;
+                return -1L;
 
             if (ctrl._file == null)
                 return -1L;
@@ -999,8 +1024,7 @@ namespace WPFHexaEditor.Control
             if (ctrl.SelectionLenghtChanged != null)
                 ctrl.SelectionLenghtChanged(ctrl, new EventArgs());
         }
-        //////////////
-
+        
         /// <summary>
         /// Set the start byte position of selection
         /// </summary>
@@ -1021,7 +1045,7 @@ namespace WPFHexaEditor.Control
             long value = (long)baseValue;
 
             if (value < -1)
-                return -1;
+                return -1L;
 
             if (ctrl._file == null)
                 return -1L;

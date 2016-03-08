@@ -31,7 +31,11 @@ namespace WPFHexaEditor.Control
         public event EventHandler MouseSelection;
         public event EventHandler Click;
         public event EventHandler MoveNext;
-        
+        public event EventHandler MoveRight;
+        public event EventHandler MoveLeft;
+        public event EventHandler MoveUp;
+        public event EventHandler MoveDown;
+
         public HexByteControl()
         {
             InitializeComponent();
@@ -208,6 +212,15 @@ namespace WPFHexaEditor.Control
 
         private void UserControl_KeyDown(object sender, KeyEventArgs e)
         {
+            if (KeyValidator.IsUpKey(e.Key))
+            {
+                e.Handled = true;
+                if (MoveUp != null)
+                    MoveUp(this, new EventArgs());
+            }
+
+
+
             if (!ReadOnlyMode)
                 if (KeyValidator.IsHexKey(e.Key))
                 {

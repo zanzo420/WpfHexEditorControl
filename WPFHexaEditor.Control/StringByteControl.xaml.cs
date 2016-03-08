@@ -28,6 +28,10 @@ namespace WPFHexaEditor.Control
         public event EventHandler MouseSelection;
         public event EventHandler StringByteModified;
         public event EventHandler MoveNext;
+        public event EventHandler MoveRight;
+        public event EventHandler MoveLeft;
+        public event EventHandler MoveUp;
+        public event EventHandler MoveDown;
 
         public StringByteControl()
         {
@@ -104,8 +108,6 @@ namespace WPFHexaEditor.Control
 
             ctrl.UpdateBackGround();
         }
-
-
         #endregion
 
         #region Standard property
@@ -122,8 +124,6 @@ namespace WPFHexaEditor.Control
                     return "";
             }
         }
-
-
         #endregion
 
         /// <summary>
@@ -200,6 +200,14 @@ namespace WPFHexaEditor.Control
 
         private void UserControl_KeyDown(object sender, KeyEventArgs e)
         {
+            if (KeyValidator.IsUpKey(e.Key))
+            {
+                e.Handled = true;
+                if (MoveUp != null)
+                    MoveUp(this, new EventArgs());
+            }
+
+
             if (!ReadOnlyMode)
             {
                 //TODO : MAKE BETTER KEYDETECTION AND EXPORT IN KEYVALIDATOR

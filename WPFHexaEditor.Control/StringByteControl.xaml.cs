@@ -205,6 +205,8 @@ namespace WPFHexaEditor.Control
                 e.Handled = true;
                 if (MoveUp != null)
                     MoveUp(this, new EventArgs());
+
+                return;
             }
 
 

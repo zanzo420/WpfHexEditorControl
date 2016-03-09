@@ -221,8 +221,6 @@ namespace WPFHexaEditor.Control
                 return;
             }
 
-
-
             if (!ReadOnlyMode)
                 if (KeyValidator.IsHexKey(e.Key))
                 {

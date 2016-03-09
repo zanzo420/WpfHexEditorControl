@@ -467,8 +467,11 @@ namespace WPFHexaEditor.Control
 
         private void Control_MoveUp(object sender, EventArgs e)
         {
-            long test = SelectionStart - BytePerLine;
+            HexByteControl hbCtrl = sender as HexByteControl;
+            StringByteControl sbCtrl = sender as StringByteControl;
 
+            long test = SelectionStart - BytePerLine;
+            
             //TODO : Validation
             if (Keyboard.Modifiers == ModifierKeys.Shift)
             {
@@ -479,12 +482,27 @@ namespace WPFHexaEditor.Control
             }
             else
             {
+
+                if (SelectionStart > SelectionStop)
+                    SelectionStart = SelectionStop;
+                else
+                    SelectionStop = SelectionStart;
+
                 if (test > -1)
                 {
                     SelectionStart -= BytePerLine;
                     SelectionStop -= BytePerLine;
                 }
             }
+
+            if (SelectionStart < GetFirstVisibleBytePosition())
+                VerticalScrollBar.Value--;
+
+            if (hbCtrl != null)
+                SetFocusHexDataPanel(SelectionStart);
+
+            if (sbCtrl != null)
+                SetFocusStringDataPanel(SelectionStart);
         }
 
         private void UpdateByteModified()
@@ -605,6 +623,53 @@ namespace WPFHexaEditor.Control
 
             VerticalScrollBar.Value++;
             SetFocusStringDataPanel(bytePositionInFile);
+        }
+
+        /// <summary>
+        /// Get first visible byte position in control
+        /// </summary>
+        /// <returns>Return -1 of no file open</returns>
+        private long GetFirstVisibleBytePosition()
+        {
+            if (_file != null)
+            {
+                int stackIndex = 0;
+                foreach (Label infolabel in LinesInfoStackPanel.Children)
+                {
+                    foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
+                        return byteControl.BytePositionInFile;
+
+                    stackIndex++;
+                }
+
+                return -1;
+            }
+            else
+                return -1;
+        }
+
+        /// <summary>
+        /// Get last visible byte position in control
+        /// </summary>
+        /// <returns>Return -1 of no file open.</returns>
+        private long GetLastVisibleBytePosition()
+        {
+            if (_file != null)
+            {
+                int stackIndex = 0;
+                long byteposition = GetFirstVisibleBytePosition();
+                foreach (Label infolabel in LinesInfoStackPanel.Children)
+                {
+                    foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
+                        byteposition++;
+
+                    stackIndex++;
+                }
+
+                return byteposition;
+            }
+            else
+                return -1;
         }
 
         private void Control_Click(object sender, EventArgs e)

@@ -553,6 +553,7 @@ namespace WPFHexaEditor.Control
                 if (VerticalScrollBar.Value < VerticalScrollBar.Maximum)
                     VerticalScrollBar.Value++;
 
+
                 SetFocusHexDataPanel(bytePositionInFile);
             }
         }
@@ -779,10 +780,10 @@ namespace WPFHexaEditor.Control
             //TODO : Validation
             if (Keyboard.Modifiers == ModifierKeys.Shift)
             {
-                if (test < _file.Length)
+                if (test <= _file.Length)
                     SelectionStart += BytePerLine;
                 else
-                    SelectionStart = 0;
+                    SelectionStart = _file.Length;
             }
             else
             {
@@ -797,7 +798,11 @@ namespace WPFHexaEditor.Control
                     SelectionStop++;
                 }
             }
-
+            
+            //Validation and refresh
+            if (SelectionStart >= _file.Length)
+                SelectionStart = _file.Length;
+            
             if (SelectionStart > GetLastVisibleBytePosition())
                 VerticalScrollBar.Value++;
 
@@ -836,6 +841,10 @@ namespace WPFHexaEditor.Control
                     SelectionStop--;
                 }
             }
+
+            //Validation and refresh
+            if (SelectionStart < 0)
+                SelectionStart = 0;
 
             if (SelectionStart < GetFirstVisibleBytePosition())
                 VerticalScrollBar.Value--;

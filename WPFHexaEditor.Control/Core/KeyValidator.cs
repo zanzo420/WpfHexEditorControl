@@ -71,6 +71,10 @@ namespace WPFHexaEditor.Control.Core
 
         public static bool IsLeftKey(Key key) { return key == Key.Left; }
 
+        public static bool IsPageDownKey(Key key) { return key == Key.PageDown; }
+
+        public static bool IsPageUpKey(Key key) { return key == Key.PageUp; }
+
         public static bool IsEnterKey(Key key) { return key == Key.Enter; }
 
         public static bool IsCtrlCKey(Key key) { return key == Key.C && Keyboard.Modifiers == ModifierKeys.Control; }

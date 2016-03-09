@@ -228,8 +228,25 @@ namespace WPFHexaEditor.Control
 
                 return;
             }
+            else if (KeyValidator.IsLeftKey(e.Key))
+            {
+                e.Handled = true;
+                if (MoveLeft != null)
+                    MoveLeft(this, new EventArgs());
+
+                return;
+            }
+            else if (KeyValidator.IsRightKey(e.Key))
+            {
+                e.Handled = true;
+                if (MoveRight != null)
+                    MoveRight(this, new EventArgs());
+
+                return;
+            }
 
 
+            //MODIFY ASCII... 
             if (!ReadOnlyMode)
             {
                 //TODO : MAKE BETTER KEYDETECTION AND EXPORT IN KEYVALIDATOR

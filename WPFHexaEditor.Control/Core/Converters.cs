@@ -57,9 +57,23 @@ namespace WPFHexaEditor.Control.Core
         /// <summary>
         /// Convert byte to ASCII string
         /// </summary>
-        public static string BytesToASCIIString(byte[] buffer)
+        public static string BytesToString(byte[] buffer, ByteToString converter = ByteToString.ByteToCharProcess)
         {
-            return Encoding.ASCII.GetString(buffer, 0, buffer.Length);
+            switch (converter)
+            {
+                case ByteToString.ASCIIEncoding:
+                    return Encoding.ASCII.GetString(buffer, 0, buffer.Length);
+                case ByteToString.ByteToCharProcess:
+                    StringBuilder builder = new StringBuilder();
+                    foreach (byte @byte in buffer)
+                    {
+                        builder.Append(ByteToChar(@byte));
+                    }
+
+                    return builder.ToString();
+            }
+
+            return "";         
         }
 
         /// <summary>

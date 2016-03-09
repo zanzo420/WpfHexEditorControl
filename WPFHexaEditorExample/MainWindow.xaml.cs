@@ -109,7 +109,9 @@ namespace WPFHexaEditorExample
             if (HexEdit.CanCopy())
             {
                 HexEdit.CopyToClipboard();
-                MessageBox.Show(Clipboard.GetText());
+
+                if (Clipboard.ContainsText())
+                    MessageBox.Show(Clipboard.GetText());
             }
             else
                 MessageBox.Show("Can't copy right now !");            

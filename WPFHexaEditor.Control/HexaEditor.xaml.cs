@@ -306,7 +306,7 @@ namespace WPFHexaEditor.Control
                         
                         long position = Converters.HexLiteralToLong(infolabel.Content.ToString());
 
-                        for (int i = 0; i < _bytePerLine; i++)
+                        for (int i = 0; i < BytePerLine; i++)
                         {
                             _file.Position = position + i;
 
@@ -323,6 +323,8 @@ namespace WPFHexaEditor.Control
                             byteControl.ByteModified += Control_ByteModified;
                             byteControl.MoveUp += Control_MoveUp;
                             byteControl.MoveDown += Control_MoveDown;
+                            byteControl.MoveLeft += Control_MoveLeft;
+                            byteControl.MoveRight += Control_MoveRight;
 
                             byteControl.Byte = (byte)_file.ReadByte();
                             
@@ -698,7 +700,7 @@ namespace WPFHexaEditor.Control
                         
                         long position = Converters.HexLiteralToLong(infolabel.Content.ToString());
 
-                        for (int i = 0; i < _bytePerLine; i++)
+                        for (int i = 0; i < BytePerLine; i++)
                         {
                             _file.Position = position + i;
                             
@@ -716,7 +718,9 @@ namespace WPFHexaEditor.Control
                             sbCtrl.BytePositionInFile = _file.Position;
                             sbCtrl.MoveUp += Control_MoveUp;
                             sbCtrl.MoveDown += Control_MoveDown;
-
+                            sbCtrl.MoveLeft += Control_MoveLeft;
+                            sbCtrl.MoveRight += Control_MoveRight;
+                            
                             sbCtrl.Byte = (byte)_file.ReadByte();
                                                         
                             dataLineStack.Children.Add(sbCtrl);
@@ -764,7 +768,85 @@ namespace WPFHexaEditor.Control
                 StringDataStackPanel.Children.Clear();
             }
         }
-        
+
+        private void Control_MoveRight(object sender, EventArgs e)
+        {
+            HexByteControl hbCtrl = sender as HexByteControl;
+            StringByteControl sbCtrl = sender as StringByteControl;
+
+            long test = SelectionStart + 1;
+
+            //TODO : Validation
+            if (Keyboard.Modifiers == ModifierKeys.Shift)
+            {
+                if (test < _file.Length)
+                    SelectionStart += BytePerLine;
+                else
+                    SelectionStart = 0;
+            }
+            else
+            {
+                if (SelectionStart > SelectionStop)
+                    SelectionStart = SelectionStop;
+                else
+                    SelectionStop = SelectionStart;
+
+                if (test < _file.Length)
+                {
+                    SelectionStart++;
+                    SelectionStop++;
+                }
+            }
+
+            if (SelectionStart > GetLastVisibleBytePosition())
+                VerticalScrollBar.Value++;
+
+            if (hbCtrl != null)
+                SetFocusHexDataPanel(SelectionStart);
+
+            if (sbCtrl != null)
+                SetFocusStringDataPanel(SelectionStart);
+        }
+
+        private void Control_MoveLeft(object sender, EventArgs e)
+        {
+            HexByteControl hbCtrl = sender as HexByteControl;
+            StringByteControl sbCtrl = sender as StringByteControl;
+
+            long test = SelectionStart - 1;
+
+            //TODO : Validation
+            if (Keyboard.Modifiers == ModifierKeys.Shift)
+            {
+                if (test > -1)
+                    SelectionStart -= BytePerLine;
+                else
+                    SelectionStart = 0;
+            }
+            else
+            {
+                if (SelectionStart > SelectionStop)
+                    SelectionStart = SelectionStop;
+                else
+                    SelectionStop = SelectionStart;
+
+                if (test > -1)
+                {
+                    SelectionStart--;
+                    SelectionStop--;
+                }
+            }
+
+            if (SelectionStart < GetFirstVisibleBytePosition())
+                VerticalScrollBar.Value--;
+
+            if (hbCtrl != null)
+                SetFocusHexDataPanel(SelectionStart);
+
+            if (sbCtrl != null)
+                SetFocusStringDataPanel(SelectionStart);
+        }
+
         private void Control_MoveNext(object sender, EventArgs e)
         {
             HexByteControl hexByteCtrl = sender as HexByteControl;
@@ -799,7 +881,7 @@ namespace WPFHexaEditor.Control
 
             if (_file != null)
             {
-                for (int i = 0; i < _bytePerLine; i++)
+                for (int i = 0; i < BytePerLine; i++)
                 {
                     //Create control
                     Label LineInfoLabel = new Label();
@@ -835,7 +917,7 @@ namespace WPFHexaEditor.Control
                     long fds = GetMaxVisibleLine();
                     //LineInfo
                     
-                    long firstLineByte = ((long)VerticalScrollBar.Value + i) * _bytePerLine; 
+                    long firstLineByte = ((long)VerticalScrollBar.Value + i) * BytePerLine; 
                     string info = "0x" +  firstLineByte.ToString(Constant.HexLineInfoStringFormat, CultureInfo.InvariantCulture);
 
                     if (firstLineByte < _file.Length)
@@ -926,7 +1008,7 @@ namespace WPFHexaEditor.Control
         public long GetMaxLine()
         {
             if (_file != null)
-                return _file.Length / _bytePerLine;
+                return _file.Length / BytePerLine;
             else
                 return 0;
         }
@@ -1165,7 +1247,7 @@ namespace WPFHexaEditor.Control
             switch (copypastemode)
             {
                 case CopyPasteMode.ASCIIString:
-                    sBuffer = Converters.BytesToASCIIString(buffer);
+                    sBuffer = Converters.BytesToString(buffer);
                     da.SetText(sBuffer, TextDataFormat.Text);
                     break;
                 case CopyPasteMode.HexaString:
@@ -1201,7 +1283,7 @@ namespace WPFHexaEditor.Control
 
             if (_file != null)
             {
-                VerticalScrollBar.Value = position / _bytePerLine;
+                VerticalScrollBar.Value = position / BytePerLine;
             }
             else
                 VerticalScrollBar.Value = 0;

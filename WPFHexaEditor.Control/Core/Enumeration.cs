@@ -46,5 +46,17 @@ namespace WPFHexaEditor.Control.Core
         NextPosition
     }
 
+    public enum ByteToString
+    {
+        /// <summary>
+        /// Build-in convertion mode. (recommended)
+        /// </summary>
+        ByteToCharProcess,
+        /// <summary>
+        /// System.Text.Encoding.ASCII string encoder
+        /// </summary>
+        ASCIIEncoding
+    }
+
 
 }

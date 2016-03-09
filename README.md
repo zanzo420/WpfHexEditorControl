@@ -1,7 +1,7 @@
 # WPF Hexadecimal Editor control
 A WPF Hexadecimal editor for view/modify file.
 
-![example](WPFHexEditorControlSample2.png?raw=true)
+![example](WPFHexEditorControlSample3.png?raw=true)
 
 ##NUGET
 Not for now. When control is more powerful ;)

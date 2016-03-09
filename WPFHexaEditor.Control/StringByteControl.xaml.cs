@@ -108,6 +108,20 @@ namespace WPFHexaEditor.Control
 
             ctrl.UpdateBackGround();
         }
+        
+        /// <summary>
+        /// Used to prevent StringByteModified event occurc when we dont want! 
+        /// </summary>
+        public bool InternalChange
+        {
+            get { return (bool)GetValue(InternalChangeProperty); }
+            set { SetValue(InternalChangeProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for InternalChange.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty InternalChangeProperty =
+            DependencyProperty.Register("InternalChange", typeof(bool), typeof(StringByteControl), new PropertyMetadata(false));
+        
         #endregion
 
         #region Standard property
@@ -195,9 +209,7 @@ namespace WPFHexaEditor.Control
                 _readOnlyMode = value;
             }
         }
-
-        public bool InternalChange { get; set; } = false;
-
+        
         private void UserControl_KeyDown(object sender, KeyEventArgs e)
         {
             if (KeyValidator.IsUpKey(e.Key))
@@ -205,6 +217,14 @@ namespace WPFHexaEditor.Control
                 e.Handled = true;
                 if (MoveUp != null)
                     MoveUp(this, new EventArgs());
+
+                return;
+            }
+            else if (KeyValidator.IsDownKey(e.Key))
+            {
+                e.Handled = true;
+                if (MoveDown != null)
+                    MoveDown(this, new EventArgs());
 
                 return;
             }

@@ -92,8 +92,22 @@ namespace WPFHexaEditor.Control
 
             ctrl.UpdateLabelFromByte();
         }
+
+        /// <summary>
+        /// Used to prevent ByteModified event occurc when we dont want! 
+        /// </summary>
+        public bool InternalChange
+        {
+            get { return (bool)GetValue(InternalChangeProperty); }
+            set { SetValue(InternalChangeProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for InternalChange.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty InternalChangeProperty =
+            DependencyProperty.Register("InternalChange", typeof(bool), typeof(HexByteControl), new PropertyMetadata(false));
+
         #endregion
-                
+
         public bool IsByteModified
         {
             get
@@ -148,9 +162,7 @@ namespace WPFHexaEditor.Control
                 UpdateBackGround();
             }
         }
-
-        public bool InternalChange { get; set; } = false;
-
+        
         /// <summary>
         /// Update Background
         /// </summary>
@@ -220,6 +232,14 @@ namespace WPFHexaEditor.Control
 
                 return;
             }
+            else if(KeyValidator.IsDownKey(e.Key))
+            {
+                e.Handled = true;
+                if (MoveDown != null)
+                    MoveDown(this, new EventArgs());
+
+                return;
+            }
 
             if (!ReadOnlyMode)
                 if (KeyValidator.IsHexKey(e.Key))
@@ -255,6 +275,8 @@ namespace WPFHexaEditor.Control
 
         private void UserControl_MouseEnter(object sender, MouseEventArgs e)
         {
+            
+
             if (Byte != null)
                 if (!IsByteModified && !_isSelected)
                     this.Background = (SolidColorBrush)TryFindResource("MouseOverColor");

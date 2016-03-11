@@ -32,8 +32,6 @@ namespace WPFHexaEditor.Control
         private Stream _file = null;
         private double _scrollLargeChange = 100;
         private bool _readOnlyMode = false;
-        private long _selectionStart = -1;
-        private long _selectionStop = -1;
         private bool _isHexDataVisible = true;
         private bool _isStringDataVisible = true;
         private bool _isVerticalScrollBarVisible = true;
@@ -69,40 +67,48 @@ namespace WPFHexaEditor.Control
 
             set
             {
-                //TODO: make open method
                 this._fileName = value;
-                
-                if (File.Exists(value))
+
+                OpenFile(value);
+            }
+        }
+
+        /// <summary>
+        /// Open file name
+        /// </summary>
+        /// <param name="filename"></param>
+        private void OpenFile(string filename)
+        {
+            if (File.Exists(filename))
+            {
+                CloseFile();
+                bool readOnlyMode = false;
+
+                try
                 {
-                    CloseFile();
-                    bool readOnlyMode = false;
-                                        
-                    try
-                    {
-                        _file = File.Open(value, FileMode.Open, FileAccess.ReadWrite, FileShare.Read); ;
-                    }
-                    catch
-                    {
-                        if (MessageBox.Show("The file is locked. Do you want to open it in read-only mode?", "", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                        {
-                            _file = File.Open(value, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                            readOnlyMode = true;
-                        }
-                    }
-
-                    RefreshView(true);
-
-                    UnSelectAll();
-                    
-                    UpdateSelectionColorMode(FirstColor.HexByteData);
-
-                    if (readOnlyMode)
-                        ReadOnlyMode = true;                    
+                    _file = File.Open(filename, FileMode.Open, FileAccess.ReadWrite, FileShare.Read); ;
                 }
-                else
+                catch
                 {
-                    throw new FileNotFoundException();
+                    if (MessageBox.Show("The file is locked. Do you want to open it in read-only mode?", "", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                    {
+                        _file = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                        readOnlyMode = true;
+                    }
                 }
+
+                RefreshView(true);
+
+                UnSelectAll();
+
+                UpdateSelectionColorMode(FirstColor.HexByteData);
+
+                if (readOnlyMode)
+                    ReadOnlyMode = true;
+            }
+            else
+            {
+                throw new FileNotFoundException();
             }
         }
 
@@ -279,7 +285,7 @@ namespace WPFHexaEditor.Control
         {
             foreach (ByteModified byteModified in _byteModifiedList)
             {
-                if (byteModified.BytePositionInFile == bytePositionInFile)
+                if (byteModified.BytePositionInFile == bytePositionInFile && byteModified.IsValid == true)
                     return byteModified; //.GetCopy();
             }
 
@@ -325,6 +331,8 @@ namespace WPFHexaEditor.Control
                             byteControl.MoveDown += Control_MoveDown;
                             byteControl.MoveLeft += Control_MoveLeft;
                             byteControl.MoveRight += Control_MoveRight;
+                            byteControl.MovePageUp += Control_MovePageUp;
+                            byteControl.MovePageDown += Control_MovePageDown;
 
                             byteControl.Byte = (byte)_file.ReadByte();
                             
@@ -372,6 +380,85 @@ namespace WPFHexaEditor.Control
             }
         }
 
+        private void Control_MovePageDown(object sender, EventArgs e)
+        {
+            //HexByteControl hbCtrl = sender as HexByteControl;
+            //StringByteControl sbCtrl = sender as StringByteControl;
+
+            //long test = SelectionStart + BytePerLine;
+            //long test2 = SelectionStart + BytePerLine * GetMaxVisibleLine();
+
+            ////TODO : Validation
+            //if (Keyboard.Modifiers == ModifierKeys.Shift)
+            //{
+            //    if (test < _file.Length)
+            //        SelectionStart += BytePerLine * GetMaxVisibleLine();
+            //    else
+            //        SelectionStart = _file.Length;
+            //}
+            //else
+            //{
+            //    if (SelectionStart > SelectionStop)
+            //        SelectionStart = SelectionStop;
+            //    else
+            //        SelectionStop = SelectionStart;
+
+            //    if (test2 < _file.Length)
+            //    {
+            //        SelectionStart += BytePerLine * GetMaxVisibleLine();
+            //        SelectionStop += BytePerLine * GetMaxVisibleLine();
+            //    }
+            //}
+
+            //if (SelectionStart > GetLastVisibleBytePosition())
+            //    VerticalScrollBar.Value++;
+
+            //if (hbCtrl != null)
+            //    SetFocusHexDataPanel(SelectionStart);
+
+            //if (sbCtrl != null)
+            //    SetFocusStringDataPanel(SelectionStart);
+        }
+
+        private void Control_MovePageUp(object sender, EventArgs e)
+        {
+            //HexByteControl hbCtrl = sender as HexByteControl;
+            //StringByteControl sbCtrl = sender as StringByteControl;
+
+            //long test = SelectionStart - BytePerLine;
+
+            ////TODO : Validation
+            //if (Keyboard.Modifiers == ModifierKeys.Shift)
+            //{
+            //    if (test > -1)
+            //        SelectionStart -= BytePerLine * GetMaxVisibleLine();
+            //    else
+            //        SelectionStart = 0;
+            //}
+            //else
+            //{
+            //    if (SelectionStart > SelectionStop)
+            //        SelectionStart = SelectionStop;
+            //    else
+            //        SelectionStop = SelectionStart;
+
+            //    if (test > -1)
+            //    {
+            //        SelectionStart -= BytePerLine * GetMaxVisibleLine();
+            //        SelectionStop -= BytePerLine * GetMaxVisibleLine();
+            //    }
+            //}
+
+            //if (SelectionStart < GetFirstVisibleBytePosition())
+            //    VerticalScrollBar.Value--;
+
+            //if (hbCtrl != null)
+            //    SetFocusHexDataPanel(SelectionStart);
+
+            //if (sbCtrl != null)
+            //    SetFocusStringDataPanel(SelectionStart);
+        }
+
         private void Control_MoveDown(object sender, EventArgs e)
         {
             HexByteControl hbCtrl = sender as HexByteControl;
@@ -385,7 +472,7 @@ namespace WPFHexaEditor.Control
                 if (test < _file.Length)
                     SelectionStart += BytePerLine;
                 else
-                    SelectionStart = 0;
+                    SelectionStart = _file.Length;
             }
             else
             {
@@ -512,7 +599,7 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Add/Modifiy a ByteModifed in the list of byte changed
         /// </summary>        
-        private void AddByteModified(byte? @byte, long bytePositionInFile, ByteAction action)
+        private void AddByteModified(byte? @byte, long bytePositionInFile, ByteAction action , int lenght = 1)
         {
             ByteModified bytemodifiedOriginal = CheckIfIsByteModified(bytePositionInFile);
 
@@ -521,7 +608,9 @@ namespace WPFHexaEditor.Control
             
             ByteModified byteModified = new ByteModified();
 
+            //TODO: Add action type (deleted, add...)
             byteModified.Byte = @byte;
+            byteModified.Lenght = lenght < 0 ? 1 : lenght;
             byteModified.BytePositionInFile = bytePositionInFile;
             byteModified.Action = action;
 
@@ -552,8 +641,7 @@ namespace WPFHexaEditor.Control
 
                 if (VerticalScrollBar.Value < VerticalScrollBar.Maximum)
                     VerticalScrollBar.Value++;
-
-
+                
                 SetFocusHexDataPanel(bytePositionInFile);
             }
         }
@@ -781,7 +869,7 @@ namespace WPFHexaEditor.Control
             if (Keyboard.Modifiers == ModifierKeys.Shift)
             {
                 if (test <= _file.Length)
-                    SelectionStart += BytePerLine;
+                    SelectionStart++;
                 else
                     SelectionStart = _file.Length;
             }
@@ -824,7 +912,7 @@ namespace WPFHexaEditor.Control
             if (Keyboard.Modifiers == ModifierKeys.Shift)
             {
                 if (test > -1)
-                    SelectionStart -= BytePerLine;
+                    SelectionStart--;
                 else
                     SelectionStart = 0;
             }

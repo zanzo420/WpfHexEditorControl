@@ -35,6 +35,8 @@ namespace WPFHexaEditor.Control
         public event EventHandler MoveLeft;
         public event EventHandler MoveUp;
         public event EventHandler MoveDown;
+        public event EventHandler MovePageDown;
+        public event EventHandler MovePageUp;
 
         public HexByteControl()
         {
@@ -256,6 +258,22 @@ namespace WPFHexaEditor.Control
 
                 return;
             }
+            else if (KeyValidator.IsPageDownKey(e.Key))
+            {
+                e.Handled = true;
+                if (MovePageDown != null)
+                    MovePageDown(this, new EventArgs());
+
+                return;
+            }
+            else if (KeyValidator.IsPageUpKey(e.Key))
+            {
+                e.Handled = true;
+                if (MovePageUp != null)
+                    MovePageUp(this, new EventArgs());
+
+                return;
+            }
 
             //MODIFY BYTE
             if (!ReadOnlyMode)
@@ -291,8 +309,7 @@ namespace WPFHexaEditor.Control
         }
 
         private void UserControl_MouseEnter(object sender, MouseEventArgs e)
-        {
-            
+        {           
 
             if (Byte != null)
                 if (!IsByteModified && !_isSelected)

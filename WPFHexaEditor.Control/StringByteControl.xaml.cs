@@ -32,6 +32,8 @@ namespace WPFHexaEditor.Control
         public event EventHandler MoveLeft;
         public event EventHandler MoveUp;
         public event EventHandler MoveDown;
+        public event EventHandler MovePageDown;
+        public event EventHandler MovePageUp;
 
         public StringByteControl()
         {
@@ -241,6 +243,22 @@ namespace WPFHexaEditor.Control
                 e.Handled = true;
                 if (MoveRight != null)
                     MoveRight(this, new EventArgs());
+
+                return;
+            }
+            else if (KeyValidator.IsPageDownKey(e.Key))
+            {
+                e.Handled = true;
+                if (MovePageDown != null)
+                    MovePageDown(this, new EventArgs());
+
+                return;
+            }
+            else if (KeyValidator.IsPageUpKey(e.Key))
+            {
+                e.Handled = true;
+                if (MovePageUp != null)
+                    MovePageUp(this, new EventArgs());
 
                 return;
             }

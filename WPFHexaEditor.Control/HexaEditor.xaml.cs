@@ -31,13 +31,8 @@ namespace WPFHexaEditor.Control
         private int _bytePerLine = 16;
         private ByteProvider _provider = null;
         private double _scrollLargeChange = 100;
-        private bool _readOnlyMode = false;
-        private bool _isHexDataVisible = true;
-        private bool _isStringDataVisible = true;
-        private bool _isVerticalScrollBarVisible = true;
-        private bool _isHeaderVisible = true;
-        private bool _isShowStatusBar = false;
-                        
+        private bool _readOnlyMode = false;  
+                              
         //Event
         public event EventHandler SelectionStartChanged;
         public event EventHandler SelectionStopChanged;
@@ -150,10 +145,7 @@ namespace WPFHexaEditor.Control
             }
 
             set
-            {
-                if (ByteProvider.CheckIsOpen(_provider))
-                    _provider.ReadOnlyMode = value;
-
+            {             
                 _readOnlyMode = value;
 
                 RefreshView(false);
@@ -652,9 +644,13 @@ namespace WPFHexaEditor.Control
 
         private void Control_MouseSelection(object sender, EventArgs e)
         {
+            //Prevent false mouse selection on file open
+            if (SelectionStart == -1)
+                return;
+
             HexByteControl hbCtrl = sender as HexByteControl;
             StringByteControl sbCtrl = sender as StringByteControl;
-
+            
             if (hbCtrl != null)
             {
                 UpdateSelectionColorMode(FirstColor.HexByteData);
@@ -1110,7 +1106,7 @@ namespace WPFHexaEditor.Control
             HexaEditor ctrl = d as HexaEditor;
             long value = (long)baseValue;
 
-            Debug.Print($"SelectionbStop : {value.ToString()}");
+            Debug.Print($"SelectionStop : {value.ToString()}");
 
             if (value < -1)
                 return -1L;
@@ -1280,110 +1276,178 @@ namespace WPFHexaEditor.Control
         #endregion Set position methods
 
         #region Visibility standard property
-
-        public bool HexDataVisibility
+        /// <summary>
+        /// Set or Get value for change visibility of hexadecimal panel
+        /// </summary>
+        public Visibility HexDataVisibility
         {
-            get
+            get { return (Visibility)GetValue(HexDataVisibilityProperty); }
+            set { SetValue(HexDataVisibilityProperty, value); }
+        }
+
+        public static readonly DependencyProperty HexDataVisibilityProperty =
+            DependencyProperty.Register("HexDataVisibility", typeof(Visibility), typeof(HexaEditor), 
+                new FrameworkPropertyMetadata(Visibility.Visible, 
+                    new PropertyChangedCallback(HexDataVisibility_PropertyChanged),
+                    new CoerceValueCallback(Visibility_CoerceValue)));
+
+        private static object Visibility_CoerceValue(DependencyObject d, object baseValue)
+        {
+            HexaEditor ctrl = d as HexaEditor;
+            Visibility value = (Visibility)baseValue;
+
+            if (value == Visibility.Hidden)
+                return Visibility.Collapsed;
+
+            return value;
+        }
+
+        private static void HexDataVisibility_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            HexaEditor ctrl = d as HexaEditor;
+            Visibility value = (Visibility)e.NewValue;
+
+            switch (value)
             {
-                return _isHexDataVisible;
-            }
+                case Visibility.Visible:
+                    ctrl.HexDataStackPanel.Visibility = Visibility.Visible;
 
-            set
-            {
-                _isHexDataVisible = value;
-
-                if (value)
-                {
-                    HexDataStackPanel.Visibility = Visibility.Visible;
-
-                    if (HeaderVisibility)
-                        HexHeaderStackPanel.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    HexDataStackPanel.Visibility = Visibility.Collapsed;
-                    HexHeaderStackPanel.Visibility = Visibility.Collapsed;
-                }
+                    if (ctrl.HeaderVisibility == Visibility.Visible)
+                        ctrl.HexHeaderStackPanel.Visibility = Visibility.Visible;
+                    break;
+                case Visibility.Collapsed:
+                    ctrl.HexDataStackPanel.Visibility = Visibility.Collapsed;
+                    ctrl.HexHeaderStackPanel.Visibility = Visibility.Collapsed;
+                    break;
             }
         }
 
-        public bool StringDataVisibility
+        /// <summary>
+        /// Set or Get value for change visibility of hexadecimal header
+        /// </summary>
+        public Visibility HeaderVisibility
         {
-            get
-            {
-                return _isStringDataVisible;
-            }
+            get { return (Visibility)GetValue(HeaderVisibilityProperty); }
+            set { SetValue(HeaderVisibilityProperty, value); }
+        }
+                
+        public static readonly DependencyProperty HeaderVisibilityProperty =
+            DependencyProperty.Register("HeaderVisibility", typeof(Visibility), typeof(HexaEditor), 
+                new FrameworkPropertyMetadata(Visibility.Visible,
+                    new PropertyChangedCallback(HeaderVisibility_PropertyChanged),
+                    new CoerceValueCallback(Visibility_CoerceValue)));
+                
+        private static void HeaderVisibility_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            HexaEditor ctrl = d as HexaEditor;
+            Visibility value = (Visibility)e.NewValue;
 
-            set
+            switch (value)
             {
-                _isStringDataVisible = value;
-
-                if (value)
-                    StringDataStackPanel.Visibility = Visibility.Visible;
-                else
-                    StringDataStackPanel.Visibility = Visibility.Collapsed;
+                case Visibility.Visible:
+                    if (ctrl.HexDataVisibility == Visibility.Visible)
+                        ctrl.HexHeaderStackPanel.Visibility = Visibility.Visible;
+                    break;
+                case Visibility.Collapsed:                    
+                    ctrl.HexHeaderStackPanel.Visibility = Visibility.Collapsed;
+                    break;
             }
         }
 
-        public bool VerticalScrollBarVisibility
+        /// <summary>
+        /// Set or Get value for change visibility of string panel
+        /// </summary>
+        public Visibility StringDataVisibility
         {
-            get
-            {
-                return _isVerticalScrollBarVisible;
-            }
+            get { return (Visibility)GetValue(StringDataVisibilityProperty); }
+            set { SetValue(StringDataVisibilityProperty, value); }
+        }
 
-            set
-            {
-                _isVerticalScrollBarVisible = value;
+        public static readonly DependencyProperty StringDataVisibilityProperty =
+            DependencyProperty.Register("StringDataVisibility", typeof(Visibility), typeof(HexaEditor), 
+                new FrameworkPropertyMetadata(Visibility.Visible,
+                    new PropertyChangedCallback(StringDataVisibility_ValidateValue),
+                    new CoerceValueCallback(Visibility_CoerceValue)));
 
-                if (value)
-                    VerticalScrollBar.Visibility = Visibility.Visible;
-                else
-                    VerticalScrollBar.Visibility = Visibility.Collapsed;
+        private static void StringDataVisibility_ValidateValue(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            HexaEditor ctrl = d as HexaEditor;
+            Visibility value = (Visibility)e.NewValue;
+
+            switch (value)
+            {
+                case Visibility.Visible:
+                    ctrl.StringDataStackPanel.Visibility = Visibility.Visible;
+                    break;
+                case Visibility.Collapsed:
+                    ctrl.StringDataStackPanel.Visibility = Visibility.Collapsed;
+                    break;
             }
         }
 
-        public bool HeaderVisibility
+        /// <summary>
+        /// Set or Get value for change visibility of vertical scroll bar
+        /// </summary>
+        public Visibility VerticalScrollBarVisibility
         {
-            get
+            get { return (Visibility)GetValue(VerticalScrollBarVisibilityProperty); }
+            set { SetValue(VerticalScrollBarVisibilityProperty, value); }
+        }
+
+        public static readonly DependencyProperty VerticalScrollBarVisibilityProperty =
+            DependencyProperty.Register("VerticalScrollBarVisibility", typeof(Visibility), typeof(HexaEditor), 
+                new FrameworkPropertyMetadata(Visibility.Visible,
+                    new PropertyChangedCallback(VerticalScrollBarVisibility_ValueChanged),
+                    new CoerceValueCallback(Visibility_CoerceValue)));
+
+        private static void VerticalScrollBarVisibility_ValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            HexaEditor ctrl = d as HexaEditor;
+            Visibility value = (Visibility)e.NewValue;
+
+            switch (value)
             {
-                return _isHeaderVisible;
-            }
-
-            set
-            {
-                _isHeaderVisible = value;
-
-                if (value)
-                {
-                    if (HexDataVisibility)
-                        HexHeaderStackPanel.Visibility = Visibility.Visible;
-                }
-                else
-                    HexHeaderStackPanel.Visibility = Visibility.Collapsed;
-
+                case Visibility.Visible:
+                    ctrl.VerticalScrollBar.Visibility = Visibility.Visible;
+                    break;
+                case Visibility.Collapsed:
+                    ctrl.VerticalScrollBar.Visibility = Visibility.Collapsed;
+                    break;
             }
         }
 
-        public bool StatusBarVisibility
+        /// <summary>
+        /// Set or Get value for change visibility of status bar
+        /// </summary>
+        public Visibility StatusBarVisibility
         {
-            get
-            {
-                return _isShowStatusBar;
-            }
-
-            set
-            {
-                _isShowStatusBar = value;
-
-                if (value)
-                    StatusBarGrid.Visibility = Visibility.Visible;
-                else
-                    StatusBarGrid.Visibility = Visibility.Collapsed;
-
-                RefreshView(false);
-            }
+            get { return (Visibility)GetValue(StatusBarVisibilityProperty); }
+            set { SetValue(StatusBarVisibilityProperty, value); }
         }
+                
+        public static readonly DependencyProperty StatusBarVisibilityProperty =
+            DependencyProperty.Register("StatusBarVisibility", typeof(Visibility), typeof(HexaEditor), 
+                new FrameworkPropertyMetadata(Visibility.Visible,
+                    new PropertyChangedCallback(StatusBarVisibility_ValueChange),
+                    new CoerceValueCallback(Visibility_CoerceValue)));
+
+        private static void StatusBarVisibility_ValueChange(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            HexaEditor ctrl = d as HexaEditor;
+            Visibility value = (Visibility)e.NewValue;
+
+            switch (value)
+            {
+                case Visibility.Visible:
+                    ctrl.StatusBarGrid.Visibility = Visibility.Visible;
+                    break;
+                case Visibility.Collapsed:
+                    ctrl.StatusBarGrid.Visibility = Visibility.Collapsed;
+                    break;
+            }
+
+            ctrl.RefreshView(false);
+        }        
         #endregion Visibility standard property
     }
 }

@@ -76,27 +76,44 @@ namespace WPFHexaEditorExample
         
         private void HexDataVisibilityButton_Click(object sender, RoutedEventArgs e)
         {
-            HexEdit.HexDataVisibility = !HexEdit.HexDataVisibility;
+            if (HexEdit.HexDataVisibility == Visibility.Visible)
+                HexEdit.HexDataVisibility = Visibility.Collapsed;
+            else
+                HexEdit.HexDataVisibility = Visibility.Visible;
         }
 
         private void HexHeaderVisibilityButton_Click(object sender, RoutedEventArgs e)
         {
-            HexEdit.HeaderVisibility = !HexEdit.HeaderVisibility;
+            if (HexEdit.HeaderVisibility == Visibility.Visible)
+                HexEdit.HeaderVisibility = Visibility.Collapsed;
+            else
+                HexEdit.HeaderVisibility = Visibility.Visible;
         }
 
         private void ScrollVisibilityButton_Click(object sender, RoutedEventArgs e)
         {
-            HexEdit.VerticalScrollBarVisibility = !HexEdit.VerticalScrollBarVisibility;
+            if (HexEdit.VerticalScrollBarVisibility == Visibility.Visible)
+                HexEdit.VerticalScrollBarVisibility = Visibility.Collapsed;
+            else
+                HexEdit.VerticalScrollBarVisibility = Visibility.Visible;
         }
 
         private void StringDataVisibilityButton_Click(object sender, RoutedEventArgs e)
         {
-            HexEdit.StringDataVisibility = !HexEdit.StringDataVisibility;
+
+            if (HexEdit.StringDataVisibility == Visibility.Visible)
+                HexEdit.StringDataVisibility = Visibility.Collapsed;
+            else
+                HexEdit.StringDataVisibility = Visibility.Visible;            
         }
 
         private void StatusBarVisibilityButton_Click(object sender, RoutedEventArgs e)
         {
-            HexEdit.StatusBarVisibility = !HexEdit.StatusBarVisibility;
+
+            if (HexEdit.StatusBarVisibility == Visibility.Visible)
+                HexEdit.StatusBarVisibility = Visibility.Collapsed;
+            else
+                HexEdit.StatusBarVisibility = Visibility.Visible;
         }
         
         private void HexEdit_SelectionLenghtChanged(object sender, EventArgs e)

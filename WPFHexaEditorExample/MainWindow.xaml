@@ -11,7 +11,6 @@
         Title="TestWindow - WPF HexaEditor Control (Alpha)" Height="518" Width="850">
     <Grid >
         <Control:HexaEditor x:Name="HexEdit" Margin="10,147,10,10" Height="Auto" Width="Auto" 
-                            StatusBarVisibility="False"
                             SelectionLenghtChanged="HexEdit_SelectionLenghtChanged"/>
         <Button x:Name="SetPositionButton" Margin="0,35,10,0" VerticalAlignment="Top" Click="SetPositionButton_Click" Height="45" HorizontalAlignment="Right" Width="150">
             <TextBlock TextWrapping="Wrap"><Run Text="Test : SetPosition"/><LineBreak/><Run Text="0x20FF (lenght 10 byte)"/></TextBlock>

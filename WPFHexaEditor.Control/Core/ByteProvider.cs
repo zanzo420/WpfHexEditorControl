@@ -26,11 +26,19 @@ namespace WPFHexaEditor.Control.Core
         public event EventHandler PositionChanged;
 
         /// <summary>
-        /// Constructor
+        /// Default constructor
         /// </summary>
         public ByteProvider()
         {
 
+        }
+
+        /// <summary>
+        /// Construct new ByteProvider with filename and try to open file
+        /// </summary>
+        public ByteProvider(string filename)
+        {
+            FileName = filename;
         }
 
         /// <summary>
@@ -111,7 +119,7 @@ namespace WPFHexaEditor.Control.Core
         /// </summary>
         public void CloseFile()
         {
-            if (this._file != null)
+            if (IsOpen)
             {
                 this._file.Close();
                 this._file = null;
@@ -125,11 +133,11 @@ namespace WPFHexaEditor.Control.Core
         /// <summary>
         /// Get the lenght of file. Return -1 if file is close.
         /// </summary>
-        public long Lenght
+        public long Length
         {
             get
             {
-                if (_file != null)
+                if (IsOpen)
                     return _file.Length;
 
                 return -1;
@@ -143,14 +151,14 @@ namespace WPFHexaEditor.Control.Core
         {
             get
             {
-                if (_file != null)
+                if (IsOpen)
                     return _file.Position;
 
                 return -1;
             }
             set
             {
-                if (_file != null)
+                if (IsOpen)
                 {
                     _file.Position = value;
 
@@ -192,7 +200,7 @@ namespace WPFHexaEditor.Control.Core
         /// <returns></returns>
         public int ReadByte()
         {
-            if (_file != null)
+            if (IsOpen)
                 if (_file.CanRead)
                     return _file.ReadByte();
 
@@ -202,7 +210,7 @@ namespace WPFHexaEditor.Control.Core
         /// <summary>
         /// Clear modification
         /// </summary>
-        private void ClearBytesModifiedsList()
+        public void ClearBytesModifiedsList()
         {
             if (_byteModifiedList != null)
                 _byteModifiedList.Clear();
@@ -211,7 +219,7 @@ namespace WPFHexaEditor.Control.Core
         /// <summary>
         /// Check if the byte in parameter are modified and return original Bytemodified from list
         /// </summary>
-        private ByteModified CheckIfIsByteModified(long bytePositionInFile)
+        public ByteModified CheckIfIsByteModified(long bytePositionInFile)
         {
             foreach (ByteModified byteModified in _byteModifiedList)
             {
@@ -283,7 +291,7 @@ namespace WPFHexaEditor.Control.Core
         public bool CanCopy(long selectionStart, long selectionStop)
         {
 
-            if (GetSelectionLenght(selectionStart, selectionStop) < 1 || _file == null)
+            if (GetSelectionLenght(selectionStart, selectionStop) < 1 || !IsOpen)
                 return false;
 
             return true;

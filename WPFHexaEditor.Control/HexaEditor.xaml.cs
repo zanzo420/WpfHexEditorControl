@@ -29,7 +29,8 @@ namespace WPFHexaEditor.Control
         private string _fileName = "";
         private const double _lineInfoHeight = 22;
         private int _bytePerLine = 16;
-        private Stream _file = null;
+        //private Stream _provider = null;
+        private ByteProvider _provider = null;
         private double _scrollLargeChange = 100;
         private bool _readOnlyMode = false;
         private bool _isHexDataVisible = true;
@@ -83,20 +84,9 @@ namespace WPFHexaEditor.Control
             {
                 CloseFile();
                 bool readOnlyMode = false;
-
-                try
-                {
-                    _file = File.Open(filename, FileMode.Open, FileAccess.ReadWrite, FileShare.Read); ;
-                }
-                catch
-                {
-                    if (MessageBox.Show("The file is locked. Do you want to open it in read-only mode?", "", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                    {
-                        _file = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                        readOnlyMode = true;
-                    }
-                }
-
+                                
+                _provider = new ByteProvider(filename);
+                
                 RefreshView(true);
 
                 UnSelectAll();
@@ -151,6 +141,9 @@ namespace WPFHexaEditor.Control
 
             set
             {
+                if (ByteProvider.CheckIsOpen(_provider))
+                    _provider.ReadOnlyMode = value;
+
                 _readOnlyMode = value;
 
                 RefreshView(false);
@@ -298,7 +291,7 @@ namespace WPFHexaEditor.Control
         /// </summary>
         private void UpdateDataViewer(bool ControlResize)
         {
-            if (_file != null)
+            if (ByteProvider.CheckIsOpen(_provider))
             {                
                 if (ControlResize)
                 {
@@ -314,14 +307,14 @@ namespace WPFHexaEditor.Control
 
                         for (int i = 0; i < BytePerLine; i++)
                         {
-                            _file.Position = position + i;
+                            _provider.Position = position + i;
 
-                            if (_file.Position >= _file.Length)
+                            if (_provider.Position >= _provider.Length)
                                 break;
 
                             HexByteControl byteControl = new HexByteControl();
 
-                            byteControl.BytePositionInFile = _file.Position;
+                            byteControl.BytePositionInFile = _provider.Position;
                             byteControl.ReadOnlyMode = _readOnlyMode;
                             byteControl.MouseSelection += Control_MouseSelection;
                             byteControl.Click += Control_Click;
@@ -334,7 +327,7 @@ namespace WPFHexaEditor.Control
                             byteControl.MovePageUp += Control_MovePageUp;
                             byteControl.MovePageDown += Control_MovePageDown;
 
-                            byteControl.Byte = (byte)_file.ReadByte();
+                            byteControl.Byte = (byte)_provider.ReadByte();
                             
                             dataLineStack.Children.Add(byteControl);                                                        
                         }
@@ -351,9 +344,9 @@ namespace WPFHexaEditor.Control
 
                         foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
                         {
-                            _file.Position = position++;
+                            _provider.Position = position++;
                                                         
-                            if (_file.Position >= _file.Length)
+                            if (_provider.Position >= _provider.Length)
                             {                                
                                 byteControl.IsByteModified = false;
                                 byteControl.BytePositionInFile = -1;
@@ -365,8 +358,8 @@ namespace WPFHexaEditor.Control
                             {
                                 byteControl.IsByteModified = false;
                                 byteControl.ReadOnlyMode = _readOnlyMode;
-                                byteControl.BytePositionInFile = _file.Position;
-                                byteControl.Byte = (byte)_file.ReadByte();                                
+                                byteControl.BytePositionInFile = _provider.Position;
+                                byteControl.Byte = (byte)_provider.ReadByte();                                
                             }
                         }
 
@@ -400,10 +393,10 @@ namespace WPFHexaEditor.Control
             //TODO : Validation
             if (Keyboard.Modifiers == ModifierKeys.Shift)
             {
-                if (test < _file.Length)
+                if (test < _provider.Length)
                     SelectionStart += BytePerLine;
                 else
-                    SelectionStart = _file.Length;
+                    SelectionStart = _provider.Length;
             }
             else
             {
@@ -412,7 +405,7 @@ namespace WPFHexaEditor.Control
                 else
                     SelectionStop = SelectionStart;
 
-                if (test < _file.Length)
+                if (test < _provider.Length)
                 {
                     SelectionStart += BytePerLine;
                     SelectionStop += BytePerLine;
@@ -550,9 +543,9 @@ namespace WPFHexaEditor.Control
         
         private void SetFocusHexDataPanel(long bytePositionInFile)
         {
-            if (_file != null)
+            if (ByteProvider.CheckIsOpen(_provider))
             {
-                if (bytePositionInFile >= _file.Length)
+                if (bytePositionInFile >= _provider.Length)
                     return;
 
                 int stackIndex = 0;
@@ -579,9 +572,9 @@ namespace WPFHexaEditor.Control
 
         private void SetFocusStringDataPanel(long bytePositionInFile)
         {
-            if (_file != null)
+            if (ByteProvider.CheckIsOpen(_provider))
             {
-                if (bytePositionInFile >= _file.Length)
+                if (bytePositionInFile >= _provider.Length)
                     return;
 
                 int stackIndex = 0;
@@ -612,7 +605,7 @@ namespace WPFHexaEditor.Control
         /// <returns>Return -1 of no file open</returns>
         private long GetFirstVisibleBytePosition()
         {
-            if (_file != null)
+            if (ByteProvider.CheckIsOpen(_provider))
             {
                 int stackIndex = 0;
                 foreach (Label infolabel in LinesInfoStackPanel.Children)
@@ -635,7 +628,7 @@ namespace WPFHexaEditor.Control
         /// <returns>Return -1 of no file open.</returns>
         private long GetLastVisibleBytePosition()
         {
-            if (_file != null)
+            if (ByteProvider.CheckIsOpen(_provider))
             {
                 int stackIndex = 0;
                 long byteposition = GetFirstVisibleBytePosition();
@@ -706,7 +699,7 @@ namespace WPFHexaEditor.Control
         /// </summary>
         private void UpdateStringDataViewer(bool ControlResize)
         {
-            if (_file != null)
+            if (ByteProvider.CheckIsOpen(_provider))
             {                
                 if (ControlResize)
                 {
@@ -722,26 +715,26 @@ namespace WPFHexaEditor.Control
 
                         for (int i = 0; i < BytePerLine; i++)
                         {
-                            _file.Position = position + i;
+                            _provider.Position = position + i;
                             
-                            if (_file.Position >= _file.Length)
+                            if (_provider.Position >= _provider.Length)
                                 break;
                                                         
                             StringByteControl sbCtrl = new StringByteControl();
 
-                            sbCtrl.BytePositionInFile = _file.Position;
+                            sbCtrl.BytePositionInFile = _provider.Position;
                             sbCtrl.StringByteModified += Control_ByteModified;
                             sbCtrl.ReadOnlyMode = _readOnlyMode;
                             sbCtrl.MoveNext += Control_MoveNext;
                             sbCtrl.MouseSelection += Control_MouseSelection;
                             sbCtrl.Click += Control_Click;
-                            sbCtrl.BytePositionInFile = _file.Position;
+                            sbCtrl.BytePositionInFile = _provider.Position;
                             sbCtrl.MoveUp += Control_MoveUp;
                             sbCtrl.MoveDown += Control_MoveDown;
                             sbCtrl.MoveLeft += Control_MoveLeft;
                             sbCtrl.MoveRight += Control_MoveRight;
                             
-                            sbCtrl.Byte = (byte)_file.ReadByte();
+                            sbCtrl.Byte = (byte)_provider.ReadByte();
                                                         
                             dataLineStack.Children.Add(sbCtrl);
                         }
@@ -758,9 +751,9 @@ namespace WPFHexaEditor.Control
 
                         foreach (StringByteControl sbCtrl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
                         {
-                            _file.Position = position++;
+                            _provider.Position = position++;
 
-                            if (_file.Position >= _file.Length)
+                            if (_provider.Position >= _provider.Length)
                             {
                                 sbCtrl.Byte = null;
                                 sbCtrl.BytePositionInFile = -1;
@@ -771,8 +764,8 @@ namespace WPFHexaEditor.Control
                             else
                             {
                                 sbCtrl.InternalChange = true;
-                                sbCtrl.Byte = (byte)_file.ReadByte();
-                                sbCtrl.BytePositionInFile = _file.Position - 1;
+                                sbCtrl.Byte = (byte)_provider.ReadByte();
+                                sbCtrl.BytePositionInFile = _provider.Position - 1;
                                 sbCtrl.IsByteModified = false;
                                 sbCtrl.ReadOnlyMode = _readOnlyMode;
                                 sbCtrl.InternalChange = false;
@@ -799,10 +792,10 @@ namespace WPFHexaEditor.Control
             //TODO : Validation
             if (Keyboard.Modifiers == ModifierKeys.Shift)
             {
-                if (test <= _file.Length)
+                if (test <= _provider.Length)
                     SelectionStart++;
                 else
-                    SelectionStart = _file.Length;
+                    SelectionStart = _provider.Length;
             }
             else
             {
@@ -811,7 +804,7 @@ namespace WPFHexaEditor.Control
                 else
                     SelectionStop = SelectionStart;
 
-                if (test < _file.Length)
+                if (test < _provider.Length)
                 {
                     SelectionStart++;
                     SelectionStop++;
@@ -819,8 +812,8 @@ namespace WPFHexaEditor.Control
             }
             
             //Validation and refresh
-            if (SelectionStart >= _file.Length)
-                SelectionStart = _file.Length;
+            if (SelectionStart >= _provider.Length)
+                SelectionStart = _provider.Length;
             
             if (SelectionStart > GetLastVisibleBytePosition())
                 VerticalScrollBar.Value++;
@@ -907,7 +900,7 @@ namespace WPFHexaEditor.Control
         {
             HexHeaderStackPanel.Children.Clear();
 
-            if (_file != null)
+            if (ByteProvider.CheckIsOpen(_provider))
             {
                 for (int i = 0; i < BytePerLine; i++)
                 {
@@ -938,7 +931,7 @@ namespace WPFHexaEditor.Control
         {
             LinesInfoStackPanel.Children.Clear();
 
-            if (_file != null)
+            if (ByteProvider.CheckIsOpen(_provider))
             {
                 for(int i = 0; i < GetMaxVisibleLine(); i++)
                 {
@@ -948,7 +941,7 @@ namespace WPFHexaEditor.Control
                     long firstLineByte = ((long)VerticalScrollBar.Value + i) * BytePerLine; 
                     string info = "0x" +  firstLineByte.ToString(Constant.HexLineInfoStringFormat, CultureInfo.InvariantCulture);
 
-                    if (firstLineByte < _file.Length)
+                    if (firstLineByte < _provider.Length)
                     {
                         //Create control
                         Label LineInfoLabel = new Label();
@@ -998,10 +991,10 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public void CloseFile()
         {
-            if (this._file != null)
+            if (ByteProvider.CheckIsOpen(_provider))
             {
-                this._file.Close();
-                this._file = null;
+                _provider.CloseFile();
+
                 ReadOnlyMode = false;
                 VerticalScrollBar.Value = 0;
             }
@@ -1018,7 +1011,7 @@ namespace WPFHexaEditor.Control
         {
             VerticalScrollBar.Visibility = Visibility.Collapsed;
 
-            if (_file != null)
+            if (ByteProvider.CheckIsOpen(_provider))
             {
                 //TODO : check if need to show
                 VerticalScrollBar.Visibility = Visibility.Visible;
@@ -1035,8 +1028,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public long GetMaxLine()
         {
-            if (_file != null)
-                return _file.Length / BytePerLine;
+            if (ByteProvider.CheckIsOpen(_provider))
+                return _provider.Length / BytePerLine;
             else
                 return 0;
         }
@@ -1094,7 +1087,7 @@ namespace WPFHexaEditor.Control
             if (value < -1)
                 return -1L;
 
-            if (ctrl._file == null)
+            if (!ByteProvider.CheckIsOpen(ctrl._provider))
                 return -1L;
             else
                 return baseValue;
@@ -1136,11 +1129,11 @@ namespace WPFHexaEditor.Control
             if (value < -1)
                 return -1L;
 
-            if (ctrl._file == null)
+            if (!ByteProvider.CheckIsOpen(ctrl._provider))
                 return -1L;
 
-            if (value >= ctrl._file.Length)
-                return ctrl._file.Length;
+            if (value >= ctrl._provider.Length)
+                return ctrl._provider.Length;
             
             return baseValue;            
         }
@@ -1174,10 +1167,10 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public void SelectAll()
         {
-            if (_file != null)
+            if (ByteProvider.CheckIsOpen(_provider))
             {
                 SelectionStart = 0;
-                SelectionStop = _file.Length;
+                SelectionStop = _provider.Length;
             }
             else
             {
@@ -1215,47 +1208,17 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public bool CanCopy()
         {
-
-            if (SelectionLenght < 1 || _file == null)
+            if (SelectionLenght < 1 || !ByteProvider.CheckIsOpen(_provider))
                 return false;
-
+            
             return true;
         }
-
-        /// <summary>
-		/// Copies the current selection in the hex box to the Clipboard.
-		/// </summary>
-        private byte[] GetCopyData()
-        {
-            //Validation
-            if (!CanCopy()) return new byte[0];
-            if (SelectionStop == -1 || SelectionStop == -1) return new byte[0];
-
-            //Variable
-            long byteStartPosition = -1;            
-            byte[] buffer = new byte[SelectionLenght];
-
-            //Set start position
-            if (SelectionStart == SelectionStop)
-                byteStartPosition = SelectionStart;
-            else if (SelectionStart > SelectionStop)
-                byteStartPosition = SelectionStop;
-            else
-                byteStartPosition = SelectionStart;
-
-            //set position
-            _file.Position = byteStartPosition;
-
-            _file.Read(buffer, 0, Convert.ToInt32(SelectionLenght));
-
-            return buffer;
-        }
-
+        
         /// <summary>
         /// Copy to clipboard with default CopyPasteMode.ASCIIString
         /// </summary>
         public void CopyToClipboard()
-        {
+        {            
             CopyToClipboard(CopyPasteMode.ASCIIString);
         }
 
@@ -1266,34 +1229,9 @@ namespace WPFHexaEditor.Control
         {
             if (!CanCopy()) return;
 
-            //Variables
-            byte[] buffer = GetCopyData();
-            string sBuffer = "";
+            if (ByteProvider.CheckIsOpen(_provider))
+                _provider.CopyToClipboard(copypastemode, SelectionStart, SelectionStop);
 
-            DataObject da = new DataObject();
-
-            switch (copypastemode)
-            {
-                case CopyPasteMode.ASCIIString:
-                    sBuffer = Converters.BytesToString(buffer);
-                    da.SetText(sBuffer, TextDataFormat.Text);
-                    break;
-                case CopyPasteMode.HexaString:
-                    sBuffer = Converters.ByteToHex(buffer);
-                    da.SetText(sBuffer, TextDataFormat.Text);
-                    break;
-                case CopyPasteMode.Byte:
-                    throw new NotImplementedException();
-            }
-            
-            //set memorystream (BinaryData) clipboard data
-            System.IO.MemoryStream ms = new System.IO.MemoryStream(buffer, 0, buffer.Length, false, true);
-            da.SetData("BinaryData", ms);
-
-            Clipboard.SetDataObject(da, true);
-
-            if (DataCopied != null)
-                DataCopied(this, new EventArgs());
         }
 
         #endregion Copy/Paste/Cut Methods
@@ -1309,7 +1247,7 @@ namespace WPFHexaEditor.Control
             SelectionStart = position;
             SelectionStop = position + byteLenght - 1;
 
-            if (_file != null)
+            if (ByteProvider.CheckIsOpen(_provider))
             {
                 VerticalScrollBar.Value = position / BytePerLine;
             }

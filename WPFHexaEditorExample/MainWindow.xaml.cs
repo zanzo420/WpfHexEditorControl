@@ -114,7 +114,7 @@ namespace WPFHexaEditorExample
                     MessageBox.Show(Clipboard.GetText());
             }
             else
-                MessageBox.Show("Can't copy right now !");            
+                MessageBox.Show("Can't copy right now !");
         }
     }
 }

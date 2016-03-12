@@ -330,15 +330,16 @@ namespace WPFHexaEditor.Control
         }
 
         private void UserControl_MouseEnter(object sender, MouseEventArgs e)
-        {           
-
+        {
             if (Byte != null)
+            {
                 if (!IsByteModified && !_isSelected)
                     this.Background = (SolidColorBrush)TryFindResource("MouseOverColor");
 
-            if (e.LeftButton == MouseButtonState.Pressed)
-                if (MouseSelection != null)
-                    MouseSelection(this, e);
+                if (e.LeftButton == MouseButtonState.Pressed)
+                    if (MouseSelection != null)
+                        MouseSelection(this, e);
+            }
         }
 
         private void UserControl_MouseLeave(object sender, MouseEventArgs e)

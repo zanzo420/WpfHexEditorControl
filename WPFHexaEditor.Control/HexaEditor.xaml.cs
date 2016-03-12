@@ -29,7 +29,6 @@ namespace WPFHexaEditor.Control
         private string _fileName = "";
         private const double _lineInfoHeight = 22;
         private int _bytePerLine = 16;
-        //private Stream _provider = null;
         private ByteProvider _provider = null;
         private double _scrollLargeChange = 100;
         private bool _readOnlyMode = false;
@@ -37,13 +36,9 @@ namespace WPFHexaEditor.Control
         private bool _isStringDataVisible = true;
         private bool _isVerticalScrollBarVisible = true;
         private bool _isHeaderVisible = true;
-        private bool _isShowStatusBar = false;        
-        
-        /// <summary>
-        /// ByteModified list for save/modify data
-        /// </summary>
-        private List<ByteModified> _byteModifiedList = new List<ByteModified>();
-
+        private bool _isShowStatusBar = false;
+                        
+        //Event
         public event EventHandler SelectionStartChanged;
         public event EventHandler SelectionStopChanged;
         public event EventHandler SelectionLenghtChanged;
@@ -68,9 +63,10 @@ namespace WPFHexaEditor.Control
 
             set
             {
+                
                 this._fileName = value;
-
-                OpenFile(value);
+                                
+                OpenFile(value);                               
             }
         }
 
@@ -83,23 +79,37 @@ namespace WPFHexaEditor.Control
             if (File.Exists(filename))
             {
                 CloseFile();
-                bool readOnlyMode = false;
+                //bool readOnlyMode = false;
                                 
                 _provider = new ByteProvider(filename);
-                
+                _provider.ReadOnlyChanged += Provider_ReadOnlyChanged;
+                _provider.DataCopied += Provider_DataCopied;
+
                 RefreshView(true);
 
                 UnSelectAll();
 
                 UpdateSelectionColorMode(FirstColor.HexByteData);
 
-                if (readOnlyMode)
-                    ReadOnlyMode = true;
+                //if (readOnlyMode)
+                //ReadOnlyMode = _provider.ReadOnlyMode;
             }
             else
             {
                 throw new FileNotFoundException();
             }
+        }
+
+        private void Provider_DataCopied(object sender, EventArgs e)
+        {
+            if (DataCopied != null)
+                DataCopied(sender, e);
+        }
+
+        private void Provider_ReadOnlyChanged(object sender, EventArgs e)
+        {
+            if (ByteProvider.CheckIsOpen(_provider))
+                ReadOnlyMode = _provider.ReadOnlyMode;
         }
 
         public int BytePerLine
@@ -163,7 +173,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         private void ClearBytesModifiedsList()
         {
-            _byteModifiedList.Clear();
+            if (ByteProvider.CheckIsOpen(_provider))
+                _provider.ClearBytesModifiedsList();
         }
         
         /// <summary>
@@ -271,21 +282,6 @@ namespace WPFHexaEditor.Control
             }
         }
         
-        /// <summary>
-        /// Check if the byte in parameter are modified and return original Bytemodified from list
-        /// </summary>
-        private ByteModified CheckIfIsByteModified(long bytePositionInFile)
-        {
-            foreach (ByteModified byteModified in _byteModifiedList)
-            {
-                if (byteModified.BytePositionInFile == bytePositionInFile && byteModified.IsValid == true)
-                    return byteModified; //.GetCopy();
-            }
-
-            return null;
-        }
-
-
         /// <summary>
         /// Update the dataviewer stackpanel
         /// </summary>
@@ -461,52 +457,57 @@ namespace WPFHexaEditor.Control
                 SetFocusStringDataPanel(SelectionStart);
         }
 
+        /// <summary>
+        /// Update byte are modified
+        /// </summary>
         private void UpdateByteModified()
         {
             int stackIndex = 0;
             ByteModified byteModifiedCopy = null;
-            foreach (ByteModified byteModified in _byteModifiedList)
-            {
-                stackIndex = 0;
-                byteModifiedCopy = byteModified.GetCopy();
 
-                foreach (Label infolabel in LinesInfoStackPanel.Children)
+            if (ByteProvider.CheckIsOpen(_provider))
+                foreach (ByteModified byteModified in _provider.ByteModifieds(ByteAction.All))
                 {
-                    foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
+                    stackIndex = 0;
+                    byteModifiedCopy = byteModified.GetCopy();
+
+                    foreach (Label infolabel in LinesInfoStackPanel.Children)
                     {
-                        if (byteModifiedCopy.BytePositionInFile == byteControl.BytePositionInFile)
+                        foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
                         {
-                            switch (byteModifiedCopy.Action)
+                            if (byteModifiedCopy.BytePositionInFile == byteControl.BytePositionInFile)
                             {
-                                case ByteAction.Modified:
-                                    byteControl.InternalChange = true;
-                                    byteControl.Byte = byteModifiedCopy.Byte;
-                                    byteControl.IsByteModified = true;
-                                    byteControl.InternalChange = false;
-                                    break;
+                                switch (byteModifiedCopy.Action)
+                                {
+                                    case ByteAction.Modified:
+                                        byteControl.InternalChange = true;
+                                        byteControl.Byte = byteModifiedCopy.Byte;
+                                        byteControl.IsByteModified = true;
+                                        byteControl.InternalChange = false;
+                                        break;
+                                }
                             }
                         }
-                    }
 
-                    foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
-                    {
-                        if (byteModifiedCopy.BytePositionInFile == byteControl.BytePositionInFile)
+                        foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
                         {
-                            switch (byteModifiedCopy.Action)
+                            if (byteModifiedCopy.BytePositionInFile == byteControl.BytePositionInFile)
                             {
-                                case ByteAction.Modified:
-                                    byteControl.InternalChange = true;
-                                    byteControl.Byte = byteModifiedCopy.Byte;
-                                    byteControl.IsByteModified = true;
-                                    byteControl.InternalChange = false;
-                                    break;
+                                switch (byteModifiedCopy.Action)
+                                {
+                                    case ByteAction.Modified:
+                                        byteControl.InternalChange = true;
+                                        byteControl.Byte = byteModifiedCopy.Byte;
+                                        byteControl.IsByteModified = true;
+                                        byteControl.InternalChange = false;
+                                        break;
+                                }
                             }
                         }
-                    }
 
-                    stackIndex++;
+                        stackIndex++;
+                    }
                 }
-            }
         }
 
         private void Control_ByteModified(object sender, EventArgs e)
@@ -515,32 +516,15 @@ namespace WPFHexaEditor.Control
             StringByteControl sbCtrl = sender as StringByteControl;
 
             if (sbCtrl != null)
-                AddByteModified(sbCtrl.Byte, sbCtrl.BytePositionInFile, ByteAction.Modified);
+                _provider.AddByteModified(sbCtrl.Byte, sbCtrl.BytePositionInFile);
             else if (ctrl != null)
-                AddByteModified(ctrl.Byte, ctrl.BytePositionInFile, ByteAction.Modified);
-        }
-
-        /// <summary>
-        /// Add/Modifiy a ByteModifed in the list of byte changed
-        /// </summary>        
-        private void AddByteModified(byte? @byte, long bytePositionInFile, ByteAction action , int lenght = 1)
-        {
-            ByteModified bytemodifiedOriginal = CheckIfIsByteModified(bytePositionInFile);
-
-            if (bytemodifiedOriginal != null)
-                _byteModifiedList.Remove(bytemodifiedOriginal);
-            
-            ByteModified byteModified = new ByteModified();
-
-            //TODO: Add action type (deleted, add...)
-            byteModified.Byte = @byte;
-            byteModified.Lenght = lenght < 0 ? 1 : lenght;
-            byteModified.BytePositionInFile = bytePositionInFile;
-            byteModified.Action = action;
-
-            _byteModifiedList.Add(byteModified);
+                _provider.AddByteModified(ctrl.Byte, ctrl.BytePositionInFile);
         }
         
+        /// <summary>
+        /// Set focus on byte
+        /// </summary>
+        /// <param name="bytePositionInFile"></param>
         private void SetFocusHexDataPanel(long bytePositionInFile)
         {
             if (ByteProvider.CheckIsOpen(_provider))
@@ -1125,6 +1109,8 @@ namespace WPFHexaEditor.Control
         {
             HexaEditor ctrl = d as HexaEditor;
             long value = (long)baseValue;
+
+            Debug.Print($"SelectionbStop : {value.ToString()}");
 
             if (value < -1)
                 return -1L;

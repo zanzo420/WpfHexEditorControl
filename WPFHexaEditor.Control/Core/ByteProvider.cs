@@ -290,7 +290,6 @@ namespace WPFHexaEditor.Control.Core
         /// </summary>
         public bool CanCopy(long selectionStart, long selectionStop)
         {
-
             if (GetSelectionLenght(selectionStart, selectionStop) < 1 || !IsOpen)
                 return false;
 

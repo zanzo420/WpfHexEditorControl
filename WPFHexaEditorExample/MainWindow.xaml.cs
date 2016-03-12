@@ -49,7 +49,7 @@ namespace WPFHexaEditorExample
 
             if (fileDialog.ShowDialog() != null)
             {
-                if (File.Exists(fileDialog.FileName))
+                if (File.Exists(fileDialog.FileName))                    
                     HexEdit.FileName = fileDialog.FileName;
             }
         }

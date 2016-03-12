@@ -314,6 +314,7 @@ namespace WPFHexaEditor.Control
                             byteControl.MoveRight += Control_MoveRight;
                             byteControl.MovePageUp += Control_MovePageUp;
                             byteControl.MovePageDown += Control_MovePageDown;
+                            byteControl.ByteDeleted += Control_ByteDeleted;
 
                             byteControl.Byte = (byte)_provider.ReadByte();
                             
@@ -336,7 +337,7 @@ namespace WPFHexaEditor.Control
                                                         
                             if (_provider.Position >= _provider.Length)
                             {                                
-                                byteControl.IsByteModified = false;
+                                byteControl.Action = ByteAction.Nothing;
                                 byteControl.BytePositionInFile = -1;
                                 byteControl.ReadOnlyMode = _readOnlyMode;
                                 byteControl.IsSelected = false;
@@ -344,7 +345,7 @@ namespace WPFHexaEditor.Control
                             }
                             else
                             {
-                                byteControl.IsByteModified = false;
+                                byteControl.Action = ByteAction.Nothing;
                                 byteControl.ReadOnlyMode = _readOnlyMode;
                                 byteControl.BytePositionInFile = _provider.Position;
                                 byteControl.Byte = (byte)_provider.ReadByte();                                
@@ -469,15 +470,19 @@ namespace WPFHexaEditor.Control
                         {
                             if (byteModifiedCopy.BytePositionInFile == byteControl.BytePositionInFile)
                             {
+                                byteControl.InternalChange = true;
+                                byteControl.Byte = byteModifiedCopy.Byte;
+
                                 switch (byteModifiedCopy.Action)
                                 {
                                     case ByteAction.Modified:
-                                        byteControl.InternalChange = true;
-                                        byteControl.Byte = byteModifiedCopy.Byte;
-                                        byteControl.IsByteModified = true;
-                                        byteControl.InternalChange = false;
+                                        byteControl.Action = ByteAction.Modified;
+                                        break;
+                                    case ByteAction.Deleted:
+                                        byteControl.Action = ByteAction.Deleted;
                                         break;
                                 }
+                                byteControl.InternalChange = false;
                             }
                         }
 
@@ -485,15 +490,29 @@ namespace WPFHexaEditor.Control
                         {
                             if (byteModifiedCopy.BytePositionInFile == byteControl.BytePositionInFile)
                             {
+                                byteControl.InternalChange = true;
+                                byteControl.Byte = byteModifiedCopy.Byte;
+
                                 switch (byteModifiedCopy.Action)
                                 {
                                     case ByteAction.Modified:
-                                        byteControl.InternalChange = true;
-                                        byteControl.Byte = byteModifiedCopy.Byte;
-                                        byteControl.IsByteModified = true;
-                                        byteControl.InternalChange = false;
+                                        byteControl.Action = ByteAction.Modified;
+                                        break;
+                                    case ByteAction.Deleted:
+                                        byteControl.Action = ByteAction.Deleted;
                                         break;
                                 }
+                                byteControl.InternalChange = false;
+
+                                //switch (byteModifiedCopy.Action)
+                                //{
+                                //    case ByteAction.Modified:
+                                //        byteControl.InternalChange = true;
+                                //        byteControl.Byte = byteModifiedCopy.Byte;
+                                //        byteControl.IsByteModified = true;
+                                //        byteControl.InternalChange = false;
+                                //        break;
+                                //}
                             }
                         }
 
@@ -713,6 +732,7 @@ namespace WPFHexaEditor.Control
                             sbCtrl.MoveDown += Control_MoveDown;
                             sbCtrl.MoveLeft += Control_MoveLeft;
                             sbCtrl.MoveRight += Control_MoveRight;
+                            sbCtrl.ByteDeleted += Control_ByteDeleted;
                             
                             sbCtrl.Byte = (byte)_provider.ReadByte();
                                                         
@@ -737,7 +757,7 @@ namespace WPFHexaEditor.Control
                             {
                                 sbCtrl.Byte = null;
                                 sbCtrl.BytePositionInFile = -1;
-                                sbCtrl.IsByteModified = false;
+                                sbCtrl.Action = ByteAction.Nothing;
                                 sbCtrl.ReadOnlyMode = _readOnlyMode;
                                 sbCtrl.IsSelected = false;
                             }
@@ -746,7 +766,7 @@ namespace WPFHexaEditor.Control
                                 sbCtrl.InternalChange = true;
                                 sbCtrl.Byte = (byte)_provider.ReadByte();
                                 sbCtrl.BytePositionInFile = _provider.Position - 1;
-                                sbCtrl.IsByteModified = false;
+                                sbCtrl.Action = ByteAction.Nothing;
                                 sbCtrl.ReadOnlyMode = _readOnlyMode;
                                 sbCtrl.InternalChange = false;
                             }
@@ -760,6 +780,23 @@ namespace WPFHexaEditor.Control
             {
                 StringDataStackPanel.Children.Clear();
             }
+        }
+
+        private void Control_ByteDeleted(object sender, EventArgs e)
+        {
+            HexByteControl ctrl = sender as HexByteControl;
+            StringByteControl sbCtrl = sender as StringByteControl;
+
+            long position = -1;
+
+            if (SelectionStart > SelectionStop)
+                position = SelectionStop;
+            else
+                position = SelectionStart;
+
+                _provider.AddByteDeleted(position, SelectionLenght);
+            
+            UpdateByteModified();
         }
 
         private void Control_MoveRight(object sender, EventArgs e)

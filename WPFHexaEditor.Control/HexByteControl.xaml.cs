@@ -21,8 +21,7 @@ namespace WPFHexaEditor.Control
     /// Interaction logic for HexControl.xaml
     /// </summary>
     public partial class HexByteControl : UserControl
-    {        
-        private bool _isByteModified;
+    {   
         private bool _isSelected = false;
         private bool _readOnlyMode = false;
         private KeyDownLabel _keyDownLabel = KeyDownLabel.FirstChar;
@@ -37,6 +36,7 @@ namespace WPFHexaEditor.Control
         public event EventHandler MoveDown;
         public event EventHandler MovePageDown;
         public event EventHandler MovePageUp;
+        public event EventHandler ByteDeleted;
 
         public HexByteControl()
         {
@@ -58,9 +58,9 @@ namespace WPFHexaEditor.Control
 
         public static readonly DependencyProperty BytePositionInFileProperty =
             DependencyProperty.Register("BytePositionInFile", typeof(long), typeof(HexByteControl), new PropertyMetadata(-1L));
-                
+
         /// <summary>
-        /// Get or Set action to this byte
+        /// Action with this byte
         /// </summary>
         public ByteAction Action
         {
@@ -68,12 +68,23 @@ namespace WPFHexaEditor.Control
             set { SetValue(ActionProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for Action.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ActionProperty =
-            DependencyProperty.Register("Action", typeof(ByteAction), typeof(HexByteControl), 
-                new FrameworkPropertyMetadata(ByteAction.Nothing, new PropertyChangedCallback(Action_PropertyChangedCallback)));
+            DependencyProperty.Register("Action", typeof(ByteAction), typeof(HexByteControl),
+                new FrameworkPropertyMetadata(ByteAction.Nothing,
+                    new PropertyChangedCallback(Action_ValueChanged),
+                    new CoerceValueCallback(Action_CoerceValue)));
 
-        private static void Action_PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static object Action_CoerceValue(DependencyObject d, object baseValue)
+        {
+            ByteAction value = (ByteAction)baseValue;
+
+            if (value != ByteAction.All)
+                return baseValue;
+            else
+                return ByteAction.Nothing;
+        }
+
+        private static void Action_ValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             HexByteControl ctrl = d as HexByteControl;
 
@@ -109,7 +120,7 @@ namespace WPFHexaEditor.Control
         {
             HexByteControl ctrl = d as HexByteControl;
 
-            if (ctrl.IsByteModified && ctrl.InternalChange == false)
+            if (ctrl.Action != ByteAction.Nothing && ctrl.InternalChange == false)
                 if (ctrl.ByteModified != null)
                     ctrl.ByteModified(ctrl, new EventArgs());
 
@@ -130,20 +141,6 @@ namespace WPFHexaEditor.Control
             DependencyProperty.Register("InternalChange", typeof(bool), typeof(HexByteControl), new PropertyMetadata(false));
 
         #endregion
-
-        public bool IsByteModified
-        {
-            get
-            {
-                return this._isByteModified;
-            }
-            set
-            {
-                this._isByteModified = value;
-
-                UpdateBackGround();
-            }
-        }
 
         public bool ReadOnlyMode
         {
@@ -202,12 +199,24 @@ namespace WPFHexaEditor.Control
                 else
                     this.Background = (SolidColorBrush)TryFindResource("SecondColor");
             }
-            else if (_isByteModified)
+            else if (Action != ByteAction.Nothing)
             {
-                this.FontWeight = (FontWeight)TryFindResource("BoldFontWeight");
-                this.Background = (SolidColorBrush)TryFindResource("ByteModifiedColor");
-                FirstHexChar.Foreground = Brushes.Black;
-                SecondHexChar.Foreground = Brushes.Black;
+                switch (Action)
+                {
+                    case ByteAction.Modified:
+                        this.FontWeight = (FontWeight)TryFindResource("BoldFontWeight");
+                        this.Background = (SolidColorBrush)TryFindResource("ByteModifiedColor");
+                        FirstHexChar.Foreground = Brushes.Black;
+                        SecondHexChar.Foreground = Brushes.Black;
+                        break;
+                    case ByteAction.Deleted:
+                        this.FontWeight = (FontWeight)TryFindResource("BoldFontWeight");
+                        this.Background = (SolidColorBrush)TryFindResource("ByteDeletedColor");
+                        FirstHexChar.Foreground = Brushes.Black;
+                        SecondHexChar.Foreground = Brushes.Black;
+                        break;
+                }
+
             }
             else
             {
@@ -295,6 +304,15 @@ namespace WPFHexaEditor.Control
 
                 return;
             }
+            else if (KeyValidator.IsDeleteKey(e.Key))
+            {
+                e.Handled = true;
+                if (ByteDeleted != null)
+                    ByteDeleted(this, new EventArgs());
+
+                return;
+            }
+                       
 
             //MODIFY BYTE
             if (!ReadOnlyMode)
@@ -311,14 +329,14 @@ namespace WPFHexaEditor.Control
                         case KeyDownLabel.FirstChar:
                             FirstHexChar.Content = key;
                             _keyDownLabel = KeyDownLabel.SecondChar;
-                            IsByteModified = true;
+                            Action = ByteAction.Modified;
                             Byte = Converters.HexToByte(FirstHexChar.Content.ToString() + SecondHexChar.Content.ToString())[0];
                             break;
                         case KeyDownLabel.SecondChar:
                             SecondHexChar.Content = key;
                             _keyDownLabel = KeyDownLabel.NextPosition;
 
-                            IsByteModified = true;                            
+                            Action = ByteAction.Modified;                            
                             Byte = Converters.HexToByte(FirstHexChar.Content.ToString() + SecondHexChar.Content.ToString())[0];
                             
                             //Move focus event
@@ -328,24 +346,28 @@ namespace WPFHexaEditor.Control
                     }
                 }            
         }
-
+        
         private void UserControl_MouseEnter(object sender, MouseEventArgs e)
         {
             if (Byte != null)
-            {
-                if (!IsByteModified && !_isSelected)
+                if (Action != ByteAction.Modified &&
+                    Action != ByteAction.Deleted &&
+                    Action != ByteAction.Added &&
+                    !IsSelected)
                     this.Background = (SolidColorBrush)TryFindResource("MouseOverColor");
 
-                if (e.LeftButton == MouseButtonState.Pressed)
-                    if (MouseSelection != null)
-                        MouseSelection(this, e);
-            }
+            if (e.LeftButton == MouseButtonState.Pressed)
+                if (MouseSelection != null)
+                    MouseSelection(this, e);
         }
 
         private void UserControl_MouseLeave(object sender, MouseEventArgs e)
         {
             if (Byte != null)
-                if (!IsByteModified && !_isSelected)
+                if (Action != ByteAction.Modified &&
+                    Action != ByteAction.Deleted &&
+                    Action != ByteAction.Added &&
+                    !IsSelected)
                     this.Background = Brushes.Transparent;
         }
     }

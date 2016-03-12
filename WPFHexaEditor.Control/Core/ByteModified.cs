@@ -11,8 +11,7 @@ namespace WPFHexaEditor.Control.Core
         private byte? _byte = null;
         private ByteAction _action = ByteAction.Nothing;
         private long _position = -1;
-        private long _lenght = -1;
-
+        
         /// <summary>
         /// Byte mofidied
         /// </summary>
@@ -60,23 +59,7 @@ namespace WPFHexaEditor.Control.Core
                 _position = value;
             }
         }
-
-        /// <summary>
-        /// The lenght of bytes in this instance
-        /// </summary>
-        public long Lenght
-        {
-            get
-            {
-                return _lenght;
-            }
-
-            set
-            {
-                _lenght = value;
-            }
-        }   
-
+        
         /// <summary>
         /// Check if the object is valid and data can be used for action
         /// </summary>
@@ -84,7 +67,7 @@ namespace WPFHexaEditor.Control.Core
         {
             get
             {
-                if (BytePositionInFile > -1 && Action != ByteAction.Nothing && Byte != null && Lenght > 0)
+                if (BytePositionInFile > -1 && Action != ByteAction.Nothing && Byte != null)
                     return true;
                 else
                     return false;

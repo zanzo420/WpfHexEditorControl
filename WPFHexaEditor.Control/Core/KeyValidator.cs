@@ -61,7 +61,15 @@ namespace WPFHexaEditor.Control.Core
 
         public static bool IsDeleteKey(Key key) { return key == Key.Delete; }
 
-        //public static bool IsIgnoredKey(Key key) { return key == Key.Tab; } //|| key == Key.Enter; }
+        public static bool IsIgnoredKey(Key key)
+        {
+            //ADD SOMES OTHER KEY FOR VALIDATED IN STRINGBYTE CONTROL
+
+            return key == Key.Tab ||
+                   key == Key.Enter ||
+                   key == Key.Return ||
+                   key == Key.Back;
+        }  
 
         public static bool IsUpKey(Key key) { return key == Key.Up; }
 

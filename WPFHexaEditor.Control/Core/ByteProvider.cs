@@ -219,11 +219,13 @@ namespace WPFHexaEditor.Control.Core
         /// <summary>
         /// Check if the byte in parameter are modified and return original Bytemodified from list
         /// </summary>
-        public ByteModified CheckIfIsByteModified(long bytePositionInFile)
+        public ByteModified CheckIfIsByteModified(long bytePositionInFile, ByteAction action = ByteAction.Modified)
         {
             foreach (ByteModified byteModified in _byteModifiedList)
             {
-                if (byteModified.BytePositionInFile == bytePositionInFile && byteModified.IsValid == true)
+                if (byteModified.BytePositionInFile == bytePositionInFile && 
+                    byteModified.IsValid == true &&
+                    byteModified.Action == action)
                     return byteModified; 
             }
 
@@ -235,22 +237,45 @@ namespace WPFHexaEditor.Control.Core
         /// </summary>        
         public void AddByteModified(byte? @byte, long bytePositionInFile)
         {
-            ByteModified bytemodifiedOriginal = CheckIfIsByteModified(bytePositionInFile);
+            ByteModified bytemodifiedOriginal = CheckIfIsByteModified(bytePositionInFile, ByteAction.Modified);
 
             if (bytemodifiedOriginal != null)
                 _byteModifiedList.Remove(bytemodifiedOriginal);
 
             ByteModified byteModified = new ByteModified();
-
-            //TODO: Add action type (deleted, add...)
+            
             byteModified.Byte = @byte;
-            byteModified.Lenght = 1;
             byteModified.BytePositionInFile = bytePositionInFile;
             byteModified.Action = ByteAction.Modified;
 
             _byteModifiedList.Add(byteModified);
         }
 
+        /// <summary>
+        /// Add/Modifiy a ByteModifed in the list of byte have deleted
+        /// </summary>        
+        public void AddByteDeleted(long bytePositionInFile, long length)
+        {
+            long position = bytePositionInFile;
+
+            for (int i = 0; i < length; i++)
+            {
+                ByteModified bytemodifiedOriginal = CheckIfIsByteModified(position, ByteAction.Deleted);
+
+                if (bytemodifiedOriginal != null)
+                    _byteModifiedList.Remove(bytemodifiedOriginal);
+
+                ByteModified byteModified = new ByteModified();
+                
+                byteModified.Byte = new byte();
+                byteModified.BytePositionInFile = position;
+                byteModified.Action = ByteAction.Deleted;
+
+                _byteModifiedList.Add(byteModified);
+
+                position++;
+            }
+        }
         /// <summary>
         /// Return an IEnumerable ByteModified have action set to Modified
         /// </summary>

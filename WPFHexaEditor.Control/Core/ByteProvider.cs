@@ -13,24 +13,17 @@ namespace WPFHexaEditor.Control.Core
     /// </summary>
     public class ByteProvider
     {
-        private Stream _file = null;
-
-        /// <summary>
-        /// ByteModified list for save/modify data
-        /// </summary>
+        //Global variable
         private List<ByteModified> _byteModifiedList = new List<ByteModified>();
-        private string _fileName;
+        private string _fileName = string.Empty;
+        private FileStream _file = null;
         private bool _readOnlyMode = false;
 
-        /// <summary>
-        /// Occurs when data are copied to clipboard
-        /// </summary>
+        //Event
         public event EventHandler DataCopied;
-
-        /// <summary>
-        /// Occurs when ReadOnlyChanged property change
-        /// </summary>
         public event EventHandler ReadOnlyChanged;
+        public event EventHandler FileClosed;
+        public event EventHandler PositionChanged;
 
         /// <summary>
         /// Constructor
@@ -55,16 +48,16 @@ namespace WPFHexaEditor.Control.Core
                 //TODO: make open method
                 this._fileName = value;
 
-                OpenFile(value);
+                OpenFile();
             }
         }
 
         /// <summary>
         /// Open file 
         /// </summary>        
-        public void OpenFile(string value)
+        public void OpenFile()
         {
-            if (File.Exists(value))
+            if (File.Exists(FileName))
             {
                 CloseFile();
 
@@ -72,13 +65,14 @@ namespace WPFHexaEditor.Control.Core
 
                 try
                 {
-                    _file = File.Open(value, FileMode.Open, FileAccess.ReadWrite, FileShare.Read); ;
+                    _file = File.Open(FileName, FileMode.Open, FileAccess.ReadWrite, FileShare.Read); ;
                 }
                 catch
                 {
                     if (MessageBox.Show("The file is locked. Do you want to open it in read-only mode?", "", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                     {
-                        _file = File.Open(value, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                        _file = File.Open(FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+
                         readOnlyMode = true;
                     }
                 }
@@ -101,11 +95,9 @@ namespace WPFHexaEditor.Control.Core
             {
                 return _readOnlyMode;
             }
-
             set
             {
                 _readOnlyMode = value;
-
 
                 //Launch event
                 if (ReadOnlyChanged != null)
@@ -113,25 +105,137 @@ namespace WPFHexaEditor.Control.Core
             }
         }
 
-        private void CloseFile()
+        /// <summary>
+        /// Close file and clear control
+        /// ReadOnlyMode is reset to false
+        /// </summary>
+        public void CloseFile()
         {
-            
+            if (this._file != null)
+            {
+                this._file.Close();
+                this._file = null;
+                ReadOnlyMode = false;
+
+                if (FileClosed != null)
+                    FileClosed(this, new EventArgs());
+            }
         }
 
+        /// <summary>
+        /// Get the lenght of file. Return -1 if file is close.
+        /// </summary>
+        public long Lenght
+        {
+            get
+            {
+                if (_file != null)
+                    return _file.Length;
 
+                return -1;
+            }
+        }
 
-        //TODO : MAke class and implementing in hexaeditor
+        /// <summary>
+        /// Get or Set position in file. Return -1 when file is closed
+        /// </summary>
+        public long Position
+        {
+            get
+            {
+                if (_file != null)
+                    return _file.Position;
 
-        //position
-        //filename
-        //filestream
-        //openfile
-        //closefile
+                return -1;
+            }
+            set
+            {
+                if (_file != null)
+                {
+                    _file.Position = value;
+
+                    if (FileClosed != null)
+                        FileClosed(this, new EventArgs());
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get if file is open
+        /// </summary>
+        public bool IsOpen
+        {
+            get
+            {
+                if (_file != null)
+                    return true;
+
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Readbyte at position if file CanRead. Return -1 is file is closed of EOF.
+        /// </summary>
+        /// <returns></returns>
+        public int ReadByte()
+        {
+            if (_file != null)
+                if (_file.CanRead)
+                    return _file.ReadByte();
+
+            return -1;
+        }
+
+        /// <summary>
+        /// Clear modification
+        /// </summary>
+        private void ClearBytesModifiedsList()
+        {
+            if (_byteModifiedList != null)
+                _byteModifiedList.Clear();
+        }
+
+        /// <summary>
+        /// Check if the byte in parameter are modified and return original Bytemodified from list
+        /// </summary>
+        private ByteModified CheckIfIsByteModified(long bytePositionInFile)
+        {
+            foreach (ByteModified byteModified in _byteModifiedList)
+            {
+                if (byteModified.BytePositionInFile == bytePositionInFile && byteModified.IsValid == true)
+                    return byteModified; //.GetCopy();
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Add/Modifiy a ByteModifed in the list of byte changed
+        /// </summary>        
+        public void AddByteModified(byte? @byte, long bytePositionInFile)
+        {
+            ByteModified bytemodifiedOriginal = CheckIfIsByteModified(bytePositionInFile);
+
+            if (bytemodifiedOriginal != null)
+                _byteModifiedList.Remove(bytemodifiedOriginal);
+
+            ByteModified byteModified = new ByteModified();
+
+            //TODO: Add action type (deleted, add...)
+            byteModified.Byte = @byte;
+            byteModified.Lenght = 1;
+            byteModified.BytePositionInFile = bytePositionInFile;
+            byteModified.Action = ByteAction.Modified;
+
+            _byteModifiedList.Add(byteModified);
+        }
+
+        //TODO : Make class and implementing in hexaeditor
+
         //byteaction list
         //addbyte
         //deletebyte
-        //lenght
-        //readonly
         //getbyte
         //canread / write
         //get change list

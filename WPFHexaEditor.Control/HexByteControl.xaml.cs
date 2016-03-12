@@ -60,6 +60,27 @@ namespace WPFHexaEditor.Control
             DependencyProperty.Register("BytePositionInFile", typeof(long), typeof(HexByteControl), new PropertyMetadata(-1L));
                 
         /// <summary>
+        /// Get or Set action to this byte
+        /// </summary>
+        public ByteAction Action
+        {
+            get { return (ByteAction)GetValue(ActionProperty); }
+            set { SetValue(ActionProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Action.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ActionProperty =
+            DependencyProperty.Register("Action", typeof(ByteAction), typeof(HexByteControl), 
+                new FrameworkPropertyMetadata(ByteAction.Nothing, new PropertyChangedCallback(Action_PropertyChangedCallback)));
+
+        private static void Action_PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            HexByteControl ctrl = d as HexByteControl;
+
+            ctrl.UpdateBackGround();
+        }
+
+        /// <summary>
         /// Used for selection coloring
         /// </summary>
         public bool HexByteFirstSelected

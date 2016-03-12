@@ -382,81 +382,12 @@ namespace WPFHexaEditor.Control
 
         private void Control_MovePageDown(object sender, EventArgs e)
         {
-            //HexByteControl hbCtrl = sender as HexByteControl;
-            //StringByteControl sbCtrl = sender as StringByteControl;
-
-            //long test = SelectionStart + BytePerLine;
-            //long test2 = SelectionStart + BytePerLine * GetMaxVisibleLine();
-
-            ////TODO : Validation
-            //if (Keyboard.Modifiers == ModifierKeys.Shift)
-            //{
-            //    if (test < _file.Length)
-            //        SelectionStart += BytePerLine * GetMaxVisibleLine();
-            //    else
-            //        SelectionStart = _file.Length;
-            //}
-            //else
-            //{
-            //    if (SelectionStart > SelectionStop)
-            //        SelectionStart = SelectionStop;
-            //    else
-            //        SelectionStop = SelectionStart;
-
-            //    if (test2 < _file.Length)
-            //    {
-            //        SelectionStart += BytePerLine * GetMaxVisibleLine();
-            //        SelectionStop += BytePerLine * GetMaxVisibleLine();
-            //    }
-            //}
-
-            //if (SelectionStart > GetLastVisibleBytePosition())
-            //    VerticalScrollBar.Value++;
-
-            //if (hbCtrl != null)
-            //    SetFocusHexDataPanel(SelectionStart);
-
-            //if (sbCtrl != null)
-            //    SetFocusStringDataPanel(SelectionStart);
+            
         }
 
         private void Control_MovePageUp(object sender, EventArgs e)
         {
-            //HexByteControl hbCtrl = sender as HexByteControl;
-            //StringByteControl sbCtrl = sender as StringByteControl;
-
-            //long test = SelectionStart - BytePerLine;
-
-            ////TODO : Validation
-            //if (Keyboard.Modifiers == ModifierKeys.Shift)
-            //{
-            //    if (test > -1)
-            //        SelectionStart -= BytePerLine * GetMaxVisibleLine();
-            //    else
-            //        SelectionStart = 0;
-            //}
-            //else
-            //{
-            //    if (SelectionStart > SelectionStop)
-            //        SelectionStart = SelectionStop;
-            //    else
-            //        SelectionStop = SelectionStart;
-
-            //    if (test > -1)
-            //    {
-            //        SelectionStart -= BytePerLine * GetMaxVisibleLine();
-            //        SelectionStop -= BytePerLine * GetMaxVisibleLine();
-            //    }
-            //}
-
-            //if (SelectionStart < GetFirstVisibleBytePosition())
-            //    VerticalScrollBar.Value--;
-
-            //if (hbCtrl != null)
-            //    SetFocusHexDataPanel(SelectionStart);
-
-            //if (sbCtrl != null)
-            //    SetFocusStringDataPanel(SelectionStart);
+            
         }
 
         private void Control_MoveDown(object sender, EventArgs e)

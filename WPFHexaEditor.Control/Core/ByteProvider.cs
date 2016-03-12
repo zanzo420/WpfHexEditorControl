@@ -175,6 +175,18 @@ namespace WPFHexaEditor.Control.Core
         }
 
         /// <summary>
+        /// Get if file is open
+        /// </summary>
+        public static bool CheckIsOpen(ByteProvider provider)
+        {
+            if (provider != null)
+                if (provider.IsOpen)
+                    return true;
+
+            return false;
+        }
+
+        /// <summary>
         /// Readbyte at position if file CanRead. Return -1 is file is closed of EOF.
         /// </summary>
         /// <returns></returns>
@@ -204,14 +216,14 @@ namespace WPFHexaEditor.Control.Core
             foreach (ByteModified byteModified in _byteModifiedList)
             {
                 if (byteModified.BytePositionInFile == bytePositionInFile && byteModified.IsValid == true)
-                    return byteModified; //.GetCopy();
+                    return byteModified; 
             }
 
             return null;
         }
 
         /// <summary>
-        /// Add/Modifiy a ByteModifed in the list of byte changed
+        /// Add/Modifiy a ByteModifed in the list of byte have changed
         /// </summary>        
         public void AddByteModified(byte? @byte, long bytePositionInFile)
         {
@@ -231,6 +243,119 @@ namespace WPFHexaEditor.Control.Core
             _byteModifiedList.Add(byteModified);
         }
 
+        /// <summary>
+        /// Return an IEnumerable ByteModified have action set to Modified
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<ByteModified> ByteModifieds(ByteAction action)
+        {
+            foreach (ByteModified byteModified in _byteModifiedList)
+                if (action != ByteAction.All)
+                {
+                    if (byteModified.Action == ByteAction.Modified)
+                        yield return byteModified;
+                }
+                else
+                    yield return byteModified;
+        }
+
+
+
+        #region Copy/Paste/Cut Methods
+        /// <summary>
+        /// Get the lenght of byte are selected (base 1)
+        /// </summary>
+        public long GetSelectionLenght(long selectionStart, long selectionStop)
+        {
+                if (selectionStop == -1 || selectionStop == -1)
+                    return 0;
+                else if (selectionStart == selectionStop)
+                    return 1;
+                else if (selectionStart > selectionStop)
+                    return selectionStart - selectionStop + 1;
+                else
+                    return selectionStop - selectionStart + 1;            
+        }
+
+        /// <summary>
+        /// Return true if Copy method could be invoked.
+        /// </summary>
+        public bool CanCopy(long selectionStart, long selectionStop)
+        {
+
+            if (GetSelectionLenght(selectionStart, selectionStop) < 1 || _file == null)
+                return false;
+
+            return true;
+        }
+
+        /// <summary>
+		/// Copies the current selection in the hex box to the Clipboard.
+		/// </summary>
+        private byte[] GetCopyData(long selectionStart, long selectionStop)
+        {
+            //Validation
+            if (!CanCopy(selectionStart, selectionStop)) return new byte[0];
+            if (selectionStop == -1 || selectionStop == -1) return new byte[0];
+
+            //Variable
+            long byteStartPosition = -1;
+            byte[] buffer = new byte[GetSelectionLenght(selectionStart, selectionStop)];
+
+            //Set start position
+            if (selectionStart == selectionStop)
+                byteStartPosition = selectionStart;
+            else if (selectionStart > selectionStop)
+                byteStartPosition = selectionStop;
+            else
+                byteStartPosition = selectionStart;
+
+            //set position
+            _file.Position = byteStartPosition;
+
+            _file.Read(buffer, 0, Convert.ToInt32(GetSelectionLenght(selectionStart, selectionStop)));
+
+            return buffer;
+        }
+        
+        /// <summary>
+        /// Copy to clipboard
+        /// </summary>        
+        public void CopyToClipboard(CopyPasteMode copypastemode, long selectionStart, long selectionStop)
+        {
+            if (!CanCopy(selectionStart, selectionStop)) return;
+
+            //Variables
+            byte[] buffer = GetCopyData(selectionStart, selectionStop);
+            string sBuffer = "";
+
+            DataObject da = new DataObject();
+
+            switch (copypastemode)
+            {
+                case CopyPasteMode.ASCIIString:
+                    sBuffer = Converters.BytesToString(buffer);
+                    da.SetText(sBuffer, TextDataFormat.Text);
+                    break;
+                case CopyPasteMode.HexaString:
+                    sBuffer = Converters.ByteToHex(buffer);
+                    da.SetText(sBuffer, TextDataFormat.Text);
+                    break;
+                case CopyPasteMode.Byte:
+                    throw new NotImplementedException();
+            }
+
+            //set memorystream (BinaryData) clipboard data
+            System.IO.MemoryStream ms = new System.IO.MemoryStream(buffer, 0, buffer.Length, false, true);
+            da.SetData("BinaryData", ms);
+
+            Clipboard.SetDataObject(da, true);
+
+            if (DataCopied != null)
+                DataCopied(this, new EventArgs());
+        }
+
+        #endregion Copy/Paste/Cut Methods
         //TODO : Make class and implementing in hexaeditor
 
         //byteaction list
@@ -239,7 +364,7 @@ namespace WPFHexaEditor.Control.Core
         //getbyte
         //canread / write
         //get change list
-        //copy / paste / cut ...
+        //paste / cut ...
         //undo / redo?
         //...           
     }

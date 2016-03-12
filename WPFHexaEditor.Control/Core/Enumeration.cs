@@ -14,7 +14,12 @@ namespace WPFHexaEditor.Control.Core
         Nothing,
         Added,
         Deleted,
-        Modified
+        Modified,
+
+        /// <summary>
+        /// Used in ByteProvirder for get list
+        /// </summary>
+        All 
     }
 
     /// <summary>

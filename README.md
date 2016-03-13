@@ -1,4 +1,4 @@
-# WPF Hexadecimal Editor control
+# WPF Hexadecimal Editor control (Alpha)
 A WPF Hexadecimal editor for view/modify file.
 
 ![example](WPFHexEditorControlSample3.png?raw=true)

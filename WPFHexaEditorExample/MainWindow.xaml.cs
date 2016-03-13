@@ -133,5 +133,10 @@ namespace WPFHexaEditorExample
             else
                 MessageBox.Show("Can't copy right now !");
         }
+
+        private void UndoButton_Click(object sender, RoutedEventArgs e)
+        {
+            HexEdit.Undo();
+        }
     }
 }

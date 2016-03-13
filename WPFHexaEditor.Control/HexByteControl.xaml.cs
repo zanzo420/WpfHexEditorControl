@@ -188,7 +188,7 @@ namespace WPFHexaEditor.Control
         /// </summary>
         private void UpdateBackGround()
         {
-            if (_isSelected)
+            if (IsSelected)
             {
                 this.FontWeight = (FontWeight)TryFindResource("NormalFontWeight");
                 FirstHexChar.Foreground = Brushes.White;
@@ -216,7 +216,6 @@ namespace WPFHexaEditor.Control
                         SecondHexChar.Foreground = Brushes.Black;
                         break;
                 }
-
             }
             else
             {

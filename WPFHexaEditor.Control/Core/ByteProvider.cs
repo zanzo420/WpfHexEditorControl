@@ -18,12 +18,14 @@ namespace WPFHexaEditor.Control.Core
         private string _fileName = string.Empty;
         private FileStream _file = null;
         private bool _readOnlyMode = false;
+        private bool _isUndoEnabled = true;
 
         //Event
         public event EventHandler DataCopied;
         public event EventHandler ReadOnlyChanged;
         public event EventHandler FileClosed;
         public event EventHandler PositionChanged;
+        public event EventHandler Undone;
 
         /// <summary>
         /// Default constructor
@@ -162,8 +164,8 @@ namespace WPFHexaEditor.Control.Core
                 {
                     _file.Position = value;
 
-                    if (FileClosed != null)
-                        FileClosed(this, new EventArgs());
+                    if (PositionChanged != null)
+                        PositionChanged(this, new EventArgs());
                 }
             }
         }
@@ -388,6 +390,44 @@ namespace WPFHexaEditor.Control.Core
         }
 
         #endregion Copy/Paste/Cut Methods
+
+        #region Undo / Redo
+
+        public void Undo()
+        {
+            if (CanUndo())
+            {
+                _byteModifiedList.RemoveAt(_byteModifiedList.Count - 1);
+
+                if (Undone != null)
+                    Undone(this, new EventArgs());
+            }
+        }
+
+        /// <summary>
+        /// Get or set for indicate if control CanUndo
+        /// </summary>
+        public bool IsUndoEnabled
+        {
+            get { return _isUndoEnabled; }
+            set { this._isUndoEnabled = value; }
+        }
+
+        /// <summary>
+        /// Check if the control can undone to a previous value
+        /// </summary>
+        /// <returns></returns>
+        public bool CanUndo()
+        {
+
+            if (IsUndoEnabled)
+                return _byteModifiedList.Count > 0;
+            else
+                return false;
+        }
+        #endregion Undo / Redo
+
+
         //TODO : Make class and implementing in hexaeditor
 
         //byteaction list

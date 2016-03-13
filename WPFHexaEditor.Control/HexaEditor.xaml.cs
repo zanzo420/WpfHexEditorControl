@@ -168,7 +168,21 @@ namespace WPFHexaEditor.Control
             if (ByteProvider.CheckIsOpen(_provider))
                 _provider.ClearBytesModifiedsList();
         }
-        
+
+        /// <summary>
+        /// Make undo of last the last bytemodified
+        /// </summary>
+        public void Undo(int repeat = 1)
+        {            
+            if (ByteProvider.CheckIsOpen(_provider))
+            {
+                for (int i = 0; i < repeat; i++)
+                    _provider.Undo();
+
+                RefreshView(false);
+            }
+        }
+
         /// <summary>
         /// Refresh currentview of hexeditor
         /// </summary>
@@ -179,9 +193,9 @@ namespace WPFHexaEditor.Control
             UpdateVerticalScroll();
             UpdateHexHeader();
             UpdateStringDataViewer(ControlResize);
-            UpdateDataViewer(ControlResize);
-            UpdateSelection();
+            UpdateDataViewer(ControlResize);            
             UpdateByteModified();
+            UpdateSelection();
         }
         
         /// <summary>
@@ -236,8 +250,8 @@ namespace WPFHexaEditor.Control
                     foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
                         if (byteControl.BytePositionInFile >= SelectionStart && 
                             byteControl.BytePositionInFile <= SelectionStop && 
-                            byteControl.BytePositionInFile > -1)
-                            byteControl.IsSelected = true;
+                            byteControl.BytePositionInFile > -1) 
+                            byteControl.IsSelected = byteControl.Action == ByteAction.Deleted ? false : true;
                         else
                             byteControl.IsSelected = false;
 
@@ -246,7 +260,7 @@ namespace WPFHexaEditor.Control
                         if (byteControl.BytePositionInFile >= SelectionStart && 
                             byteControl.BytePositionInFile <= SelectionStop &&
                             byteControl.BytePositionInFile > -1)
-                            byteControl.IsSelected = true;
+                            byteControl.IsSelected = byteControl.Action == ByteAction.Deleted ? false : true; 
                         else
                             byteControl.IsSelected = false;
                 }
@@ -257,7 +271,7 @@ namespace WPFHexaEditor.Control
                         if (byteControl.BytePositionInFile >= SelectionStop && 
                             byteControl.BytePositionInFile <= SelectionStart && 
                             byteControl.BytePositionInFile > -1)
-                            byteControl.IsSelected = true;
+                            byteControl.IsSelected = byteControl.Action == ByteAction.Deleted ? false : true;
                         else
                             byteControl.IsSelected = false;
 
@@ -266,7 +280,7 @@ namespace WPFHexaEditor.Control
                         if (byteControl.BytePositionInFile >= SelectionStop &&
                             byteControl.BytePositionInFile <= SelectionStart && 
                             byteControl.BytePositionInFile > -1)
-                            byteControl.IsSelected = true;
+                            byteControl.IsSelected = byteControl.Action == ByteAction.Deleted ? false : true;
                         else
                             byteControl.IsSelected = false;
                 }
@@ -292,13 +306,22 @@ namespace WPFHexaEditor.Control
                         dataLineStack.Orientation = Orientation.Horizontal;
                         
                         long position = Converters.HexLiteralToLong(infolabel.Content.ToString());
+                        //long correction = 0;
 
                         for (int i = 0; i < BytePerLine; i++)
                         {
-                            _provider.Position = position + i;
+                            _provider.Position = position + i; //+ correction;
 
                             if (_provider.Position >= _provider.Length)
                                 break;
+
+                            //FOR TESTING PURPOSE ONLY... 
+                            //if (_provider.CheckIfIsByteModified(_provider.Position, ByteAction.Deleted) != null)
+                            //{
+                            //    correction++;
+                            //    i--;
+                            //    continue;
+                            //}
 
                             HexByteControl byteControl = new HexByteControl();
 
@@ -796,7 +819,10 @@ namespace WPFHexaEditor.Control
 
                 _provider.AddByteDeleted(position, SelectionLenght);
             
+            //TEST
+            //RefreshView(true);
             UpdateByteModified();
+            UpdateSelection();
         }
 
         private void Control_MoveRight(object sender, EventArgs e)

@@ -35,5 +35,6 @@
             <Label x:Name="label1_Copy" Content="SelectionLenght" HorizontalAlignment="Left" Margin="1,62,0,0" VerticalAlignment="Top"/>
         </Grid>
         <Button x:Name="CopyButton" Content="CopyToClipboard" HorizontalAlignment="Left" Margin="278,10,0,0" VerticalAlignment="Top" Width="100" Click="CopyButton_Click"/>
+        <Button x:Name="UndoButton" Content="Undo" HorizontalAlignment="Left" Margin="278,60,0,0" VerticalAlignment="Top" Width="100" Click="UndoButton_Click"/>
     </Grid>
 </Window>

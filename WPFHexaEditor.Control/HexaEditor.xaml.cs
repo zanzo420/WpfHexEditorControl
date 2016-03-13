@@ -1275,7 +1275,7 @@ namespace WPFHexaEditor.Control
             if (!CanCopy()) return;
 
             if (ByteProvider.CheckIsOpen(_provider))
-                _provider.CopyToClipboard(copypastemode, SelectionStart, SelectionStop);
+                _provider.CopyToClipboard(copypastemode, SelectionStart, SelectionStop, false);
 
         }
 

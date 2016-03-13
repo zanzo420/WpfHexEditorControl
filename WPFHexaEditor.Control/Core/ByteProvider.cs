@@ -225,10 +225,19 @@ namespace WPFHexaEditor.Control.Core
         {
             foreach (ByteModified byteModified in _byteModifiedList)
             {
-                if (byteModified.BytePositionInFile == bytePositionInFile && 
-                    byteModified.IsValid == true &&
-                    byteModified.Action == action)
-                    return byteModified; 
+                if (action != ByteAction.All)
+                {
+                    if (byteModified.BytePositionInFile == bytePositionInFile &&
+                        byteModified.IsValid == true &&
+                        byteModified.Action == action)
+                        return byteModified;
+                }
+                else
+                {
+                    if (byteModified.BytePositionInFile == bytePositionInFile &&
+                        byteModified.IsValid == true)
+                        return byteModified;
+                }
             }
 
             return null;
@@ -262,7 +271,7 @@ namespace WPFHexaEditor.Control.Core
 
             for (int i = 0; i < length; i++)
             {
-                ByteModified bytemodifiedOriginal = CheckIfIsByteModified(position, ByteAction.Deleted);
+                ByteModified bytemodifiedOriginal = CheckIfIsByteModified(position, ByteAction.All);
 
                 if (bytemodifiedOriginal != null)
                     _byteModifiedList.Remove(bytemodifiedOriginal);
@@ -326,7 +335,7 @@ namespace WPFHexaEditor.Control.Core
         /// <summary>
 		/// Copies the current selection in the hex box to the Clipboard.
 		/// </summary>
-        private byte[] GetCopyData(long selectionStart, long selectionStop)
+        private byte[] GetCopyData(long selectionStart, long selectionStop, bool excludeByteAction)
         {
             //Validation
             if (!CanCopy(selectionStart, selectionStop)) return new byte[0];
@@ -334,7 +343,7 @@ namespace WPFHexaEditor.Control.Core
 
             //Variable
             long byteStartPosition = -1;
-            byte[] buffer = new byte[GetSelectionLenght(selectionStart, selectionStop)];
+            List<byte> bufferList = new List<byte>();
 
             //Set start position
             if (selectionStart == selectionStop)
@@ -347,20 +356,57 @@ namespace WPFHexaEditor.Control.Core
             //set position
             _file.Position = byteStartPosition;
 
-            _file.Read(buffer, 0, Convert.ToInt32(GetSelectionLenght(selectionStart, selectionStop)));
+            //Exclude byte deleted from copy
+            if (excludeByteAction)
+            {
+                byte[] buffer = new byte[GetSelectionLenght(selectionStart, selectionStop)];
+                _file.Read(buffer, 0, Convert.ToInt32(GetSelectionLenght(selectionStart, selectionStop)));
+                return buffer;
+            }
+            else
+            {
+                for (int i = 0; i < GetSelectionLenght(selectionStart, selectionStop); i++)
+                {
+                    ByteModified byteModified = CheckIfIsByteModified(_file.Position, ByteAction.All);
 
-            return buffer;
+                    if (byteModified == null)
+                    {
+                        bufferList.Add((byte)_file.ReadByte());
+                        continue;
+                    }
+                    else
+                    {
+                        switch (byteModified.Action)
+                        {
+                            case ByteAction.Added:
+                                //TODO : IMPLEMENTING ADD BYTE
+                                break;
+                            case ByteAction.Deleted:
+                                //NOTHING TODO we dont want to add deleted byte
+                                break;
+                            case ByteAction.Modified:
+                                if (byteModified.IsValid)
+                                    bufferList.Add(byteModified.Byte.Value);
+                                break;
+                        }
+                    }
+
+                    _file.Position++;
+                }
+            }
+            
+            return bufferList.ToArray();
         }
         
         /// <summary>
         /// Copy to clipboard
         /// </summary>        
-        public void CopyToClipboard(CopyPasteMode copypastemode, long selectionStart, long selectionStop)
+        public void CopyToClipboard(CopyPasteMode copypastemode, long selectionStart, long selectionStop, bool excludeByteAction = false)
         {
             if (!CanCopy(selectionStart, selectionStop)) return;
 
             //Variables
-            byte[] buffer = GetCopyData(selectionStart, selectionStop);
+            byte[] buffer = GetCopyData(selectionStart, selectionStop, excludeByteAction);
             string sBuffer = "";
 
             DataObject da = new DataObject();
@@ -393,6 +439,9 @@ namespace WPFHexaEditor.Control.Core
 
         #region Undo / Redo
 
+        /// <summary>
+        /// Undo last byteaction
+        /// </summary>
         public void Undo()
         {
             if (CanUndo())

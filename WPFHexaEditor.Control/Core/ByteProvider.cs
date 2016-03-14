@@ -21,11 +21,12 @@ namespace WPFHexaEditor.Control.Core
         private bool _isUndoEnabled = true;
 
         //Event
-        public event EventHandler DataCopied;
+        public event EventHandler DataCopiedToClipboard;
         public event EventHandler ReadOnlyChanged;
         public event EventHandler FileClosed;
         public event EventHandler PositionChanged;
         public event EventHandler Undone;
+        public event EventHandler DataCopiedToStream;
 
         /// <summary>
         /// Default constructor
@@ -335,7 +336,8 @@ namespace WPFHexaEditor.Control.Core
         /// <summary>
 		/// Copies the current selection in the hex box to the Clipboard.
 		/// </summary>
-        private byte[] GetCopyData(long selectionStart, long selectionStop, bool excludeByteAction)
+        /// <param name="copyChange">Set tu true if you want onclude change in your copy. Set to false to copy directly from source</param>
+        private byte[] GetCopyData(long selectionStart, long selectionStop, bool copyChange)
         {
             //Validation
             if (!CanCopy(selectionStart, selectionStop)) return new byte[0];
@@ -357,7 +359,7 @@ namespace WPFHexaEditor.Control.Core
             _file.Position = byteStartPosition;
 
             //Exclude byte deleted from copy
-            if (excludeByteAction)
+            if (!copyChange)
             {
                 byte[] buffer = new byte[GetSelectionLenght(selectionStart, selectionStop)];
                 _file.Read(buffer, 0, Convert.ToInt32(GetSelectionLenght(selectionStart, selectionStop)));
@@ -397,16 +399,17 @@ namespace WPFHexaEditor.Control.Core
             
             return bufferList.ToArray();
         }
-        
+
         /// <summary>
-        /// Copy to clipboard
+        /// Copy selection of byte to clipboard
         /// </summary>        
-        public void CopyToClipboard(CopyPasteMode copypastemode, long selectionStart, long selectionStop, bool excludeByteAction = false)
+        /// <param name="copyChange">Set tu true if you want onclude change in your copy. Set to false to copy directly from source</param>
+        public void CopyToClipboard(CopyPasteMode copypastemode, long selectionStart, long selectionStop, bool copyChange = true)
         {
             if (!CanCopy(selectionStart, selectionStop)) return;
 
             //Variables
-            byte[] buffer = GetCopyData(selectionStart, selectionStop, excludeByteAction);
+            byte[] buffer = GetCopyData(selectionStart, selectionStop, copyChange);
             string sBuffer = "";
 
             DataObject da = new DataObject();
@@ -414,11 +417,11 @@ namespace WPFHexaEditor.Control.Core
             switch (copypastemode)
             {
                 case CopyPasteMode.ASCIIString:
-                    sBuffer = Converters.BytesToString(buffer);
+                    sBuffer = ByteConverters.BytesToString(buffer);
                     da.SetText(sBuffer, TextDataFormat.Text);
                     break;
                 case CopyPasteMode.HexaString:
-                    sBuffer = Converters.ByteToHex(buffer);
+                    sBuffer = ByteConverters.ByteToHex(buffer);
                     da.SetText(sBuffer, TextDataFormat.Text);
                     break;
                 case CopyPasteMode.Byte:
@@ -431,8 +434,29 @@ namespace WPFHexaEditor.Control.Core
 
             Clipboard.SetDataObject(da, true);
 
-            if (DataCopied != null)
-                DataCopied(this, new EventArgs());
+            if (DataCopiedToClipboard != null)
+                DataCopiedToClipboard(this, new EventArgs());
+        }
+
+        /// <summary>
+        /// Copy selection of byte to a stream
+        /// </summary>        
+        /// <param name="output">Output stream. Data will be copied at end of stream</param>
+        /// <param name="copyChange">Set tu true if you want onclude change in your copy. Set to false to copy directly from source</param>
+        public void CopyToStream(Stream output, long selectionStart, long selectionStop, bool copyChange = true)
+        {
+            if (!CanCopy(selectionStart, selectionStop)) return;
+
+            //Variables
+            byte[] buffer = GetCopyData(selectionStart, selectionStop, copyChange);
+
+            if (output.CanWrite)
+                output.Write(buffer, (int)output.Length, buffer.Length);
+            else
+                throw new Exception("An error is occurs when writing");
+                                    
+            if (DataCopiedToStream != null)
+                DataCopiedToStream(this, new EventArgs());
         }
 
         #endregion Copy/Paste/Cut Methods

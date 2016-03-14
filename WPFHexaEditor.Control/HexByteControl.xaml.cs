@@ -230,7 +230,7 @@ namespace WPFHexaEditor.Control
         {
             if (Byte != null)
             {
-                string hexabyte = Converters.ByteToHex(Byte.Value);
+                string hexabyte = ByteConverters.ByteToHex(Byte.Value);
 
                 FirstHexChar.Content = hexabyte.Substring(0, 1);
                 SecondHexChar.Content = hexabyte.Substring(1, 1);
@@ -329,14 +329,14 @@ namespace WPFHexaEditor.Control
                             FirstHexChar.Content = key;
                             _keyDownLabel = KeyDownLabel.SecondChar;
                             Action = ByteAction.Modified;
-                            Byte = Converters.HexToByte(FirstHexChar.Content.ToString() + SecondHexChar.Content.ToString())[0];
+                            Byte = ByteConverters.HexToByte(FirstHexChar.Content.ToString() + SecondHexChar.Content.ToString())[0];
                             break;
                         case KeyDownLabel.SecondChar:
                             SecondHexChar.Content = key;
                             _keyDownLabel = KeyDownLabel.NextPosition;
 
                             Action = ByteAction.Modified;                            
-                            Byte = Converters.HexToByte(FirstHexChar.Content.ToString() + SecondHexChar.Content.ToString())[0];
+                            Byte = ByteConverters.HexToByte(FirstHexChar.Content.ToString() + SecondHexChar.Content.ToString())[0];
                             
                             //Move focus event
                             if (MoveNext != null)

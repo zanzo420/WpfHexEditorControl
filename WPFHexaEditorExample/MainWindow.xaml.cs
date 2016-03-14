@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Win32;
 using System.IO;
+using WPFHexaEditor.Control.Core;
 
 namespace WPFHexaEditorExample
 {
@@ -127,8 +128,17 @@ namespace WPFHexaEditorExample
             {
                 HexEdit.CopyToClipboard();
 
-                if (Clipboard.ContainsText())
-                    MessageBox.Show(Clipboard.GetText());
+                try
+                {
+                    if (Clipboard.ContainsText())
+                        MessageBox.Show(Clipboard.GetText());
+                }
+                catch
+                {
+                    //Clipboard fail
+                    if (Clipboard.ContainsText())
+                        MessageBox.Show(Clipboard.GetText());
+                }
             }
             else
                 MessageBox.Show("Can't copy right now !");
@@ -137,6 +147,15 @@ namespace WPFHexaEditorExample
         private void UndoButton_Click(object sender, RoutedEventArgs e)
         {
             HexEdit.Undo();
+        }
+
+        private void CopyToStreamButton_Click(object sender, RoutedEventArgs e)
+        {
+            MemoryStream ms = new MemoryStream();
+
+            HexEdit.CopyToStream(ms, true);
+
+            MessageBox.Show(ByteConverters.BytesToString(ms.ToArray()));
         }
     }
 }

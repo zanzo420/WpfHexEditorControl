@@ -78,7 +78,7 @@ namespace WPFHexaEditor.Control
                                 
                 _provider = new ByteProvider(filename);
                 _provider.ReadOnlyChanged += Provider_ReadOnlyChanged;
-                _provider.DataCopied += Provider_DataCopied;
+                _provider.DataCopiedToClipboard += Provider_DataCopied;
 
                 RefreshView(true);
 
@@ -305,7 +305,7 @@ namespace WPFHexaEditor.Control
                         dataLineStack.Height = _lineInfoHeight;
                         dataLineStack.Orientation = Orientation.Horizontal;
                         
-                        long position = Converters.HexLiteralToLong(infolabel.Content.ToString());
+                        long position = ByteConverters.HexLiteralToLong(infolabel.Content.ToString());
                         //long correction = 0;
 
                         for (int i = 0; i < BytePerLine; i++)
@@ -352,7 +352,7 @@ namespace WPFHexaEditor.Control
                     int stackIndex = 0;
                     foreach (Label infolabel in LinesInfoStackPanel.Children)
                     {
-                        long position = Converters.HexLiteralToLong(infolabel.Content.ToString());
+                        long position = ByteConverters.HexLiteralToLong(infolabel.Content.ToString());
 
                         foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
                         {
@@ -733,7 +733,7 @@ namespace WPFHexaEditor.Control
                         dataLineStack.Height = _lineInfoHeight;
                         dataLineStack.Orientation = Orientation.Horizontal;
                         
-                        long position = Converters.HexLiteralToLong(infolabel.Content.ToString());
+                        long position = ByteConverters.HexLiteralToLong(infolabel.Content.ToString());
 
                         for (int i = 0; i < BytePerLine; i++)
                         {
@@ -770,7 +770,7 @@ namespace WPFHexaEditor.Control
                     int stackIndex = 0;
                     foreach (Label infolabel in LinesInfoStackPanel.Children)
                     {                        
-                        long position = Converters.HexLiteralToLong(infolabel.Content.ToString());
+                        long position = ByteConverters.HexLiteralToLong(infolabel.Content.ToString());
 
                         foreach (StringByteControl sbCtrl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
                         {
@@ -955,7 +955,7 @@ namespace WPFHexaEditor.Control
                     LineInfoLabel.Width = 25;
                     LineInfoLabel.HorizontalContentAlignment = HorizontalAlignment.Right;
                     LineInfoLabel.VerticalContentAlignment = VerticalAlignment.Center;
-                    LineInfoLabel.Content = Converters.ByteToHex((byte)i);
+                    LineInfoLabel.Content = ByteConverters.ByteToHex((byte)i);
                     LineInfoLabel.ToolTip = $"Column : {i.ToString()}";
 
                     HexHeaderStackPanel.Children.Add(LineInfoLabel);
@@ -1014,7 +1014,7 @@ namespace WPFHexaEditor.Control
 
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                SelectionStop = Converters.HexLiteralToLong(line.Content.ToString()) + BytePerLine - 1;
+                SelectionStop = ByteConverters.HexLiteralToLong(line.Content.ToString()) + BytePerLine - 1;
             }
         }
 
@@ -1024,7 +1024,7 @@ namespace WPFHexaEditor.Control
 
             Label line = sender as Label;
 
-            SelectionStart = Converters.HexLiteralToLong(line.Content.ToString());
+            SelectionStart = ByteConverters.HexLiteralToLong(line.Content.ToString());
             SelectionStop = SelectionStart + BytePerLine - 1;
         }
 
@@ -1279,6 +1279,19 @@ namespace WPFHexaEditor.Control
 
         }
 
+        /// <summary>
+        /// Copy to a stream
+        /// </summary>      
+        /// <param name="output">Output stream is not closed after copy</param>
+        public void CopyToStream(Stream output, bool copyChange)
+        {
+            if (!CanCopy()) return;
+
+            if (ByteProvider.CheckIsOpen(_provider))
+                _provider.CopyToStream(output, SelectionStart, SelectionStop, copyChange);
+
+        }
+
         #endregion Copy/Paste/Cut Methods
 
         #region Set position methods
@@ -1314,7 +1327,7 @@ namespace WPFHexaEditor.Control
         {
             try
             {
-                SetPosition(Converters.HexLiteralToLong(HexLiteralPosition));
+                SetPosition(ByteConverters.HexLiteralToLong(HexLiteralPosition));
             }
             catch
             {
@@ -1329,7 +1342,7 @@ namespace WPFHexaEditor.Control
         {
             try
             {
-                SetPosition(Converters.HexLiteralToLong(HexLiteralPosition), byteLenght);
+                SetPosition(ByteConverters.HexLiteralToLong(HexLiteralPosition), byteLenght);
             }
             catch
             {

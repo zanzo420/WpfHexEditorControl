@@ -169,7 +169,7 @@ namespace WPFHexaEditor.Control
             get
             {
                 if (Byte != null)
-                    return Converters.ByteToHex(Byte.Value);
+                    return ByteConverters.ByteToHex(Byte.Value);
                 else
                     return "";
             }
@@ -183,7 +183,7 @@ namespace WPFHexaEditor.Control
         {
             if (Byte != null)
             {
-                StringByteLabel.Content = Converters.ByteToChar(Byte.Value);
+                StringByteLabel.Content = ByteConverters.ByteToChar(Byte.Value);
             }
             else
             {
@@ -316,13 +316,13 @@ namespace WPFHexaEditor.Control
 
                 if (Keyboard.Modifiers != ModifierKeys.Shift && e.Key != Key.RightShift && e.Key != Key.LeftShift)
                 {
-                    StringByteLabel.Content = Converters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key)).ToString().ToLower();//e.Key.ToString();
+                    StringByteLabel.Content = ByteConverters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key)).ToString().ToLower();//e.Key.ToString();
                     isok = true;
                 }
                 else if (Keyboard.Modifiers == ModifierKeys.Shift && e.Key != Key.RightShift && e.Key != Key.LeftShift)
                 {
                     isok = true;
-                    StringByteLabel.Content = Converters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key));//e.Key.ToString();    
+                    StringByteLabel.Content = ByteConverters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key));//e.Key.ToString();    
                 }
 
                 //Move focus event
@@ -330,7 +330,7 @@ namespace WPFHexaEditor.Control
                     if (MoveNext != null)
                     {
                         Action = ByteAction.Modified;
-                        Byte = Converters.CharToByte(StringByteLabel.Content.ToString()[0]);
+                        Byte = ByteConverters.CharToByte(StringByteLabel.Content.ToString()[0]);
 
                         MoveNext(this, new EventArgs());
                     }

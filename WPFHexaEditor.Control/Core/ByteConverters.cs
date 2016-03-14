@@ -8,7 +8,7 @@ namespace WPFHexaEditor.Control.Core
     /// <summary>
     /// ByteCharConverter for convert data
     /// </summary>
-    public class Converters
+    public class ByteConverters
     {
         /// <summary>
         /// Convert Byte to Char

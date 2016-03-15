@@ -215,6 +215,7 @@ namespace WPFHexaEditor.Control.Core
 
         /// <summary>
         /// Submit change to files/stream
+        /// TODO : NEED UPTIMISATION FOR LARGE FILE... IT'S AS BEGINING :) 
         /// </summary>
         public void SubmitChanges()
         {

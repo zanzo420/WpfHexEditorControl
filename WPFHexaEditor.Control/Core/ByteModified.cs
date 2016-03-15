@@ -11,6 +11,7 @@ namespace WPFHexaEditor.Control.Core
         private byte? _byte = null;
         private ByteAction _action = ByteAction.Nothing;
         private long _position = -1;
+        private long _undoLenght = 1;
         
         /// <summary>
         /// Byte mofidied
@@ -71,6 +72,22 @@ namespace WPFHexaEditor.Control.Core
                     return true;
                 else
                     return false;
+            }
+        }
+
+        /// <summary>
+        /// Number of undo todo when this byte is reach
+        /// </summary>
+        public long UndoLenght
+        {
+            get
+            {
+                return _undoLenght;
+            }
+
+            set
+            {
+                _undoLenght = value;
             }
         }
 

@@ -37,5 +37,6 @@
         <Button x:Name="CopyButton" Content="CopyToClipboard" HorizontalAlignment="Left" Margin="278,10,0,0" VerticalAlignment="Top" Width="100" Click="CopyButton_Click"/>
         <Button x:Name="UndoButton" Content="Undo" HorizontalAlignment="Left" Margin="278,60,0,0" VerticalAlignment="Top" Width="100" Click="UndoButton_Click"/>
         <Button x:Name="CopyToStreamButton" Content="CopyToStream" HorizontalAlignment="Left" Margin="278,35,0,0" VerticalAlignment="Top" Width="100" Click="CopyToStreamButton_Click"/>
+        <Button x:Name="SelectionByteButton" Content="SelectionByte, String, Hexa" HorizontalAlignment="Left" Margin="10,110,0,0" VerticalAlignment="Top" Width="155" Click="SelectionByteButton_Click"/>
     </Grid>
 </Window>

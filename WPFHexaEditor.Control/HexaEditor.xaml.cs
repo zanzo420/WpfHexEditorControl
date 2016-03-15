@@ -161,9 +161,9 @@ namespace WPFHexaEditor.Control
         }
 
         /// <summary>
-        /// Clear modification
+        /// Clear undo and change
         /// </summary>
-        private void ClearBytesModifiedsList()
+        private void ClearUndoChange()
         {
             if (ByteProvider.CheckIsOpen(_provider))
                 _provider.ClearBytesModifiedsList();
@@ -173,7 +173,9 @@ namespace WPFHexaEditor.Control
         /// Make undo of last the last bytemodified
         /// </summary>
         public void Undo(int repeat = 1)
-        {            
+        {
+            UnSelectAll();
+             
             if (ByteProvider.CheckIsOpen(_provider))
             {
                 for (int i = 0; i < repeat; i++)
@@ -1019,11 +1021,9 @@ namespace WPFHexaEditor.Control
         }
 
         private void LineInfoLabel_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            //TODO: Multiline selection
-
+        {            
             Label line = sender as Label;
-
+            
             SelectionStart = ByteConverters.HexLiteralToLong(line.Content.ToString());
             SelectionStop = SelectionStart + BytePerLine - 1;
         }
@@ -1042,7 +1042,7 @@ namespace WPFHexaEditor.Control
                 VerticalScrollBar.Value = 0;
             }
 
-            ClearBytesModifiedsList();
+            ClearUndoChange();
             UnSelectAll();
             RefreshView();
         }
@@ -1245,6 +1245,51 @@ namespace WPFHexaEditor.Control
             }
         }
 
+        /// <summary>
+        /// Get byte array from current selection
+        /// </summary>
+        public byte[] SelectionByteArray
+        {
+            get
+            {
+                MemoryStream ms = new MemoryStream();
+
+                CopyToStream(ms, true);
+
+                return ms.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Get string from current selection
+        /// </summary>
+        public string SelectionString
+        {
+            get
+            {
+                MemoryStream ms = new MemoryStream();
+
+                CopyToStream(ms, true);
+
+                return ByteConverters.BytesToString(ms.ToArray());
+            }
+        }
+
+        /// <summary>
+        /// Get Hexadecimal from current selection
+        /// </summary>
+        public string SelectionHexa
+        {
+            get
+            {
+                MemoryStream ms = new MemoryStream();
+
+                CopyToStream(ms, true);
+
+                return ByteConverters.ByteToHex(ms.ToArray());
+            }
+        }
+
         #endregion Selection Property/Methods
 
         #region Copy/Paste/Cut Methods
@@ -1268,30 +1313,44 @@ namespace WPFHexaEditor.Control
         }
 
         /// <summary>
-        /// Copy to clipboard
+        /// Copy to clipboard the current selection with actual change in control
         /// </summary>        
         public void CopyToClipboard(CopyPasteMode copypastemode)
+        {
+            CopyToClipboard(copypastemode, SelectionStart, SelectionStop, true);
+        }
+
+        /// <summary>
+        /// Copy to clipboard
+        /// </summary>        
+        public void CopyToClipboard(CopyPasteMode copypastemode, long selectionStart, long selectionStop, bool copyChange)
         {
             if (!CanCopy()) return;
 
             if (ByteProvider.CheckIsOpen(_provider))
-                _provider.CopyToClipboard(copypastemode, SelectionStart, SelectionStop, false);
-
+                _provider.CopyToClipboard(copypastemode, SelectionStart, SelectionStop, copyChange);
         }
 
         /// <summary>
-        /// Copy to a stream
+        /// Copy selection to a stream
         /// </summary>      
         /// <param name="output">Output stream is not closed after copy</param>
         public void CopyToStream(Stream output, bool copyChange)
         {
+            CopyToStream(output, SelectionStart, SelectionStop, copyChange);
+        }
+
+        /// <summary>
+        /// Copy selection to a stream
+        /// </summary>      
+        /// <param name="output">Output stream is not closed after copy</param>
+        public void CopyToStream(Stream output, long selectionStart, long selectionStop, bool copyChange)
+        {
             if (!CanCopy()) return;
 
             if (ByteProvider.CheckIsOpen(_provider))
-                _provider.CopyToStream(output, SelectionStart, SelectionStop, copyChange);
-
+                _provider.CopyToStream(output, selectionStart, selectionStop, copyChange);
         }
-
         #endregion Copy/Paste/Cut Methods
 
         #region Set position methods

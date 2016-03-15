@@ -257,6 +257,7 @@ namespace WPFHexaEditor.Control.Core
             ByteModified byteModified = new ByteModified();
             
             byteModified.Byte = @byte;
+            byteModified.UndoLenght = 1;
             byteModified.BytePositionInFile = bytePositionInFile;
             byteModified.Action = ByteAction.Modified;
 
@@ -280,6 +281,7 @@ namespace WPFHexaEditor.Control.Core
                 ByteModified byteModified = new ByteModified();
                 
                 byteModified.Byte = new byte();
+                byteModified.UndoLenght = length;
                 byteModified.BytePositionInFile = position;
                 byteModified.Action = ByteAction.Deleted;
 
@@ -470,7 +472,10 @@ namespace WPFHexaEditor.Control.Core
         {
             if (CanUndo())
             {
-                _byteModifiedList.RemoveAt(_byteModifiedList.Count - 1);
+                ByteModified last = _byteModifiedList.Last<ByteModified>();
+
+                for (int i = 0; i < last.UndoLenght; i++)
+                    _byteModifiedList.RemoveAt(_byteModifiedList.Count - 1);
 
                 if (Undone != null)
                     Undone(this, new EventArgs());

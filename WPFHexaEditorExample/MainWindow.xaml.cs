@@ -155,7 +155,17 @@ namespace WPFHexaEditorExample
 
             HexEdit.CopyToStream(ms, true);
 
+            //ms.Position = 0;
+            //File.WriteAllBytes(@"c:\test\test.exe", ms.ToArray());
+
             MessageBox.Show(ByteConverters.BytesToString(ms.ToArray()));
+        }
+
+        private void SelectionByteButton_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show($"SelectionByteArray ToString \n\n {ByteConverters.BytesToString(HexEdit.SelectionByteArray)}");
+            MessageBox.Show($"SelectionString \n\n {HexEdit.SelectionString}");
+            MessageBox.Show($"SelectionHexa \n\n {HexEdit.SelectionHexa}");
         }
     }
 }

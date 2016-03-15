@@ -79,6 +79,7 @@ namespace WPFHexaEditor.Control
                 _provider = new ByteProvider(filename);
                 _provider.ReadOnlyChanged += Provider_ReadOnlyChanged;
                 _provider.DataCopiedToClipboard += Provider_DataCopied;
+                _provider.ChangesSubmited += Provider_ChangesSubmited;
 
                 RefreshView(true);
 
@@ -93,6 +94,11 @@ namespace WPFHexaEditor.Control
             {
                 throw new FileNotFoundException();
             }
+        }
+
+        private void Provider_ChangesSubmited(object sender, EventArgs e)
+        {
+            FileName = _fileName;
         }
 
         private void Provider_DataCopied(object sender, EventArgs e)
@@ -166,7 +172,7 @@ namespace WPFHexaEditor.Control
         private void ClearUndoChange()
         {
             if (ByteProvider.CheckIsOpen(_provider))
-                _provider.ClearBytesModifiedsList();
+                _provider.ClearUndoChange();
         }
 
         /// <summary>
@@ -527,17 +533,7 @@ namespace WPFHexaEditor.Control
                                         byteControl.Action = ByteAction.Deleted;
                                         break;
                                 }
-                                byteControl.InternalChange = false;
-
-                                //switch (byteModifiedCopy.Action)
-                                //{
-                                //    case ByteAction.Modified:
-                                //        byteControl.InternalChange = true;
-                                //        byteControl.Byte = byteModifiedCopy.Byte;
-                                //        byteControl.IsByteModified = true;
-                                //        byteControl.InternalChange = false;
-                                //        break;
-                                //}
+                                byteControl.InternalChange = false;                                
                             }
                         }
 
@@ -1045,6 +1041,17 @@ namespace WPFHexaEditor.Control
             ClearUndoChange();
             UnSelectAll();
             RefreshView();
+        }
+
+        /// <summary>
+        /// Save to the current stream
+        /// TODO: Add save as another stream...
+        /// </summary>
+        public void SubmitChanges()
+        {
+            if (ByteProvider.CheckIsOpen(_provider))
+                if (!_provider.ReadOnlyMode)
+                    _provider.SubmitChanges();
         }
 
         /// <summary>

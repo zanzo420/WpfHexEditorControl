@@ -16,7 +16,7 @@ namespace WPFHexaEditor.Control.Core
         //Global variable
         private List<ByteModified> _byteModifiedList = new List<ByteModified>();
         private string _fileName = string.Empty;
-        private FileStream _file = null;
+        private Stream _stream = null;
         private bool _readOnlyMode = false;
         private bool _isUndoEnabled = true;
 
@@ -27,6 +27,7 @@ namespace WPFHexaEditor.Control.Core
         public event EventHandler PositionChanged;
         public event EventHandler Undone;
         public event EventHandler DataCopiedToStream;
+        public event EventHandler ChangesSubmited;
 
         /// <summary>
         /// Default constructor
@@ -76,13 +77,13 @@ namespace WPFHexaEditor.Control.Core
 
                 try
                 {
-                    _file = File.Open(FileName, FileMode.Open, FileAccess.ReadWrite, FileShare.Read); ;
+                    _stream = File.Open(FileName, FileMode.Open, FileAccess.ReadWrite, FileShare.Read); ;
                 }
                 catch
                 {
                     if (MessageBox.Show("The file is locked. Do you want to open it in read-only mode?", "", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                     {
-                        _file = File.Open(FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                        _stream = File.Open(FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 
                         readOnlyMode = true;
                     }
@@ -124,8 +125,8 @@ namespace WPFHexaEditor.Control.Core
         {
             if (IsOpen)
             {
-                this._file.Close();
-                this._file = null;
+                this._stream.Close();
+                this._stream = null;
                 ReadOnlyMode = false;
 
                 if (FileClosed != null)
@@ -141,7 +142,7 @@ namespace WPFHexaEditor.Control.Core
             get
             {
                 if (IsOpen)
-                    return _file.Length;
+                    return _stream.Length;
 
                 return -1;
             }
@@ -155,7 +156,7 @@ namespace WPFHexaEditor.Control.Core
             get
             {
                 if (IsOpen)
-                    return _file.Position;
+                    return _stream.Position;
 
                 return -1;
             }
@@ -163,7 +164,7 @@ namespace WPFHexaEditor.Control.Core
             {
                 if (IsOpen)
                 {
-                    _file.Position = value;
+                    _stream.Position = value;
 
                     if (PositionChanged != null)
                         PositionChanged(this, new EventArgs());
@@ -178,7 +179,7 @@ namespace WPFHexaEditor.Control.Core
         {
             get
             {
-                if (_file != null)
+                if (_stream != null)
                     return true;
 
                 return false;
@@ -204,16 +205,79 @@ namespace WPFHexaEditor.Control.Core
         public int ReadByte()
         {
             if (IsOpen)
-                if (_file.CanRead)
-                    return _file.ReadByte();
+                if (_stream.CanRead)
+                    return _stream.ReadByte();
 
             return -1;
         }
 
+        #region SubmitChanges to file/stream
+
         /// <summary>
-        /// Clear modification
+        /// Submit change to files/stream
         /// </summary>
-        public void ClearBytesModifiedsList()
+        public void SubmitChanges()
+        {
+            if (CanWrite)
+            {
+                MemoryStream msNewStream = new MemoryStream();
+                ByteModified byteModified = null;
+                var SortedModified = _byteModifiedList.OrderBy(b => b.BytePositionInFile);
+                
+                //Start update and rewrite file. 
+                //TODO: Test with largefile and use temps file otherwise of memory stream
+                for (int i = 0; i < _stream.Length; i++)
+                {
+                    byteModified = CheckIfIsByteModified(i, ByteAction.All);
+
+                    //Set position in strea
+                    _stream.Position = i; // + byteAdjuster;
+
+                    //Switch action todo or get actual byte...
+                    if (byteModified != null && ByteModified.CheckIsValid(byteModified))
+                        switch (byteModified.Action)
+                        {
+                            case ByteAction.Added:
+                                //TODO : IMPLEMENTING ADD BYTE
+                                break;
+                            case ByteAction.Deleted:
+                                //NOTHING TODO we dont want to add deleted byte
+                                //newStreamLength++;
+                                break;
+                            case ByteAction.Modified:
+                                msNewStream.WriteByte(byteModified.Byte.Value);
+                                break;
+                        }
+                    else
+                    {
+                        msNewStream.WriteByte((byte)_stream.ReadByte());
+                    }
+                }
+
+                //Write to current stream
+                _stream.Position = 0;
+                _stream.Write(msNewStream.ToArray(),0, (int)msNewStream.Length);
+                _stream.SetLength(msNewStream.Length);
+
+                //Launch event
+                if (ChangesSubmited != null)
+                    ChangesSubmited(this, new EventArgs());
+
+#if DEBUG
+                File.WriteAllBytes(@"c:\test\test.txt", msNewStream.ToArray());
+#endif
+            }
+            else
+                throw new Exception("Cannot write to file.");            
+        }
+
+        #endregion SubmitChanges to file/stream
+
+        #region Bytes modifications methods
+        /// <summary>
+        /// Clear changes and undo
+        /// </summary>
+        public void ClearUndoChange()
         {
             if (_byteModifiedList != null)
                 _byteModifiedList.Clear();
@@ -305,8 +369,7 @@ namespace WPFHexaEditor.Control.Core
                 else
                     yield return byteModified;
         }
-
-
+        #endregion Bytes modifications methods
 
         #region Copy/Paste/Cut Methods
         /// <summary>
@@ -323,18 +386,7 @@ namespace WPFHexaEditor.Control.Core
                 else
                     return selectionStop - selectionStart + 1;            
         }
-
-        /// <summary>
-        /// Return true if Copy method could be invoked.
-        /// </summary>
-        public bool CanCopy(long selectionStart, long selectionStop)
-        {
-            if (GetSelectionLenght(selectionStart, selectionStop) < 1 || !IsOpen)
-                return false;
-
-            return true;
-        }
-
+                
         /// <summary>
 		/// Copies the current selection in the hex box to the Clipboard.
 		/// </summary>
@@ -358,24 +410,24 @@ namespace WPFHexaEditor.Control.Core
                 byteStartPosition = selectionStart;
 
             //set position
-            _file.Position = byteStartPosition;
+            _stream.Position = byteStartPosition;
 
             //Exclude byte deleted from copy
             if (!copyChange)
             {
                 byte[] buffer = new byte[GetSelectionLenght(selectionStart, selectionStop)];
-                _file.Read(buffer, 0, Convert.ToInt32(GetSelectionLenght(selectionStart, selectionStop)));
+                _stream.Read(buffer, 0, Convert.ToInt32(GetSelectionLenght(selectionStart, selectionStop)));
                 return buffer;
             }
             else
             {
                 for (int i = 0; i < GetSelectionLenght(selectionStart, selectionStop); i++)
                 {
-                    ByteModified byteModified = CheckIfIsByteModified(_file.Position, ByteAction.All);
+                    ByteModified byteModified = CheckIfIsByteModified(_stream.Position, ByteAction.All);
 
                     if (byteModified == null)
                     {
-                        bufferList.Add((byte)_file.ReadByte());
+                        bufferList.Add((byte)_stream.ReadByte());
                         continue;
                     }
                     else
@@ -395,7 +447,7 @@ namespace WPFHexaEditor.Control.Core
                         }
                     }
 
-                    _file.Position++;
+                    _stream.Position++;
                 }
             }
             
@@ -470,7 +522,7 @@ namespace WPFHexaEditor.Control.Core
         /// </summary>
         public void Undo()
         {
-            if (CanUndo())
+            if (CanUndo)
             {
                 ByteModified last = _byteModifiedList.Last<ByteModified>();
 
@@ -495,27 +547,81 @@ namespace WPFHexaEditor.Control.Core
         /// Check if the control can undone to a previous value
         /// </summary>
         /// <returns></returns>
-        public bool CanUndo()
+        public bool CanUndo
         {
-
-            if (IsUndoEnabled)
-                return _byteModifiedList.Count > 0;
-            else
-                return false;
+            get
+            {
+                if (IsUndoEnabled)
+                    return _byteModifiedList.Count > 0;
+                else
+                    return false;
+            }
         }
         #endregion Undo / Redo
 
+        #region Can do property...
+        /// <summary>
+        /// Return true if Copy method could be invoked.
+        /// </summary>
+        public bool CanCopy(long selectionStart, long selectionStop)
+        {
+            if (GetSelectionLenght(selectionStart, selectionStop) < 1 || !IsOpen)
+                return false;
 
-        //TODO : Make class and implementing in hexaeditor
+            return true;
+        }
 
-        //byteaction list
+        /// <summary>
+        /// Update a value indicating whether the current stream is supporting writing.
+        /// </summary>
+        public bool CanWrite
+        {
+            get
+            {
+                if (_stream != null)
+                    if (!ReadOnlyMode)
+                        return _stream.CanWrite;
+
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Update a value indicating  whether the current stream is supporting reading.
+        /// </summary>
+        public bool CanRead
+        {
+            get
+            {
+                if (_stream != null)
+                    return _stream.CanRead;
+
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Update a value indicating  whether the current stream is supporting seeking.
+        /// </summary>
+        public bool CanSeek
+        {
+            get
+            {
+                if (_stream != null)
+                    return _stream.CanSeek;
+
+                return false;
+            }
+        }
+        #endregion Can do Property...
+        
         //addbyte
-        //deletebyte
         //getbyte
         //canread / write
         //get change list
         //paste / cut ...
-        //undo / redo?
+        //redo?
+        //save change
         //...           
     }
 }

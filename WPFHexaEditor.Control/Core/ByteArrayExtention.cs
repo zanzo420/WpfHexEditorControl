@@ -54,6 +54,7 @@ namespace WPFHexaEditor.Control.Core
     }
 }
 
+//SAMPLE FOND ON STACKOVERFLOW
 
 //using System;
 //using System.Collections.Generic;

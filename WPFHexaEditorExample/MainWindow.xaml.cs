@@ -167,5 +167,10 @@ namespace WPFHexaEditorExample
             MessageBox.Show($"SelectionString \n\n {HexEdit.SelectionString}");
             MessageBox.Show($"SelectionHexa \n\n {HexEdit.SelectionHexa}");
         }
+
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            HexEdit.SubmitChanges();
+        }
     }
 }

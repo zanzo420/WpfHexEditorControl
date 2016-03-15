@@ -18,7 +18,7 @@
         <Button x:Name="button" Content="Test : BytePerLine=26" Margin="0,11,10,0" VerticalAlignment="Top" Click="button_Click" HorizontalAlignment="Right" Width="150"/>
         <Button x:Name="OpenFileButton" Content="Open" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="OpenFileButton_Click"/>
         <Button x:Name="CloseFileButton" Content="CloseFile" HorizontalAlignment="Left" Margin="10,60,0,0" VerticalAlignment="Top" Width="75" Click="CloseFileButton_Click"/>
-        <Button x:Name="ReadOnlybutton" Content="ReadOnly" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="75" Click="ReadOnlybutton_Click"/>
+        <Button x:Name="ReadOnlybutton" Content="ReadOnly" HorizontalAlignment="Left" Margin="10,85,0,0" VerticalAlignment="Top" Width="75" Click="ReadOnlybutton_Click"/>
         <Button x:Name="SelectAllButton" Content="SelectAll" HorizontalAlignment="Left" Margin="90,10,0,0" VerticalAlignment="Top" Width="75" Click="SelectAllButton_Click"/>
         <Button x:Name="UnSelectAllButton" Content="UnSelectAll" HorizontalAlignment="Left" Margin="90,35,0,0" VerticalAlignment="Top" Width="75" Click="UnSelectAllButton_Click"/>
         <Button x:Name="HexDataVisibilityButton" Content="HexDataVisibility" HorizontalAlignment="Left" Margin="170,10,0,0" VerticalAlignment="Top" Width="103" Click="HexDataVisibilityButton_Click"/>
@@ -38,5 +38,6 @@
         <Button x:Name="UndoButton" Content="Undo" HorizontalAlignment="Left" Margin="278,60,0,0" VerticalAlignment="Top" Width="100" Click="UndoButton_Click"/>
         <Button x:Name="CopyToStreamButton" Content="CopyToStream" HorizontalAlignment="Left" Margin="278,35,0,0" VerticalAlignment="Top" Width="100" Click="CopyToStreamButton_Click"/>
         <Button x:Name="SelectionByteButton" Content="SelectionByte, String, Hexa" HorizontalAlignment="Left" Margin="10,110,0,0" VerticalAlignment="Top" Width="155" Click="SelectionByteButton_Click"/>
+        <Button x:Name="SaveButton" Content="Save" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="75" Click="SaveButton_Click"/>
     </Grid>
 </Window>

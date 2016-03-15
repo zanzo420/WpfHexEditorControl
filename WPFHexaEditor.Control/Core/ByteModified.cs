@@ -123,5 +123,18 @@ namespace WPFHexaEditor.Control.Core
         {
             return $"ByteModified - Action:{Action} Position:{BytePositionInFile} Byte:{Byte}";
         }
+
+
+        /// <summary>
+        /// Get if file is open
+        /// </summary>
+        public static bool CheckIsValid(ByteModified byteModified)
+        {
+            if (byteModified != null)
+                if (byteModified.IsValid)
+                    return true;
+
+            return false;
+        }
     }
 }

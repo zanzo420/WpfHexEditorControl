@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -212,7 +213,6 @@ namespace WPFHexaEditor.Control.Core
         }
 
         #region SubmitChanges to file/stream
-
         /// <summary>
         /// Submit change to files/stream
         /// TODO : NEED UPTIMISATION FOR LARGE FILE... IT'S AS BEGINING :) 
@@ -223,42 +223,61 @@ namespace WPFHexaEditor.Control.Core
             {
                 MemoryStream msNewStream = new MemoryStream();
                 ByteModified byteModified = null;
-                var SortedModified = _byteModifiedList.OrderBy(b => b.BytePositionInFile);
-                
-                //Start update and rewrite file. 
-                //TODO: Test with largefile and use temps file otherwise of memory stream
-                for (int i = 0; i < _stream.Length; i++)
+                //var SortedModified = _byteModifiedList.OrderBy(b => b.BytePositionInFile);
+
+                Debug.Print($"Deleted count : { ByteModifieds(ByteAction.Deleted).Count().ToString()}");
+                Debug.Print($"Added count : { ByteModifieds(ByteAction.Added).Count().ToString()}");
+                Debug.Print($"Modified count : { ByteModifieds(ByteAction.Modified).Count().ToString()}");
+
+                //Fast change only nothing byte deleted or added
+                if (ByteModifieds(ByteAction.Deleted).Count() == 0 &&
+                    ByteModifieds(ByteAction.Added).Count() == 0)
                 {
-                    byteModified = CheckIfIsByteModified(i, ByteAction.All);
-
-                    //Set position in strea
-                    _stream.Position = i; // + byteAdjuster;
-
-                    //Switch action todo or get actual byte...
-                    if (byteModified != null && ByteModified.CheckIsValid(byteModified))
-                        switch (byteModified.Action)
+                    //Fast save. only save byteaction=modified
+                    foreach (ByteModified bm in ByteModifieds(ByteAction.Modified))                    
+                        if (bm.IsValid)
                         {
-                            case ByteAction.Added:
-                                //TODO : IMPLEMENTING ADD BYTE
-                                break;
-                            case ByteAction.Deleted:
-                                //NOTHING TODO we dont want to add deleted byte
-                                //newStreamLength++;
-                                break;
-                            case ByteAction.Modified:
-                                msNewStream.WriteByte(byteModified.Byte.Value);
-                                break;
-                        }
-                    else
-                    {
-                        msNewStream.WriteByte((byte)_stream.ReadByte());
-                    }
+                            _stream.Position = bm.BytePositionInFile;
+                            _stream.WriteByte(bm.Byte.Value);
+                        }                    
                 }
+                else
+                {
+                    //Start update and rewrite file. 
+                    //TODO: Test with largefile and use temps file otherwise of memory stream
+                    for (int i = 0; i < _stream.Length; i++)
+                    {
+                        byteModified = CheckIfIsByteModified(i, ByteAction.All);
 
-                //Write to current stream
-                _stream.Position = 0;
-                _stream.Write(msNewStream.ToArray(),0, (int)msNewStream.Length);
-                _stream.SetLength(msNewStream.Length);
+                        //Set position in strea
+                        _stream.Position = i; // + byteAdjuster;
+
+                        //Switch action todo or get actual byte...
+                        if (byteModified != null && ByteModified.CheckIsValid(byteModified))
+                            switch (byteModified.Action)
+                            {
+                                case ByteAction.Added:
+                                    //TODO : IMPLEMENTING ADD BYTE
+                                    break;
+                                case ByteAction.Deleted:
+                                    //NOTHING TODO we dont want to add deleted byte
+                                    //newStreamLength++;
+                                    break;
+                                case ByteAction.Modified:
+                                    msNewStream.WriteByte(byteModified.Byte.Value);
+                                    break;
+                            }
+                        else
+                        {
+                            msNewStream.WriteByte((byte)_stream.ReadByte());
+                        }
+                    }
+
+                    //Write to current stream
+                    _stream.Position = 0;
+                    _stream.Write(msNewStream.ToArray(), 0, (int)msNewStream.Length);
+                    _stream.SetLength(msNewStream.Length);
+                }
 
                 //Launch event
                 if (ChangesSubmited != null)
@@ -269,9 +288,8 @@ namespace WPFHexaEditor.Control.Core
 #endif
             }
             else
-                throw new Exception("Cannot write to file.");            
+                throw new Exception("Cannot write to file.");
         }
-
         #endregion SubmitChanges to file/stream
 
         #region Bytes modifications methods
@@ -364,7 +382,7 @@ namespace WPFHexaEditor.Control.Core
             foreach (ByteModified byteModified in _byteModifiedList)
                 if (action != ByteAction.All)
                 {
-                    if (byteModified.Action == ByteAction.Modified)
+                    if (byteModified.Action == action)
                         yield return byteModified;
                 }
                 else

@@ -150,6 +150,17 @@ namespace WPFHexaEditor.Control.Core
         }
 
         /// <summary>
+        /// Check if position as at EOF.
+        /// </summary>
+        public bool EOF
+        {
+            get
+            {
+                return _stream.Position == _stream.Length;
+            }
+        }
+
+        /// <summary>
         /// Get or Set position in file. Return -1 when file is closed
         /// </summary>
         public long Position
@@ -157,7 +168,7 @@ namespace WPFHexaEditor.Control.Core
             get
             {
                 if (IsOpen)
-                    return _stream.Position;
+                    return _stream.Position <= _stream.Length ? _stream.Position : _stream.Length;
 
                 return -1;
             }
@@ -222,9 +233,8 @@ namespace WPFHexaEditor.Control.Core
             if (CanWrite)
             {
                 MemoryStream msNewStream = new MemoryStream();
-                ByteModified byteModified = null;
-                //var SortedModified = _byteModifiedList.OrderBy(b => b.BytePositionInFile);
-
+                //ByteModified byteModified = null;
+                
                 Debug.Print($"Deleted count : { ByteModifieds(ByteAction.Deleted).Count().ToString()}");
                 Debug.Print($"Added count : { ByteModifieds(ByteAction.Added).Count().ToString()}");
                 Debug.Print($"Modified count : { ByteModifieds(ByteAction.Modified).Count().ToString()}");
@@ -234,58 +244,71 @@ namespace WPFHexaEditor.Control.Core
                     ByteModifieds(ByteAction.Added).Count() == 0)
                 {
                     //Fast save. only save byteaction=modified
-                    foreach (ByteModified bm in ByteModifieds(ByteAction.Modified))                    
+                    foreach (ByteModified bm in ByteModifieds(ByteAction.Modified))
                         if (bm.IsValid)
                         {
                             _stream.Position = bm.BytePositionInFile;
                             _stream.WriteByte(bm.Byte.Value);
-                        }                    
+                        }
                 }
                 else
                 {
-                    //Start update and rewrite file. 
-                    //TODO: Test with largefile and use temps file otherwise of memory stream
-                    for (int i = 0; i < _stream.Length; i++)
-                    {
-                        byteModified = CheckIfIsByteModified(i, ByteAction.All);
+                    byte[] buffer;
+                    var SortedBM = ByteModifieds(ByteAction.All).OrderBy(b => b.BytePositionInFile);
 
-                        //Set position in strea
-                        _stream.Position = i; // + byteAdjuster;
+                    //Set position to zorp 
+                    Position = 0;
 
-                        //Switch action todo or get actual byte...
-                        if (byteModified != null && ByteModified.CheckIsValid(byteModified))
-                            switch (byteModified.Action)
-                            {
-                                case ByteAction.Added:
-                                    //TODO : IMPLEMENTING ADD BYTE
-                                    break;
-                                case ByteAction.Deleted:
-                                    //NOTHING TODO we dont want to add deleted byte
-                                    //newStreamLength++;
-                                    break;
-                                case ByteAction.Modified:
-                                    msNewStream.WriteByte(byteModified.Byte.Value);
-                                    break;
-                            }
-                        else
+                    ////Start update and rewrite file. 
+                    foreach (ByteModified nextByteModified in SortedBM)
+                    {                         
+                        //start reading
+                        Debug.Print($"Position {Position.ToString()}");
+
+                        buffer = new byte[nextByteModified.BytePositionInFile - Position];
+
+                        Debug.Print($"Buffer Lenght : {buffer.Length.ToString()}");
+                        
+                        _stream.Read(buffer, 0, buffer.Length);
+                        msNewStream.Write(buffer, 0, buffer.Length);
+
+                        switch (nextByteModified.Action)
                         {
-                            msNewStream.WriteByte((byte)_stream.ReadByte());
+                            case ByteAction.Added:
+                                //TODO : IMPLEMENTING ADD BYTE
+                                break;
+                            case ByteAction.Deleted:
+                                //NOTHING TODO we dont want to add deleted byte
+                                //newStreamLength++;
+                                Position++;
+                                break;
+                            case ByteAction.Modified:
+                                msNewStream.WriteByte(nextByteModified.Byte.Value);
+                                break;
+                        }
+
+                        //Read/Write the last section of file
+                        if (nextByteModified.BytePositionInFile == SortedBM.Last().BytePositionInFile)
+                        {
+                            buffer = new byte[_stream.Length - Position];
+                            _stream.Read(buffer, 0, buffer.Length);
+                            msNewStream.Write(buffer, 0, buffer.Length);
                         }
                     }
-
-                    //Write to current stream
+                                        
+                    //Write new data to current stream
                     _stream.Position = 0;
                     _stream.Write(msNewStream.ToArray(), 0, (int)msNewStream.Length);
                     _stream.SetLength(msNewStream.Length);
+
+                    //dispose resource
+                    msNewStream.Close();
+                    buffer = null;
                 }
 
                 //Launch event
                 if (ChangesSubmited != null)
                     ChangesSubmited(this, new EventArgs());
-
-#if DEBUG
-                File.WriteAllBytes(@"c:\test\test.txt", msNewStream.ToArray());
-#endif
             }
             else
                 throw new Exception("Cannot write to file.");

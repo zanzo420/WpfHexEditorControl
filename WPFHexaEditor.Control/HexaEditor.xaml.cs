@@ -1089,7 +1089,7 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public long GetMaxVisibleLine()
         {
-            return (long)(LinesInfoStackPanel.ActualHeight / _lineInfoHeight); // + 1; //TEMPS
+            return (long)(LinesInfoStackPanel.ActualHeight / _lineInfoHeight); // + 1; //TEST
         }
 
         private void Grid_SizeChanged(object sender, SizeChangedEventArgs e)

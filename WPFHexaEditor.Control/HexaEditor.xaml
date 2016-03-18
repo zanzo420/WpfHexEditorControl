@@ -48,7 +48,7 @@
         <Grid x:Name="StatusBarGrid" Grid.Row="3" Grid.ColumnSpan="4" Height="30" Visibility="Collapsed" >
             <Label Content="StatusBar are not implemented now..."/>
         </Grid>
-        <Rectangle x:Name="BottomRectangle" Fill="#FFF4F4F5" Opacity="0" Grid.Row="1" HorizontalAlignment="Left" MouseMove="BottomRectangle_MouseMove" Margin="0,0,0,-30" Width="778" Grid.ColumnSpan="4" Grid.RowSpan="2" Height="55" VerticalAlignment="Bottom"/>
-        <Rectangle x:Name="TopRectangle" Fill="#FFF4F4F5" Opacity="0" HorizontalAlignment="Left" MouseMove="TopRectangle_MouseMove" Margin="0,-30,0,0" Width="778" Grid.ColumnSpan="4" Grid.RowSpan="2" Height="55" VerticalAlignment="Top"/>
+        <Rectangle x:Name="BottomRectangle" Fill="#FFF4F4F5" Opacity="0" Grid.Row="1" HorizontalAlignment="Left" MouseMove="BottomRectangle_MouseMove" Margin="0,0,0,-30" Width="778" Grid.ColumnSpan="4" Grid.RowSpan="2" Height="42" VerticalAlignment="Bottom"/>
+        <Rectangle x:Name="TopRectangle" Fill="#FFF4F4F5" Opacity="0" HorizontalAlignment="Left" MouseMove="TopRectangle_MouseMove" Margin="0,-30,0,0" Width="778" Grid.ColumnSpan="4" Height="50" VerticalAlignment="Top"/>
     </Grid>
 </UserControl>

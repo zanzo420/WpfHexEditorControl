@@ -226,19 +226,15 @@ namespace WPFHexaEditor.Control.Core
         #region SubmitChanges to file/stream
         /// <summary>
         /// Submit change to files/stream
-        /// TODO : NEED UPTIMISATION FOR LARGE FILE... IT'S AS BEGINING :) 
+        /// TODO : NEED UPTIMISATION FOR LARGE FILE... IT'S AS BEGINING :) USE TEMPS FILE ?  
         /// </summary>
         public void SubmitChanges()
         {
             if (CanWrite)
             {
+                //Temp stream for new file. 
                 MemoryStream msNewStream = new MemoryStream();
-                //ByteModified byteModified = null;
                 
-                Debug.Print($"Deleted count : { ByteModifieds(ByteAction.Deleted).Count().ToString()}");
-                Debug.Print($"Added count : { ByteModifieds(ByteAction.Added).Count().ToString()}");
-                Debug.Print($"Modified count : { ByteModifieds(ByteAction.Modified).Count().ToString()}");
-
                 //Fast change only nothing byte deleted or added
                 if (ByteModifieds(ByteAction.Deleted).Count() == 0 &&
                     ByteModifieds(ByteAction.Added).Count() == 0)
@@ -254,24 +250,30 @@ namespace WPFHexaEditor.Control.Core
                 else
                 {
                     byte[] buffer;
+                    long bufferlength = 0;
                     var SortedBM = ByteModifieds(ByteAction.All).OrderBy(b => b.BytePositionInFile);
 
-                    //Set position to zorp 
+                    //Set position  
                     Position = 0;
 
                     ////Start update and rewrite file. 
                     foreach (ByteModified nextByteModified in SortedBM)
-                    {                         
-                        //start reading
-                        Debug.Print($"Position {Position.ToString()}");
+                    {
+                        //start read/write / use little block for uptimize memory
+                        while (Position != nextByteModified.BytePositionInFile)
+                        {
+                            bufferlength = nextByteModified.BytePositionInFile - Position;
 
-                        buffer = new byte[nextByteModified.BytePositionInFile - Position];
+                            if (bufferlength > Constant.COPY_BLOCK_SIZE)
+                                buffer = new byte[Constant.COPY_BLOCK_SIZE];
+                            else
+                                buffer = new byte[bufferlength];
 
-                        Debug.Print($"Buffer Lenght : {buffer.Length.ToString()}");
+                            _stream.Read(buffer, 0, buffer.Length);
+                            msNewStream.Write(buffer, 0, buffer.Length);
+                        }
                         
-                        _stream.Read(buffer, 0, buffer.Length);
-                        msNewStream.Write(buffer, 0, buffer.Length);
-
+                        //Apply ByteAction!
                         switch (nextByteModified.Action)
                         {
                             case ByteAction.Added:
@@ -279,28 +281,49 @@ namespace WPFHexaEditor.Control.Core
                                 break;
                             case ByteAction.Deleted:
                                 //NOTHING TODO we dont want to add deleted byte
-                                //newStreamLength++;
                                 Position++;
                                 break;
                             case ByteAction.Modified:
+                                Position++;
                                 msNewStream.WriteByte(nextByteModified.Byte.Value);
                                 break;
                         }
 
-                        //Read/Write the last section of file
+                        //Read/Write the last section of file 
                         if (nextByteModified.BytePositionInFile == SortedBM.Last().BytePositionInFile)
                         {
-                            buffer = new byte[_stream.Length - Position];
-                            _stream.Read(buffer, 0, buffer.Length);
-                            msNewStream.Write(buffer, 0, buffer.Length);
+                            while (!EOF)
+                            {
+                                bufferlength = _stream.Length - Position;
+
+                                if (bufferlength > Constant.COPY_BLOCK_SIZE)
+                                    buffer = new byte[Constant.COPY_BLOCK_SIZE];
+                                else
+                                    buffer = new byte[bufferlength];
+
+                                _stream.Read(buffer, 0, buffer.Length);
+                                msNewStream.Write(buffer, 0, buffer.Length);
+                            }                            
                         }
                     }
-                                        
-                    //Write new data to current stream
-                    _stream.Position = 0;
-                    _stream.Write(msNewStream.ToArray(), 0, (int)msNewStream.Length);
-                    _stream.SetLength(msNewStream.Length);
 
+                    //Write new data to current stream
+                    Position = 0;
+                    msNewStream.Position = 0;
+                    while (!EOF)
+                    {
+                        bufferlength = _stream.Length - Position;
+
+                        if (bufferlength > Constant.COPY_BLOCK_SIZE)
+                            buffer = new byte[Constant.COPY_BLOCK_SIZE];
+                        else
+                            buffer = new byte[bufferlength];
+
+                        msNewStream.Read(buffer, 0, buffer.Length);
+                        _stream.Write(buffer, 0, buffer.Length);
+                    }
+                    _stream.SetLength(msNewStream.Length);
+                    
                     //dispose resource
                     msNewStream.Close();
                     buffer = null;

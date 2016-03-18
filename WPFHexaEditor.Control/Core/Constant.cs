@@ -10,5 +10,7 @@ namespace WPFHexaEditor.Control.Core
     {
         public static readonly string HexLineInfoStringFormat = "x8";
         public static readonly string HexStringFormat = "x";
+
+        public const int COPY_BLOCK_SIZE = 4096;
     }
 }

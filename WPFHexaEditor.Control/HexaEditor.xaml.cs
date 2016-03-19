@@ -45,88 +45,8 @@ namespace WPFHexaEditor.Control
 
             RefreshView(true);
         }
-
-        /// <summary>
-        /// Set or Get the file with the control will show hex
-        /// </summary>
-        public string FileName
-        {
-            get
-            {
-                return this._fileName;
-            }
-
-            set
-            {
-                
-                this._fileName = value;
-                                
-                OpenFile(value);                               
-            }
-        }
-
-        /// <summary>
-        /// Open file name
-        /// </summary>
-        /// <param name="filename"></param>
-        private void OpenFile(string filename)
-        {
-            if (File.Exists(filename))
-            {
-                CloseFile();
-                //bool readOnlyMode = false;
-                                
-                _provider = new ByteProvider(filename);
-                _provider.ReadOnlyChanged += Provider_ReadOnlyChanged;
-                _provider.DataCopiedToClipboard += Provider_DataCopied;
-                _provider.ChangesSubmited += Provider_ChangesSubmited;
-
-                RefreshView(true);
-
-                UnSelectAll();
-
-                UpdateSelectionColorMode(FirstColor.HexByteData);
-
-                //if (readOnlyMode)
-                //ReadOnlyMode = _provider.ReadOnlyMode;
-            }
-            else
-            {
-                throw new FileNotFoundException();
-            }
-        }
-
-        private void Provider_ChangesSubmited(object sender, EventArgs e)
-        {
-            FileName = _fileName;
-        }
-
-        private void Provider_DataCopied(object sender, EventArgs e)
-        {
-            if (DataCopied != null)
-                DataCopied(sender, e);
-        }
-
-        private void Provider_ReadOnlyChanged(object sender, EventArgs e)
-        {
-            if (ByteProvider.CheckIsOpen(_provider))
-                ReadOnlyMode = _provider.ReadOnlyMode;
-        }
-
-        public int BytePerLine
-        {
-            get
-            {
-                return _bytePerLine;
-            }
-            set
-            {
-                _bytePerLine = value;
-
-                RefreshView(true);                
-            }
-        }
-
+        
+        #region Miscellaneous property/methods
         public double ScrollLargeChange {
             get
             {
@@ -139,7 +59,9 @@ namespace WPFHexaEditor.Control
                 UpdateVerticalScroll();
             }
         }
+        #endregion Miscellaneous property/methods
 
+        #region ReadOnly property/event
         /// <summary>
         /// Put the control on readonly mode.
         /// </summary>
@@ -158,249 +80,95 @@ namespace WPFHexaEditor.Control
             }
         }
 
-        /// <summary>
-        /// Update de StatusPanel
-        /// </summary>
-        private void UpdateStatusPanel()
+        private void Provider_ReadOnlyChanged(object sender, EventArgs e)
         {
+            if (ByteProvider.CheckIsOpen(_provider))
+                ReadOnlyMode = _provider.ReadOnlyMode;
+        }
+        #endregion ReadOnly property/event
+        
+        #region Add modify delete bytes methods/event
+        private void Control_ByteModified(object sender, EventArgs e)
+        {
+            HexByteControl ctrl = sender as HexByteControl;
+            StringByteControl sbCtrl = sender as StringByteControl;
+
+            if (sbCtrl != null)
+                _provider.AddByteModified(sbCtrl.Byte, sbCtrl.BytePositionInFile);
+            else if (ctrl != null)
+                _provider.AddByteModified(ctrl.Byte, ctrl.BytePositionInFile);
+        }
+                                
+        private void Control_ByteDeleted(object sender, EventArgs e)
+        {
+            HexByteControl ctrl = sender as HexByteControl;
+            StringByteControl sbCtrl = sender as StringByteControl;
+
+            long position = -1;
+
+            if (SelectionStart > SelectionStop)
+                position = SelectionStop;
+            else
+                position = SelectionStart;
             
-        }
-
-        /// <summary>
-        /// Clear undo and change
-        /// </summary>
-        private void ClearUndoChange()
-        {
-            if (ByteProvider.CheckIsOpen(_provider))
-                _provider.ClearUndoChange();
-        }
-
-        /// <summary>
-        /// Make undo of last the last bytemodified
-        /// </summary>
-        public void Undo(int repeat = 1)
-        {
-            UnSelectAll();
-             
-            if (ByteProvider.CheckIsOpen(_provider))
-            {
-                for (int i = 0; i < repeat; i++)
-                    _provider.Undo();
-
-                RefreshView(false);
-            }
-        }
-
-        /// <summary>
-        /// Refresh currentview of hexeditor
-        /// </summary>
-        /// <param name="ControlResize"></param>
-        private void RefreshView(bool ControlResize = false)
-        {
-            UpdateLinesInfo();
-            UpdateVerticalScroll();
-            UpdateHexHeader();
-            UpdateStringDataViewer(ControlResize);
-            UpdateDataViewer(ControlResize);            
+                _provider.AddByteDeleted(position, SelectionLenght);
+            
+            //TEST
+            //RefreshView(true);
             UpdateByteModified();
             UpdateSelection();
         }
-        
+        #endregion Add modify delete bytes methods/event
+
+        #region Lines methods
         /// <summary>
-        /// Update the selection of byte in hexadecimal panel
+        /// Obtain the max line for verticalscrollbar
         /// </summary>
-        private void UpdateSelectionColorMode(FirstColor coloring)
-        {
-            int stackIndex = 0;
-
-            switch (coloring)
-            {
-                case FirstColor.HexByteData:
-                    stackIndex = 0;
-                    foreach (Label infolabel in LinesInfoStackPanel.Children)
-                    {
-                        foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
-                            byteControl.HexByteFirstSelected = true;
-
-                        foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
-                            byteControl.StringByteFirstSelected = false;
-
-                        stackIndex++;
-                    }
-                    break;
-                case FirstColor.StringByteData:
-                    stackIndex = 0;
-                    foreach (Label infolabel in LinesInfoStackPanel.Children)
-                    {
-                        foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
-                            byteControl.HexByteFirstSelected = false;
-
-                        foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
-                            byteControl.StringByteFirstSelected = true;
-
-                        stackIndex++;
-                    }
-                    break;
-            }
-        }
-
-        /// <summary>
-        /// Update the selection of byte
-        /// </summary>
-        private void UpdateSelection()
-        {
-            int stackIndex = 0;
-            foreach (Label infolabel in LinesInfoStackPanel.Children)
-            {
-                if (SelectionStart <= SelectionStop)
-                {
-                    //Stringbyte panel
-                    foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
-                        if (byteControl.BytePositionInFile >= SelectionStart && 
-                            byteControl.BytePositionInFile <= SelectionStop && 
-                            byteControl.BytePositionInFile > -1) 
-                            byteControl.IsSelected = byteControl.Action == ByteAction.Deleted ? false : true;
-                        else
-                            byteControl.IsSelected = false;
-
-                    //HexByte panel
-                    foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
-                        if (byteControl.BytePositionInFile >= SelectionStart && 
-                            byteControl.BytePositionInFile <= SelectionStop &&
-                            byteControl.BytePositionInFile > -1)
-                            byteControl.IsSelected = byteControl.Action == ByteAction.Deleted ? false : true; 
-                        else
-                            byteControl.IsSelected = false;
-                }
-                else 
-                {
-                    //Stringbyte panel
-                    foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
-                        if (byteControl.BytePositionInFile >= SelectionStop && 
-                            byteControl.BytePositionInFile <= SelectionStart && 
-                            byteControl.BytePositionInFile > -1)
-                            byteControl.IsSelected = byteControl.Action == ByteAction.Deleted ? false : true;
-                        else
-                            byteControl.IsSelected = false;
-
-                    //HexByte panel
-                    foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
-                        if (byteControl.BytePositionInFile >= SelectionStop &&
-                            byteControl.BytePositionInFile <= SelectionStart && 
-                            byteControl.BytePositionInFile > -1)
-                            byteControl.IsSelected = byteControl.Action == ByteAction.Deleted ? false : true;
-                        else
-                            byteControl.IsSelected = false;
-                }
-                stackIndex++;
-            }
-        }
-        
-        /// <summary>
-        /// Update the dataviewer stackpanel
-        /// </summary>
-        private void UpdateDataViewer(bool ControlResize)
+        public long GetMaxLine()
         {
             if (ByteProvider.CheckIsOpen(_provider))
-            {                
-                if (ControlResize)
-                {
-                    HexDataStackPanel.Children.Clear();                    
-
-                    foreach (Label infolabel in LinesInfoStackPanel.Children)
-                    {
-                        StackPanel dataLineStack = new StackPanel();
-                        dataLineStack.Height = _lineInfoHeight;
-                        dataLineStack.Orientation = Orientation.Horizontal;
-                        
-                        long position = ByteConverters.HexLiteralToLong(infolabel.Content.ToString());
-                        //long correction = 0;
-
-                        for (int i = 0; i < BytePerLine; i++)
-                        {
-                            _provider.Position = position + i; //+ correction;
-
-                            if (_provider.Position >= _provider.Length)
-                                break;
-
-                            //FOR TESTING PURPOSE ONLY... 
-                            //if (_provider.CheckIfIsByteModified(_provider.Position, ByteAction.Deleted) != null)
-                            //{
-                            //    correction++;
-                            //    i--;
-                            //    continue;
-                            //}
-
-                            HexByteControl byteControl = new HexByteControl();
-
-                            byteControl.BytePositionInFile = _provider.Position;
-                            byteControl.ReadOnlyMode = _readOnlyMode;
-                            byteControl.MouseSelection += Control_MouseSelection;
-                            byteControl.Click += Control_Click;
-                            byteControl.MoveNext += Control_MoveNext;
-                            byteControl.ByteModified += Control_ByteModified;
-                            byteControl.MoveUp += Control_MoveUp;
-                            byteControl.MoveDown += Control_MoveDown;
-                            byteControl.MoveLeft += Control_MoveLeft;
-                            byteControl.MoveRight += Control_MoveRight;
-                            byteControl.MovePageUp += Control_MovePageUp;
-                            byteControl.MovePageDown += Control_MovePageDown;
-                            byteControl.ByteDeleted += Control_ByteDeleted;
-
-                            byteControl.Byte = (byte)_provider.ReadByte();
-                            
-                            dataLineStack.Children.Add(byteControl);                                                        
-                        }
-
-                        HexDataStackPanel.Children.Add(dataLineStack);
-                    }
-                }
-                else
-                {
-                    int stackIndex = 0;
-                    foreach (Label infolabel in LinesInfoStackPanel.Children)
-                    {
-                        long position = ByteConverters.HexLiteralToLong(infolabel.Content.ToString());
-
-                        foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
-                        {
-                            _provider.Position = position++;
-                                                        
-                            if (_provider.Position >= _provider.Length)
-                            {                                
-                                byteControl.Action = ByteAction.Nothing;
-                                byteControl.BytePositionInFile = -1;
-                                byteControl.ReadOnlyMode = _readOnlyMode;
-                                byteControl.IsSelected = false;
-                                byteControl.Byte = null; 
-                            }
-                            else
-                            {
-                                byteControl.Action = ByteAction.Nothing;
-                                byteControl.ReadOnlyMode = _readOnlyMode;
-                                byteControl.BytePositionInFile = _provider.Position;
-                                byteControl.Byte = (byte)_provider.ReadByte();                                
-                            }
-                        }
-
-                        stackIndex++;                        
-                    }
-                }
-            }
+                return _provider.Length / BytePerLine;
             else
+                return 0;
+        }
+
+        /// <summary>
+        /// Get the number of row visible in control 
+        /// </summary>
+        public long GetMaxVisibleLine()
+        {
+            return (long)(LinesInfoStackPanel.ActualHeight / _lineInfoHeight); // + 1; //TEST
+        }
+        #endregion Lines methods
+
+        #region Selection Property/Methods/Event
+        
+        private void LineInfoLabel_MouseMove(object sender, MouseEventArgs e)
+        {
+            Label line = sender as Label;
+
+            if (e.LeftButton == MouseButtonState.Pressed)
             {
-                HexDataStackPanel.Children.Clear();
+                SelectionStop = ByteConverters.HexLiteralToLong(line.Content.ToString()) + BytePerLine - 1;
             }
+        }
+
+        private void LineInfoLabel_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Label line = sender as Label;
+
+            SelectionStart = ByteConverters.HexLiteralToLong(line.Content.ToString());
+            SelectionStop = SelectionStart + BytePerLine - 1;
         }
 
         private void Control_MovePageDown(object sender, EventArgs e)
         {
-            
+
         }
 
         private void Control_MovePageUp(object sender, EventArgs e)
         {
-            
+
         }
 
         private void Control_MoveDown(object sender, EventArgs e)
@@ -448,7 +216,7 @@ namespace WPFHexaEditor.Control
             StringByteControl sbCtrl = sender as StringByteControl;
 
             long test = SelectionStart - BytePerLine;
-            
+
             //TODO : Validation
             if (Keyboard.Modifiers == ModifierKeys.Shift)
             {
@@ -481,194 +249,13 @@ namespace WPFHexaEditor.Control
                 SetFocusStringDataPanel(SelectionStart);
         }
 
-        /// <summary>
-        /// Update byte are modified
-        /// </summary>
-        private void UpdateByteModified()
-        {
-            int stackIndex = 0;
-            ByteModified byteModifiedCopy = null;
-
-            if (ByteProvider.CheckIsOpen(_provider))
-                foreach (ByteModified byteModified in _provider.ByteModifieds(ByteAction.All))
-                {
-                    stackIndex = 0;
-                    byteModifiedCopy = byteModified.GetCopy();
-
-                    foreach (Label infolabel in LinesInfoStackPanel.Children)
-                    {
-                        foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
-                        {
-                            if (byteModifiedCopy.BytePositionInFile == byteControl.BytePositionInFile)
-                            {
-                                byteControl.InternalChange = true;
-                                byteControl.Byte = byteModifiedCopy.Byte;
-
-                                switch (byteModifiedCopy.Action)
-                                {
-                                    case ByteAction.Modified:
-                                        byteControl.Action = ByteAction.Modified;
-                                        break;
-                                    case ByteAction.Deleted:
-                                        byteControl.Action = ByteAction.Deleted;
-                                        break;
-                                }
-                                byteControl.InternalChange = false;
-                            }
-                        }
-
-                        foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
-                        {
-                            if (byteModifiedCopy.BytePositionInFile == byteControl.BytePositionInFile)
-                            {
-                                byteControl.InternalChange = true;
-                                byteControl.Byte = byteModifiedCopy.Byte;
-
-                                switch (byteModifiedCopy.Action)
-                                {
-                                    case ByteAction.Modified:
-                                        byteControl.Action = ByteAction.Modified;
-                                        break;
-                                    case ByteAction.Deleted:
-                                        byteControl.Action = ByteAction.Deleted;
-                                        break;
-                                }
-                                byteControl.InternalChange = false;                                
-                            }
-                        }
-
-                        stackIndex++;
-                    }
-                }
-        }
-
-        private void Control_ByteModified(object sender, EventArgs e)
-        {
-            HexByteControl ctrl = sender as HexByteControl;
-            StringByteControl sbCtrl = sender as StringByteControl;
-
-            if (sbCtrl != null)
-                _provider.AddByteModified(sbCtrl.Byte, sbCtrl.BytePositionInFile);
-            else if (ctrl != null)
-                _provider.AddByteModified(ctrl.Byte, ctrl.BytePositionInFile);
-        }
-        
-        /// <summary>
-        /// Set focus on byte
-        /// </summary>
-        /// <param name="bytePositionInFile"></param>
-        private void SetFocusHexDataPanel(long bytePositionInFile)
-        {
-            if (ByteProvider.CheckIsOpen(_provider))
-            {
-                if (bytePositionInFile >= _provider.Length)
-                    return;
-
-                int stackIndex = 0;
-                foreach (Label infolabel in LinesInfoStackPanel.Children)
-                {
-                    foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
-                    {
-                        if (byteControl.BytePositionInFile == bytePositionInFile)
-                        {
-                            byteControl.Focus();
-                            return;
-                        }
-                    }
-
-                    stackIndex++;
-                }
-
-                if (VerticalScrollBar.Value < VerticalScrollBar.Maximum)
-                    VerticalScrollBar.Value++;
-                
-                SetFocusHexDataPanel(bytePositionInFile);
-            }
-        }
-
-        private void SetFocusStringDataPanel(long bytePositionInFile)
-        {
-            if (ByteProvider.CheckIsOpen(_provider))
-            {
-                if (bytePositionInFile >= _provider.Length)
-                    return;
-
-                int stackIndex = 0;
-                foreach (Label infolabel in LinesInfoStackPanel.Children)
-                {
-                    foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
-                    {
-                        if (byteControl.BytePositionInFile == bytePositionInFile)
-                        {
-                            byteControl.Focus();
-                            return;
-                        }
-                    }
-
-                    stackIndex++;
-                }
-
-                if (VerticalScrollBar.Value < VerticalScrollBar.Maximum)
-                    VerticalScrollBar.Value++;
-
-                SetFocusStringDataPanel(bytePositionInFile);
-            }
-        }
-
-        /// <summary>
-        /// Get first visible byte position in control
-        /// </summary>
-        /// <returns>Return -1 of no file open</returns>
-        private long GetFirstVisibleBytePosition()
-        {
-            if (ByteProvider.CheckIsOpen(_provider))
-            {
-                int stackIndex = 0;
-                foreach (Label infolabel in LinesInfoStackPanel.Children)
-                {
-                    foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
-                        return byteControl.BytePositionInFile;
-
-                    stackIndex++;
-                }
-
-                return -1;
-            }
-            else
-                return -1;
-        }
-
-        /// <summary>
-        /// Get last visible byte position in control
-        /// </summary>
-        /// <returns>Return -1 of no file open.</returns>
-        private long GetLastVisibleBytePosition()
-        {
-            if (ByteProvider.CheckIsOpen(_provider))
-            {
-                int stackIndex = 0;
-                long byteposition = GetFirstVisibleBytePosition();
-                foreach (Label infolabel in LinesInfoStackPanel.Children)
-                {
-                    foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
-                        byteposition++;
-
-                    stackIndex++;
-                }
-
-                return byteposition;
-            }
-            else
-                return -1;
-        }
-
         private void Control_Click(object sender, EventArgs e)
         {
             StringByteControl sbCtrl = sender as StringByteControl;
             HexByteControl ctrl = sender as HexByteControl;
 
             if (Keyboard.Modifiers == ModifierKeys.Shift)
-            {             
+            {
                 SelectionStop = ctrl.BytePositionInFile;
             }
             else
@@ -677,12 +264,11 @@ namespace WPFHexaEditor.Control
                 SelectionStop = ctrl.BytePositionInFile;
             }
 
-
             if (ctrl != null)
                 UpdateSelectionColorMode(FirstColor.HexByteData);
-            
+
             if (sbCtrl != null)
-                UpdateSelectionColorMode(FirstColor.StringByteData);            
+                UpdateSelectionColorMode(FirstColor.StringByteData);
         }
 
         private void Control_MouseSelection(object sender, EventArgs e)
@@ -693,7 +279,7 @@ namespace WPFHexaEditor.Control
 
             HexByteControl hbCtrl = sender as HexByteControl;
             StringByteControl sbCtrl = sender as StringByteControl;
-            
+
             if (hbCtrl != null)
             {
                 UpdateSelectionColorMode(FirstColor.HexByteData);
@@ -716,395 +302,7 @@ namespace WPFHexaEditor.Control
 
             UpdateSelection();
         }
-
-        /// <summary>
-        /// Update the dataviewer stackpanel
-        /// </summary>
-        private void UpdateStringDataViewer(bool ControlResize)
-        {
-            if (ByteProvider.CheckIsOpen(_provider))
-            {                
-                if (ControlResize)
-                {
-                    StringDataStackPanel.Children.Clear();
-
-                    foreach (Label infolabel in LinesInfoStackPanel.Children)
-                    {
-                        StackPanel dataLineStack = new StackPanel();
-                        dataLineStack.Height = _lineInfoHeight;
-                        dataLineStack.Orientation = Orientation.Horizontal;
-                        
-                        long position = ByteConverters.HexLiteralToLong(infolabel.Content.ToString());
-
-                        for (int i = 0; i < BytePerLine; i++)
-                        {
-                            _provider.Position = position + i;
-                            
-                            if (_provider.Position >= _provider.Length)
-                                break;
-                                                        
-                            StringByteControl sbCtrl = new StringByteControl();
-
-                            sbCtrl.BytePositionInFile = _provider.Position;
-                            sbCtrl.StringByteModified += Control_ByteModified;
-                            sbCtrl.ReadOnlyMode = _readOnlyMode;
-                            sbCtrl.MoveNext += Control_MoveNext;
-                            sbCtrl.MouseSelection += Control_MouseSelection;
-                            sbCtrl.Click += Control_Click;
-                            sbCtrl.BytePositionInFile = _provider.Position;
-                            sbCtrl.MoveUp += Control_MoveUp;
-                            sbCtrl.MoveDown += Control_MoveDown;
-                            sbCtrl.MoveLeft += Control_MoveLeft;
-                            sbCtrl.MoveRight += Control_MoveRight;
-                            sbCtrl.ByteDeleted += Control_ByteDeleted;
-                            
-                            sbCtrl.Byte = (byte)_provider.ReadByte();
-                                                        
-                            dataLineStack.Children.Add(sbCtrl);
-                        }
-
-                        StringDataStackPanel.Children.Add(dataLineStack);
-                    }
-                }
-                else
-                {
-                    int stackIndex = 0;
-                    foreach (Label infolabel in LinesInfoStackPanel.Children)
-                    {                        
-                        long position = ByteConverters.HexLiteralToLong(infolabel.Content.ToString());
-
-                        foreach (StringByteControl sbCtrl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
-                        {
-                            _provider.Position = position++;
-
-                            if (_provider.Position >= _provider.Length)
-                            {
-                                sbCtrl.Byte = null;
-                                sbCtrl.BytePositionInFile = -1;
-                                sbCtrl.Action = ByteAction.Nothing;
-                                sbCtrl.ReadOnlyMode = _readOnlyMode;
-                                sbCtrl.IsSelected = false;
-                            }
-                            else
-                            {
-                                sbCtrl.InternalChange = true;
-                                sbCtrl.Byte = (byte)_provider.ReadByte();
-                                sbCtrl.BytePositionInFile = _provider.Position - 1;
-                                sbCtrl.Action = ByteAction.Nothing;
-                                sbCtrl.ReadOnlyMode = _readOnlyMode;
-                                sbCtrl.InternalChange = false;
-                            }
-                        }
-                        
-                        stackIndex++;                        
-                    }
-                }
-            }
-            else
-            {
-                StringDataStackPanel.Children.Clear();
-            }
-        }
-
-        private void Control_ByteDeleted(object sender, EventArgs e)
-        {
-            HexByteControl ctrl = sender as HexByteControl;
-            StringByteControl sbCtrl = sender as StringByteControl;
-
-            long position = -1;
-
-            if (SelectionStart > SelectionStop)
-                position = SelectionStop;
-            else
-                position = SelectionStart;
-
-                _provider.AddByteDeleted(position, SelectionLenght);
-            
-            //TEST
-            //RefreshView(true);
-            UpdateByteModified();
-            UpdateSelection();
-        }
-
-        private void Control_MoveRight(object sender, EventArgs e)
-        {
-            HexByteControl hbCtrl = sender as HexByteControl;
-            StringByteControl sbCtrl = sender as StringByteControl;
-
-            long test = SelectionStart + 1;
-
-            //TODO : Validation
-            if (Keyboard.Modifiers == ModifierKeys.Shift)
-            {
-                if (test <= _provider.Length)
-                    SelectionStart++;
-                else
-                    SelectionStart = _provider.Length;
-            }
-            else
-            {
-                if (SelectionStart > SelectionStop)
-                    SelectionStart = SelectionStop;
-                else
-                    SelectionStop = SelectionStart;
-
-                if (test < _provider.Length)
-                {
-                    SelectionStart++;
-                    SelectionStop++;
-                }
-            }
-            
-            //Validation and refresh
-            if (SelectionStart >= _provider.Length)
-                SelectionStart = _provider.Length;
-            
-            if (SelectionStart > GetLastVisibleBytePosition())
-                VerticalScrollBar.Value++;
-
-            if (hbCtrl != null)
-                SetFocusHexDataPanel(SelectionStart);
-
-            if (sbCtrl != null)
-                SetFocusStringDataPanel(SelectionStart);
-        }
-
-        private void Control_MoveLeft(object sender, EventArgs e)
-        {
-            HexByteControl hbCtrl = sender as HexByteControl;
-            StringByteControl sbCtrl = sender as StringByteControl;
-
-            long test = SelectionStart - 1;
-
-            //TODO : Validation
-            if (Keyboard.Modifiers == ModifierKeys.Shift)
-            {
-                if (test > -1)
-                    SelectionStart--;
-                else
-                    SelectionStart = 0;
-            }
-            else
-            {
-                if (SelectionStart > SelectionStop)
-                    SelectionStart = SelectionStop;
-                else
-                    SelectionStop = SelectionStart;
-
-                if (test > -1)
-                {
-                    SelectionStart--;
-                    SelectionStop--;
-                }
-            }
-
-            //Validation and refresh
-            if (SelectionStart < 0)
-                SelectionStart = 0;
-
-            if (SelectionStart < GetFirstVisibleBytePosition())
-                VerticalScrollBar.Value--;
-
-            if (hbCtrl != null)
-                SetFocusHexDataPanel(SelectionStart);
-
-            if (sbCtrl != null)
-                SetFocusStringDataPanel(SelectionStart);
-        }
-
-        private void Control_MoveNext(object sender, EventArgs e)
-        {
-            HexByteControl hexByteCtrl = sender as HexByteControl;
-            StringByteControl sbCtrl = sender as StringByteControl;
-
-            if (sbCtrl != null)
-            {
-                sbCtrl.IsSelected = false;
-                SetFocusStringDataPanel(sbCtrl.BytePositionInFile + 1);                
-            }
-
-            if (hexByteCtrl != null)
-            {
-                hexByteCtrl.IsSelected = false;
-                SetFocusHexDataPanel(hexByteCtrl.BytePositionInFile + 1);            
-            }
-
-            if (hexByteCtrl != null || sbCtrl != null)
-            {
-                SelectionStart++;
-                SelectionStop++;
-                UpdateByteModified();
-            }
-        }
-
-        /// <summary>
-        /// Update the position info panel at left of the control
-        /// </summary>
-        public void UpdateHexHeader()
-        {
-            HexHeaderStackPanel.Children.Clear();
-
-            if (ByteProvider.CheckIsOpen(_provider))
-            {
-                for (int i = 0; i < BytePerLine; i++)
-                {
-                    //Create control
-                    Label LineInfoLabel = new Label();
-                    LineInfoLabel.Height = _lineInfoHeight;
-                    LineInfoLabel.Padding = new Thickness(0, 0, 10, 0);
-                    LineInfoLabel.Foreground = Brushes.Gray;
-                    LineInfoLabel.Width = 25;
-                    LineInfoLabel.HorizontalContentAlignment = HorizontalAlignment.Right;
-                    LineInfoLabel.VerticalContentAlignment = VerticalAlignment.Center;
-                    LineInfoLabel.Content = ByteConverters.ByteToHex((byte)i);
-                    LineInfoLabel.ToolTip = $"Column : {i.ToString()}";
-
-                    HexHeaderStackPanel.Children.Add(LineInfoLabel);
-                }
-            }
-            else
-            {
-
-            }
-        }
-
-        /// <summary>
-        /// Update the position info panel at left of the control
-        /// </summary>
-        public void UpdateLinesInfo()
-        {
-            LinesInfoStackPanel.Children.Clear();
-
-            if (ByteProvider.CheckIsOpen(_provider))
-            {
-                for(int i = 0; i < GetMaxVisibleLine(); i++)
-                {
-                    long fds = GetMaxVisibleLine();
-                    //LineInfo
-                    
-                    long firstLineByte = ((long)VerticalScrollBar.Value + i) * BytePerLine; 
-                    string info = "0x" +  firstLineByte.ToString(Constant.HexLineInfoStringFormat, CultureInfo.InvariantCulture);
-
-                    if (firstLineByte < _provider.Length)
-                    {
-                        //Create control
-                        Label LineInfoLabel = new Label();
-                        LineInfoLabel.Height = _lineInfoHeight;
-                        LineInfoLabel.Padding = new Thickness(0, 0, 10, 0);
-                        LineInfoLabel.Foreground = Brushes.Gray;
-                        LineInfoLabel.MouseDown += LineInfoLabel_MouseDown;
-                        LineInfoLabel.MouseMove += LineInfoLabel_MouseMove;
-                        LineInfoLabel.HorizontalContentAlignment = HorizontalAlignment.Right;
-                        LineInfoLabel.VerticalContentAlignment = VerticalAlignment.Center;
-                        LineInfoLabel.Content = info;
-                        LineInfoLabel.ToolTip = $"Byte : {firstLineByte.ToString()}";  
-
-                        LinesInfoStackPanel.Children.Add(LineInfoLabel);
-                    }
-                } 
-            }
-            else
-            {
-
-            }
-        }
-
-        private void LineInfoLabel_MouseMove(object sender, MouseEventArgs e)
-        {
-            Label line = sender as Label;
-
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                SelectionStop = ByteConverters.HexLiteralToLong(line.Content.ToString()) + BytePerLine - 1;
-            }
-        }
-
-        private void LineInfoLabel_MouseDown(object sender, MouseButtonEventArgs e)
-        {            
-            Label line = sender as Label;
-            
-            SelectionStart = ByteConverters.HexLiteralToLong(line.Content.ToString());
-            SelectionStop = SelectionStart + BytePerLine - 1;
-        }
-
-        /// <summary>
-        /// Close file and clear control
-        /// ReadOnlyMode is reset to false
-        /// </summary>
-        public void CloseFile()
-        {
-            if (ByteProvider.CheckIsOpen(_provider))
-            {
-                _provider.CloseFile();
-
-                ReadOnlyMode = false;
-                VerticalScrollBar.Value = 0;
-            }
-
-            ClearUndoChange();
-            UnSelectAll();
-            RefreshView();
-        }
-
-        /// <summary>
-        /// Save to the current stream
-        /// TODO: Add save as another stream...
-        /// </summary>
-        public void SubmitChanges()
-        {
-            if (ByteProvider.CheckIsOpen(_provider))
-                if (!_provider.ReadOnlyMode)
-                    _provider.SubmitChanges();
-        }
-
-        /// <summary>
-        /// Update vertical scrollbar with file info
-        /// </summary>
-        public void UpdateVerticalScroll()
-        {
-            VerticalScrollBar.Visibility = Visibility.Collapsed;
-
-            if (ByteProvider.CheckIsOpen(_provider))
-            {
-                //TODO : check if need to show
-                VerticalScrollBar.Visibility = Visibility.Visible;
-
-                VerticalScrollBar.SmallChange = 1;
-                VerticalScrollBar.LargeChange = ScrollLargeChange;
-                VerticalScrollBar.Maximum = GetMaxLine() - GetMaxVisibleLine() + 1;
-            }     
-                  
-        }
-
-        /// <summary>
-        /// Obtain the max line for verticalscrollbar
-        /// </summary>
-        public long GetMaxLine()
-        {
-            if (ByteProvider.CheckIsOpen(_provider))
-                return _provider.Length / BytePerLine;
-            else
-                return 0;
-        }
-
-        /// <summary>
-        /// Get the number of row visible in control 
-        /// </summary>
-        public long GetMaxVisibleLine()
-        {
-            return (long)(LinesInfoStackPanel.ActualHeight / _lineInfoHeight); // + 1; //TEST
-        }
-
-        private void Grid_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            RefreshView(true);
-        }
-
-        private void VerticalScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            RefreshView(false);
-        }
-
+        
         private void BottomRectangle_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
@@ -1116,8 +314,7 @@ namespace WPFHexaEditor.Control
             if (e.LeftButton == MouseButtonState.Pressed)
                 VerticalScrollBar.Value--;            
         }
-
-        #region Selection Property/Methods
+        
         /// <summary>
         /// Set the start byte position of selection
         /// </summary>
@@ -1300,6 +497,130 @@ namespace WPFHexaEditor.Control
             }
         }
 
+        private void UserControl_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (e.Delta > 0) //UP
+            {
+                VerticalScrollBar.Value--;
+            }
+
+
+            if (e.Delta < 0) //Down
+            {
+                VerticalScrollBar.Value++;
+            }
+        }
+
+        private void Control_MoveRight(object sender, EventArgs e)
+        {
+            HexByteControl hbCtrl = sender as HexByteControl;
+            StringByteControl sbCtrl = sender as StringByteControl;
+
+            long test = SelectionStart + 1;
+
+            //TODO : Validation
+            if (Keyboard.Modifiers == ModifierKeys.Shift)
+            {
+                if (test <= _provider.Length)
+                    SelectionStart++;
+                else
+                    SelectionStart = _provider.Length;
+            }
+            else
+            {
+                if (SelectionStart > SelectionStop)
+                    SelectionStart = SelectionStop;
+                else
+                    SelectionStop = SelectionStart;
+
+                if (test < _provider.Length)
+                {
+                    SelectionStart++;
+                    SelectionStop++;
+                }
+            }
+
+            //Validation and refresh
+            if (SelectionStart >= _provider.Length)
+                SelectionStart = _provider.Length;
+
+            if (SelectionStart > GetLastVisibleBytePosition())
+                VerticalScrollBar.Value++;
+
+            if (hbCtrl != null)
+                SetFocusHexDataPanel(SelectionStart);
+
+            if (sbCtrl != null)
+                SetFocusStringDataPanel(SelectionStart);
+        }
+
+        private void Control_MoveLeft(object sender, EventArgs e)
+        {
+            HexByteControl hbCtrl = sender as HexByteControl;
+            StringByteControl sbCtrl = sender as StringByteControl;
+
+            long test = SelectionStart - 1;
+
+            //TODO : Validation
+            if (Keyboard.Modifiers == ModifierKeys.Shift)
+            {
+                if (test > -1)
+                    SelectionStart--;
+                else
+                    SelectionStart = 0;
+            }
+            else
+            {
+                if (SelectionStart > SelectionStop)
+                    SelectionStart = SelectionStop;
+                else
+                    SelectionStop = SelectionStart;
+
+                if (test > -1)
+                {
+                    SelectionStart--;
+                    SelectionStop--;
+                }
+            }
+
+            //Validation and refresh
+            if (SelectionStart < 0)
+                SelectionStart = 0;
+
+            if (SelectionStart < GetFirstVisibleBytePosition())
+                VerticalScrollBar.Value--;
+
+            if (hbCtrl != null)
+                SetFocusHexDataPanel(SelectionStart);
+
+            if (sbCtrl != null)
+                SetFocusStringDataPanel(SelectionStart);
+        }
+
+        private void Control_MoveNext(object sender, EventArgs e)
+        {
+            HexByteControl hexByteCtrl = sender as HexByteControl;
+            StringByteControl sbCtrl = sender as StringByteControl;
+
+            if (sbCtrl != null)
+            {
+                sbCtrl.IsSelected = false;
+                SetFocusStringDataPanel(sbCtrl.BytePositionInFile + 1);
+            }
+
+            if (hexByteCtrl != null)
+            {
+                hexByteCtrl.IsSelected = false;
+                SetFocusHexDataPanel(hexByteCtrl.BytePositionInFile + 1);
+            }
+
+            if (hexByteCtrl != null || sbCtrl != null)
+            {
+                SelectionStart++;
+                SelectionStop++;
+                UpdateByteModified();
+            }
+        }
         #endregion Selection Property/Methods
 
         #region Copy/Paste/Cut Methods
@@ -1361,6 +682,16 @@ namespace WPFHexaEditor.Control
             if (ByteProvider.CheckIsOpen(_provider))
                 _provider.CopyToStream(output, selectionStart, selectionStop, copyChange);
         }
+
+        /// <summary>
+        /// Occurs when data is copied in byteprovider instance
+        /// </summary>
+        private void Provider_DataCopied(object sender, EventArgs e)
+        {
+            if (DataCopied != null)
+                DataCopied(sender, e);
+        }
+
         #endregion Copy/Paste/Cut Methods
 
         #region Set position methods
@@ -1420,7 +751,7 @@ namespace WPFHexaEditor.Control
         }
         #endregion Set position methods
 
-        #region Visibility standard property
+        #region Visibility property
         /// <summary>
         /// Set or Get value for change visibility of hexadecimal panel
         /// </summary>
@@ -1592,7 +923,718 @@ namespace WPFHexaEditor.Control
             }
 
             ctrl.RefreshView(false);
-        }        
+        }
         #endregion Visibility standard property
+
+        #region Undo / Redo
+        /// <summary>
+        /// Clear undo and change
+        /// </summary>
+        private void ClearUndoChange()
+        {
+            if (ByteProvider.CheckIsOpen(_provider))
+                _provider.ClearUndoChange();
+        }
+
+        /// <summary>
+        /// Make undo of last the last bytemodified
+        /// </summary>
+        public void Undo(int repeat = 1)
+        {
+            UnSelectAll();
+
+            if (ByteProvider.CheckIsOpen(_provider))
+            {
+                for (int i = 0; i < repeat; i++)
+                    _provider.Undo();
+
+                RefreshView(false);
+            }
+        }
+        #endregion Undo / Redo
+
+        #region Open, Close, Save... Methods/Property
+
+        private void Provider_ChangesSubmited(object sender, EventArgs e)
+        {
+            FileName = _fileName;
+        }
+
+
+        /// <summary>
+        /// Set or Get the file with the control will show hex
+        /// </summary>
+        public string FileName
+        {
+            get
+            {
+                return this._fileName;
+            }
+
+            set
+            {
+                this._fileName = value;
+
+                OpenFile(value);
+            }
+        }
+
+        /// <summary>
+        /// Close file and clear control
+        /// ReadOnlyMode is reset to false
+        /// </summary>
+        public void CloseFile()
+        {
+            if (ByteProvider.CheckIsOpen(_provider))
+            {
+                _provider.CloseFile();
+
+                ReadOnlyMode = false;
+                VerticalScrollBar.Value = 0;
+            }
+
+            ClearUndoChange();
+            UnSelectAll();
+            RefreshView();
+        }
+
+
+        /// <summary>
+        /// Save to the current stream
+        /// TODO: Add save as another stream...
+        /// </summary>
+        public void SubmitChanges()
+        {
+            if (ByteProvider.CheckIsOpen(_provider))
+                if (!_provider.ReadOnlyMode)
+                    _provider.SubmitChanges();
+        }
+
+        /// <summary>
+        /// Open file name
+        /// </summary>
+        /// <param name="filename"></param>
+        private void OpenFile(string filename)
+        {
+            if (File.Exists(filename))
+            {
+                CloseFile();
+                //bool readOnlyMode = false;
+
+                _provider = new ByteProvider(filename);
+                _provider.ReadOnlyChanged += Provider_ReadOnlyChanged;
+                _provider.DataCopiedToClipboard += Provider_DataCopied;
+                _provider.ChangesSubmited += Provider_ChangesSubmited;
+
+                RefreshView(true);
+
+                UnSelectAll();
+
+                UpdateSelectionColorMode(FirstColor.HexByteData);
+
+                //if (readOnlyMode)
+                //ReadOnlyMode = _provider.ReadOnlyMode;
+            }
+            else
+            {
+                throw new FileNotFoundException();
+            }
+        }
+
+        #endregion
+
+        #region Update/Refresh view methods/event
+        /// <summary>
+        /// Get or set the number of byte are show in control
+        /// </summary>
+        public int BytePerLine
+        {
+            get
+            {
+                return _bytePerLine;
+            }
+            set
+            {
+                _bytePerLine = value;
+
+                RefreshView(true);
+            }
+        }
+
+        private void Grid_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            RefreshView(true);
+        }
+
+        private void VerticalScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            RefreshView(false);
+        }
+        /// <summary>
+        /// Update vertical scrollbar with file info
+        /// </summary>
+        public void UpdateVerticalScroll()
+        {
+            VerticalScrollBar.Visibility = Visibility.Collapsed;
+
+            if (ByteProvider.CheckIsOpen(_provider))
+            {
+                //TODO : check if need to show
+                VerticalScrollBar.Visibility = Visibility.Visible;
+
+                VerticalScrollBar.SmallChange = 1;
+                VerticalScrollBar.LargeChange = ScrollLargeChange;
+                VerticalScrollBar.Maximum = GetMaxLine() - GetMaxVisibleLine() + 1;
+            }
+
+        }
+
+        /// <summary>
+        /// Update de StatusPanel
+        /// </summary>
+        private void UpdateStatusPanel()
+        {
+
+        }
+
+        /// <summary>
+        /// Refresh currentview of hexeditor
+        /// </summary>
+        /// <param name="ControlResize"></param>
+        private void RefreshView(bool ControlResize = false)
+        {
+            UpdateLinesInfo();
+            UpdateVerticalScroll();
+            UpdateHexHeader();
+            UpdateStringDataViewer(ControlResize);
+            UpdateDataViewer(ControlResize);
+            UpdateByteModified();
+            UpdateSelection();
+        }
+
+        /// <summary>
+        /// Update the selection of byte in hexadecimal panel
+        /// </summary>
+        private void UpdateSelectionColorMode(FirstColor coloring)
+        {
+            int stackIndex = 0;
+
+            switch (coloring)
+            {
+                case FirstColor.HexByteData:
+                    stackIndex = 0;
+                    foreach (Label infolabel in LinesInfoStackPanel.Children)
+                    {
+                        foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
+                            byteControl.HexByteFirstSelected = true;
+
+                        foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
+                            byteControl.StringByteFirstSelected = false;
+
+                        stackIndex++;
+                    }
+                    break;
+                case FirstColor.StringByteData:
+                    stackIndex = 0;
+                    foreach (Label infolabel in LinesInfoStackPanel.Children)
+                    {
+                        foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
+                            byteControl.HexByteFirstSelected = false;
+
+                        foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
+                            byteControl.StringByteFirstSelected = true;
+
+                        stackIndex++;
+                    }
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Update the dataviewer stackpanel
+        /// </summary>
+        private void UpdateStringDataViewer(bool ControlResize)
+        {
+            if (ByteProvider.CheckIsOpen(_provider))
+            {
+                if (ControlResize)
+                {
+                    StringDataStackPanel.Children.Clear();
+
+                    foreach (Label infolabel in LinesInfoStackPanel.Children)
+                    {
+                        StackPanel dataLineStack = new StackPanel();
+                        dataLineStack.Height = _lineInfoHeight;
+                        dataLineStack.Orientation = Orientation.Horizontal;
+
+                        long position = ByteConverters.HexLiteralToLong(infolabel.Content.ToString());
+
+                        for (int i = 0; i < BytePerLine; i++)
+                        {
+                            _provider.Position = position + i;
+
+                            if (_provider.Position >= _provider.Length)
+                                break;
+
+                            StringByteControl sbCtrl = new StringByteControl();
+
+                            sbCtrl.BytePositionInFile = _provider.Position;
+                            sbCtrl.StringByteModified += Control_ByteModified;
+                            sbCtrl.ReadOnlyMode = _readOnlyMode;
+                            sbCtrl.MoveNext += Control_MoveNext;
+                            sbCtrl.MouseSelection += Control_MouseSelection;
+                            sbCtrl.Click += Control_Click;
+                            sbCtrl.BytePositionInFile = _provider.Position;
+                            sbCtrl.MoveUp += Control_MoveUp;
+                            sbCtrl.MoveDown += Control_MoveDown;
+                            sbCtrl.MoveLeft += Control_MoveLeft;
+                            sbCtrl.MoveRight += Control_MoveRight;
+                            sbCtrl.ByteDeleted += Control_ByteDeleted;
+
+                            sbCtrl.Byte = (byte)_provider.ReadByte();
+
+                            dataLineStack.Children.Add(sbCtrl);
+                        }
+
+                        StringDataStackPanel.Children.Add(dataLineStack);
+                    }
+                }
+                else
+                {
+                    int stackIndex = 0;
+                    foreach (Label infolabel in LinesInfoStackPanel.Children)
+                    {
+                        long position = ByteConverters.HexLiteralToLong(infolabel.Content.ToString());
+
+                        foreach (StringByteControl sbCtrl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
+                        {
+                            _provider.Position = position++;
+
+                            if (_provider.Position >= _provider.Length)
+                            {
+                                sbCtrl.Byte = null;
+                                sbCtrl.BytePositionInFile = -1;
+                                sbCtrl.Action = ByteAction.Nothing;
+                                sbCtrl.ReadOnlyMode = _readOnlyMode;
+                                sbCtrl.IsSelected = false;
+                            }
+                            else
+                            {
+                                sbCtrl.InternalChange = true;
+                                sbCtrl.Byte = (byte)_provider.ReadByte();
+                                sbCtrl.BytePositionInFile = _provider.Position - 1;
+                                sbCtrl.Action = ByteAction.Nothing;
+                                sbCtrl.ReadOnlyMode = _readOnlyMode;
+                                sbCtrl.InternalChange = false;
+                            }
+                        }
+
+                        stackIndex++;
+                    }
+                }
+            }
+            else
+            {
+                StringDataStackPanel.Children.Clear();
+            }
+        }
+
+        /// <summary>
+        /// Update byte are modified
+        /// </summary>
+        private void UpdateByteModified()
+        {
+            int stackIndex = 0;
+            ByteModified byteModifiedCopy = null;
+
+            if (ByteProvider.CheckIsOpen(_provider))
+                foreach (ByteModified byteModified in _provider.ByteModifieds(ByteAction.All))
+                {
+                    stackIndex = 0;
+                    byteModifiedCopy = byteModified.GetCopy();
+
+                    foreach (Label infolabel in LinesInfoStackPanel.Children)
+                    {
+                        foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
+                        {
+                            if (byteModifiedCopy.BytePositionInFile == byteControl.BytePositionInFile)
+                            {
+                                byteControl.InternalChange = true;
+                                byteControl.Byte = byteModifiedCopy.Byte;
+
+                                switch (byteModifiedCopy.Action)
+                                {
+                                    case ByteAction.Modified:
+                                        byteControl.Action = ByteAction.Modified;
+                                        break;
+                                    case ByteAction.Deleted:
+                                        byteControl.Action = ByteAction.Deleted;
+                                        break;
+                                }
+                                byteControl.InternalChange = false;
+                            }
+                        }
+
+                        foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
+                        {
+                            if (byteModifiedCopy.BytePositionInFile == byteControl.BytePositionInFile)
+                            {
+                                byteControl.InternalChange = true;
+                                byteControl.Byte = byteModifiedCopy.Byte;
+
+                                switch (byteModifiedCopy.Action)
+                                {
+                                    case ByteAction.Modified:
+                                        byteControl.Action = ByteAction.Modified;
+                                        break;
+                                    case ByteAction.Deleted:
+                                        byteControl.Action = ByteAction.Deleted;
+                                        break;
+                                }
+                                byteControl.InternalChange = false;
+                            }
+                        }
+
+                        stackIndex++;
+                    }
+                }
+        }
+
+        /// <summary>
+        /// Update the selection of byte
+        /// </summary>
+        private void UpdateSelection()
+        {
+            int stackIndex = 0;
+            foreach (Label infolabel in LinesInfoStackPanel.Children)
+            {
+                if (SelectionStart <= SelectionStop)
+                {
+                    //Stringbyte panel
+                    foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
+                        if (byteControl.BytePositionInFile >= SelectionStart &&
+                            byteControl.BytePositionInFile <= SelectionStop &&
+                            byteControl.BytePositionInFile > -1)
+                            byteControl.IsSelected = byteControl.Action == ByteAction.Deleted ? false : true;
+                        else
+                            byteControl.IsSelected = false;
+
+                    //HexByte panel
+                    foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
+                        if (byteControl.BytePositionInFile >= SelectionStart &&
+                            byteControl.BytePositionInFile <= SelectionStop &&
+                            byteControl.BytePositionInFile > -1)
+                            byteControl.IsSelected = byteControl.Action == ByteAction.Deleted ? false : true;
+                        else
+                            byteControl.IsSelected = false;
+                }
+                else
+                {
+                    //Stringbyte panel
+                    foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
+                        if (byteControl.BytePositionInFile >= SelectionStop &&
+                            byteControl.BytePositionInFile <= SelectionStart &&
+                            byteControl.BytePositionInFile > -1)
+                            byteControl.IsSelected = byteControl.Action == ByteAction.Deleted ? false : true;
+                        else
+                            byteControl.IsSelected = false;
+
+                    //HexByte panel
+                    foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
+                        if (byteControl.BytePositionInFile >= SelectionStop &&
+                            byteControl.BytePositionInFile <= SelectionStart &&
+                            byteControl.BytePositionInFile > -1)
+                            byteControl.IsSelected = byteControl.Action == ByteAction.Deleted ? false : true;
+                        else
+                            byteControl.IsSelected = false;
+                }
+                stackIndex++;
+            }
+        }
+
+        /// <summary>
+        /// Update the dataviewer stackpanel
+        /// </summary>
+        private void UpdateDataViewer(bool ControlResize)
+        {
+            if (ByteProvider.CheckIsOpen(_provider))
+            {
+                if (ControlResize)
+                {
+                    HexDataStackPanel.Children.Clear();
+
+                    foreach (Label infolabel in LinesInfoStackPanel.Children)
+                    {
+                        StackPanel dataLineStack = new StackPanel();
+                        dataLineStack.Height = _lineInfoHeight;
+                        dataLineStack.Orientation = Orientation.Horizontal;
+
+                        long position = ByteConverters.HexLiteralToLong(infolabel.Content.ToString());
+                        //long correction = 0;
+
+                        for (int i = 0; i < BytePerLine; i++)
+                        {
+                            _provider.Position = position + i; //+ correction;
+
+                            if (_provider.Position >= _provider.Length)
+                                break;
+
+                            //FOR TESTING PURPOSE ONLY... 
+                            //if (_provider.CheckIfIsByteModified(_provider.Position, ByteAction.Deleted) != null)
+                            //{
+                            //    correction++;
+                            //    i--;
+                            //    continue;
+                            //}
+
+                            HexByteControl byteControl = new HexByteControl();
+
+                            byteControl.BytePositionInFile = _provider.Position;
+                            byteControl.ReadOnlyMode = _readOnlyMode;
+                            byteControl.MouseSelection += Control_MouseSelection;
+                            byteControl.Click += Control_Click;
+                            byteControl.MoveNext += Control_MoveNext;
+                            byteControl.ByteModified += Control_ByteModified;
+                            byteControl.MoveUp += Control_MoveUp;
+                            byteControl.MoveDown += Control_MoveDown;
+                            byteControl.MoveLeft += Control_MoveLeft;
+                            byteControl.MoveRight += Control_MoveRight;
+                            byteControl.MovePageUp += Control_MovePageUp;
+                            byteControl.MovePageDown += Control_MovePageDown;
+                            byteControl.ByteDeleted += Control_ByteDeleted;
+
+                            byteControl.Byte = (byte)_provider.ReadByte();
+
+                            dataLineStack.Children.Add(byteControl);
+                        }
+
+                        HexDataStackPanel.Children.Add(dataLineStack);
+                    }
+                }
+                else
+                {
+                    int stackIndex = 0;
+                    foreach (Label infolabel in LinesInfoStackPanel.Children)
+                    {
+                        long position = ByteConverters.HexLiteralToLong(infolabel.Content.ToString());
+
+                        foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
+                        {
+                            _provider.Position = position++;
+
+                            if (_provider.Position >= _provider.Length)
+                            {
+                                byteControl.Action = ByteAction.Nothing;
+                                byteControl.BytePositionInFile = -1;
+                                byteControl.ReadOnlyMode = _readOnlyMode;
+                                byteControl.IsSelected = false;
+                                byteControl.Byte = null;
+                            }
+                            else
+                            {
+                                byteControl.Action = ByteAction.Nothing;
+                                byteControl.ReadOnlyMode = _readOnlyMode;
+                                byteControl.BytePositionInFile = _provider.Position;
+                                byteControl.Byte = (byte)_provider.ReadByte();
+                            }
+                        }
+
+                        stackIndex++;
+                    }
+                }
+            }
+            else
+            {
+                HexDataStackPanel.Children.Clear();
+            }
+        }
+
+        /// <summary>
+        /// Update the position info panel at left of the control
+        /// </summary>
+        public void UpdateHexHeader()
+        {
+            HexHeaderStackPanel.Children.Clear();
+
+            if (ByteProvider.CheckIsOpen(_provider))
+            {
+                for (int i = 0; i < BytePerLine; i++)
+                {
+                    //Create control
+                    Label LineInfoLabel = new Label();
+                    LineInfoLabel.Height = _lineInfoHeight;
+                    LineInfoLabel.Padding = new Thickness(0, 0, 10, 0);
+                    LineInfoLabel.Foreground = Brushes.Gray;
+                    LineInfoLabel.Width = 25;
+                    LineInfoLabel.HorizontalContentAlignment = HorizontalAlignment.Right;
+                    LineInfoLabel.VerticalContentAlignment = VerticalAlignment.Center;
+                    LineInfoLabel.Content = ByteConverters.ByteToHex((byte)i);
+                    LineInfoLabel.ToolTip = $"Column : {i.ToString()}";
+
+                    HexHeaderStackPanel.Children.Add(LineInfoLabel);
+                }
+            }
+            else
+            {
+
+            }
+        }
+
+        /// <summary>
+        /// Update the position info panel at left of the control
+        /// </summary>
+        public void UpdateLinesInfo()
+        {
+            LinesInfoStackPanel.Children.Clear();
+
+            if (ByteProvider.CheckIsOpen(_provider))
+            {
+                for (int i = 0; i < GetMaxVisibleLine(); i++)
+                {
+                    long fds = GetMaxVisibleLine();
+                    //LineInfo
+
+                    long firstLineByte = ((long)VerticalScrollBar.Value + i) * BytePerLine;
+                    string info = "0x" + firstLineByte.ToString(Constant.HexLineInfoStringFormat, CultureInfo.InvariantCulture);
+
+                    if (firstLineByte < _provider.Length)
+                    {
+                        //Create control
+                        Label LineInfoLabel = new Label();
+                        LineInfoLabel.Height = _lineInfoHeight;
+                        LineInfoLabel.Padding = new Thickness(0, 0, 10, 0);
+                        LineInfoLabel.Foreground = Brushes.Gray;
+                        LineInfoLabel.MouseDown += LineInfoLabel_MouseDown;
+                        LineInfoLabel.MouseMove += LineInfoLabel_MouseMove;
+                        LineInfoLabel.HorizontalContentAlignment = HorizontalAlignment.Right;
+                        LineInfoLabel.VerticalContentAlignment = VerticalAlignment.Center;
+                        LineInfoLabel.Content = info;
+                        LineInfoLabel.ToolTip = $"Byte : {firstLineByte.ToString()}";
+
+                        LinesInfoStackPanel.Children.Add(LineInfoLabel);
+                    }
+                }
+            }
+            else
+            {
+
+            }
+        }
+
+        #endregion Update/Refresh view methods
+
+        #region First/Last visible byte methods
+        /// <summary>
+        /// Get first visible byte position in control
+        /// </summary>
+        /// <returns>Return -1 of no file open</returns>
+        private long GetFirstVisibleBytePosition()
+        {
+            if (ByteProvider.CheckIsOpen(_provider))
+            {
+                int stackIndex = 0;
+                foreach (Label infolabel in LinesInfoStackPanel.Children)
+                {
+                    foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
+                        return byteControl.BytePositionInFile;
+
+                    stackIndex++;
+                }
+
+                return -1;
+            }
+            else
+                return -1;
+        }
+
+        /// <summary>
+        /// Get last visible byte position in control
+        /// </summary>
+        /// <returns>Return -1 of no file open.</returns>
+        private long GetLastVisibleBytePosition()
+        {
+            if (ByteProvider.CheckIsOpen(_provider))
+            {
+                int stackIndex = 0;
+                long byteposition = GetFirstVisibleBytePosition();
+                foreach (Label infolabel in LinesInfoStackPanel.Children)
+                {
+                    foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
+                        byteposition++;
+
+                    stackIndex++;
+                }
+
+                return byteposition;
+            }
+            else
+                return -1;
+        }
+        #endregion First/Last visible byte methods
+
+        #region Focus Methods
+
+        /// <summary>
+        /// Set focus on byte
+        /// </summary>
+        /// <param name="bytePositionInFile"></param>
+        private void SetFocusHexDataPanel(long bytePositionInFile)
+        {
+            if (ByteProvider.CheckIsOpen(_provider))
+            {
+                if (bytePositionInFile >= _provider.Length)
+                    return;
+
+                int stackIndex = 0;
+                foreach (Label infolabel in LinesInfoStackPanel.Children)
+                {
+                    foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
+                    {
+                        if (byteControl.BytePositionInFile == bytePositionInFile)
+                        {
+                            byteControl.Focus();
+                            return;
+                        }
+                    }
+
+                    stackIndex++;
+                }
+
+                if (VerticalScrollBar.Value < VerticalScrollBar.Maximum)
+                    VerticalScrollBar.Value++;
+
+                SetFocusHexDataPanel(bytePositionInFile);
+            }
+        }
+
+        private void SetFocusStringDataPanel(long bytePositionInFile)
+        {
+            if (ByteProvider.CheckIsOpen(_provider))
+            {
+                if (bytePositionInFile >= _provider.Length)
+                    return;
+
+                int stackIndex = 0;
+                foreach (Label infolabel in LinesInfoStackPanel.Children)
+                {
+                    foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
+                    {
+                        if (byteControl.BytePositionInFile == bytePositionInFile)
+                        {
+                            byteControl.Focus();
+                            return;
+                        }
+                    }
+
+                    stackIndex++;
+                }
+
+                if (VerticalScrollBar.Value < VerticalScrollBar.Maximum)
+                    VerticalScrollBar.Value++;
+
+                SetFocusStringDataPanel(bytePositionInFile);
+            }
+        }
+        #endregion Focus Methods
     }
 }

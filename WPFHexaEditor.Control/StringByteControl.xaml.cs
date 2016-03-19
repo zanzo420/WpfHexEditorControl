@@ -28,6 +28,7 @@ namespace WPFHexaEditor.Control
         public event EventHandler MouseSelection;
         public event EventHandler StringByteModified;
         public event EventHandler MoveNext;
+        public event EventHandler MovePrevious;
         public event EventHandler MoveRight;
         public event EventHandler MoveLeft;
         public event EventHandler MoveUp;
@@ -306,8 +307,18 @@ namespace WPFHexaEditor.Control
 
                 return;
             }
+            else if (KeyValidator.IsBackspaceKey(e.Key))
+            {
+                e.Handled = true;
+                if (ByteDeleted != null)
+                    ByteDeleted(this, new EventArgs());
 
+                if (MovePrevious != null)
+                    MovePrevious(this, new EventArgs());
 
+                return;
+            }
+            
             //MODIFY ASCII... 
             //TODO : MAKE BETTER KEYDETECTION AND EXPORT IN KEYVALIDATOR
             if (!ReadOnlyMode)

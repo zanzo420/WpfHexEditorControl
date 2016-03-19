@@ -254,21 +254,35 @@ namespace WPFHexaEditor.Control
             StringByteControl sbCtrl = sender as StringByteControl;
             HexByteControl ctrl = sender as HexByteControl;
 
-            if (Keyboard.Modifiers == ModifierKeys.Shift)
-            {
-                SelectionStop = ctrl.BytePositionInFile;
-            }
-            else
-            {
-                SelectionStart = ctrl.BytePositionInFile;
-                SelectionStop = ctrl.BytePositionInFile;
-            }
-
             if (ctrl != null)
+            {
+                if (Keyboard.Modifiers == ModifierKeys.Shift)
+                {
+                    SelectionStop = ctrl.BytePositionInFile;
+                }
+                else
+                {
+                    SelectionStart = ctrl.BytePositionInFile;
+                    SelectionStop = ctrl.BytePositionInFile;
+                }
+
                 UpdateSelectionColorMode(FirstColor.HexByteData);
+            }
 
             if (sbCtrl != null)
+            {
+                if (Keyboard.Modifiers == ModifierKeys.Shift)
+                {
+                    SelectionStop = sbCtrl.BytePositionInFile;
+                }
+                else
+                {
+                    SelectionStart = sbCtrl.BytePositionInFile;
+                    SelectionStop = sbCtrl.BytePositionInFile;
+                }
+
                 UpdateSelectionColorMode(FirstColor.StringByteData);
+            }
         }
 
         private void Control_MouseSelection(object sender, EventArgs e)
@@ -595,6 +609,32 @@ namespace WPFHexaEditor.Control
 
             if (sbCtrl != null)
                 SetFocusStringDataPanel(SelectionStart);
+        }
+
+
+        private void Control_MovePrevious(object sender, EventArgs e)
+        {
+            HexByteControl hexByteCtrl = sender as HexByteControl;
+            StringByteControl sbCtrl = sender as StringByteControl;
+
+            if (sbCtrl != null)
+            {
+                sbCtrl.IsSelected = false;
+                SetFocusStringDataPanel(sbCtrl.BytePositionInFile - 1);
+            }
+
+            if (hexByteCtrl != null)
+            {
+                hexByteCtrl.IsSelected = false;
+                SetFocusHexDataPanel(hexByteCtrl.BytePositionInFile - 1);
+            }
+
+            if (hexByteCtrl != null || sbCtrl != null)
+            {
+                SelectionStart--;
+                SelectionStop--;
+                UpdateByteModified();
+            }
         }
 
         private void Control_MoveNext(object sender, EventArgs e)
@@ -1049,16 +1089,19 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public int BytePerLine
         {
-            get
-            {
-                return _bytePerLine;
-            }
-            set
-            {
-                _bytePerLine = value;
+            get { return (int)GetValue(BytePerLineProperty); }
+            set { SetValue(BytePerLineProperty, value); }
+        }
 
-                RefreshView(true);
-            }
+        public static readonly DependencyProperty BytePerLineProperty =
+            DependencyProperty.Register("BytePerLine", typeof(int), typeof(HexaEditor), 
+                new FrameworkPropertyMetadata(16, new PropertyChangedCallback(BytePerLine_PropertyChanged)));
+
+        private static void BytePerLine_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            HexaEditor ctrl = d as HexaEditor;
+
+            ctrl.RefreshView(true);
         }
 
         private void Grid_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -1182,6 +1225,7 @@ namespace WPFHexaEditor.Control
                             sbCtrl.StringByteModified += Control_ByteModified;
                             sbCtrl.ReadOnlyMode = _readOnlyMode;
                             sbCtrl.MoveNext += Control_MoveNext;
+                            sbCtrl.MovePrevious += Control_MovePrevious;
                             sbCtrl.MouseSelection += Control_MouseSelection;
                             sbCtrl.Click += Control_Click;
                             sbCtrl.BytePositionInFile = _provider.Position;
@@ -1394,6 +1438,7 @@ namespace WPFHexaEditor.Control
                             byteControl.MouseSelection += Control_MouseSelection;
                             byteControl.Click += Control_Click;
                             byteControl.MoveNext += Control_MoveNext;
+                            byteControl.MovePrevious += Control_MovePrevious;
                             byteControl.ByteModified += Control_ByteModified;
                             byteControl.MoveUp += Control_MoveUp;
                             byteControl.MoveDown += Control_MoveDown;

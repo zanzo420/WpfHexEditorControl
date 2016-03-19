@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WPFHexaEditor.Control"
              mc:Ignorable="d"
-             KeyDown="UserControl_KeyDown"
+             KeyDown="UserControl_KeyDown" MouseDown="HexChar_MouseDown"
              MouseEnter="UserControl_MouseEnter" MouseLeave="UserControl_MouseLeave"
              Width="25" Height="22" Focusable="True">
     <UserControl.Resources>
@@ -19,8 +19,8 @@
     </UserControl.Resources>
 
     <Grid ToolTip="{Binding Source={StaticResource ByteToolTip}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
-        <Label x:Name="FirstHexChar" Content="X" HorizontalAlignment="Left" Padding="0" Width="9" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" MouseDown="HexChar_MouseDown" Focusable="True"/>
-        <Label x:Name="SecondHexChar" Content="X" Padding="0" VerticalContentAlignment="Center" Margin="9,0,0,0" MouseDown="HexChar_MouseDown" Focusable="True"/>
+        <Label x:Name="FirstHexChar" Content="X" HorizontalAlignment="Left" Padding="0" Width="9" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Focusable="True"/>
+        <Label x:Name="SecondHexChar" Content="X" Padding="0" VerticalContentAlignment="Center" Margin="9,0,0,0" Focusable="True"/>
 
     </Grid>
 </UserControl>

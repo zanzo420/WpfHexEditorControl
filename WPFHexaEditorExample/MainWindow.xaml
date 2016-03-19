@@ -15,7 +15,6 @@
         <Button x:Name="SetPositionButton" Margin="0,35,10,0" VerticalAlignment="Top" Click="SetPositionButton_Click" Height="45" HorizontalAlignment="Right" Width="150">
             <TextBlock TextWrapping="Wrap"><Run Text="Test : SetPosition"/><LineBreak/><Run Text="0x20FF (lenght 10 byte)"/></TextBlock>
         </Button>
-        <Button x:Name="button" Content="Test : BytePerLine=26" Margin="0,11,10,0" VerticalAlignment="Top" Click="button_Click" HorizontalAlignment="Right" Width="150"/>
         <Button x:Name="OpenFileButton" Content="Open" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="OpenFileButton_Click"/>
         <Button x:Name="CloseFileButton" Content="CloseFile" HorizontalAlignment="Left" Margin="10,60,0,0" VerticalAlignment="Top" Width="75" Click="CloseFileButton_Click"/>
         <Button x:Name="ReadOnlybutton" Content="ReadOnly" HorizontalAlignment="Left" Margin="10,85,0,0" VerticalAlignment="Top" Width="75" Click="ReadOnlybutton_Click"/>
@@ -39,5 +38,7 @@
         <Button x:Name="CopyToStreamButton" Content="CopyToStream" HorizontalAlignment="Left" Margin="278,35,0,0" VerticalAlignment="Top" Width="100" Click="CopyToStreamButton_Click"/>
         <Button x:Name="SelectionByteButton" Content="SelectionByte, String, Hexa" HorizontalAlignment="Left" Margin="10,110,0,0" VerticalAlignment="Top" Width="155" Click="SelectionByteButton_Click"/>
         <Button x:Name="SaveButton" Content="Save" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="75" Click="SaveButton_Click"/>
+        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="23" Margin="569,112,0,0" TextWrapping="Wrap" Text="{Binding ElementName=HexEdit, Path=BytePerLine, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="31"/>
+        <Label x:Name="label2" Content="BytePerline" HorizontalAlignment="Left" Margin="495,108,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>

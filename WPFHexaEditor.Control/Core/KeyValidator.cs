@@ -67,8 +67,8 @@ namespace WPFHexaEditor.Control.Core
 
             return key == Key.Tab ||
                    key == Key.Enter ||
-                   key == Key.Return ||
-                   key == Key.Back;
+                   key == Key.Return; //||
+                   // == Key.Back;
         }  
 
         public static bool IsUpKey(Key key) { return key == Key.Up; }

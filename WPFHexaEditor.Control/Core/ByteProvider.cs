@@ -235,6 +235,8 @@ namespace WPFHexaEditor.Control.Core
                 //Temp stream for new file. 
                 MemoryStream msNewStream = new MemoryStream();
                 
+                
+
                 //Fast change only nothing byte deleted or added
                 if (ByteModifieds(ByteAction.Deleted).Count() == 0 &&
                     ByteModifieds(ByteAction.Added).Count() == 0)

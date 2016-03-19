@@ -667,19 +667,22 @@ namespace WPFHexaEditor.Control
             StringByteControl sbCtrl = sender as StringByteControl;
             HexByteControl ctrl = sender as HexByteControl;
 
-            if (ctrl != null)
+            if (Keyboard.Modifiers == ModifierKeys.Shift)
+            {             
+                SelectionStop = ctrl.BytePositionInFile;
+            }
+            else
             {
                 SelectionStart = ctrl.BytePositionInFile;
                 SelectionStop = ctrl.BytePositionInFile;
-                UpdateSelectionColorMode(FirstColor.HexByteData);
             }
 
+
+            if (ctrl != null)
+                UpdateSelectionColorMode(FirstColor.HexByteData);
+            
             if (sbCtrl != null)
-            {
-                SelectionStart = sbCtrl.BytePositionInFile;
-                SelectionStop = sbCtrl.BytePositionInFile;
-                UpdateSelectionColorMode(FirstColor.StringByteData);
-            }
+                UpdateSelectionColorMode(FirstColor.StringByteData);            
         }
 
         private void Control_MouseSelection(object sender, EventArgs e)

@@ -8,9 +8,9 @@
         x:Class="WPFHexaEditorExample.MainWindow"
         mc:Ignorable="d" Loaded="Window_Loaded"
         Background="WhiteSmoke"
-        Title="TestWindow - WPF HexaEditor Control (Alpha)" Height="518" Width="850">
+        Title="TestWindow - WPF HexaEditor Control (Alpha)" Height="550" Width="850">
     <Grid >
-        <Control:HexaEditor x:Name="HexEdit" Margin="10,147,10,10" Height="Auto" Width="Auto" 
+        <Control:HexaEditor x:Name="HexEdit" Margin="10,173,10,10" Height="Auto" Width="Auto" 
                             SelectionLenghtChanged="HexEdit_SelectionLenghtChanged"/>
         <Button x:Name="SetPositionButton" Margin="0,35,10,0" VerticalAlignment="Top" Click="SetPositionButton_Click" Height="45" HorizontalAlignment="Right" Width="150">
             <TextBlock TextWrapping="Wrap"><Run Text="Test : SetPosition"/><LineBreak/><Run Text="0x20FF (lenght 10 byte)"/></TextBlock>
@@ -40,5 +40,7 @@
         <Button x:Name="SaveButton" Content="Save" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="75" Click="SaveButton_Click"/>
         <TextBox x:Name="textBox" HorizontalAlignment="Right" Height="23" Margin="0,112,242,0" TextWrapping="Wrap" Text="{Binding ElementName=HexEdit, Path=BytePerLine, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="31"/>
         <Label x:Name="label2" Content="BytePerline" HorizontalAlignment="Right" Margin="0,108,278,0" VerticalAlignment="Top"/>
+        <Label x:Name="label3" Content="FileName" HorizontalAlignment="Left" Margin="10,142,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+        <Label x:Name="label4" Content="{Binding ElementName=HexEdit, Path=FileName, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="75,142,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>

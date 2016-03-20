@@ -26,9 +26,7 @@ namespace WPFHexaEditor.Control
     /// </summary>
     public partial class HexaEditor : UserControl
     {
-        private string _fileName = "";
         private const double _lineInfoHeight = 22;
-        private int _bytePerLine = 16;
         private ByteProvider _provider = null;
         private double _scrollLargeChange = 100;
         private bool _readOnlyMode = false;  
@@ -997,27 +995,35 @@ namespace WPFHexaEditor.Control
 
         private void Provider_ChangesSubmited(object sender, EventArgs e)
         {
-            FileName = _fileName;
+            //Refresh filename
+            FileName = FileName;
         }
 
 
         /// <summary>
         /// Set or Get the file with the control will show hex
         /// </summary>
+
+
         public string FileName
         {
-            get
-            {
-                return this._fileName;
-            }
-
-            set
-            {
-                this._fileName = value;
-
-                OpenFile(value);
-            }
+            get { return (string)GetValue(FileNameProperty); }
+            set { SetValue(FileNameProperty, value); }
         }
+
+        // Using a DependencyProperty as the backing store for FileName.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty FileNameProperty =
+            DependencyProperty.Register("FileName", typeof(string), typeof(HexaEditor), 
+                new FrameworkPropertyMetadata("", new PropertyChangedCallback(FileName_PropertyChanged)));
+
+        private static void FileName_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            HexaEditor ctrl = d as HexaEditor;
+
+            ctrl.OpenFile((string)e.NewValue);
+        }
+
+
 
         /// <summary>
         /// Close file and clear control

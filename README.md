@@ -4,7 +4,7 @@ A WPF Hexadecimal editor for view/modify file.
 ![example](WPFHexEditorControlSample4.png?raw=true)
 
 ##NUGET
-Not for now. When control is more powerful ;)
+https://www.nuget.org/packages/WPFHexaEditor/
 
 ## Features
 - Modify bytes

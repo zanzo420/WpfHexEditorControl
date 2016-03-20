@@ -18,6 +18,11 @@ namespace WPFHexaEditor.Control.Core
                 key == Key.NumPad0 || key == Key.NumPad1 || key == Key.NumPad2 || key == Key.NumPad3 || key == Key.NumPad4 || key == Key.NumPad5 || key == Key.NumPad6 || key == Key.NumPad7 || key == Key.NumPad8 || key == Key.NumPad9;
         }
 
+        /// <summary>
+        /// Get if key is a Hexakey (alpha)
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public static bool IsHexKey(Key key)
         {
             return key == Key.A || key == Key.B || key == Key.C || key == Key.D || key == Key.E || key == Key.F || 
@@ -60,6 +65,8 @@ namespace WPFHexaEditor.Control.Core
         public static bool IsSubstractKey(Key key) { return key == Key.Subtract || key == Key.OemMinus; }
 
         public static bool IsDeleteKey(Key key) { return key == Key.Delete; }
+
+        public static bool IsCapsLock(Key key) { return key == Key.CapsLock; }
 
         public static bool IsIgnoredKey(Key key)
         {

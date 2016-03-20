@@ -163,7 +163,7 @@ namespace WPFHexaEditor.Control
 
         #region Standard property
         /// <summary>
-        /// Get the hex string representation of this byte
+        /// Get the hex string {00} representation of this byte
         /// </summary>
         public string HexString
         {
@@ -248,7 +248,7 @@ namespace WPFHexaEditor.Control
         {
             if (KeyValidator.IsIgnoredKey(e.Key))
             {
-                e.Handled = true;                
+                e.Handled = true;
                 return;
             }
             else if (KeyValidator.IsUpKey(e.Key))
@@ -301,39 +301,67 @@ namespace WPFHexaEditor.Control
             }
             else if (KeyValidator.IsDeleteKey(e.Key))
             {
-                e.Handled = true;
-                if (ByteDeleted != null)
-                    ByteDeleted(this, new EventArgs());
+                if (!ReadOnlyMode)
+                {
+                    e.Handled = true;
+                    if (ByteDeleted != null)
+                        ByteDeleted(this, new EventArgs());
 
-                return;
+                    return;
+                }
             }
             else if (KeyValidator.IsBackspaceKey(e.Key))
             {
+                if (!ReadOnlyMode)
+                {
+                    e.Handled = true;
+                    if (ByteDeleted != null)
+                        ByteDeleted(this, new EventArgs());
+
+                    if (MovePrevious != null)
+                        MovePrevious(this, new EventArgs());
+
+                    return;
+                }
+            }
+            else if (KeyValidator.IsCapsLock(e.Key))
+            {
                 e.Handled = true;
-                if (ByteDeleted != null)
-                    ByteDeleted(this, new EventArgs());
-
-                if (MovePrevious != null)
-                    MovePrevious(this, new EventArgs());
-
                 return;
             }
             
+
             //MODIFY ASCII... 
             //TODO : MAKE BETTER KEYDETECTION AND EXPORT IN KEYVALIDATOR
             if (!ReadOnlyMode)
             {                
                 bool isok = false;
 
-                if (Keyboard.Modifiers != ModifierKeys.Shift && e.Key != Key.RightShift && e.Key != Key.LeftShift)
+                if (Keyboard.GetKeyStates(Key.CapsLock) == KeyStates.Toggled)
                 {
-                    StringByteLabel.Content = ByteConverters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key)).ToString().ToLower();//e.Key.ToString();
-                    isok = true;
+                    if (Keyboard.Modifiers != ModifierKeys.Shift && e.Key != Key.RightShift && e.Key != Key.LeftShift)
+                    {
+                        StringByteLabel.Content = ByteConverters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key));
+                        isok = true;
+                    }
+                    else if (Keyboard.Modifiers == ModifierKeys.Shift && e.Key != Key.RightShift && e.Key != Key.LeftShift)
+                    {
+                        isok = true;
+                        StringByteLabel.Content = ByteConverters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key)).ToString().ToLower();
+                    }
                 }
-                else if (Keyboard.Modifiers == ModifierKeys.Shift && e.Key != Key.RightShift && e.Key != Key.LeftShift)
+                else
                 {
-                    isok = true;
-                    StringByteLabel.Content = ByteConverters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key));//e.Key.ToString();    
+                    if (Keyboard.Modifiers != ModifierKeys.Shift && e.Key != Key.RightShift && e.Key != Key.LeftShift)
+                    {
+                        StringByteLabel.Content = ByteConverters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key)).ToString().ToLower();
+                        isok = true;
+                    }
+                    else if (Keyboard.Modifiers == ModifierKeys.Shift && e.Key != Key.RightShift && e.Key != Key.LeftShift)
+                    {
+                        isok = true;
+                        StringByteLabel.Content = ByteConverters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key));    
+                    }
                 }
 
                 //Move focus event

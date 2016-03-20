@@ -15,7 +15,9 @@ https://www.nuget.org/packages/WPFHexaEditor/
 - Most of property is Dependency Property. You can use binding :)
 - Choose the number of byte per line to show 
 - Set position in code
+- Unlimited Undo (no redo for now)
 - Move in file with mouse wheel / or keyboard
+- Modify mode (hexa / char)
 - ...
 
 ##Release Notes

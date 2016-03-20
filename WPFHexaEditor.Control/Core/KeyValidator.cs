@@ -7,6 +7,9 @@ using System.Windows.Input;
 
 namespace WPFHexaEditor.Control.Core
 {
+    /// <summary>
+    /// Static class for valid keyboard key.
+    /// </summary>
     public static class KeyValidator
     {
         /// <summary>
@@ -72,7 +75,7 @@ namespace WPFHexaEditor.Control.Core
         {
             //ADD SOMES OTHER KEY FOR VALIDATED IN STRINGBYTE CONTROL
 
-            //IS POSIBLE TO DELETE KEY FROM VALIDATION FOR ADD FUNCTIONALITY...
+            //DELETE KEY FOR ADD OTHER FUNCTIONALITY...
 
             return key == Key.Tab ||
                    key == Key.Enter ||
@@ -84,18 +87,7 @@ namespace WPFHexaEditor.Control.Core
                    key == Key.RightAlt ||
                    key == Key.System ||
                    key == Key.LeftCtrl ||
-                   key == Key.F1 ||
-                   key == Key.F2 ||
-                   key == Key.F3 ||
-                   key == Key.F4 ||
-                   key == Key.F5 ||
-                   key == Key.F6 ||
-                   key == Key.F7 ||
-                   key == Key.F8 ||
-                   key == Key.F9 ||
-                   key == Key.F10 ||
-                   key == Key.F11 ||
-                   key == Key.F12 ||
+                   key == Key.F1 || key == Key.F2 || key == Key.F3 || key == Key.F4 || key == Key.F5 || key == Key.F6 || key == Key.F7 || key == Key.F8 || key == Key.F9 || key == Key.F10 || key == Key.F11 || key == Key.F12 ||
                    key == Key.Home ||
                    key == Key.Insert ||
                    key == Key.End ||

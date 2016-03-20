@@ -227,6 +227,7 @@ namespace WPFHexaEditor.Control.Core
         /// <summary>
         /// Submit change to files/stream
         /// TODO : NEED UPTIMISATION FOR LARGE FILE... IT'S AS BEGINING :) USE TEMPS FILE ?  
+        /// TODO : USE TEMPS FILE FOR LARGE FILE
         /// </summary>
         public void SubmitChanges()
         {
@@ -235,8 +236,6 @@ namespace WPFHexaEditor.Control.Core
                 //Temp stream for new file. 
                 MemoryStream msNewStream = new MemoryStream();
                 
-                
-
                 //Fast change only nothing byte deleted or added
                 if (ByteModifieds(ByteAction.Deleted).Count() == 0 &&
                     ByteModifieds(ByteAction.Added).Count() == 0)
@@ -261,9 +260,11 @@ namespace WPFHexaEditor.Control.Core
                     ////Start update and rewrite file. 
                     foreach (ByteModified nextByteModified in SortedBM)
                     {
+                        Application.Current.DoEvents();
+
                         //start read/write / use little block for uptimize memory
                         while (Position != nextByteModified.BytePositionInFile)
-                        {
+                        {                            
                             bufferlength = nextByteModified.BytePositionInFile - Position;
 
                             if (bufferlength > Constant.COPY_BLOCK_SIZE)
@@ -273,8 +274,10 @@ namespace WPFHexaEditor.Control.Core
 
                             _stream.Read(buffer, 0, buffer.Length);
                             msNewStream.Write(buffer, 0, buffer.Length);
+
+                            Application.Current.DoEvents();
                         }
-                        
+
                         //Apply ByteAction!
                         switch (nextByteModified.Action)
                         {
@@ -305,6 +308,8 @@ namespace WPFHexaEditor.Control.Core
 
                                 _stream.Read(buffer, 0, buffer.Length);
                                 msNewStream.Write(buffer, 0, buffer.Length);
+
+                                Application.Current.DoEvents();
                             }                            
                         }
                     }
@@ -404,6 +409,8 @@ namespace WPFHexaEditor.Control.Core
 
             for (int i = 0; i < length; i++)
             {
+                if (i % 100 == 0) Application.Current.DoEvents();
+
                 ByteModified bytemodifiedOriginal = CheckIfIsByteModified(position, ByteAction.All);
 
                 if (bytemodifiedOriginal != null)

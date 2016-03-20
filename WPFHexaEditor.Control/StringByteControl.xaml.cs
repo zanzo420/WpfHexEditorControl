@@ -324,12 +324,8 @@ namespace WPFHexaEditor.Control
                     return;
                 }
             }
-            else if (KeyValidator.IsCapsLock(e.Key))
-            {
-                e.Handled = true;
-                return;
-            }
             
+                        
 
             //MODIFY ASCII... 
             //TODO : MAKE BETTER KEYDETECTION AND EXPORT IN KEYVALIDATOR

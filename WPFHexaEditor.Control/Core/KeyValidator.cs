@@ -72,13 +72,39 @@ namespace WPFHexaEditor.Control.Core
         {
             //ADD SOMES OTHER KEY FOR VALIDATED IN STRINGBYTE CONTROL
 
+            //IS POSIBLE TO DELETE KEY FROM VALIDATION FOR ADD FUNCTIONALITY...
+
             return key == Key.Tab ||
                    key == Key.Enter ||
-                   key == Key.Return; //||
-                   // == Key.Back;
+                   key == Key.Return ||
+                   key == Key.LWin ||
+                   key == Key.RWin ||
+                   key == Key.CapsLock ||
+                   key == Key.LeftAlt ||
+                   key == Key.RightAlt ||
+                   key == Key.System ||
+                   key == Key.LeftCtrl ||
+                   key == Key.F1 ||
+                   key == Key.F2 ||
+                   key == Key.F3 ||
+                   key == Key.F4 ||
+                   key == Key.F5 ||
+                   key == Key.F6 ||
+                   key == Key.F7 ||
+                   key == Key.F8 ||
+                   key == Key.F9 ||
+                   key == Key.F10 ||
+                   key == Key.F11 ||
+                   key == Key.F12 ||
+                   key == Key.Home ||
+                   key == Key.Insert ||
+                   key == Key.End ||
+                   key == Key.Escape;
         }  
 
         public static bool IsUpKey(Key key) { return key == Key.Up; }
+
+        public static bool IsWindowsKey(Key key) { return key == Key.LWin || key == Key.RWin; }
 
         public static bool IsDownKey(Key key) { return key == Key.Down; }
 

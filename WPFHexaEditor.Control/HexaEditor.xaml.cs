@@ -1350,6 +1350,10 @@ namespace WPFHexaEditor.Control
                         }
 
                         stackIndex++;
+
+                        //Prevent index out off range exception when resize at EOF
+                        if (stackIndex == HexDataStackPanel.Children.Count && VerticalScrollBar.Value == VerticalScrollBar.Maximum)
+                            stackIndex--;
                     }
                 }
         }
@@ -1666,7 +1670,7 @@ namespace WPFHexaEditor.Control
                 if (VerticalScrollBar.Value < VerticalScrollBar.Maximum)
                     VerticalScrollBar.Value++;
 
-                SetFocusHexDataPanel(bytePositionInFile);
+                SetPosition(bytePositionInFile);
             }
         }
 
@@ -1695,7 +1699,7 @@ namespace WPFHexaEditor.Control
                 if (VerticalScrollBar.Value < VerticalScrollBar.Maximum)
                     VerticalScrollBar.Value++;
 
-                SetFocusStringDataPanel(bytePositionInFile);
+                SetPosition(bytePositionInFile);
             }
         }
         #endregion Focus Methods

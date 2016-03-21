@@ -1150,7 +1150,7 @@ namespace WPFHexaEditor.Control
         /// Refresh currentview of hexeditor
         /// </summary>
         /// <param name="ControlResize"></param>
-        private void RefreshView(bool ControlResize = false)
+        public void RefreshView(bool ControlResize = false)
         {
             UpdateLinesInfo();
             UpdateVerticalScroll();
@@ -1280,6 +1280,10 @@ namespace WPFHexaEditor.Control
                         }
 
                         stackIndex++;
+
+                        //Prevent index out off range exception when resize at EOF
+                        if (stackIndex == HexDataStackPanel.Children.Count && VerticalScrollBar.Value == VerticalScrollBar.Maximum)
+                            stackIndex--;
                     }
                 }
             }
@@ -1399,6 +1403,10 @@ namespace WPFHexaEditor.Control
                             byteControl.IsSelected = false;
                 }
                 stackIndex++;
+
+                //Prevent index out off range exception when resize at EOF
+                if (stackIndex == HexDataStackPanel.Children.Count && VerticalScrollBar.Value == VerticalScrollBar.Maximum)
+                    stackIndex--;
             }
         }
 
@@ -1491,6 +1499,10 @@ namespace WPFHexaEditor.Control
                         }
 
                         stackIndex++;
+
+                        //Prevent index out off range exception when resize at EOF
+                        if (stackIndex == HexDataStackPanel.Children.Count && VerticalScrollBar.Value == VerticalScrollBar.Maximum)
+                            stackIndex--;
                     }
                 }
             }

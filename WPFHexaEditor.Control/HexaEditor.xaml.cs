@@ -996,7 +996,9 @@ namespace WPFHexaEditor.Control
         private void Provider_ChangesSubmited(object sender, EventArgs e)
         {
             //Refresh filename
-            FileName = FileName;
+            var filename = FileName;
+            CloseFile();
+            FileName = filename;
         }
 
 
@@ -1019,7 +1021,7 @@ namespace WPFHexaEditor.Control
         private static void FileName_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             HexaEditor ctrl = d as HexaEditor;
-
+                        
             ctrl.OpenFile((string)e.NewValue);
         }
 
@@ -1034,6 +1036,15 @@ namespace WPFHexaEditor.Control
             if (ByteProvider.CheckIsOpen(_provider))
             {
                 _provider.CloseFile();
+
+                try
+                {
+                    FileName = string.Empty;
+                }
+                catch
+                {
+
+                }
 
                 ReadOnlyMode = false;
                 VerticalScrollBar.Value = 0;

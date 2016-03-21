@@ -4,7 +4,7 @@ A WPF Hexadecimal editor for view/modify file.
 ![example](WPFHexEditorControlSample4.png?raw=true)
 
 ##NUGET
-Not for now. When control is more powerful ;)
+https://www.nuget.org/packages/WPFHexaEditor/
 
 ## Features
 - Modify bytes
@@ -15,7 +15,9 @@ Not for now. When control is more powerful ;)
 - Most of property is Dependency Property. You can use binding :)
 - Choose the number of byte per line to show 
 - Set position in code
+- Unlimited Undo (no redo for now)
 - Move in file with mouse wheel / or keyboard
+- Modify mode (hexa / char)
 - ...
 
 ##Release Notes
@@ -34,5 +36,5 @@ xmlns:Control="clr-namespace:WPFHexaEditor.Control;assembly=WPFHexaEditor.Contro
 Insert the control like this:
 
 ```xaml
-<Control:HexaEditor FileName={Binding FileNamePath} />
+<Control:HexaEditor FileName={Binding FileNamePath} Width="Auto" Height="Auto"/>
 ```

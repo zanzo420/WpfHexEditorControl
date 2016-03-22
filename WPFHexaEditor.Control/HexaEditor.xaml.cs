@@ -54,7 +54,7 @@ namespace WPFHexaEditor.Control
             if (ByteProvider.CheckIsOpen(_provider))
                 foreach (long index in _provider.Find(text))
                 {
-                    SetPosition(index, text.Length);
+                    //SetPosition(index, text.Length);
                     Debug.WriteLine($"FindIndex : {index}");
                 }
         }

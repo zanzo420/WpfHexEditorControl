@@ -12,9 +12,14 @@
     <Grid >
         <Control:HexaEditor x:Name="HexEdit" Margin="10,173,10,10" Height="Auto" Width="Auto" 
                             SelectionLenghtChanged="HexEdit_SelectionLenghtChanged"/>
-        <Button x:Name="SetPositionButton" Margin="0,35,10,0" VerticalAlignment="Top" Click="SetPositionButton_Click" Height="45" HorizontalAlignment="Right" Width="150">
-            <TextBlock TextWrapping="Wrap"><Run Text="Test : SetPosition"/><LineBreak/><Run Text="0x20FF (lenght 10 byte)"/></TextBlock>
+
+        <Button x:Name="SetPositionButton" Margin="383,10,0,0" VerticalAlignment="Top" Click="SetPositionButton_Click" Height="45" HorizontalAlignment="Left" Width="138">
+            <StackPanel Orientation="Horizontal">
+                <Label>SetPosition</Label>
+                <TextBox x:Name="PositionText" Text="0" Width="58"/>
+            </StackPanel>
         </Button>
+
         <Button x:Name="OpenFileButton" Content="Open" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="OpenFileButton_Click"/>
         <Button x:Name="CloseFileButton" Content="CloseFile" HorizontalAlignment="Left" Margin="10,60,0,0" VerticalAlignment="Top" Width="75" Click="CloseFileButton_Click"/>
         <Button x:Name="ReadOnlybutton" Content="ReadOnly" HorizontalAlignment="Left" Margin="10,85,0,0" VerticalAlignment="Top" Width="75" Click="ReadOnlybutton_Click"/>
@@ -25,7 +30,7 @@
         <Button x:Name="ScrollVisibilityButton" Content="ScrollVisibility" HorizontalAlignment="Left" Margin="170,35,0,0" VerticalAlignment="Top" Width="103" Click="ScrollVisibilityButton_Click"/>
         <Button x:Name="StringDataVisibilityButton" Content="StringDataVisibility" HorizontalAlignment="Left" Margin="170,85,0,0" VerticalAlignment="Top" Width="103" Click="StringDataVisibilityButton_Click"/>
         <Button x:Name="StatusBarVisibilityButton" Content="StatusBarVisibility" HorizontalAlignment="Left" Margin="170,110,0,0" VerticalAlignment="Top" Width="103" Click="StatusBarVisibilityButton_Click"/>
-        <Grid Margin="0,10,165,0" Height="93" VerticalAlignment="Top" HorizontalAlignment="Right" Width="182">
+        <Grid Margin="0,10,10,0" Height="93" VerticalAlignment="Top" HorizontalAlignment="Right" Width="182">
             <Label x:Name="SelectionStartLabel" Content="{Binding ElementName=HexEdit, Path=SelectionStart, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="107,0,0,0" VerticalAlignment="Top"/>
             <Label x:Name="SelectionStopLabel" Content="{Binding ElementName=HexEdit, Path=SelectionStop, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="107,31,0,0" VerticalAlignment="Top"/>
             <Label x:Name="label" Content="SelectionStart" HorizontalAlignment="Left" VerticalAlignment="Top"/>
@@ -38,11 +43,14 @@
         <Button x:Name="CopyToStreamButton" Content="CopyToStream" HorizontalAlignment="Left" Margin="278,35,0,0" VerticalAlignment="Top" Width="100" Click="CopyToStreamButton_Click"/>
         <Button x:Name="SelectionByteButton" Content="SelectionByte, String, Hexa" HorizontalAlignment="Left" Margin="10,110,0,0" VerticalAlignment="Top" Width="155" Click="SelectionByteButton_Click"/>
         <Button x:Name="SaveButton" Content="Save" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="75" Click="SaveButton_Click"/>
-        <TextBox x:Name="textBox" HorizontalAlignment="Right" Height="23" Margin="0,112,242,0" TextWrapping="Wrap" Text="{Binding ElementName=HexEdit, Path=BytePerLine, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="31"/>
-        <Label x:Name="label2" Content="BytePerline" HorizontalAlignment="Right" Margin="0,108,278,0" VerticalAlignment="Top"/>
+        <Grid Margin="0,103,87,0" HorizontalAlignment="Right" Width="105" Height="27" VerticalAlignment="Top">
+            <TextBox x:Name="textBox" HorizontalAlignment="Right" Height="23" Margin="0,4,0,0" TextWrapping="Wrap" Text="{Binding BytePerLine, ElementName=HexEdit, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="31"/>
+            <Label x:Name="label2" Content="BytePerline" HorizontalAlignment="Right" Margin="0,0,36,0" VerticalAlignment="Top"/>
+        </Grid>
         <Label x:Name="label3" Content="FileName" HorizontalAlignment="Left" Margin="10,142,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
         <Label x:Name="label4" Content="{Binding ElementName=HexEdit, Path=FileName, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="75,142,0,0" VerticalAlignment="Top"/>
         <Button x:Name="button" Content="Find" HorizontalAlignment="Left" Margin="278,110,0,0" VerticalAlignment="Top" Width="100" Click="button_Click_1"/>
-        <TextBox x:Name="Findtextbox" HorizontalAlignment="Left" Height="20" Margin="383,110,0,0" TextWrapping="Wrap" Text="FindText" VerticalAlignment="Top" Width="64"/>
+        <TextBox x:Name="Findtextbox" HorizontalAlignment="Left" Height="20" Margin="383,110,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="64" TextChanged="Findtextbox_TextChanged"/>
+        <Label x:Name="findHexLabel" Content="" HorizontalAlignment="Left" Margin="278,135,0,0" VerticalAlignment="Top" Width="169"/>
     </Grid>
 </Window>

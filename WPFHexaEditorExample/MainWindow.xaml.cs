@@ -36,7 +36,11 @@ namespace WPFHexaEditorExample
 
         private void SetPositionButton_Click(object sender, RoutedEventArgs e)
         {
-            HexEdit.SetPosition("0x20FF", 10);
+            long position = 0;
+            if (long.TryParse(PositionText.Text, out position))
+                HexEdit.SetPosition(position, 1);
+            else
+                MessageBox.Show("Enter long value.");
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
@@ -175,7 +179,20 @@ namespace WPFHexaEditorExample
 
         private void button_Click_1(object sender, RoutedEventArgs e)
         {
-            HexEdit.Find(Findtextbox.Text);
+            if (Findtextbox.Text != "")
+                HexEdit.Find(Findtextbox.Text);
+            else
+                MessageBox.Show("Enter string to find");
         }
+
+        private void Findtextbox_TextChanged(object sender, TextChangedEventArgs e)
+        {            
+            try
+            {
+                findHexLabel.Content = ByteConverters.StringToHex(Findtextbox.Text);
+            }
+            catch { }
+        }
+
     }
 }

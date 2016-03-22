@@ -149,5 +149,15 @@ namespace WPFHexaEditor.Control.Core
 
             return byteList.ToArray();
         }
+
+        /// <summary>
+        /// Convert String to hex string For example: "barn" = "62 61 72 6e"
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string StringToHex(string str)
+        {
+            return ByteToHex(StringToByte(str));
+        }
     }
 }

@@ -707,9 +707,15 @@ namespace WPFHexaEditor.Control.Core
                 if (i % 1000 == 0)
                     Application.Current.DoEvents();
 
-                if (ReadByte() == byteString[0])
+                byte read = (byte)ReadByte();
+
+                if (read == byteString[0])
                 {
+                    Position--;
+                    i--;
                     _stream.Read(buffer, 0, buffer.Length);
+
+                    //Debug.Print($"Find Position : {Position}");
 
                     findindex = buffer.FindIndexOf(byteString);
 
@@ -717,13 +723,12 @@ namespace WPFHexaEditor.Control.Core
                     {
                         foreach (long index in findindex)
                         {
+                            //Debug.WriteLine(buffer.FindIndexOf(byteString).Count());
                             yield return index + i + 1;
                         }
-
-                        Debug.WriteLine(buffer.FindIndexOf(byteString).Count());
                     }
 
-                    i += buffer.Length - byteString.Length;
+                    i += buffer.Length; //- byteString.Length;
                 }
             }
         }

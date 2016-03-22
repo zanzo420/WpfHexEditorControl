@@ -20,7 +20,12 @@ https://www.nuget.org/packages/WPFHexaEditor/
 - Modify mode (hexa / char)
 - ...
 
-##Release Notes
+##Release Notes (version of NUGET package)
+New in version 0.6.1 
+- Add functionnality - FindFirst, FindNext, FindLast
+- Bug Fix - When refresh control at last line
+- Bug Fix - refresh file after saving
+
 New in version 0.1.0 
 - Add functionnality - BytePerLine 
 - Add functionality - Set position

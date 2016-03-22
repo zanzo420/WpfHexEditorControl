@@ -180,7 +180,7 @@ namespace WPFHexaEditorExample
         private void button_Click_1(object sender, RoutedEventArgs e)
         {
             if (Findtextbox.Text != "")
-                HexEdit.Find(Findtextbox.Text);
+                HexEdit.FindFirst(Findtextbox.Text);
             else
                 MessageBox.Show("Enter string to find");
         }
@@ -194,5 +194,21 @@ namespace WPFHexaEditorExample
             catch { }
         }
 
+        private void button1_Click(object sender, RoutedEventArgs e)
+        {
+            if (Findtextbox.Text != "")
+                HexEdit.FindNext(Findtextbox.Text);
+            else
+                MessageBox.Show("Enter string to find");
+        }
+
+        private void button2_Click(object sender, RoutedEventArgs e)
+        {
+
+            if (Findtextbox.Text != "")
+                HexEdit.FindLast(Findtextbox.Text);
+            else
+                MessageBox.Show("Enter string to find");
+        }
     }
 }

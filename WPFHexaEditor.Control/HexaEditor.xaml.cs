@@ -43,22 +43,7 @@ namespace WPFHexaEditor.Control
 
             RefreshView(true);
         }
-
-
-        /// <summary>
-        /// TEMPS METHODS FORT TESTING PURPOSE ONLY
-        /// </summary>
-        /// <param name="text"></param>
-        public void Find(string text)
-        {
-            if (ByteProvider.CheckIsOpen(_provider))
-                foreach (long index in _provider.Find(text))
-                {
-                    //SetPosition(index, text.Length);
-                    Debug.WriteLine($"FindIndex : {index}");
-                }
-        }
-
+        
         #region Miscellaneous property/methods
         public double ScrollLargeChange {
             get
@@ -1729,5 +1714,59 @@ namespace WPFHexaEditor.Control
             }
         }
         #endregion Focus Methods
+
+        #region Find methods
+
+        /// <summary>
+        /// Find first occurence of string in stream.
+        /// </summary>
+        public void FindFirst(string text, long startPosition = 0)
+        {
+            Application.Current.MainWindow.Cursor = Cursors.Wait;
+
+            if (ByteProvider.CheckIsOpen(_provider))
+            {
+                var first = _provider.FindIndexOf(text, startPosition).FirstOrDefault();
+
+                SetPosition(first, text.Length);
+            }
+
+            Application.Current.MainWindow.Cursor = null;
+        }
+
+        /// <summary>
+        /// Find first occurence of string in stream.
+        /// </summary>
+        public void FindNext(string text)
+        {
+            Application.Current.MainWindow.Cursor = Cursors.Wait;
+
+            if (ByteProvider.CheckIsOpen(_provider))
+            {
+                var first = _provider.FindIndexOf(text, SelectionStart + SelectionLenght).FirstOrDefault();
+
+                SetPosition(first, text.Length);
+            }
+
+            Application.Current.MainWindow.Cursor = null;
+        }
+
+        /// <summary>
+        /// Find first occurence of string in stream.
+        /// </summary>
+        public void FindLast(string text)
+        {
+            Application.Current.MainWindow.Cursor = Cursors.Wait;
+
+            if (ByteProvider.CheckIsOpen(_provider))
+            {
+                var first = _provider.FindIndexOf(text, SelectionStart + SelectionLenght).LastOrDefault();
+
+                SetPosition(first, text.Length);
+            }
+
+            Application.Current.MainWindow.Cursor = null;
+        }
+        #endregion Find methods
     }
 }

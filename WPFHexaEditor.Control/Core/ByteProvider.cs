@@ -692,43 +692,52 @@ namespace WPFHexaEditor.Control.Core
         #region Find methods
 
         /// <summary>
-        /// TEST METHODS FOR FIND STRING IN FILE... OVERLOAD WILL BE CREATED AFTER IS WORK FINE
+        /// Find all occurance of string in stream and return an IEnumerable contening index when is find.
+        /// </summary>
+        public IEnumerable<long> FindIndexOf(string stringToFind, long startPosition = 0)
+        {
+            return FindIndexOf(ByteConverters.StringToByte(stringToFind), startPosition);
+        }
+
+        /// <summary>
+        /// Find all occurance of byte[] in stream and return an IEnumerable contening index when is find.
         /// </summary>
         /// <param name="findtest"></param>
-        public IEnumerable<long> Find(string findtest)
+        public IEnumerable<long> FindIndexOf(byte[] bytesTofind, long startPosition = 0)
         {
-            byte[] byteString = ByteConverters.StringToByte(findtest);
-            Position = 0;
-            byte[] buffer = new byte[Constant.COPY_BLOCK_SIZE];
-            IEnumerable<long> findindex;
+            //start position checkup
+            if (startPosition > Length) startPosition = Length;
+            else if (startPosition < 0) startPosition = 0;
 
-            for (int i = 0; i < Length; i++)
+            //var
+            Position = startPosition;
+            byte[] buffer = new byte[Constant.FIND_BLOCK_SIZE];
+            IEnumerable<long> findindex;
+                        
+            //start find
+            for (long i = startPosition; i < Length; i++)
             {
+                //Do not freeze UI...
                 if (i % 1000 == 0)
                     Application.Current.DoEvents();
-
-                byte read = (byte)ReadByte();
-
-                if (read == byteString[0])
+                
+                if ((byte)ReadByte() == bytesTofind[0])
                 {
+                    //position correction after read one byte
                     Position--;
                     i--;
+
+                    //read buffer and find
                     _stream.Read(buffer, 0, buffer.Length);
+                    findindex = buffer.FindIndexOf(bytesTofind);
 
-                    //Debug.Print($"Find Position : {Position}");
-
-                    findindex = buffer.FindIndexOf(byteString);
-
+                    //if byte if find yield return 
                     if (findindex.Count() > 0)
-                    {
                         foreach (long index in findindex)
-                        {
-                            //Debug.WriteLine(buffer.FindIndexOf(byteString).Count());
                             yield return index + i + 1;
-                        }
-                    }
 
-                    i += buffer.Length; //- byteString.Length;
+                    //position correction
+                    i += buffer.Length; 
                 }
             }
         }

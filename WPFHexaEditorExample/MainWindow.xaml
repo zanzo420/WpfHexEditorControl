@@ -8,12 +8,12 @@
         x:Class="WPFHexaEditorExample.MainWindow"
         mc:Ignorable="d" Loaded="Window_Loaded"
         Background="WhiteSmoke"
-        Title="TestWindow - WPF HexaEditor Control (Alpha)" Height="550" Width="850">
+        Title="TestWindow - WPF HexaEditor Control (Alpha)" Height="586" Width="850">
     <Grid >
-        <Control:HexaEditor x:Name="HexEdit" Margin="10,173,10,10" Height="Auto" Width="Auto" 
+        <Control:HexaEditor x:Name="HexEdit" Margin="10,194,10,10" Height="Auto" Width="Auto" 
                             SelectionLenghtChanged="HexEdit_SelectionLenghtChanged"/>
 
-        <Button x:Name="SetPositionButton" Margin="383,10,0,0" VerticalAlignment="Top" Click="SetPositionButton_Click" Height="45" HorizontalAlignment="Left" Width="138">
+        <Button x:Name="SetPositionButton" Margin="383,10,0,0" VerticalAlignment="Top" Click="SetPositionButton_Click" Height="45" HorizontalAlignment="Left" Width="144">
             <StackPanel Orientation="Horizontal">
                 <Label>SetPosition</Label>
                 <TextBox x:Name="PositionText" Text="0" Width="58"/>
@@ -47,10 +47,12 @@
             <TextBox x:Name="textBox" HorizontalAlignment="Right" Height="23" Margin="0,4,0,0" TextWrapping="Wrap" Text="{Binding BytePerLine, ElementName=HexEdit, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="31"/>
             <Label x:Name="label2" Content="BytePerline" HorizontalAlignment="Right" Margin="0,0,36,0" VerticalAlignment="Top"/>
         </Grid>
-        <Label x:Name="label3" Content="FileName" HorizontalAlignment="Left" Margin="10,142,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
-        <Label x:Name="label4" Content="{Binding ElementName=HexEdit, Path=FileName, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="75,142,0,0" VerticalAlignment="Top"/>
-        <Button x:Name="button" Content="Find" HorizontalAlignment="Left" Margin="278,110,0,0" VerticalAlignment="Top" Width="100" Click="button_Click_1"/>
-        <TextBox x:Name="Findtextbox" HorizontalAlignment="Left" Height="20" Margin="383,110,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="64" TextChanged="Findtextbox_TextChanged"/>
-        <Label x:Name="findHexLabel" Content="" HorizontalAlignment="Left" Margin="278,135,0,0" VerticalAlignment="Top" Width="169"/>
+        <Label x:Name="label3" Content="FileName" HorizontalAlignment="Left" Margin="10,163,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+        <Label x:Name="label4" Content="{Binding ElementName=HexEdit, Path=FileName, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="75,163,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="button" Content="FindFirst" HorizontalAlignment="Left" Margin="10,135,0,0" VerticalAlignment="Top" Width="75" Click="button_Click_1"/>
+        <TextBox x:Name="Findtextbox" HorizontalAlignment="Left" Height="20" Margin="250,135,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="88" TextChanged="Findtextbox_TextChanged"/>
+        <Label x:Name="findHexLabel" Content="" HorizontalAlignment="Left" Margin="343,132,0,0" VerticalAlignment="Top" Width="184"/>
+        <Button x:Name="button1" Content="FindNext" HorizontalAlignment="Left" Margin="90,135,0,0" VerticalAlignment="Top" Width="75" Click="button1_Click"/>
+        <Button x:Name="button2" Content="FindLast" HorizontalAlignment="Left" Margin="170,135,0,0" VerticalAlignment="Top" Width="75" Click="button2_Click"/>
     </Grid>
 </Window>

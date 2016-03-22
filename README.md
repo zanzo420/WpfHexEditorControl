@@ -18,6 +18,7 @@ https://www.nuget.org/packages/WPFHexaEditor/
 - Unlimited Undo (no redo for now)
 - Move in file with mouse wheel / or keyboard
 - Modify mode (hexa / char)
+- Find (string, byte[])
 - ...
 
 ##Release Notes (version of NUGET package)

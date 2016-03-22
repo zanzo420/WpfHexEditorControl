@@ -43,7 +43,22 @@ namespace WPFHexaEditor.Control
 
             RefreshView(true);
         }
-        
+
+
+        /// <summary>
+        /// TEMPS METHODS FORT TESTING PURPOSE ONLY
+        /// </summary>
+        /// <param name="text"></param>
+        public void Find(string text)
+        {
+            if (ByteProvider.CheckIsOpen(_provider))
+                foreach (long index in _provider.Find(text))
+                {
+                    SetPosition(index, text.Length);
+                    Debug.WriteLine($"FindIndex : {index}");
+                }
+        }
+
         #region Miscellaneous property/methods
         public double ScrollLargeChange {
             get
@@ -207,7 +222,7 @@ namespace WPFHexaEditor.Control
             if (sbCtrl != null)
                 SetFocusStringDataPanel(SelectionStart);
         }
-
+        
         private void Control_MoveUp(object sender, EventArgs e)
         {
             HexByteControl hbCtrl = sender as HexByteControl;

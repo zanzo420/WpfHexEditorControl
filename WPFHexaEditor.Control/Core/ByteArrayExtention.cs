@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace WPFHexaEditor.Control.Core
 {
-
     /// <summary>
     /// Extention methodes for find match in byte[]
     /// </summary>

@@ -134,5 +134,20 @@ namespace WPFHexaEditor.Control.Core
 
             return value;
         }
+
+        /// <summary>
+        /// Convert string to byte array
+        /// </summary>
+        public static byte[] StringToByte(string str)
+        {
+            List<byte> byteList = new List<byte>();
+
+            foreach (char c in str)
+            {
+                byteList.Add(CharToByte(c));
+            }
+
+            return byteList.ToArray();
+        }
     }
 }

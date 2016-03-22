@@ -172,5 +172,10 @@ namespace WPFHexaEditorExample
         {
             HexEdit.SubmitChanges();
         }
+
+        private void button_Click_1(object sender, RoutedEventArgs e)
+        {
+            HexEdit.Find(Findtextbox.Text);
+        }
     }
 }

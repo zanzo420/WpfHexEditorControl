@@ -688,7 +688,48 @@ namespace WPFHexaEditor.Control.Core
             }
         }
         #endregion Can do Property...
-        
+
+        #region Find methods
+
+        /// <summary>
+        /// TEST METHODS FOR FIND STRING IN FILE... OVERLOAD WILL BE CREATED AFTER IS WORK FINE
+        /// </summary>
+        /// <param name="findtest"></param>
+        public IEnumerable<long> Find(string findtest)
+        {
+            byte[] byteString = ByteConverters.StringToByte(findtest);
+            Position = 0;
+            byte[] buffer = new byte[Constant.COPY_BLOCK_SIZE];
+            IEnumerable<long> findindex;
+
+            for (int i = 0; i < Length; i++)
+            {
+                if (i % 1000 == 0)
+                    Application.Current.DoEvents();
+
+                if (ReadByte() == byteString[0])
+                {
+                    _stream.Read(buffer, 0, buffer.Length);
+
+                    findindex = buffer.FindIndexOf(byteString);
+
+                    if (findindex.Count() > 0)
+                    {
+                        foreach (long index in findindex)
+                        {
+                            yield return index + i + 1;
+                        }
+
+                        Debug.WriteLine(buffer.FindIndexOf(byteString).Count());
+                    }
+
+                    i += buffer.Length - byteString.Length;
+                }
+            }
+        }
+
+        #endregion Find methods
+
         //addbyte
         //getbyte
         //canread / write

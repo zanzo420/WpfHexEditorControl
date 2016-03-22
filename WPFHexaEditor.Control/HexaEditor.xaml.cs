@@ -1722,8 +1722,6 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public bool FindFirst(string text, long startPosition = 0)
         {
-            Application.Current.MainWindow.Cursor = Cursors.Wait;
-
             if (ByteProvider.CheckIsOpen(_provider))
             {
                 try
@@ -1739,7 +1737,6 @@ namespace WPFHexaEditor.Control
                 }
             }
                         
-            Application.Current.MainWindow.Cursor = null;
             return false;
         }
 
@@ -1748,13 +1745,11 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public bool FindNext(string text)
         {
-            Application.Current.MainWindow.Cursor = Cursors.Wait;
-
             if (ByteProvider.CheckIsOpen(_provider))
             {
                 try
                 {
-                    var first = _provider.FindIndexOf(text, SelectionStart + SelectionLenght).First();
+                    var first = _provider.FindIndexOf(text, SelectionStart + 1).First();
                     SetPosition(first, text.Length);
                     return true;
                 }
@@ -1774,14 +1769,12 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public bool FindLast(string text)
         {
-            Application.Current.MainWindow.Cursor = Cursors.Wait;
-
             if (ByteProvider.CheckIsOpen(_provider))
             {
                 try
                 {
-                    var first = _provider.FindIndexOf(text, SelectionStart + SelectionLenght).Last();
-                    SetPosition(first, text.Length);
+                    var last = _provider.FindIndexOf(text, SelectionStart + 1).Last();
+                    SetPosition(last, text.Length);
                     return true;
                 }
                 catch
@@ -1791,7 +1784,6 @@ namespace WPFHexaEditor.Control
                 }
             }
 
-            Application.Current.MainWindow.Cursor = null;
             return false;
         }
 
@@ -1801,12 +1793,10 @@ namespace WPFHexaEditor.Control
         /// <returns>Return null if no occurence found</returns>
         public IEnumerable<long> FindAll(string text, long startPosition = 0)
         {
-            Application.Current.MainWindow.Cursor = Cursors.Wait;
 
             if (ByteProvider.CheckIsOpen(_provider))            
                 return _provider.FindIndexOf(text, startPosition);
             
-            Application.Current.MainWindow.Cursor = null;
             return null;
         }
         #endregion Find methods

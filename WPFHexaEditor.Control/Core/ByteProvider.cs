@@ -727,6 +727,9 @@ namespace WPFHexaEditor.Control.Core
                     Position--;
                     i--;
 
+                    if (buffer.Length > Length - Position)
+                        buffer = new byte[Length - Position];
+
                     //read buffer and find
                     _stream.Read(buffer, 0, buffer.Length);
                     findindex = buffer.FindIndexOf(bytesTofind);

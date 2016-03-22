@@ -1720,52 +1720,94 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Find first occurence of string in stream.
         /// </summary>
-        public void FindFirst(string text, long startPosition = 0)
+        public bool FindFirst(string text, long startPosition = 0)
         {
             Application.Current.MainWindow.Cursor = Cursors.Wait;
 
             if (ByteProvider.CheckIsOpen(_provider))
             {
-                var first = _provider.FindIndexOf(text, startPosition).FirstOrDefault();
-
-                SetPosition(first, text.Length);
+                try
+                {
+                    var first = _provider.FindIndexOf(text, startPosition).First();
+                    SetPosition(first, text.Length);
+                    return true;
+                }
+                catch
+                {
+                    UnSelectAll();
+                    return false;
+                }
             }
-
+                        
             Application.Current.MainWindow.Cursor = null;
+            return false;
         }
 
         /// <summary>
         /// Find first occurence of string in stream.
         /// </summary>
-        public void FindNext(string text)
+        public bool FindNext(string text)
         {
             Application.Current.MainWindow.Cursor = Cursors.Wait;
 
             if (ByteProvider.CheckIsOpen(_provider))
             {
-                var first = _provider.FindIndexOf(text, SelectionStart + SelectionLenght).FirstOrDefault();
-
-                SetPosition(first, text.Length);
+                try
+                {
+                    var first = _provider.FindIndexOf(text, SelectionStart + SelectionLenght).First();
+                    SetPosition(first, text.Length);
+                    return true;
+                }
+                catch
+                {
+                    UnSelectAll();
+                    return false;
+                }
             }
 
             Application.Current.MainWindow.Cursor = null;
+            return false;
         }
 
         /// <summary>
         /// Find first occurence of string in stream.
         /// </summary>
-        public void FindLast(string text)
+        public bool FindLast(string text)
         {
             Application.Current.MainWindow.Cursor = Cursors.Wait;
 
             if (ByteProvider.CheckIsOpen(_provider))
             {
-                var first = _provider.FindIndexOf(text, SelectionStart + SelectionLenght).LastOrDefault();
-
-                SetPosition(first, text.Length);
+                try
+                {
+                    var first = _provider.FindIndexOf(text, SelectionStart + SelectionLenght).Last();
+                    SetPosition(first, text.Length);
+                    return true;
+                }
+                catch
+                {
+                    UnSelectAll();
+                    return false;
+                }
             }
 
             Application.Current.MainWindow.Cursor = null;
+            return false;
+        }
+
+        /// <summary>
+        /// Find all occurence of string in stream.
+        /// </summary>
+        /// <returns>Return null if no occurence found</returns>
+        public IEnumerable<long> FindAll(string text, long startPosition = 0)
+        {
+            Application.Current.MainWindow.Cursor = Cursors.Wait;
+
+            if (ByteProvider.CheckIsOpen(_provider))            
+                return _provider.FindIndexOf(text, startPosition);
+            
+            Application.Current.MainWindow.Cursor = null;
+            return null;
         }
         #endregion Find methods
     }

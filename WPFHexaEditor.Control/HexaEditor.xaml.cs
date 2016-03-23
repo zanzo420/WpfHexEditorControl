@@ -29,8 +29,9 @@ namespace WPFHexaEditor.Control
         private const double _lineInfoHeight = 22;
         private ByteProvider _provider = null;
         private double _scrollLargeChange = 100;
-        private bool _readOnlyMode = false;  
-                              
+        private bool _readOnlyMode = false;
+        private List<long> _markedPositionList = new List<long>();
+
         //Event
         public event EventHandler SelectionStartChanged;
         public event EventHandler SelectionStopChanged;
@@ -251,6 +252,8 @@ namespace WPFHexaEditor.Control
         {
             StringByteControl sbCtrl = sender as StringByteControl;
             HexByteControl ctrl = sender as HexByteControl;
+
+            _markedPositionList.Clear();
 
             if (ctrl != null)
             {
@@ -1170,6 +1173,7 @@ namespace WPFHexaEditor.Control
             UpdateDataViewer(ControlResize);
             UpdateByteModified();
             UpdateSelection();
+            UpdateMarkedByte();
         }
 
         /// <summary>
@@ -1417,6 +1421,49 @@ namespace WPFHexaEditor.Control
                         else
                             byteControl.IsSelected = false;
                 }
+                stackIndex++;
+
+                //Prevent index out off range exception when resize at EOF
+                if (stackIndex == HexDataStackPanel.Children.Count && VerticalScrollBar.Value == VerticalScrollBar.Maximum)
+                    stackIndex--;
+            }
+        }
+
+        /// <summary>
+        /// Update bytes as marked on findall()
+        /// </summary>
+        private void UpdateMarkedByte()
+        {
+            int stackIndex = 0;
+            long position = -1;
+            foreach (Label infolabel in LinesInfoStackPanel.Children)
+            {
+                //Stringbyte panel
+                foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
+                {
+                    position = -1;
+
+                    try
+                    {
+                        position = _markedPositionList.Single(p => p == byteControl.BytePositionInFile);
+                        byteControl.IsSelected = true;
+                    }
+                    catch { byteControl.IsSelected = false; }                    
+                }
+
+                //HexByte panel
+                foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
+                {
+                    position = -1;
+
+                    try
+                    {
+                        position = _markedPositionList.Single(p => p == byteControl.BytePositionInFile);
+                        byteControl.IsSelected = true;
+                    }
+                    catch { byteControl.IsSelected = false; }
+                }
+
                 stackIndex++;
 
                 //Prevent index out off range exception when resize at EOF
@@ -1716,88 +1763,168 @@ namespace WPFHexaEditor.Control
         #endregion Focus Methods
 
         #region Find methods
+        /// <summary>
+        /// Find first occurence of string in stream. Search start as startPosition.
+        /// </summary>        
+        public long FindFirst(string text, long startPosition = 0)
+        {
+            return FindFirst(ByteConverters.StringToByte(text));
+        }
 
         /// <summary>
-        /// Find first occurence of string in stream.
+        /// Find first occurence of byte[] in stream. Search start as startPosition.
         /// </summary>
-        public bool FindFirst(string text, long startPosition = 0)
+        public long FindFirst(byte[] bytes, long startPosition = 0)
         {
             if (ByteProvider.CheckIsOpen(_provider))
             {
                 try
                 {
-                    var first = _provider.FindIndexOf(text, startPosition).First();
-                    SetPosition(first, text.Length);
-                    return true;
+                    var position = _provider.FindIndexOf(bytes, startPosition).First();
+                    SetPosition(position, bytes.Length);
+                    return position;
                 }
                 catch
                 {
                     UnSelectAll();
-                    return false;
+                    return -1;
                 }
             }
                         
-            return false;
+            return -1;
         }
 
         /// <summary>
-        /// Find first occurence of string in stream.
+        /// Find next occurence of string in stream search start at SelectionStart.
+        /// </summary>        
+        public long FindNext(string text)
+        {
+            return FindNext(ByteConverters.StringToByte(text));
+        }
+
+        /// <summary>
+        /// Find next occurence of byte[] in stream search start at SelectionStart.
         /// </summary>
-        public bool FindNext(string text)
+        public long FindNext(byte[] bytes)
         {
             if (ByteProvider.CheckIsOpen(_provider))
             {
                 try
                 {
-                    var first = _provider.FindIndexOf(text, SelectionStart + 1).First();
-                    SetPosition(first, text.Length);
-                    return true;
+                    var position = _provider.FindIndexOf(bytes, SelectionStart + 1).First();
+                    SetPosition(position, bytes.Length);
+                    return position;
                 }
                 catch
                 {
                     UnSelectAll();
-                    return false;
+                    return -1;
                 }
             }
 
-            Application.Current.MainWindow.Cursor = null;
-            return false;
+            return -1;
         }
 
         /// <summary>
-        /// Find first occurence of string in stream.
+        /// Find last occurence of string in stream search start at SelectionStart.
+        /// </summary>        
+        public long FindLast(string text)
+        {
+            return FindLast(ByteConverters.StringToByte(text));
+        }
+
+        /// <summary>
+        /// Find first occurence of byte[] in stream.
         /// </summary>
-        public bool FindLast(string text)
+        public long FindLast(byte[] bytes)
         {
             if (ByteProvider.CheckIsOpen(_provider))
             {
                 try
                 {
-                    var last = _provider.FindIndexOf(text, SelectionStart + 1).Last();
-                    SetPosition(last, text.Length);
-                    return true;
+                    var position = _provider.FindIndexOf(bytes, SelectionStart + 1).Last();
+                    SetPosition(position, bytes.Length);
+                    return position;
                 }
                 catch
                 {
                     UnSelectAll();
-                    return false;
+                    return -1;
                 }
             }
 
-            return false;
+            return -1;
         }
 
         /// <summary>
         /// Find all occurence of string in stream.
         /// </summary>
         /// <returns>Return null if no occurence found</returns>
-        public IEnumerable<long> FindAll(string text, long startPosition = 0)
+        public IEnumerable<long> FindAll(string text)
         {
+            return FindAll(ByteConverters.StringToByte(text));
+        }
 
+        /// <summary>
+        /// Find all occurence of byte[] in stream.
+        /// </summary>
+        /// <returns>Return null if no occurence found</returns>
+        public IEnumerable<long> FindAll(byte[] bytes)
+        {
             if (ByteProvider.CheckIsOpen(_provider))            
-                return _provider.FindIndexOf(text, startPosition);
+                return _provider.FindIndexOf(bytes);
             
             return null;
+        }
+
+        /// <summary>
+        /// Find all occurence of string in stream.
+        /// </summary>
+        /// <returns>Return null if no occurence found</returns>
+        public IEnumerable<long> FindAll(string text, bool markAll)
+        {
+            return FindAll(ByteConverters.StringToByte(text), markAll);
+        }
+
+        /// <summary>
+        /// Find all occurence of string in stream. Mark al occurance in stream is MarcAll as true
+        /// </summary>
+        /// <returns>Return null if no occurence found</returns>
+        public IEnumerable<long> FindAll(byte[] bytes, bool markAll)
+        {
+            if (markAll)
+            {
+                _markedPositionList.Clear();
+
+                var positions = FindAll(bytes);
+
+                foreach (long position in positions)
+                {
+                    for (long i = position; i < bytes.Length; i++)
+                        _markedPositionList.Add(i + 1);
+                }
+
+                UnSelectAll();
+                UpdateMarkedByte();
+
+                return positions;
+            }
+            else
+            {
+                return FindAll(bytes);
+            }
+        }
+
+        /// <summary>
+        /// Find all occurence of SelectionByteArray in stream.
+        /// </summary>
+        /// <returns>Return null if no occurence found</returns>
+        public IEnumerable<long> FindAllSelection(bool markAll)
+        {
+            if (SelectionLenght > 0)
+                return FindAll(SelectionByteArray, markAll);
+            else
+                return null;
         }
         #endregion Find methods
     }

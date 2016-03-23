@@ -18,10 +18,15 @@ https://www.nuget.org/packages/WPFHexaEditor/
 - Unlimited Undo (no redo for now)
 - Move in file with mouse wheel / or keyboard
 - Modify mode (hexa / char)
-- Find (string, byte[])
+- Finds methods (FindFirst, FindNext, FindAll, FindLast, FindSelection) and overlord for (string, byte[])
 - ...
 
 ##Release Notes (version of NUGET package)
+New in version 0.7.0
+- Add FindSelection
+- HighLight for Find
+- Somes bugs fix and minor add...
+
 New in version 0.6.1 
 - Add functionnality - FindFirst, FindNext, FindLast
 - Bug Fix - When refresh control at last line

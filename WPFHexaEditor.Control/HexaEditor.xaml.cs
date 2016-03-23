@@ -1053,6 +1053,8 @@ namespace WPFHexaEditor.Control
                 VerticalScrollBar.Value = 0;
             }
 
+            _markedPositionList.Clear();
+
             ClearUndoChange();
             UnSelectAll();
             RefreshView();
@@ -1435,41 +1437,53 @@ namespace WPFHexaEditor.Control
         private void UpdateMarkedByte()
         {
             int stackIndex = 0;
-            long position = -1;
-            foreach (Label infolabel in LinesInfoStackPanel.Children)
-            {
-                //Stringbyte panel
-                foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
+            bool find = false;
+
+            if (_markedPositionList.Count > 0)
+                foreach (Label infolabel in LinesInfoStackPanel.Children)
                 {
-                    position = -1;
-
-                    try
+                    //Stringbyte panel
+                    foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
                     {
-                        position = _markedPositionList.Single(p => p == byteControl.BytePositionInFile);
-                        byteControl.IsSelected = true;
+                        find = false;
+
+                        foreach (long position in _markedPositionList)
+                            if (position == byteControl.BytePositionInFile)
+                            {
+                                find = true;
+                                break;
+                            }
+
+                        if (find)
+                            byteControl.IsSelected = true;
+                        else
+                            byteControl.IsSelected = false;
                     }
-                    catch { byteControl.IsSelected = false; }                    
-                }
 
-                //HexByte panel
-                foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
-                {
-                    position = -1;
-
-                    try
+                    //HexByte panel
+                    foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
                     {
-                        position = _markedPositionList.Single(p => p == byteControl.BytePositionInFile);
-                        byteControl.IsSelected = true;
+                        find = false;
+
+                        foreach (long position in _markedPositionList)
+                            if (position == byteControl.BytePositionInFile)
+                            {
+                                find = true;
+                                break;
+                            }
+
+                        if (find)
+                            byteControl.IsSelected = true;
+                        else
+                            byteControl.IsSelected = false;
                     }
-                    catch { byteControl.IsSelected = false; }
+
+                    stackIndex++;
+
+                    //Prevent index out off range exception when resize at EOF
+                    if (stackIndex == HexDataStackPanel.Children.Count && VerticalScrollBar.Value == VerticalScrollBar.Maximum)
+                        stackIndex--;
                 }
-
-                stackIndex++;
-
-                //Prevent index out off range exception when resize at EOF
-                if (stackIndex == HexDataStackPanel.Children.Count && VerticalScrollBar.Value == VerticalScrollBar.Maximum)
-                    stackIndex--;
-            }
         }
 
         /// <summary>
@@ -1900,8 +1914,8 @@ namespace WPFHexaEditor.Control
 
                 foreach (long position in positions)
                 {
-                    for (long i = position; i < bytes.Length; i++)
-                        _markedPositionList.Add(i + 1);
+                    for (long i = position; i < position + bytes.Length; i++)
+                        _markedPositionList.Add(i);
                 }
 
                 UnSelectAll();

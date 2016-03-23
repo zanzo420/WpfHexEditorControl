@@ -210,5 +210,10 @@ namespace WPFHexaEditorExample
             else
                 MessageBox.Show("Enter string to find");
         }
+
+        private void button3_Click(object sender, RoutedEventArgs e)
+        {
+            HexEdit.FindAllSelection(true);
+        }
     }
 }

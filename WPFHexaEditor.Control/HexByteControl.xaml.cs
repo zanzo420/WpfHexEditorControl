@@ -167,34 +167,74 @@ namespace WPFHexaEditor.Control
             }
         }
 
+
+        /// <summary>
+        /// Get or Set if control as selected
+        /// </summary>
         public bool IsSelected
         {
-            get
-            {
-                return _isSelected;
-            }
-
-            set
-            {
-                _isSelected = value;
-
-                _keyDownLabel = KeyDownLabel.FirstChar;
-
-                UpdateBackGround();
-            }
+            get { return (bool)GetValue(IsSelectedProperty); }
+            set { SetValue(IsSelectedProperty, value); }
         }
-        
+
+        public static readonly DependencyProperty IsSelectedProperty =
+            DependencyProperty.Register("IsSelected", typeof(bool), typeof(HexByteControl),
+                new FrameworkPropertyMetadata(false, 
+                    new PropertyChangedCallback(IsSelected_PropertyChange)));
+
+       
+        private static void IsSelected_PropertyChange(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            HexByteControl ctrl = d as HexByteControl;
+
+            ctrl._keyDownLabel = KeyDownLabel.FirstChar;
+            ctrl.UpdateBackGround();
+        }
+           
+        /// <summary>
+        /// Get of Set if control as marked as highlighted
+        /// </summary>                        
+        public bool IsHighLight
+        {
+            get { return (bool)GetValue(IsHighLightProperty); }
+            set { SetValue(IsHighLightProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsHighLightProperty =
+            DependencyProperty.Register("IsHighLight", typeof(bool), typeof(HexByteControl), 
+                new FrameworkPropertyMetadata(false,
+                    new PropertyChangedCallback(IsHighLight_PropertyChanged)));
+
+        private static void IsHighLight_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            HexByteControl ctrl = d as HexByteControl;
+            
+            ctrl._keyDownLabel = KeyDownLabel.FirstChar;
+            ctrl.UpdateBackGround();
+        }
+
+
+
+
         /// <summary>
         /// Update Background
         /// </summary>
         private void UpdateBackGround()
         {
-            if (IsSelected)
+            if (IsHighLight)
+            {
+                this.FontWeight = (FontWeight)TryFindResource("NormalFontWeight");
+                FirstHexChar.Foreground = Brushes.Black;
+                SecondHexChar.Foreground = Brushes.Black;
+                
+                this.Background = (SolidColorBrush)TryFindResource("HighLightColor");
+            }
+            else if (IsSelected)
             {
                 this.FontWeight = (FontWeight)TryFindResource("NormalFontWeight");
                 FirstHexChar.Foreground = Brushes.White;
                 SecondHexChar.Foreground = Brushes.White;
-
+                
                 if (HexByteFirstSelected)
                     this.Background = (SolidColorBrush)TryFindResource("FirstColor"); 
                 else
@@ -363,7 +403,7 @@ namespace WPFHexaEditor.Control
                 if (Action != ByteAction.Modified &&
                     Action != ByteAction.Deleted &&
                     Action != ByteAction.Added &&
-                    !IsSelected)
+                    !IsSelected && !IsHighLight)
                     this.Background = (SolidColorBrush)TryFindResource("MouseOverColor");
 
             if (e.LeftButton == MouseButtonState.Pressed)
@@ -377,7 +417,7 @@ namespace WPFHexaEditor.Control
                 if (Action != ByteAction.Modified &&
                     Action != ByteAction.Deleted &&
                     Action != ByteAction.Added &&
-                    !IsSelected)
+                    !IsSelected && !IsHighLight)
                     this.Background = Brushes.Transparent;
         }
     }

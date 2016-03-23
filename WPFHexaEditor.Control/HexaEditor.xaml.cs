@@ -253,7 +253,7 @@ namespace WPFHexaEditor.Control
             StringByteControl sbCtrl = sender as StringByteControl;
             HexByteControl ctrl = sender as HexByteControl;
 
-            _markedPositionList.Clear();
+            UnHighLightAll();
 
             if (ctrl != null)
             {
@@ -285,7 +285,7 @@ namespace WPFHexaEditor.Control
                 UpdateSelectionColorMode(FirstColor.StringByteData);
             }
         }
-
+        
         private void Control_MouseSelection(object sender, EventArgs e)
         {
             //Prevent false mouse selection on file open
@@ -329,7 +329,14 @@ namespace WPFHexaEditor.Control
             if (e.LeftButton == MouseButtonState.Pressed)
                 VerticalScrollBar.Value--;            
         }
-        
+
+
+        private void UnHighLightAll()
+        {
+            _markedPositionList.Clear();
+            UpdateHighLightByte();
+        }
+
         /// <summary>
         /// Set the start byte position of selection
         /// </summary>
@@ -1053,8 +1060,7 @@ namespace WPFHexaEditor.Control
                 VerticalScrollBar.Value = 0;
             }
 
-            _markedPositionList.Clear();
-
+            UnHighLightAll();
             ClearUndoChange();
             UnSelectAll();
             RefreshView();
@@ -1175,7 +1181,7 @@ namespace WPFHexaEditor.Control
             UpdateDataViewer(ControlResize);
             UpdateByteModified();
             UpdateSelection();
-            UpdateMarkedByte();
+            UpdateHighLightByte();
         }
 
         /// <summary>
@@ -1434,12 +1440,13 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Update bytes as marked on findall()
         /// </summary>
-        private void UpdateMarkedByte()
+        private void UpdateHighLightByte()
         {
             int stackIndex = 0;
             bool find = false;
 
             if (_markedPositionList.Count > 0)
+            {
                 foreach (Label infolabel in LinesInfoStackPanel.Children)
                 {
                     //Stringbyte panel
@@ -1454,10 +1461,7 @@ namespace WPFHexaEditor.Control
                                 break;
                             }
 
-                        if (find)
-                            byteControl.IsSelected = true;
-                        else
-                            byteControl.IsSelected = false;
+                        byteControl.IsHighLight = find;
                     }
 
                     //HexByte panel
@@ -1472,10 +1476,7 @@ namespace WPFHexaEditor.Control
                                 break;
                             }
 
-                        if (find)
-                            byteControl.IsSelected = true;
-                        else
-                            byteControl.IsSelected = false;
+                        byteControl.IsHighLight = find;
                     }
 
                     stackIndex++;
@@ -1484,6 +1485,28 @@ namespace WPFHexaEditor.Control
                     if (stackIndex == HexDataStackPanel.Children.Count && VerticalScrollBar.Value == VerticalScrollBar.Maximum)
                         stackIndex--;
                 }
+            }
+            else //Un highlight all
+            {
+                stackIndex = 0;
+
+                foreach (Label infolabel in LinesInfoStackPanel.Children)
+                {
+                    //Stringbyte panel
+                    foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
+                        byteControl.IsHighLight = false;
+
+                    //HexByte panel
+                    foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
+                        byteControl.IsHighLight = false;
+
+                    stackIndex++;
+
+                    //Prevent index out off range exception when resize at EOF
+                    if (stackIndex == HexDataStackPanel.Children.Count && VerticalScrollBar.Value == VerticalScrollBar.Maximum)
+                        stackIndex--;
+                }
+            }
         }
 
         /// <summary>
@@ -1895,31 +1918,34 @@ namespace WPFHexaEditor.Control
         /// Find all occurence of string in stream.
         /// </summary>
         /// <returns>Return null if no occurence found</returns>
-        public IEnumerable<long> FindAll(string text, bool markAll)
+        public IEnumerable<long> FindAll(string text, bool highLight)
         {
-            return FindAll(ByteConverters.StringToByte(text), markAll);
+            return FindAll(ByteConverters.StringToByte(text), highLight);
         }
 
         /// <summary>
         /// Find all occurence of string in stream. Mark al occurance in stream is MarcAll as true
         /// </summary>
         /// <returns>Return null if no occurence found</returns>
-        public IEnumerable<long> FindAll(byte[] bytes, bool markAll)
+        public IEnumerable<long> FindAll(byte[] bytes, bool highLight)
         {
-            if (markAll)
+            if (highLight)
             {
-                _markedPositionList.Clear();
+                UnHighLightAll();
 
                 var positions = FindAll(bytes);
 
                 foreach (long position in positions)
                 {
                     for (long i = position; i < position + bytes.Length; i++)
+                    {
                         _markedPositionList.Add(i);
+                        UpdateHighLightByte();
+                    }
                 }
 
                 UnSelectAll();
-                UpdateMarkedByte();
+                //UpdateHighLightByte();
 
                 return positions;
             }
@@ -1933,10 +1959,10 @@ namespace WPFHexaEditor.Control
         /// Find all occurence of SelectionByteArray in stream.
         /// </summary>
         /// <returns>Return null if no occurence found</returns>
-        public IEnumerable<long> FindAllSelection(bool markAll)
+        public IEnumerable<long> FindAllSelection(bool highLight)
         {
             if (SelectionLenght > 0)
-                return FindAll(SelectionByteArray, markAll);
+                return FindAll(SelectionByteArray, highLight);
             else
                 return null;
         }

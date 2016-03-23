@@ -1813,6 +1813,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public long FindFirst(byte[] bytes, long startPosition = 0)
         {
+            UnHighLightAll();
+
             if (ByteProvider.CheckIsOpen(_provider))
             {
                 try
@@ -1844,6 +1846,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public long FindNext(byte[] bytes)
         {
+            UnHighLightAll();
+
             if (ByteProvider.CheckIsOpen(_provider))
             {
                 try
@@ -1875,6 +1879,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public long FindLast(byte[] bytes)
         {
+            UnHighLightAll();
+
             if (ByteProvider.CheckIsOpen(_provider))
             {
                 try
@@ -1908,6 +1914,8 @@ namespace WPFHexaEditor.Control
         /// <returns>Return null if no occurence found</returns>
         public IEnumerable<long> FindAll(byte[] bytes)
         {
+            UnHighLightAll();
+
             if (ByteProvider.CheckIsOpen(_provider))            
                 return _provider.FindIndexOf(bytes);
             
@@ -1931,7 +1939,7 @@ namespace WPFHexaEditor.Control
         {
             if (highLight)
             {
-                UnHighLightAll();
+                //UnHighLightAll();
 
                 var positions = FindAll(bytes);
 

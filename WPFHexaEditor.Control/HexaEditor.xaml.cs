@@ -43,6 +43,8 @@ namespace WPFHexaEditor.Control
             InitializeComponent();
 
             RefreshView(true);
+
+            StatusBarGrid.DataContext = this;
         }
         
         #region Miscellaneous property/methods
@@ -141,7 +143,27 @@ namespace WPFHexaEditor.Control
         #endregion Lines methods
 
         #region Selection Property/Methods/Event
-        
+
+
+        /// <summary>
+        /// Ger the selected line 
+        /// </summary>
+        public long SelectionLine
+        {
+            get { return (long)GetValue(SelectionLineProperty); }
+            internal set { SetValue(SelectionLineProperty, value); }
+        }
+
+        public static readonly DependencyProperty SelectionLineProperty =
+            DependencyProperty.Register("SelectionLine", typeof(long), typeof(HexaEditor), 
+                new FrameworkPropertyMetadata(0L,
+                    new PropertyChangedCallback(SelectionLine_ValueChanged)));
+
+        private static void SelectionLine_ValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            
+        }
+
         private void LineInfoLabel_MouseMove(object sender, MouseEventArgs e)
         {
             Label line = sender as Label;
@@ -330,7 +352,6 @@ namespace WPFHexaEditor.Control
                 VerticalScrollBar.Value--;            
         }
 
-
         /// <summary>
         /// Un highlight all byte as highlighted with find all methods
         /// </summary>
@@ -373,7 +394,7 @@ namespace WPFHexaEditor.Control
             HexaEditor ctrl = d as HexaEditor;
             
             ctrl.UpdateSelection();
-            ctrl.UpdateStatusPanel();
+            ctrl.UpdateSelectionLine();
 
             if (ctrl.SelectionStartChanged != null)
                 ctrl.SelectionStartChanged(ctrl, new EventArgs());
@@ -381,7 +402,8 @@ namespace WPFHexaEditor.Control
             if (ctrl.SelectionLenghtChanged != null)
                 ctrl.SelectionLenghtChanged(ctrl, new EventArgs());
         }
-        
+              
+
         /// <summary>
         /// Set the start byte position of selection
         /// </summary>
@@ -420,7 +442,7 @@ namespace WPFHexaEditor.Control
             HexaEditor ctrl = d as HexaEditor;
 
             ctrl.UpdateSelection();
-            ctrl.UpdateStatusPanel();
+            ctrl.UpdateSelectionLine();
 
             if (ctrl.SelectionStopChanged != null)
                 ctrl.SelectionStopChanged(ctrl, new EventArgs());
@@ -941,6 +963,7 @@ namespace WPFHexaEditor.Control
                     ctrl.VerticalScrollBar.Visibility = Visibility.Collapsed;
                     break;
             }
+            
         }
 
         /// <summary>
@@ -972,7 +995,7 @@ namespace WPFHexaEditor.Control
                     ctrl.StatusBarGrid.Visibility = Visibility.Collapsed;
                     break;
             }
-
+                        
             ctrl.RefreshView(false);
         }
         #endregion Visibility standard property
@@ -1018,8 +1041,6 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Set or Get the file with the control will show hex
         /// </summary>
-
-
         public string FileName
         {
             get { return (string)GetValue(FileNameProperty); }
@@ -1037,9 +1058,7 @@ namespace WPFHexaEditor.Control
                         
             ctrl.OpenFile((string)e.NewValue);
         }
-
-
-
+        
         /// <summary>
         /// Close file and clear control
         /// ReadOnlyMode is reset to false
@@ -1131,7 +1150,7 @@ namespace WPFHexaEditor.Control
         private static void BytePerLine_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             HexaEditor ctrl = d as HexaEditor;
-
+            
             ctrl.RefreshView(true);
         }
 
@@ -1141,7 +1160,7 @@ namespace WPFHexaEditor.Control
         }
 
         private void VerticalScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
+        {            
             RefreshView(false);
         }
         /// <summary>
@@ -1164,13 +1183,16 @@ namespace WPFHexaEditor.Control
         }
 
         /// <summary>
-        /// Update de StatusPanel
+        /// Update de SelectionLine property
         /// </summary>
-        private void UpdateStatusPanel()
+        private void UpdateSelectionLine()
         {
-
+            if (ByteProvider.CheckIsOpen(_provider))
+                SelectionLine = (SelectionStart / BytePerLine) + 1;
+            else
+                SelectionLine = 0;
         }
-
+        
         /// <summary>
         /// Refresh currentview of hexeditor
         /// </summary>

@@ -212,10 +212,7 @@ namespace WPFHexaEditor.Control
             ctrl._keyDownLabel = KeyDownLabel.FirstChar;
             ctrl.UpdateBackGround();
         }
-
-
-
-
+        
         /// <summary>
         /// Update Background
         /// </summary>

@@ -10,7 +10,7 @@
         Background="WhiteSmoke"
         Title="TestWindow - WPF HexaEditor Control (Alpha)" Height="586" Width="850">
     <Grid >
-        <Control:HexaEditor x:Name="HexEdit" Margin="10,194,10,10" Height="Auto" Width="Auto" 
+        <Control:HexaEditor x:Name="HexEdit" Margin="10,194,10,10" Height="Auto" Width="Auto" StatusBarVisibility="Visible"
                             SelectionLenghtChanged="HexEdit_SelectionLenghtChanged"/>
 
         <Button x:Name="SetPositionButton" Margin="383,10,0,0" VerticalAlignment="Top" Click="SetPositionButton_Click" Height="45" HorizontalAlignment="Left" Width="144">

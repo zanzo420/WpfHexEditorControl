@@ -19,6 +19,7 @@ https://www.nuget.org/packages/WPFHexaEditor/
 - Move in file with mouse wheel / or keyboard
 - Modify mode (hexa / char)
 - Finds methods (FindFirst, FindNext, FindAll, FindLast, FindSelection) and overlord for (string, byte[])
+- Highlight byte with somes find methods
 - ...
 
 ##Release Notes (version of NUGET package)

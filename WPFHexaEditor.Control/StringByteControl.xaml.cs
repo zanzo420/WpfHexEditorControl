@@ -218,14 +218,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         private void UpdateBackGround()
         {
-            if (IsHighLight)
-            {
-                this.FontWeight = (FontWeight)TryFindResource("NormalFontWeight");
-                StringByteLabel.Foreground = Brushes.Black;
 
-                this.Background = (SolidColorBrush)TryFindResource("HighLightColor");
-            }
-            else if (IsSelected)
+            if (IsSelected)
             {
                 this.FontWeight = (FontWeight)TryFindResource("NormalFontWeight");
                 StringByteLabel.Foreground = Brushes.White;
@@ -234,6 +228,13 @@ namespace WPFHexaEditor.Control
                     this.Background = (SolidColorBrush)TryFindResource("FirstColor");
                 else
                     this.Background = (SolidColorBrush)TryFindResource("SecondColor");
+            }
+            else if (IsHighLight)
+            {
+                this.FontWeight = (FontWeight)TryFindResource("NormalFontWeight");
+                StringByteLabel.Foreground = Brushes.Black;
+
+                this.Background = (SolidColorBrush)TryFindResource("HighLightColor");
             }
             else if (Action != ByteAction.Nothing)
             {

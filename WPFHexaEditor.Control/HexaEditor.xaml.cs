@@ -253,7 +253,7 @@ namespace WPFHexaEditor.Control
             StringByteControl sbCtrl = sender as StringByteControl;
             HexByteControl ctrl = sender as HexByteControl;
 
-            UnHighLightAll();
+            //UnHighLightAll();
 
             if (ctrl != null)
             {
@@ -331,7 +331,10 @@ namespace WPFHexaEditor.Control
         }
 
 
-        private void UnHighLightAll()
+        /// <summary>
+        /// Un highlight all byte as highlighted with find all methods
+        /// </summary>
+        public void UnHighLightAll()
         {
             _markedPositionList.Clear();
             UpdateHighLightByte();
@@ -1812,9 +1815,7 @@ namespace WPFHexaEditor.Control
         /// Find first occurence of byte[] in stream. Search start as startPosition.
         /// </summary>
         public long FindFirst(byte[] bytes, long startPosition = 0)
-        {
-            UnHighLightAll();
-
+        {            
             if (ByteProvider.CheckIsOpen(_provider))
             {
                 try
@@ -1845,9 +1846,7 @@ namespace WPFHexaEditor.Control
         /// Find next occurence of byte[] in stream search start at SelectionStart.
         /// </summary>
         public long FindNext(byte[] bytes)
-        {
-            UnHighLightAll();
-
+        {            
             if (ByteProvider.CheckIsOpen(_provider))
             {
                 try
@@ -1879,8 +1878,6 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public long FindLast(byte[] bytes)
         {
-            UnHighLightAll();
-
             if (ByteProvider.CheckIsOpen(_provider))
             {
                 try
@@ -1932,7 +1929,7 @@ namespace WPFHexaEditor.Control
         }
 
         /// <summary>
-        /// Find all occurence of string in stream. Mark al occurance in stream is MarcAll as true
+        /// Find all occurence of string in stream. Highlight occurance in stream is MarcAll as true
         /// </summary>
         /// <returns>Return null if no occurence found</returns>
         public IEnumerable<long> FindAll(byte[] bytes, bool highLight)
@@ -1964,7 +1961,7 @@ namespace WPFHexaEditor.Control
         }
 
         /// <summary>
-        /// Find all occurence of SelectionByteArray in stream.
+        /// Find all occurence of SelectionByteArray in stream. Highlight byte finded
         /// </summary>
         /// <returns>Return null if no occurence found</returns>
         public IEnumerable<long> FindAllSelection(bool highLight)

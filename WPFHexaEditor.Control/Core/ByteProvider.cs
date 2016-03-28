@@ -233,8 +233,13 @@ namespace WPFHexaEditor.Control.Core
         {
             if (CanWrite)
             {
-                //Temp stream for new file. 
-                MemoryStream msNewStream = new MemoryStream();
+                //Create appropriate temp stream for new file. 
+                Stream NewStream = null;
+
+                if (Length < ConstantReadOnly.LARGE_FILE_LENGTH)
+                    NewStream = new MemoryStream();
+                else
+                    NewStream = File.Open(Path.GetTempFileName(), FileMode.Open, FileAccess.ReadWrite);
                 
                 //Fast change only nothing byte deleted or added
                 if (ByteModifieds(ByteAction.Deleted).Count() == 0 &&
@@ -250,7 +255,7 @@ namespace WPFHexaEditor.Control.Core
                 }
                 else
                 {
-                    byte[] buffer;
+                    byte[] buffer = new byte[ConstantReadOnly.COPY_BLOCK_SIZE];
                     long bufferlength = 0;
                     var SortedBM = ByteModifieds(ByteAction.All).OrderBy(b => b.BytePositionInFile);
 
@@ -260,22 +265,21 @@ namespace WPFHexaEditor.Control.Core
                     ////Start update and rewrite file. 
                     foreach (ByteModified nextByteModified in SortedBM)
                     {
-                        Application.Current.DoEvents();
+                        //Application.Current.DoEvents();
 
                         //start read/write / use little block for uptimize memory
                         while (Position != nextByteModified.BytePositionInFile)
                         {                            
                             bufferlength = nextByteModified.BytePositionInFile - Position;
 
-                            if (bufferlength > Constant.COPY_BLOCK_SIZE)
-                                buffer = new byte[Constant.COPY_BLOCK_SIZE];
-                            else
+                            //EOF
+                            if (bufferlength < ConstantReadOnly.COPY_BLOCK_SIZE)                                
                                 buffer = new byte[bufferlength];
 
                             _stream.Read(buffer, 0, buffer.Length);
-                            msNewStream.Write(buffer, 0, buffer.Length);
+                            NewStream.Write(buffer, 0, buffer.Length);
 
-                            Application.Current.DoEvents();
+                            //Application.Current.DoEvents();
                         }
 
                         //Apply ByteAction!
@@ -290,7 +294,7 @@ namespace WPFHexaEditor.Control.Core
                                 break;
                             case ByteAction.Modified:
                                 Position++;
-                                msNewStream.WriteByte(nextByteModified.Byte.Value);
+                                NewStream.WriteByte(nextByteModified.Byte.Value);
                                 break;
                         }
 
@@ -301,38 +305,36 @@ namespace WPFHexaEditor.Control.Core
                             {
                                 bufferlength = _stream.Length - Position;
 
-                                if (bufferlength > Constant.COPY_BLOCK_SIZE)
-                                    buffer = new byte[Constant.COPY_BLOCK_SIZE];
-                                else
+                                //EOF
+                                if (bufferlength < ConstantReadOnly.COPY_BLOCK_SIZE)                                    
                                     buffer = new byte[bufferlength];
 
                                 _stream.Read(buffer, 0, buffer.Length);
-                                msNewStream.Write(buffer, 0, buffer.Length);
+                                NewStream.Write(buffer, 0, buffer.Length);
 
-                                Application.Current.DoEvents();
+                                //Application.Current.DoEvents();
                             }                            
                         }
                     }
 
                     //Write new data to current stream
                     Position = 0;
-                    msNewStream.Position = 0;
+                    NewStream.Position = 0;
                     while (!EOF)
                     {
                         bufferlength = _stream.Length - Position;
 
-                        if (bufferlength > Constant.COPY_BLOCK_SIZE)
-                            buffer = new byte[Constant.COPY_BLOCK_SIZE];
-                        else
+                        //EOF
+                        if (bufferlength < ConstantReadOnly.COPY_BLOCK_SIZE)                            
                             buffer = new byte[bufferlength];
 
-                        msNewStream.Read(buffer, 0, buffer.Length);
+                        NewStream.Read(buffer, 0, buffer.Length);
                         _stream.Write(buffer, 0, buffer.Length);
                     }
-                    _stream.SetLength(msNewStream.Length);
+                    _stream.SetLength(NewStream.Length);
                     
                     //dispose resource
-                    msNewStream.Close();
+                    NewStream.Close();
                     buffer = null;
                 }
 
@@ -711,7 +713,7 @@ namespace WPFHexaEditor.Control.Core
 
             //var
             Position = startPosition;
-            byte[] buffer = new byte[Constant.FIND_BLOCK_SIZE];
+            byte[] buffer = new byte[ConstantReadOnly.FIND_BLOCK_SIZE];
             IEnumerable<long> findindex;
                         
             //start find

@@ -48,7 +48,7 @@ namespace WPFHexaEditor.Control.Core
         /// </summary>
         public static string ByteToHex(byte b)
         {
-            string sB = b.ToString(Constant.HexStringFormat, CultureInfo.InvariantCulture );//System.Threading.Thread.CurrentThread.CurrentCulture);
+            string sB = b.ToString(ConstantReadOnly.HexStringFormat, CultureInfo.InvariantCulture );//System.Threading.Thread.CurrentThread.CurrentCulture);
             if (sB.Length == 1)
                 sB = "0" + sB;
             return sB;

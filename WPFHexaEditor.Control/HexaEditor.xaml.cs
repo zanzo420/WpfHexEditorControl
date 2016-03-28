@@ -146,7 +146,7 @@ namespace WPFHexaEditor.Control
 
 
         /// <summary>
-        /// Ger the selected line 
+        /// Get the selected line of focus control
         /// </summary>
         public long SelectionLine
         {
@@ -1682,7 +1682,7 @@ namespace WPFHexaEditor.Control
                     //LineInfo
 
                     long firstLineByte = ((long)VerticalScrollBar.Value + i) * BytePerLine;
-                    string info = "0x" + firstLineByte.ToString(Constant.HexLineInfoStringFormat, CultureInfo.InvariantCulture);
+                    string info = "0x" + firstLineByte.ToString(ConstantReadOnly.HexLineInfoStringFormat, CultureInfo.InvariantCulture);
 
                     if (firstLineByte < _provider.Length)
                     {

@@ -74,7 +74,7 @@
     <Compile Include="Core\ByteModified.cs" />
     <Compile Include="Core\ByteProvider.cs" />
     <Compile Include="Core\ByteConverters.cs" />
-    <Compile Include="Core\Constant.cs" />
+    <Compile Include="Core\ConstantReadOnly.cs" />
     <Compile Include="Core\Enumeration.cs" />
     <Compile Include="Core\KeyValidator.cs" />
     <Compile Include="StringByteControl.xaml.cs">

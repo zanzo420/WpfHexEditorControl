@@ -1028,7 +1028,7 @@ namespace WPFHexaEditor.Control
         #endregion Undo / Redo
 
         #region Open, Close, Save... Methods/Property
-
+        
         private void Provider_ChangesSubmited(object sender, EventArgs e)
         {
             //Refresh filename
@@ -1036,8 +1036,7 @@ namespace WPFHexaEditor.Control
             CloseFile();
             FileName = filename;
         }
-
-
+        
         /// <summary>
         /// Set or Get the file with the control will show hex
         /// </summary>
@@ -1207,6 +1206,7 @@ namespace WPFHexaEditor.Control
             UpdateByteModified();
             UpdateSelection();
             UpdateHighLightByte();
+            UpdateStatusBar();
         }
 
         /// <summary>
@@ -1994,5 +1994,36 @@ namespace WPFHexaEditor.Control
                 return null;
         }
         #endregion Find methods
+
+        #region Statusbar
+        /// <summary>
+        /// Update statusbar for somes property dont support dependency property
+        /// </summary>
+        private void UpdateStatusBar()
+        {
+            if (StatusBarVisibility == Visibility.Visible)
+                if (ByteProvider.CheckIsOpen(_provider))
+                {
+                    bool MB = false;
+
+                    FileLengthLabel.Content = _provider.Length;
+
+                    //is mega bytes ?
+                    double lenght = _provider.Length / 1024;
+                    if (lenght > 1024)
+                    {
+                        lenght = lenght / 1024;
+                        MB = true;
+                    }
+
+                    FileLengthKBLabel.Content = Math.Round(lenght, 2) + (MB == true ? " MB" : " KB");
+                }
+                else
+                {
+                    FileLengthLabel.Content = 0;
+                    FileLengthKBLabel.Content = 0;
+                }
+        }
+        #endregion Statusbar
     }
 }

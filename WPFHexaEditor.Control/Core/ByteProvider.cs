@@ -89,7 +89,7 @@ namespace WPFHexaEditor.Control.Core
                         readOnlyMode = true;
                     }
                 }
-
+                
                 if (readOnlyMode)
                     ReadOnlyMode = true;
             }
@@ -134,7 +134,7 @@ namespace WPFHexaEditor.Control.Core
                     FileClosed(this, new EventArgs());
             }
         }
-
+        
         /// <summary>
         /// Get the lenght of file. Return -1 if file is close.
         /// </summary>
@@ -146,7 +146,7 @@ namespace WPFHexaEditor.Control.Core
                     return _stream.Length;
 
                 return -1;
-            }
+            }            
         }
 
         /// <summary>
@@ -265,8 +265,6 @@ namespace WPFHexaEditor.Control.Core
                     ////Start update and rewrite file. 
                     foreach (ByteModified nextByteModified in SortedBM)
                     {
-                        //Application.Current.DoEvents();
-
                         //start read/write / use little block for uptimize memory
                         while (Position != nextByteModified.BytePositionInFile)
                         {                            
@@ -278,8 +276,6 @@ namespace WPFHexaEditor.Control.Core
 
                             _stream.Read(buffer, 0, buffer.Length);
                             NewStream.Write(buffer, 0, buffer.Length);
-
-                            //Application.Current.DoEvents();
                         }
 
                         //Apply ByteAction!
@@ -311,8 +307,6 @@ namespace WPFHexaEditor.Control.Core
 
                                 _stream.Read(buffer, 0, buffer.Length);
                                 NewStream.Write(buffer, 0, buffer.Length);
-
-                                //Application.Current.DoEvents();
                             }                            
                         }
                     }

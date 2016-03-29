@@ -98,6 +98,8 @@ namespace WPFHexaEditor.Control
                 _provider.AddByteModified(sbCtrl.Byte, sbCtrl.BytePositionInFile);
             else if (ctrl != null)
                 _provider.AddByteModified(ctrl.Byte, ctrl.BytePositionInFile);
+
+            UpdateStatusBar();
         }
                                 
         private void Control_ByteDeleted(object sender, EventArgs e)
@@ -118,6 +120,7 @@ namespace WPFHexaEditor.Control
             //RefreshView(true);
             UpdateByteModified();
             UpdateSelection();
+            UpdateStatusBar();
         }
         #endregion Add modify delete bytes methods/event
 
@@ -2005,11 +2008,12 @@ namespace WPFHexaEditor.Control
                 if (ByteProvider.CheckIsOpen(_provider))
                 {
                     bool MB = false;
+                    long deletedBytesCount = _provider.ByteModifieds(ByteAction.Deleted).Count();
 
-                    FileLengthLabel.Content = _provider.Length;
+                    FileLengthLabel.Content = _provider.Length - deletedBytesCount;
 
-                    //is mega bytes ?
-                    double lenght = _provider.Length / 1024;
+                    //is mega bytes ?                    
+                    double lenght = (_provider.Length - deletedBytesCount) / 1024;
                     if (lenght > 1024)
                     {
                         lenght = lenght / 1024;

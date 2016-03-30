@@ -265,6 +265,8 @@ namespace WPFHexaEditor.Control.Core
                     ////Start update and rewrite file. 
                     foreach (ByteModified nextByteModified in SortedBM)
                     {
+                        buffer = new byte[ConstantReadOnly.COPY_BLOCK_SIZE];
+
                         //start read/write / use little block for uptimize memory
                         while (Position != nextByteModified.BytePositionInFile)
                         {                            
@@ -314,6 +316,8 @@ namespace WPFHexaEditor.Control.Core
                     //Write new data to current stream
                     Position = 0;
                     NewStream.Position = 0;
+                    buffer = new byte[ConstantReadOnly.COPY_BLOCK_SIZE];
+
                     while (!EOF)
                     {
                         bufferlength = _stream.Length - Position;

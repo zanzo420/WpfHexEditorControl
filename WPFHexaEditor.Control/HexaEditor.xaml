@@ -45,10 +45,10 @@
         <StackPanel x:Name="HexHeaderStackPanel" Orientation="Horizontal" Grid.Column="1" Grid.Row="0" Margin="10,0"/>
         <StackPanel x:Name="StringDataStackPanel" Grid.Row="1" Grid.Column="2" Margin="10,0,0,0"/>
 
-        <Grid x:Name="StatusBarGrid" Background="WhiteSmoke" Grid.Row="2" Grid.ColumnSpan="4" Height="30" Visibility="Visible" VerticalAlignment="Top" >
+        <Grid x:Name="StatusBarGrid" Background="WhiteSmoke" Grid.Row="2" Grid.ColumnSpan="5" Height="30" Visibility="Visible" VerticalAlignment="Top" >
             <Separator Height="1" Margin="0,0,0,29" 
                        Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HexaEditor}}, Path=BorderBrush}"/>
-            
+
             <StackPanel Orientation="Horizontal">
                 <Label Content="Ln" Padding="5,5,0,5"/>
                 <Label Content="{Binding SelectionLine, UpdateSourceTrigger=PropertyChanged}"/>

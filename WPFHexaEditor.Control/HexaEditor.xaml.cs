@@ -1938,8 +1938,8 @@ namespace WPFHexaEditor.Control
         {
             UnHighLightAll();
 
-            if (ByteProvider.CheckIsOpen(_provider))            
-                return _provider.FindIndexOf(bytes);
+            if (ByteProvider.CheckIsOpen(_provider))
+                return _provider.FindIndexOf(bytes, 0);
             
             return null;
         }
@@ -1992,7 +1992,10 @@ namespace WPFHexaEditor.Control
         public IEnumerable<long> FindAllSelection(bool highLight)
         {
             if (SelectionLenght > 0)
+            {
+                
                 return FindAll(SelectionByteArray, highLight);
+            }
             else
                 return null;
         }

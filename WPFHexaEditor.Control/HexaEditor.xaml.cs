@@ -1117,6 +1117,9 @@ namespace WPFHexaEditor.Control
                 _provider.ReadOnlyChanged += Provider_ReadOnlyChanged;
                 _provider.DataCopiedToClipboard += Provider_DataCopied;
                 _provider.ChangesSubmited += Provider_ChangesSubmited;
+                _provider.LongProcessProgressChanged += Provider_LongProcessProgressChanged;
+                _provider.LongProcessProgressStarted += Provider_LongProcessProgressStarted;
+                _provider.LongProcessProgressCompleted += Provider_LongProcessProgressCompleted;
 
                 RefreshView(true);
 
@@ -1130,6 +1133,54 @@ namespace WPFHexaEditor.Control
             else
             {
                 throw new FileNotFoundException();
+            }
+        }
+
+        private void Provider_LongProcessProgressCompleted(object sender, EventArgs e)
+        {
+            LongProgressProgressBar.Visibility = Visibility.Collapsed;
+            CancelLongProcessButton.Visibility = Visibility.Collapsed;
+        }
+
+        private void Provider_LongProcessProgressStarted(object sender, EventArgs e)
+        {
+            LongProgressProgressBar.Visibility = Visibility.Visible;
+            CancelLongProcessButton.Visibility = Visibility.Visible;
+        }
+
+        private void Provider_LongProcessProgressChanged(object sender, EventArgs e)
+        {
+            //Update progress bar
+            LongProgressProgressBar.Value = (double)sender;
+            Application.Current.DoEvents();
+        }
+
+
+        private void CancelLongProcessButton_Click(object sender, RoutedEventArgs e)
+        {            
+            //TODO: Add messagebox confirmation
+
+            if (ByteProvider.CheckIsOpen(_provider))
+                _provider.IsOnLongProcess = false;
+        }
+
+        /// <summary>
+        /// Check if byteprovider is on long progress and update control
+        /// </summary>
+        private void CheckProviderIsOnProgress()
+        {
+            if (ByteProvider.CheckIsOpen(_provider))
+            {
+                if (!_provider.IsOnLongProcess)
+                {
+                    CancelLongProcessButton.Visibility = Visibility.Collapsed;
+                    LongProgressProgressBar.Visibility = Visibility.Collapsed;
+                }
+            }
+            else
+            {
+                CancelLongProcessButton.Visibility = Visibility.Collapsed;
+                LongProgressProgressBar.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -1210,8 +1261,10 @@ namespace WPFHexaEditor.Control
             UpdateSelection();
             UpdateHighLightByte();
             UpdateStatusBar();
-        }
 
+            CheckProviderIsOnProgress();
+        }
+        
         /// <summary>
         /// Update the selection of byte in hexadecimal panel
         /// </summary>
@@ -1793,7 +1846,8 @@ namespace WPFHexaEditor.Control
                 if (VerticalScrollBar.Value < VerticalScrollBar.Maximum)
                     VerticalScrollBar.Value++;
 
-                SetPosition(bytePositionInFile);
+                SetFocusHexDataPanel(bytePositionInFile);
+                //SetPosition(bytePositionInFile);
             }
         }
 
@@ -1822,7 +1876,8 @@ namespace WPFHexaEditor.Control
                 if (VerticalScrollBar.Value < VerticalScrollBar.Maximum)
                     VerticalScrollBar.Value++;
 
-                SetPosition(bytePositionInFile);
+                SetFocusStringDataPanel(bytePositionInFile);
+                //SetPosition(bytePositionInFile);
             }
         }
         #endregion Focus Methods
@@ -2032,5 +2087,6 @@ namespace WPFHexaEditor.Control
                 }
         }
         #endregion Statusbar
+
     }
 }

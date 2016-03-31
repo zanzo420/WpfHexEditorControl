@@ -20,6 +20,8 @@ namespace WPFHexaEditor.Control.Core
         private Stream _stream = null;
         private bool _readOnlyMode = false;
         private bool _isUndoEnabled = true;
+        private double _longProcessProgress = 0;
+        private bool _isOnLongProcess = false;
 
         //Event
         public event EventHandler DataCopiedToClipboard;
@@ -29,6 +31,9 @@ namespace WPFHexaEditor.Control.Core
         public event EventHandler Undone;
         public event EventHandler DataCopiedToStream;
         public event EventHandler ChangesSubmited;
+        public event EventHandler LongProcessProgressChanged;
+        public event EventHandler LongProcessProgressStarted;
+        public event EventHandler LongProcessProgressCompleted;
 
         /// <summary>
         /// Default constructor
@@ -58,13 +63,12 @@ namespace WPFHexaEditor.Control.Core
 
             set
             {
-                //TODO: make open method
                 this._fileName = value;
 
                 OpenFile();
             }
         }
-
+        
         /// <summary>
         /// Open file 
         /// </summary>        
@@ -233,6 +237,10 @@ namespace WPFHexaEditor.Control.Core
         {
             if (CanWrite)
             {
+                //Set percent of progress to zero and create and iterator for help mesure progress
+                LongProcessProgress = 0;
+                int i = 0;                
+
                 //Create appropriate temp stream for new file. 
                 Stream NewStream = null;
 
@@ -245,19 +253,47 @@ namespace WPFHexaEditor.Control.Core
                 if (ByteModifieds(ByteAction.Deleted).Count() == 0 &&
                     ByteModifieds(ByteAction.Added).Count() == 0)
                 {
+                    //Launch event at process strated
+                    IsOnLongProcess = true;
+                    if (LongProcessProgressStarted != null)
+                        LongProcessProgressStarted(this, new EventArgs());
+
+                    var bytemodifiedList = ByteModifieds(ByteAction.Modified);
+                    double countChange = bytemodifiedList.Count();
+                    i = 0;
+
                     //Fast save. only save byteaction=modified
-                    foreach (ByteModified bm in ByteModifieds(ByteAction.Modified))
+                    foreach (ByteModified bm in bytemodifiedList)
                         if (bm.IsValid)
                         {
+                            //Set percent of progress
+                            LongProcessProgress = i++ / countChange;
+                            
+                            //Break process?
+                            if (!IsOnLongProcess)
+                                break;
+                            
                             _stream.Position = bm.BytePositionInFile;
                             _stream.WriteByte(bm.Byte.Value);
                         }
+
+                    //Launch event at process completed
+                    IsOnLongProcess = false;
+                    if (LongProcessProgressCompleted != null)
+                        LongProcessProgressCompleted(this, new EventArgs());
                 }
                 else
                 {
+                    //Launch event at process strated
+                    IsOnLongProcess = true;
+                    if (LongProcessProgressStarted != null)
+                        LongProcessProgressStarted(this, new EventArgs());
+
                     byte[] buffer = new byte[ConstantReadOnly.COPY_BLOCK_SIZE];
                     long bufferlength = 0;
                     var SortedBM = ByteModifieds(ByteAction.All).OrderBy(b => b.BytePositionInFile);
+                    double countChange = SortedBM.Count();
+                    i = 0;
 
                     //Set position  
                     Position = 0;
@@ -265,9 +301,17 @@ namespace WPFHexaEditor.Control.Core
                     ////Start update and rewrite file. 
                     foreach (ByteModified nextByteModified in SortedBM)
                     {
+                        //Set percent of progress
+                        LongProcessProgress = (i++ / countChange);
+
+                        //Break process?
+                        if (!IsOnLongProcess)
+                            break;
+
+                        //Reset buffer
                         buffer = new byte[ConstantReadOnly.COPY_BLOCK_SIZE];
 
-                        //start read/write / use little block for uptimize memory
+                        //start read/write / use little block for optimize memory
                         while (Position != nextByteModified.BytePositionInFile)
                         {                            
                             bufferlength = nextByteModified.BytePositionInFile - Position;
@@ -320,6 +364,13 @@ namespace WPFHexaEditor.Control.Core
 
                     while (!EOF)
                     {
+                        //Set percent of progress
+                        LongProcessProgress = ((double)Position / (double)Length);
+
+                        //Break process?
+                        if (!IsOnLongProcess)
+                            break;
+
                         bufferlength = _stream.Length - Position;
 
                         //EOF
@@ -334,6 +385,11 @@ namespace WPFHexaEditor.Control.Core
                     //dispose resource
                     NewStream.Close();
                     buffer = null;
+                    
+                    //Launch event at process completed
+                    IsOnLongProcess = false;
+                    if (LongProcessProgressCompleted != null)
+                        LongProcessProgressCompleted(this, new EventArgs());
                 }
 
                 //Launch event
@@ -687,6 +743,7 @@ namespace WPFHexaEditor.Control.Core
                 return false;
             }
         }
+                
         #endregion Can do Property...
 
         #region Find methods
@@ -747,13 +804,44 @@ namespace WPFHexaEditor.Control.Core
 
         #endregion Find methods
 
-        //addbyte
-        //getbyte
-        //canread / write
-        //get change list
-        //paste / cut ...
-        //redo?
-        //save change
-        //...           
+        #region Long process progress
+        /// <summary>
+        /// Get if byteprovider is on a long process. Set to false to cancel all process.
+        /// </summary>
+        public bool IsOnLongProcess
+        {
+            get
+            {
+                return _isOnLongProcess;
+            }
+
+            set
+            {
+                _isOnLongProcess = value;
+            }
+        }
+
+
+        /// <summary>
+        /// Get the long progress percent of job. 
+        /// When set (internal) launch event LongProcessProgressChanged
+        /// </summary>
+        public double LongProcessProgress
+        {
+            get
+            {
+                return _longProcessProgress;
+            }
+
+            internal set
+            {
+                _longProcessProgress = value;
+
+                if (LongProcessProgressChanged != null)
+                    LongProcessProgressChanged(value, new EventArgs());
+            }
+        }
+        #endregion Long process progress
+
     }
 }

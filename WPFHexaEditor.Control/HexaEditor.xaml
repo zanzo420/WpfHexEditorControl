@@ -28,6 +28,7 @@
             <RowDefinition Height="30"/>
             <RowDefinition Height="287*"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <StackPanel x:Name="LinesInfoStackPanel" HorizontalAlignment="Left"
@@ -52,14 +53,20 @@
             <StackPanel Orientation="Horizontal">
                 <Label Content="Ln" Padding="5,5,0,5"/>
                 <Label Content="{Binding SelectionLine, UpdateSourceTrigger=PropertyChanged}"/>
-                <Label/> <!--Spacer-->
+                <Label/>
+                <!--Spacer-->
                 <Label x:Name="FileLengthKBLabel" ContentStringFormat="N0"/>
                 <Label Content="(" Padding="5,5,0,5"/>
                 <Label x:Name="FileLengthLabel" ContentStringFormat="N0" Padding="0,5,5,5"/>
                 <Label Content="Bytes)" Padding="0,5,5,5"/>
             </StackPanel>
         </Grid>
-        <Rectangle x:Name="BottomRectangle" Fill="#FFF4F4F5" Opacity="0" Grid.Row="1" HorizontalAlignment="Left" MouseMove="BottomRectangle_MouseMove" Margin="0,0,0,-30" Width="778" Grid.ColumnSpan="4" Grid.RowSpan="2" Height="42" VerticalAlignment="Bottom"/>
-        <Rectangle x:Name="TopRectangle" Fill="#FFF4F4F5" Opacity="0" HorizontalAlignment="Left" MouseMove="TopRectangle_MouseMove" Margin="0,-30,0,0" Width="778" Grid.ColumnSpan="4" Height="50" VerticalAlignment="Top"/>
+
+        <ProgressBar Grid.Row="3" Grid.ColumnSpan="5" Height="2" BorderThickness="0" x:Name="LongProgressProgressBar" Minimum="0" Maximum="1"/>
+
+        <Rectangle x:Name="BottomRectangle" Fill="#FFF4F4F5" Opacity="0" Grid.Row="2" MouseMove="BottomRectangle_MouseMove" Margin="0,0,0,-28" Grid.ColumnSpan="5" Grid.RowSpan="2" Height="42" VerticalAlignment="Bottom"/>
+        <Rectangle x:Name="TopRectangle" Fill="#FFF4F4F5" Opacity="0" MouseMove="TopRectangle_MouseMove" Margin="0,-30,0,0" Grid.ColumnSpan="5" Height="50" VerticalAlignment="Top"/>
+
+        <Button x:Name="CancelLongProcessButton" Content="X" ToolTip="Cancel long process"  Grid.Column="4" Grid.Row="2" VerticalContentAlignment="Center" BorderThickness="0" Click="CancelLongProcessButton_Click"/>
     </Grid>
 </UserControl>

@@ -773,14 +773,23 @@ namespace WPFHexaEditor.Control.Core
             byte[] buffer = new byte[ConstantReadOnly.FIND_BLOCK_SIZE];
             IEnumerable<long> findindex;
             List<long> indexList = new List<long>();
-                        
+
+            //Launch event at process strated
+            IsOnLongProcess = true;
+            if (LongProcessProgressStarted != null)
+                LongProcessProgressStarted(this, new EventArgs());
+
             //start find
             for (long i = startPosition; i < Length; i++)
             {
                 //Do not freeze UI...
-                //if (i % 1000 == 0)
-                //    Application.Current.DoEvents();
-                
+                if (i % 2000 == 0)
+                    LongProcessProgress = (double)Position / Length;
+
+                //Break long process if needed
+                if (!IsOnLongProcess)
+                    break;
+
                 if ((byte)ReadByte() == bytesTofind[0])
                 {
                     //position correction after read one byte
@@ -794,19 +803,24 @@ namespace WPFHexaEditor.Control.Core
                     _stream.Read(buffer, 0, buffer.Length);
                     findindex = buffer.FindIndexOf(bytesTofind);
 
-                    //if byte if find yield return 
+                    //if byte if find add to list
                     if (findindex.Count() > 0)
                         foreach (long index in findindex)
                             indexList.Add(index + i + 1);
-                            //yield return index + i + 1;
 
                     //position correction
                     i += buffer.Length; 
                 }
             }
 
+            //Yield return all finded occurence
             foreach (long index in indexList)
                 yield return index;
+            
+            //Launch event at process completed
+            IsOnLongProcess = false;
+            if (LongProcessProgressCompleted != null)
+                LongProcessProgressCompleted(this, new EventArgs());
         }
 
         #endregion Find methods

@@ -1052,12 +1052,14 @@ namespace WPFHexaEditor.Control
         // Using a DependencyProperty as the backing store for FileName.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty FileNameProperty =
             DependencyProperty.Register("FileName", typeof(string), typeof(HexaEditor), 
-                new FrameworkPropertyMetadata("", new PropertyChangedCallback(FileName_PropertyChanged)));
+                new FrameworkPropertyMetadata("", 
+                    new PropertyChangedCallback(FileName_PropertyChanged)));
 
         private static void FileName_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             HexaEditor ctrl = d as HexaEditor;
-                        
+
+            ctrl.CloseFile();
             ctrl.OpenFile((string)e.NewValue);
         }
         
@@ -1140,12 +1142,16 @@ namespace WPFHexaEditor.Control
         {
             LongProgressProgressBar.Visibility = Visibility.Collapsed;
             CancelLongProcessButton.Visibility = Visibility.Collapsed;
+
+            //this.IsEnabled = true;
         }
 
         private void Provider_LongProcessProgressStarted(object sender, EventArgs e)
         {
             LongProgressProgressBar.Visibility = Visibility.Visible;
             CancelLongProcessButton.Visibility = Visibility.Visible;
+            
+            //this.IsEnabled = false;
         }
 
         private void Provider_LongProcessProgressChanged(object sender, EventArgs e)

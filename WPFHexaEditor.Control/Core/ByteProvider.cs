@@ -133,7 +133,9 @@ namespace WPFHexaEditor.Control.Core
                 this._stream.Close();
                 this._stream = null;
                 ReadOnlyMode = false;
-
+                IsOnLongProcess = false;
+                LongProcessProgress = 0;
+            
                 if (FileClosed != null)
                     FileClosed(this, new EventArgs());
             }
@@ -770,13 +772,14 @@ namespace WPFHexaEditor.Control.Core
             Position = startPosition;
             byte[] buffer = new byte[ConstantReadOnly.FIND_BLOCK_SIZE];
             IEnumerable<long> findindex;
+            List<long> indexList = new List<long>();
                         
             //start find
             for (long i = startPosition; i < Length; i++)
             {
                 //Do not freeze UI...
-                if (i % 1000 == 0)
-                    Application.Current.DoEvents();
+                //if (i % 1000 == 0)
+                //    Application.Current.DoEvents();
                 
                 if ((byte)ReadByte() == bytesTofind[0])
                 {
@@ -794,12 +797,16 @@ namespace WPFHexaEditor.Control.Core
                     //if byte if find yield return 
                     if (findindex.Count() > 0)
                         foreach (long index in findindex)
-                            yield return index + i + 1;
+                            indexList.Add(index + i + 1);
+                            //yield return index + i + 1;
 
                     //position correction
                     i += buffer.Length; 
                 }
             }
+
+            foreach (long index in indexList)
+                yield return index;
         }
 
         #endregion Find methods

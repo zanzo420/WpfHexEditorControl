@@ -2025,12 +2025,12 @@ namespace WPFHexaEditor.Control
                     for (long i = position; i < position + bytes.Length; i++)
                     {
                         _markedPositionList.Add(i);
-                        UpdateHighLightByte();
+                        //UpdateHighLightByte();
                     }
                 }
 
                 UnSelectAll();
-                //UpdateHighLightByte();
+                UpdateHighLightByte();
 
                 return positions;
             }

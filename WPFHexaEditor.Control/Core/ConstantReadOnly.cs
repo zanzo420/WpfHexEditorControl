@@ -13,7 +13,7 @@ namespace WPFHexaEditor.Control.Core
 
         public const long LARGE_FILE_LENGTH = 52428800L; //50 MB
         public const int COPY_BLOCK_SIZE = 131072; //128 KB
-        public const int FIND_BLOCK_SIZE = 131072; //128 KB
+        public const int FIND_BLOCK_SIZE = 1048576; //128 KB
         
     }
 }

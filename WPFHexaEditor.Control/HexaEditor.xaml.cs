@@ -45,6 +45,7 @@ namespace WPFHexaEditor.Control
             RefreshView(true);
 
             StatusBarGrid.DataContext = this;
+
         }
         
         #region Miscellaneous property/methods
@@ -783,12 +784,17 @@ namespace WPFHexaEditor.Control
 
             if (ByteProvider.CheckIsOpen(_provider))
             {
-                VerticalScrollBar.Value = position / BytePerLine;
+                VerticalScrollBar.Value = GetLineNumber(position);
             }
             else
                 VerticalScrollBar.Value = 0;
 
             RefreshView(true);
+        }
+
+        public double GetLineNumber(long position)
+        {
+            return position / BytePerLine;
         }
 
         public void SetPosition(long position)
@@ -1221,6 +1227,15 @@ namespace WPFHexaEditor.Control
         private void VerticalScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {            
             RefreshView(false);
+
+            Debug.Print($"VScroll ActualHeight :  {VerticalScrollBar.ActualHeight}");
+            Debug.Print($"VScroll Track ActualHeight :  {VerticalScrollBar.Track.ActualHeight}");
+            Debug.Print($"VScroll Arrow ActualHeight :  {(VerticalScrollBar.ActualHeight - VerticalScrollBar.Track.ActualHeight) / 2}");
+            Debug.Print($"VScroll Track Top ActualHeight :  { VerticalScrollBar.Track.Top() }");
+            Debug.Print($"VScroll Track Down ActualHeight :  { VerticalScrollBar.Track.Bottom() }");
+            Debug.Print($"VScroll Track TickHeight :  { VerticalScrollBar.Track.TickHeight()}");
+
+            //BookMarkTest.Margin = new Thickness(0, (GetLineNumber(4000000) * VerticalScrollBar.Track.TickHeight() - VerticalScrollBar.Track.ButtonHeight()) + BookMarkTest.ActualHeight, 0, 0);
         }
         /// <summary>
         /// Update vertical scrollbar with file info
@@ -1540,7 +1555,7 @@ namespace WPFHexaEditor.Control
                     foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
                     {
                         find = false;
-
+                        
                         foreach (long position in _markedPositionList)
                             if (position == byteControl.BytePositionInFile)
                             {
@@ -2020,6 +2035,8 @@ namespace WPFHexaEditor.Control
         /// <returns>Return null if no occurence found</returns>
         public IEnumerable<long> FindAll(byte[] bytes, bool highLight)
         {
+            ClearAllMarker();
+
             if (highLight)
             {
                 //UnHighLightAll();
@@ -2031,8 +2048,11 @@ namespace WPFHexaEditor.Control
                     for (long i = position; i < position + bytes.Length; i++)
                     {
                         _markedPositionList.Add(i);
+                                                
                         //UpdateHighLightByte();
                     }
+
+                    SetScrollMarker(position);
                 }
 
                 UnSelectAll();
@@ -2094,5 +2114,34 @@ namespace WPFHexaEditor.Control
         }
         #endregion Statusbar
 
+
+        #region Bookmark and other scrollmarker
+        /// <summary>
+        /// Set marker at position
+        /// </summary>
+        public void SetScrollMarker(long position)
+        {   
+            Rectangle rect = new Rectangle();
+
+            rect.Fill = Brushes.Blue;
+            rect.Height = 4;
+            rect.Width = 4;
+            rect.HorizontalAlignment = HorizontalAlignment.Left;
+            rect.VerticalAlignment = VerticalAlignment.Top;
+            rect.Tag = position;
+
+            double topPosition = (GetLineNumber(position) * VerticalScrollBar.Track.TickHeight() + VerticalScrollBar.Track.ButtonHeight()) - rect.ActualHeight;
+
+            rect.Margin = new Thickness(0, topPosition, 0, 0);
+
+            MarkerGrid.Children.Add(rect);
+
+        }
+
+        public void ClearAllMarker()
+        {
+            MarkerGrid.Children.Clear();
+        }
+        #endregion Bookmark and other scrollmarker
     }
 }

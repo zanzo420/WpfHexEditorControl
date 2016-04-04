@@ -64,9 +64,11 @@
 
         <ProgressBar Grid.Row="3" Grid.ColumnSpan="5" Height="2" BorderThickness="0" x:Name="LongProgressProgressBar" Minimum="0" Maximum="1"/>
 
-        <Rectangle x:Name="BottomRectangle" Fill="#FFF4F4F5" Opacity="0" Grid.Row="2" MouseMove="BottomRectangle_MouseMove" Margin="0,0,0,-28" Grid.ColumnSpan="5" Grid.RowSpan="2" Height="42" VerticalAlignment="Bottom"/>
-        <Rectangle x:Name="TopRectangle" Fill="#FFF4F4F5" Opacity="0" MouseMove="TopRectangle_MouseMove" Margin="0,-30,0,0" Grid.ColumnSpan="5" Height="50" VerticalAlignment="Top"/>
+        <Rectangle x:Name="BottomRectangle" Fill="#FFF4F4F5" Opacity="0" Grid.Row="2" MouseMove="BottomRectangle_MouseMove" Margin="0,0,0,-28" Grid.ColumnSpan="4" Grid.RowSpan="2" Height="42" VerticalAlignment="Bottom"/>
+        <Rectangle x:Name="TopRectangle" Fill="#FFF4F4F5" Opacity="0" MouseMove="TopRectangle_MouseMove" Margin="0,-30,0,0" Grid.ColumnSpan="4" Height="50" VerticalAlignment="Top"/>
 
         <Button x:Name="CancelLongProcessButton" Content="X" FontWeight="Bold" ToolTip="Click to cancel long process"  Grid.Column="4" Grid.Row="2" VerticalContentAlignment="Center" BorderThickness="0" Click="CancelLongProcessButton_Click"/>
+
+        <Grid x:Name="MarkerGrid" Grid.Column="4" Grid.RowSpan="2"/>        
     </Grid>
 </UserControl>

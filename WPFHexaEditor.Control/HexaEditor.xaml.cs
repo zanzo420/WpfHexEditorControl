@@ -399,6 +399,7 @@ namespace WPFHexaEditor.Control
             
             ctrl.UpdateSelection();
             ctrl.UpdateSelectionLine();
+            ctrl.SetScrollMarker(0, ScrollMarker.SelectionStart);
 
             if (ctrl.SelectionStartChanged != null)
                 ctrl.SelectionStartChanged(ctrl, new EventArgs());
@@ -1094,6 +1095,7 @@ namespace WPFHexaEditor.Control
 
             UnHighLightAll();
             ClearUndoChange();
+            ClearAllScrollMarker();
             UnSelectAll();
             RefreshView();
         }
@@ -1228,12 +1230,12 @@ namespace WPFHexaEditor.Control
         {            
             RefreshView(false);
 
-            Debug.Print($"VScroll ActualHeight :  {VerticalScrollBar.ActualHeight}");
-            Debug.Print($"VScroll Track ActualHeight :  {VerticalScrollBar.Track.ActualHeight}");
-            Debug.Print($"VScroll Arrow ActualHeight :  {(VerticalScrollBar.ActualHeight - VerticalScrollBar.Track.ActualHeight) / 2}");
-            Debug.Print($"VScroll Track Top ActualHeight :  { VerticalScrollBar.Track.Top() }");
-            Debug.Print($"VScroll Track Down ActualHeight :  { VerticalScrollBar.Track.Bottom() }");
-            Debug.Print($"VScroll Track TickHeight :  { VerticalScrollBar.Track.TickHeight()}");
+            //Debug.Print($"VScroll ActualHeight :  {VerticalScrollBar.ActualHeight}");
+            //Debug.Print($"VScroll Track ActualHeight :  {VerticalScrollBar.Track.ActualHeight}");
+            //Debug.Print($"VScroll Arrow ActualHeight :  {(VerticalScrollBar.ActualHeight - VerticalScrollBar.Track.ActualHeight) / 2}");
+            //Debug.Print($"VScroll Track Top ActualHeight :  { VerticalScrollBar.Track.Top() }");
+            //Debug.Print($"VScroll Track Down ActualHeight :  { VerticalScrollBar.Track.Bottom() }");
+            //Debug.Print($"VScroll Track TickHeight :  { VerticalScrollBar.Track.TickHeight()}");
 
             //BookMarkTest.Margin = new Thickness(0, (GetLineNumber(4000000) * VerticalScrollBar.Track.TickHeight() - VerticalScrollBar.Track.ButtonHeight()) + BookMarkTest.ActualHeight, 0, 0);
         }
@@ -1284,6 +1286,9 @@ namespace WPFHexaEditor.Control
             UpdateStatusBar();
 
             CheckProviderIsOnProgress();
+
+            if (ControlResize)
+                UpdateScrollMarkerPosition();
         }
         
         /// <summary>
@@ -2035,7 +2040,7 @@ namespace WPFHexaEditor.Control
         /// <returns>Return null if no occurence found</returns>
         public IEnumerable<long> FindAll(byte[] bytes, bool highLight)
         {
-            ClearAllMarker();
+            ClearAllScrollMarker();
 
             if (highLight)
             {
@@ -2046,13 +2051,9 @@ namespace WPFHexaEditor.Control
                 foreach (long position in positions)
                 {
                     for (long i = position; i < position + bytes.Length; i++)
-                    {
                         _markedPositionList.Add(i);
-                                                
-                        //UpdateHighLightByte();
-                    }
 
-                    SetScrollMarker(position);
+                    SetScrollMarker(position, ScrollMarker.Search);
                 }
 
                 UnSelectAll();
@@ -2119,26 +2120,101 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Set marker at position
         /// </summary>
-        public void SetScrollMarker(long position)
-        {   
+        public void SetScrollMarker(long position, ScrollMarker marker)
+        {
+            //Remove selection start marker
+            if (marker == ScrollMarker.SelectionStart)
+            {
+                int i = 0;
+                foreach (Rectangle ctrl in MarkerGrid.Children)
+                {
+                    if (ctrl.Tag.ToString() == "SelStart")
+                    {
+                        MarkerGrid.Children.RemoveAt(i);
+                        break;
+                    }
+
+                    i++;
+                }
+            }
+            
+
             Rectangle rect = new Rectangle();
-
-            rect.Fill = Brushes.Blue;
-            rect.Height = 4;
-            rect.Width = 4;
+            
+            rect.Height = 4;            
             rect.HorizontalAlignment = HorizontalAlignment.Left;
-            rect.VerticalAlignment = VerticalAlignment.Top;
-            rect.Tag = position;
+            rect.VerticalAlignment = VerticalAlignment.Top; 
+            rect.MouseDown += Rect_MouseDown;
 
-            double topPosition = (GetLineNumber(position) * VerticalScrollBar.Track.TickHeight() + VerticalScrollBar.Track.ButtonHeight()) - rect.ActualHeight;
+            var byteinfo = new ByteModified();
+            byteinfo.BytePositionInFile = position;
+            rect.DataContext = byteinfo;
+
+            switch (marker)
+            {
+                case ScrollMarker.Bookmark:
+                    rect.ToolTip = TryFindResource("ScrollMarkerSearchToolTip");
+                    rect.Fill = (SolidColorBrush)TryFindResource("BookMarkColor");
+                    rect.Tag = position;
+                    rect.Width = 4;
+                    break;
+                case ScrollMarker.Search:
+                    rect.ToolTip = TryFindResource("ScrollMarkerSearchToolTip");
+                    rect.Fill = (SolidColorBrush)TryFindResource("SearchBookMarkColor");
+                    rect.Tag = position;
+                    rect.Width = 4;
+                    break;
+                case ScrollMarker.SelectionStart:
+                    rect.Fill = (SolidColorBrush)TryFindResource("SelectionStartBookMarkColor");
+                    rect.Width = VerticalScrollBar.ActualWidth;
+                    rect.Tag = "SelStart";
+                    position = SelectionStart;
+                    break;
+            }
+
+            double topPosition;
+
+            if ((GetLineNumber(position) - GetMaxVisibleLine() + 1) > 0)
+                topPosition = ((GetLineNumber(position) - GetMaxVisibleLine() + 1) * VerticalScrollBar.Track.TickHeight()) - rect.ActualHeight;
+            else
+                topPosition = (GetLineNumber(position) * VerticalScrollBar.Track.TickHeight()) - rect.ActualHeight;
 
             rect.Margin = new Thickness(0, topPosition, 0, 0);
 
-            MarkerGrid.Children.Add(rect);
+            Debug.Print($"TopPosition : {topPosition.ToString()}");
+            Debug.Print($"TickHeight : {VerticalScrollBar.Track.TickHeight().ToString()}");
 
+            MarkerGrid.Children.Add(rect);
         }
 
-        public void ClearAllMarker()
+        private void Rect_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Rectangle rect = sender as Rectangle;
+
+            Debug.Print(rect.Tag.ToString());
+            
+            if (rect.Tag.ToString() != "SelStart")
+                SetPosition((long)rect.Tag, 1);
+            else
+                SetPosition(SelectionStart, 1);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void UpdateScrollMarkerPosition()
+        {
+            foreach (Rectangle rect in MarkerGrid.Children)
+            {
+                if (rect.Tag.ToString() != "SelStart")
+                    rect.Margin = new Thickness(0, (GetLineNumber((long)rect.Tag) * VerticalScrollBar.Track.TickHeight()) - rect.ActualHeight, 0, 0);
+            }
+        }
+
+        /// <summary>
+        /// Cleat ScrollMarker
+        /// </summary>
+        public void ClearAllScrollMarker()
         {
             MarkerGrid.Children.Clear();
         }

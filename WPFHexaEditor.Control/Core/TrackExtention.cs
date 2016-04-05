@@ -53,30 +53,10 @@ namespace WPFHexaEditor.Control.Core
         {
             Grid parent = s.Parent as Grid;
 
-            RepeatButton TopRepeatButton = (RepeatButton)parent.Children[1];
             Track TrackControl = (Track)parent.Children[2];
-            RepeatButton BottomRepeatButton = (RepeatButton)parent.Children[3];
 
             return TrackControl.ActualHeight / TrackControl.Maximum;
         }
 
-
-
-
-        ///// <summary>
-        ///// Get actual bottom position of track
-        ///// </summary>
-        //public static double ValuePosition(this Track s)
-        //{
-        //    Grid parent = s.Parent as Grid;
-
-        //    RepeatButton TopRepeatButton = (RepeatButton)parent.Children[1];
-        //    Track TrackControl = (Track)parent.Children[2];
-        //    RepeatButton BottomRepeatButton = (RepeatButton)parent.Children[3];
-
-        //    return TrackControl.Top() +
-        //        TrackControl.ActualHeight +
-        //        parent.Margin.Top + 1;
-        //}
     }
 }

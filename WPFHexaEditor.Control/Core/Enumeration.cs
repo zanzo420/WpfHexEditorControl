@@ -63,5 +63,13 @@ namespace WPFHexaEditor.Control.Core
         ASCIIEncoding
     }
 
-
+    /// <summary>
+    /// Scrollbar marker
+    /// </summary>
+    public enum ScrollMarker
+    {
+        Search,
+        Bookmark,
+        SelectionStart
+    }
 }

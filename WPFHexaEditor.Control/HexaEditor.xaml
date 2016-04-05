@@ -69,6 +69,6 @@
 
         <Button x:Name="CancelLongProcessButton" Content="X" FontWeight="Bold" ToolTip="Click to cancel long process"  Grid.Column="4" Grid.Row="2" VerticalContentAlignment="Center" BorderThickness="0" Click="CancelLongProcessButton_Click"/>
 
-        <Grid x:Name="MarkerGrid" Grid.Column="4" Grid.RowSpan="2"/>        
+        <Grid x:Name="MarkerGrid" Grid.Column="4" Grid.RowSpan="2" Margin="0,17"/>        
     </Grid>
 </UserControl>

@@ -8,4 +8,8 @@
     <SolidColorBrush x:Key="MouseOverColor" Color="#B20081FF"/>
     <SolidColorBrush x:Key="ByteDeletedColor" Color="#B2FF0000"/>
     <SolidColorBrush x:Key="HighLightColor" Color="#B2FFFF00"/>
+
+    <SolidColorBrush x:Key="BookMarkColor" Color="#B20000FF"/>
+    <SolidColorBrush x:Key="SearchBookMarkColor" Color="#FFFF8B00"/>
+    <SolidColorBrush x:Key="SelectionStartBookMarkColor" Color="#FFFF8B00"/>
 </ResourceDictionary>

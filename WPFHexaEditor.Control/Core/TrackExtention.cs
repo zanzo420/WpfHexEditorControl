@@ -58,5 +58,17 @@ namespace WPFHexaEditor.Control.Core
             return TrackControl.ActualHeight / TrackControl.Maximum;
         }
 
+        /// <summary>
+        /// Get actual Tick Height with another maximum value
+        /// </summary>
+        public static double TickHeight(this Track s, long maximum)
+        {
+            Grid parent = s.Parent as Grid;
+
+            Track TrackControl = (Track)parent.Children[2];
+
+            return TrackControl.ActualHeight / maximum;
+        }
+
     }
 }

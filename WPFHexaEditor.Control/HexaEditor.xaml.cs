@@ -1554,6 +1554,8 @@ namespace WPFHexaEditor.Control
 
             if (_markedPositionList.Count > 0)
             {
+                _markedPositionList.Sort();
+
                 foreach (Label infolabel in LinesInfoStackPanel.Children)
                 {
                     //Stringbyte panel
@@ -2122,7 +2124,10 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public void SetScrollMarker(long position, ScrollMarker marker)
         {
-            //Remove selection start marker
+            Rectangle rect = new Rectangle();
+            double topPosition;
+
+            //Remove selection start marker and set position
             if (marker == ScrollMarker.SelectionStart)
             {
                 int i = 0;
@@ -2133,14 +2138,22 @@ namespace WPFHexaEditor.Control
                         MarkerGrid.Children.RemoveAt(i);
                         break;
                     }
-
                     i++;
                 }
-            }
-            
 
-            Rectangle rect = new Rectangle();
+                position = SelectionStart;
+            }
+
+            //Set position in scrollbar 
+            topPosition = (GetLineNumber(position) * VerticalScrollBar.Track.TickHeight(GetMaxLine()) - 1);
             
+            //Check if position already exist and exit if exist
+            if (marker != ScrollMarker.SelectionStart)
+                foreach (Rectangle ctrl in MarkerGrid.Children)
+                    if (ctrl.Margin.Top == topPosition)
+                        return;
+            
+            //Create rectangle
             rect.Height = 4;            
             rect.HorizontalAlignment = HorizontalAlignment.Left;
             rect.VerticalAlignment = VerticalAlignment.Top; 
@@ -2168,22 +2181,12 @@ namespace WPFHexaEditor.Control
                     rect.Fill = (SolidColorBrush)TryFindResource("SelectionStartBookMarkColor");
                     rect.Width = VerticalScrollBar.ActualWidth;
                     rect.Tag = "SelStart";
-                    position = SelectionStart;
+                    rect.Height = 2;
                     break;
             }
 
-            double topPosition;
-
-            if ((GetLineNumber(position) - GetMaxVisibleLine() + 1) > 0)
-                topPosition = ((GetLineNumber(position) - GetMaxVisibleLine() + 1) * VerticalScrollBar.Track.TickHeight()) - rect.ActualHeight;
-            else
-                topPosition = (GetLineNumber(position) * VerticalScrollBar.Track.TickHeight()) - rect.ActualHeight;
-
             rect.Margin = new Thickness(0, topPosition, 0, 0);
-
-            Debug.Print($"TopPosition : {topPosition.ToString()}");
-            Debug.Print($"TickHeight : {VerticalScrollBar.Track.TickHeight().ToString()}");
-
+            
             MarkerGrid.Children.Add(rect);
         }
 
@@ -2200,14 +2203,14 @@ namespace WPFHexaEditor.Control
         }
 
         /// <summary>
-        /// 
+        /// Update all scroll marker position
         /// </summary>
         private void UpdateScrollMarkerPosition()
         {
             foreach (Rectangle rect in MarkerGrid.Children)
             {
                 if (rect.Tag.ToString() != "SelStart")
-                    rect.Margin = new Thickness(0, (GetLineNumber((long)rect.Tag) * VerticalScrollBar.Track.TickHeight()) - rect.ActualHeight, 0, 0);
+                    rect.Margin = new Thickness(0, (GetLineNumber((long)rect.Tag) * VerticalScrollBar.Track.TickHeight(GetMaxLine())) - rect.ActualHeight, 0, 0);
             }
         }
 

@@ -1,7 +1,7 @@
 # WPF Hexadecimal Editor control (Beta)
 A WPF Hexadecimal editor for view/modify file.
 
-![example](WPFHexEditorControlSample4.png?raw=true)
+![example](WPFHexEditorControlSample5.png?raw=true)
 
 ##NUGET
 https://www.nuget.org/packages/WPFHexaEditor/
@@ -20,6 +20,7 @@ https://www.nuget.org/packages/WPFHexaEditor/
 - Modify mode (hexa / char)
 - Finds methods (FindFirst, FindNext, FindAll, FindLast, FindSelection) and overlord for (string, byte[])
 - Highlight byte with somes find methods
+- Scollbar marker for selection start and byte finded (soon bookmark will be added)
 - ...
 
 ##Release Notes (version of NUGET package)

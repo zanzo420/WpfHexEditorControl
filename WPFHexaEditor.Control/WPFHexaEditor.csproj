@@ -69,15 +69,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Core\ApplicationExtention.cs" />
-    <Compile Include="Core\ByteArrayExtention.cs" />
-    <Compile Include="Core\ByteModified.cs" />
-    <Compile Include="Core\ByteProvider.cs" />
-    <Compile Include="Core\ByteConverters.cs" />
+    <Compile Include="Core\BookMark.cs" />
+    <Compile Include="Core\MethodExtention\ApplicationExtention.cs" />
+    <Compile Include="Core\MethodExtention\ByteArrayExtention.cs" />
+    <Compile Include="Core\Bytes\ByteModified.cs" />
+    <Compile Include="Core\Bytes\ByteProvider.cs" />
+    <Compile Include="Core\Bytes\ByteConverters.cs" />
     <Compile Include="Core\ConstantReadOnly.cs" />
     <Compile Include="Core\Enumeration.cs" />
     <Compile Include="Core\KeyValidator.cs" />
-    <Compile Include="Core\TrackExtention.cs" />
+    <Compile Include="Core\MethodExtention\TrackExtention.cs" />
     <Compile Include="StringByteControl.xaml.cs">
       <DependentUpon>StringByteControl.xaml</DependentUpon>
     </Compile>

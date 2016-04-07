@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
-namespace WPFHexaEditor.Control.Core
+namespace WPFHexaEditor.Core.Bytes
 {
     /// <summary>
     /// ByteCharConverter for convert data

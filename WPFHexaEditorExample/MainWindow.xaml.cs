@@ -14,7 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Win32;
 using System.IO;
-using WPFHexaEditor.Control.Core;
+using WPFHexaEditor.Core.Bytes;
 
 namespace WPFHexaEditorExample
 {

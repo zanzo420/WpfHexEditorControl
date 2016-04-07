@@ -12,4 +12,5 @@
     <SolidColorBrush x:Key="BookMarkColor" Color="#B20000FF"/>
     <SolidColorBrush x:Key="SearchBookMarkColor" Color="#FFFF8B00"/>
     <SolidColorBrush x:Key="SelectionStartBookMarkColor" Color="#FFFF8B00"/>
+    <SolidColorBrush x:Key="ByteModifiedMarkColor" Color="#CC68717C"/>
 </ResourceDictionary>

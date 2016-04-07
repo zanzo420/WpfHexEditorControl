@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WPFHexaEditor.Control.Core
+namespace WPFHexaEditor.Core
 {
     /// <summary>
     /// ByteAction used for ByteModified class
@@ -68,8 +68,10 @@ namespace WPFHexaEditor.Control.Core
     /// </summary>
     public enum ScrollMarker
     {
-        Search,
+        Nothing,
+        SearchHighLight,
         Bookmark,
-        SelectionStart
+        SelectionStart,
+        ByteModified
     }
 }

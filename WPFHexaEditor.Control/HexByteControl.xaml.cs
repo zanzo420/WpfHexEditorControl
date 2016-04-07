@@ -12,8 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
-using WPFHexaEditor.Control.Core;
+using WPFHexaEditor.Core;
+using WPFHexaEditor.Core.Bytes;
 
 namespace WPFHexaEditor.Control
 {
@@ -22,7 +22,6 @@ namespace WPFHexaEditor.Control
     /// </summary>
     public partial class HexByteControl : UserControl
     {   
-        private bool _isSelected = false;
         private bool _readOnlyMode = false;
         private KeyDownLabel _keyDownLabel = KeyDownLabel.FirstChar;
 

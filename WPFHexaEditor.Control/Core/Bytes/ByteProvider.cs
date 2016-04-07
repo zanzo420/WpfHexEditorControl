@@ -7,7 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace WPFHexaEditor.Control.Core
+using WPFHexaEditor.Core.MethodExtention;
+
+namespace WPFHexaEditor.Core.Bytes
 {
     /// <summary>
     /// Used for interaction with file

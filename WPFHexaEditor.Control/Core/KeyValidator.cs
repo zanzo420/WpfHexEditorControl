@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace WPFHexaEditor.Control.Core
+namespace WPFHexaEditor.Core
 {
     /// <summary>
     /// Static class for valid keyboard key.

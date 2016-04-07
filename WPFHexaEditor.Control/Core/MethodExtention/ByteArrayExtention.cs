@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WPFHexaEditor.Control.Core
+namespace WPFHexaEditor.Core.MethodExtention
 {
     /// <summary>
     /// Extention methodes for find match in byte[]

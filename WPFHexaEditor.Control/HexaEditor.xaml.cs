@@ -16,7 +16,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using WPFHexaEditor.Control.Core;
+using WPFHexaEditor.Core;
+using WPFHexaEditor.Core.Bytes;
+using WPFHexaEditor.Core.MethodExtention;
 
 namespace WPFHexaEditor.Control
 {
@@ -96,9 +98,15 @@ namespace WPFHexaEditor.Control
             StringByteControl sbCtrl = sender as StringByteControl;
 
             if (sbCtrl != null)
+            {
                 _provider.AddByteModified(sbCtrl.Byte, sbCtrl.BytePositionInFile);
+                SetScrollMarker(sbCtrl.BytePositionInFile, ScrollMarker.ByteModified);
+            }
             else if (ctrl != null)
+            {
                 _provider.AddByteModified(ctrl.Byte, ctrl.BytePositionInFile);
+                SetScrollMarker(ctrl.BytePositionInFile, ScrollMarker.ByteModified);
+            }
 
             UpdateStatusBar();
         }
@@ -2055,7 +2063,7 @@ namespace WPFHexaEditor.Control
                     for (long i = position; i < position + bytes.Length; i++)
                         _markedPositionList.Add(i);
 
-                    SetScrollMarker(position, ScrollMarker.Search);
+                    SetScrollMarker(position, ScrollMarker.SearchHighLight);
                 }
 
                 UnSelectAll();
@@ -2146,18 +2154,16 @@ namespace WPFHexaEditor.Control
 
             //Set position in scrollbar 
             topPosition = (GetLineNumber(position) * VerticalScrollBar.Track.TickHeight(GetMaxLine()) - 1);
-            
+
             //Check if position already exist and exit if exist
             if (marker != ScrollMarker.SelectionStart)
                 foreach (Rectangle ctrl in MarkerGrid.Children)
                     if (ctrl.Margin.Top == topPosition)
                         return;
-            
-            //Create rectangle
-            rect.Height = 4;            
-            rect.HorizontalAlignment = HorizontalAlignment.Left;
-            rect.VerticalAlignment = VerticalAlignment.Top; 
+
+            //Somes general properties
             rect.MouseDown += Rect_MouseDown;
+            rect.VerticalAlignment = VerticalAlignment.Top;
 
             var byteinfo = new ByteModified();
             byteinfo.BytePositionInFile = position;
@@ -2170,18 +2176,32 @@ namespace WPFHexaEditor.Control
                     rect.Fill = (SolidColorBrush)TryFindResource("BookMarkColor");
                     rect.Tag = position;
                     rect.Width = 4;
+                    rect.Height = 4;
+                    rect.HorizontalAlignment = HorizontalAlignment.Left;
                     break;
-                case ScrollMarker.Search:
+                case ScrollMarker.SearchHighLight:
                     rect.ToolTip = TryFindResource("ScrollMarkerSearchToolTip");
                     rect.Fill = (SolidColorBrush)TryFindResource("SearchBookMarkColor");
                     rect.Tag = position;
                     rect.Width = 4;
+                    rect.Height = 4;
+                    rect.HorizontalAlignment = HorizontalAlignment.Left;
                     break;
                 case ScrollMarker.SelectionStart:
                     rect.Fill = (SolidColorBrush)TryFindResource("SelectionStartBookMarkColor");
                     rect.Width = VerticalScrollBar.ActualWidth;
                     rect.Tag = "SelStart";
                     rect.Height = 2;
+                    rect.Height = 4;
+                    rect.HorizontalAlignment = HorizontalAlignment.Left;
+                    break;
+                case ScrollMarker.ByteModified:
+                    rect.ToolTip = TryFindResource("ScrollMarkerSearchToolTip");
+                    rect.Fill = (SolidColorBrush)TryFindResource("ByteModifiedMarkColor");
+                    rect.Tag = position;
+                    rect.Width = 4;
+                    rect.Height = 4;
+                    rect.HorizontalAlignment = HorizontalAlignment.Right;
                     break;
             }
 

@@ -72,6 +72,7 @@ namespace WPFHexaEditor.Core
         SearchHighLight,
         Bookmark,
         SelectionStart,
-        ByteModified
+        ByteModified,
+        ByteDeleted
     }
 }

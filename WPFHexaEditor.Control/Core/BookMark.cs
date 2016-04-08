@@ -6,10 +6,14 @@ using WPFHexaEditor.Core.Bytes;
 
 namespace WPFHexaEditor.Core
 {
+    /// <summary>
+    /// BookMark class
+    /// </summary>
     public class BookMark
     {
         ScrollMarker _marker = ScrollMarker.Nothing;
-        ByteModified _byteModified = new ByteModified();
+        long _bytePositionInFile = 0;
+
 
         public ScrollMarker Marker
         {
@@ -24,16 +28,16 @@ namespace WPFHexaEditor.Core
             }
         }
 
-        public ByteModified ByteModified
+        public long BytePositionInFile
         {
             get
             {
-                return _byteModified;
+                return _bytePositionInFile;
             }
 
             set
             {
-                _byteModified = value;
+                _bytePositionInFile = value;
             }
         }
     }

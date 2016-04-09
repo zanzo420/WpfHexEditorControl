@@ -2129,9 +2129,26 @@ namespace WPFHexaEditor.Control
         
         #region Bookmark and other scrollmarker
         /// <summary>
+        /// Set bookmark at specified position
+        /// </summary>
+        /// <param name="position"></param>
+        public void SetBookMark(long position)
+        {
+            SetScrollMarker(position, ScrollMarker.Bookmark);
+        }
+
+        /// <summary>
+        /// Set bookmark at selection start
+        /// </summary>
+        public void SetBookMark()
+        {
+            SetScrollMarker(SelectionStart, ScrollMarker.Bookmark);
+        }
+
+        /// <summary>
         /// Set marker at position
         /// </summary>
-        public void SetScrollMarker(long position, ScrollMarker marker)
+        private void SetScrollMarker(long position, ScrollMarker marker)
         {
             Rectangle rect = new Rectangle();
             double topPosition = 0;

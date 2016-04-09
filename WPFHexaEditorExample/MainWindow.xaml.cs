@@ -215,5 +215,10 @@ namespace WPFHexaEditorExample
         {
             HexEdit.FindAllSelection(true);
         }
+
+        private void button4_Click(object sender, RoutedEventArgs e)
+        {
+            HexEdit.SetBookMark();
+        }
     }
 }

@@ -4,17 +4,10 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WPFHexaEditor.Core;
 using WPFHexaEditor.Core.Bytes;
@@ -31,7 +24,6 @@ namespace WPFHexaEditor.Control
         private const double _lineInfoHeight = 22;
         private ByteProvider _provider = null;
         private double _scrollLargeChange = 100;
-        private bool _readOnlyMode = false;
         private List<long> _markedPositionList = new List<long>();
 
         //Event
@@ -71,19 +63,22 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public bool ReadOnlyMode
         {
-            get
-            {
-                return _readOnlyMode;
-            }
-
-            set
-            {             
-                _readOnlyMode = value;
-
-                RefreshView(false);
-            }
+            get { return (bool)GetValue(ReadOnlyModeProperty); }
+            set { SetValue(ReadOnlyModeProperty, value); }
         }
 
+        public static readonly DependencyProperty ReadOnlyModeProperty =
+            DependencyProperty.Register("ReadOnlyMode", typeof(bool), typeof(HexaEditor),
+                new FrameworkPropertyMetadata(false, 
+                    new PropertyChangedCallback(ReadOnlyMode_PropertyChanged)));
+
+        private static void ReadOnlyMode_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            HexaEditor ctrl = d as HexaEditor;
+
+            ctrl.RefreshView(false);
+        }
+        
         private void Provider_ReadOnlyChanged(object sender, EventArgs e)
         {
             if (ByteProvider.CheckIsOpen(_provider))
@@ -1369,7 +1364,7 @@ namespace WPFHexaEditor.Control
 
                             sbCtrl.BytePositionInFile = _provider.Position;
                             sbCtrl.StringByteModified += Control_ByteModified;
-                            sbCtrl.ReadOnlyMode = _readOnlyMode;
+                            sbCtrl.ReadOnlyMode = ReadOnlyMode;
                             sbCtrl.MoveNext += Control_MoveNext;
                             sbCtrl.MovePrevious += Control_MovePrevious;
                             sbCtrl.MouseSelection += Control_MouseSelection;
@@ -1405,7 +1400,7 @@ namespace WPFHexaEditor.Control
                                 sbCtrl.Byte = null;
                                 sbCtrl.BytePositionInFile = -1;
                                 sbCtrl.Action = ByteAction.Nothing;
-                                sbCtrl.ReadOnlyMode = _readOnlyMode;
+                                sbCtrl.ReadOnlyMode = ReadOnlyMode;
                                 sbCtrl.IsSelected = false;
                             }
                             else
@@ -1414,7 +1409,7 @@ namespace WPFHexaEditor.Control
                                 sbCtrl.Byte = (byte)_provider.ReadByte();
                                 sbCtrl.BytePositionInFile = _provider.Position - 1;
                                 sbCtrl.Action = ByteAction.Nothing;
-                                sbCtrl.ReadOnlyMode = _readOnlyMode;
+                                sbCtrl.ReadOnlyMode = ReadOnlyMode;
                                 sbCtrl.InternalChange = false;
                             }
                         }
@@ -1562,9 +1557,11 @@ namespace WPFHexaEditor.Control
             int stackIndex = 0;
             bool find = false;
 
-            if (_markedPositionList.Count > 0)
+            if (_markedPositionList.Count > 0) 
             {
-                _markedPositionList.Sort();
+                //var ByteList = from hlb in _markedPositionList
+                //         where hlb >= GetFirstVisibleBytePosition() + BytePerLine && hlb <= GetLastVisibleBytePosition() + BytePerLine
+                //         select hlb;
 
                 foreach (Label infolabel in LinesInfoStackPanel.Children)
                 {
@@ -1666,7 +1663,7 @@ namespace WPFHexaEditor.Control
                             HexByteControl byteControl = new HexByteControl();
 
                             byteControl.BytePositionInFile = _provider.Position;
-                            byteControl.ReadOnlyMode = _readOnlyMode;
+                            byteControl.ReadOnlyMode = ReadOnlyMode;
                             byteControl.MouseSelection += Control_MouseSelection;
                             byteControl.Click += Control_Click;
                             byteControl.MoveNext += Control_MoveNext;
@@ -1703,14 +1700,14 @@ namespace WPFHexaEditor.Control
                             {
                                 byteControl.Action = ByteAction.Nothing;
                                 byteControl.BytePositionInFile = -1;
-                                byteControl.ReadOnlyMode = _readOnlyMode;
+                                byteControl.ReadOnlyMode = ReadOnlyMode;
                                 byteControl.IsSelected = false;
                                 byteControl.Byte = null;
                             }
                             else
                             {
                                 byteControl.Action = ByteAction.Nothing;
-                                byteControl.ReadOnlyMode = _readOnlyMode;
+                                byteControl.ReadOnlyMode = ReadOnlyMode;
                                 byteControl.BytePositionInFile = _provider.Position;
                                 byteControl.Byte = (byte)_provider.ReadByte();
                             }
@@ -1858,7 +1855,6 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Set focus on byte
         /// </summary>
-        /// <param name="bytePositionInFile"></param>
         private void SetFocusHexDataPanel(long bytePositionInFile)
         {
             if (ByteProvider.CheckIsOpen(_provider))
@@ -1889,6 +1885,9 @@ namespace WPFHexaEditor.Control
             }
         }
 
+        /// <summary>
+        /// Set focus on byte
+        /// </summary>
         private void SetFocusStringDataPanel(long bytePositionInFile)
         {
             if (ByteProvider.CheckIsOpen(_provider))
@@ -2071,6 +2070,9 @@ namespace WPFHexaEditor.Control
                 UnSelectAll();
                 UpdateHighLightByte();
 
+                //Sort list
+                _markedPositionList.Sort();
+
                 return positions;
             }
             else
@@ -2126,8 +2128,22 @@ namespace WPFHexaEditor.Control
                 }
         }
         #endregion Statusbar
-        
+
         #region Bookmark and other scrollmarker
+
+        /// <summary>
+        /// Get all bookmark are currently set 
+        /// </summary>
+        public IEnumerable<BookMark> BookMarks
+        {
+            get { return (IEnumerable<BookMark>)GetValue(BookMarksProperty); }
+            internal set { SetValue(BookMarksProperty, value); }
+        }
+
+        public static readonly DependencyProperty BookMarksProperty =
+            DependencyProperty.Register("BookMarks", typeof(IEnumerable<BookMark>), typeof(HexaEditor), 
+                new FrameworkPropertyMetadata(new List<BookMark>()));
+        
         /// <summary>
         /// Set bookmark at specified position
         /// </summary>
@@ -2152,8 +2168,8 @@ namespace WPFHexaEditor.Control
         {
             Rectangle rect = new Rectangle();
             double topPosition = 0;
-            double rightPosition = 0; 
-            
+            double rightPosition = 0;
+
             //create bookmark
             var bookMark = new BookMark();
             bookMark.Marker = marker;
@@ -2196,7 +2212,7 @@ namespace WPFHexaEditor.Control
             var byteinfo = new ByteModified();
             byteinfo.BytePositionInFile = position;
             rect.DataContext = byteinfo;
-            
+
             //Set somes properties for different marker
             switch (marker)
             {
@@ -2227,8 +2243,29 @@ namespace WPFHexaEditor.Control
             }
 
             rect.Margin = new Thickness(0, topPosition, rightPosition, 0);
-            
+
+            //Add to grid
             MarkerGrid.Children.Add(rect);
+
+            //Update bookmarks properties
+            UpdateBookMarkProperties();
+        }
+
+        /// <summary>
+        /// Update the bookmark properties are currently set
+        /// </summary>
+        private void UpdateBookMarkProperties()
+        {
+            List<BookMark> bmList = new List<BookMark>();
+            foreach (Rectangle rc in MarkerGrid.Children)
+            {
+                BookMark bm = rc.Tag as BookMark;
+
+                if (bm != null)
+                    if (bm.Marker == ScrollMarker.Bookmark)
+                        bmList.Add(bm);
+            }
+            BookMarks = bmList;
         }
 
         private void Rect_MouseDown(object sender, MouseButtonEventArgs e)

@@ -81,9 +81,9 @@ namespace WPFHexaEditor.Control
 
         public static readonly DependencyProperty ByteProperty =
             DependencyProperty.Register("Byte", typeof(byte?), typeof(StringByteControl),
-                new FrameworkPropertyMetadata(null, new PropertyChangedCallback(Byte_PropertyChangedCallBack)));
+                new FrameworkPropertyMetadata(null, new PropertyChangedCallback(Byte_PropertyChanged)));
 
-        private static void Byte_PropertyChangedCallBack(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void Byte_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             StringByteControl ctrl = d as StringByteControl;
 
@@ -92,6 +92,7 @@ namespace WPFHexaEditor.Control
                     ctrl.StringByteModified(ctrl, new EventArgs());
 
             ctrl.UpdateLabelFromByte();
+            ctrl.UpdateHexString();
         }
         
         /// <summary>
@@ -113,7 +114,20 @@ namespace WPFHexaEditor.Control
 
             ctrl.UpdateBackGround();
         }
+        
+        /// <summary>
+        /// Get the hex string {00} representation of this byte
+        /// </summary>
+        public string HexString
+        {
+            get { return (string)GetValue(HexStringProperty); }
+            set { SetValue(HexStringProperty, value); }
+        }
 
+        public static readonly DependencyProperty HexStringProperty =
+            DependencyProperty.Register("HexString", typeof(string), typeof(StringByteControl), 
+                new FrameworkPropertyMetadata(string.Empty));
+        
         /// <summary>
         /// Get of Set if control as marked as highlighted
         /// </summary>                        
@@ -183,22 +197,6 @@ namespace WPFHexaEditor.Control
 
         #endregion
 
-        #region Standard property
-        /// <summary>
-        /// Get the hex string {00} representation of this byte
-        /// </summary>
-        public string HexString
-        {
-            get
-            {
-                if (Byte != null)
-                    return ByteConverters.ByteToHex(Byte.Value);
-                else
-                    return "";
-            }
-        }
-        #endregion
-
         /// <summary>
         /// Update control label from byte property
         /// </summary>
@@ -212,6 +210,14 @@ namespace WPFHexaEditor.Control
             {
                 StringByteLabel.Content = "";
             }
+        }
+
+        private void UpdateHexString()
+        {
+            if (Byte != null)
+                HexString = ByteConverters.ByteToHex(Byte.Value);
+            else
+                HexString = string.Empty;
         }
         
         /// <summary>

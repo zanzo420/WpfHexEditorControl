@@ -114,9 +114,9 @@ namespace WPFHexaEditor.Control
 
         public static readonly DependencyProperty ByteProperty =
             DependencyProperty.Register("Byte", typeof(byte?), typeof(HexByteControl),
-                new FrameworkPropertyMetadata(null, new PropertyChangedCallback(Byte_PropertyChangedCallBack)));
+                new FrameworkPropertyMetadata(null, new PropertyChangedCallback(Byte_PropertyChanged)));
 
-        private static void Byte_PropertyChangedCallBack(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void Byte_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             HexByteControl ctrl = d as HexByteControl;
 
@@ -125,6 +125,7 @@ namespace WPFHexaEditor.Control
                     ctrl.ByteModified(ctrl, new EventArgs());
 
             ctrl.UpdateLabelFromByte();
+            ctrl.UpdateHexString();
         }
 
         /// <summary>
@@ -153,20 +154,20 @@ namespace WPFHexaEditor.Control
                 _readOnlyMode = value;
             }
         }
-
-
+        
         /// <summary>
         /// Get the hex string representation of this byte
         /// </summary>
         public string HexString
         {
-            get
-            {
-                return ((string)FirstHexChar.Content + (string)SecondHexChar.Content).ToString();
-            }
+            get { return (string)GetValue(HexStringProperty); }
+            internal set { SetValue(HexStringProperty, value); }
         }
-
-
+                
+        public static readonly DependencyProperty HexStringProperty =
+            DependencyProperty.Register("HexString", typeof(string), typeof(HexByteControl), 
+                new FrameworkPropertyMetadata(string.Empty));
+            
         /// <summary>
         /// Get or Set if control as selected
         /// </summary>
@@ -297,7 +298,7 @@ namespace WPFHexaEditor.Control
                 e.Handled = true;
                 if (MoveUp != null)
                     MoveUp(this, new EventArgs());
-
+                
                 return;
             }
             else if(KeyValidator.IsDownKey(e.Key))
@@ -392,7 +393,12 @@ namespace WPFHexaEditor.Control
                     }
                 }            
         }
-        
+
+        private void UpdateHexString()
+        {
+            HexString = ((string)FirstHexChar.Content + (string)SecondHexChar.Content).ToString();
+        }
+
         private void UserControl_MouseEnter(object sender, MouseEventArgs e)
         {
             if (Byte != null)

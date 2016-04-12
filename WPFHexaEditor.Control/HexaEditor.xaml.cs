@@ -783,19 +783,25 @@ namespace WPFHexaEditor.Control
 
             RefreshView(true);
         }
-
+        
+        /// <summary>
+        /// Get the line number of position in parameter
+        /// </summary>
         public double GetLineNumber(long position)
         {
             return position / BytePerLine;
         }
 
+        /// <summary>
+        /// Set position in control at position in parameter
+        /// </summary>
         public void SetPosition(long position)
         {
             SetPosition(position, 0);
         }
 
         /// <summary>
-        /// Set position of cursor
+        /// Set position in control at position in parameter
         /// </summary>
         public void SetPosition(string HexLiteralPosition)
         {
@@ -810,7 +816,7 @@ namespace WPFHexaEditor.Control
         }
 
         /// <summary>
-        /// Set position of cursor
+        /// Set position in control at position in parameter with specified selected lenght
         /// </summary>
         public void SetPosition(string HexLiteralPosition, long byteLenght)
         {

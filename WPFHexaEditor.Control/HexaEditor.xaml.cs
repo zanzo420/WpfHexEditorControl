@@ -39,7 +39,6 @@ namespace WPFHexaEditor.Control
             RefreshView(true);
 
             StatusBarGrid.DataContext = this;
-
         }
         
         #region Miscellaneous property/methods
@@ -122,8 +121,6 @@ namespace WPFHexaEditor.Control
 
             SetScrollMarker(position, ScrollMarker.ByteDeleted);
 
-            //TEST
-            //RefreshView(true);
             UpdateByteModified();
             UpdateSelection();
             UpdateStatusBar();
@@ -152,8 +149,6 @@ namespace WPFHexaEditor.Control
         #endregion Lines methods
 
         #region Selection Property/Methods/Event
-
-
         /// <summary>
         /// Get the selected line of focus control
         /// </summary>
@@ -165,14 +160,8 @@ namespace WPFHexaEditor.Control
 
         public static readonly DependencyProperty SelectionLineProperty =
             DependencyProperty.Register("SelectionLine", typeof(long), typeof(HexaEditor), 
-                new FrameworkPropertyMetadata(0L,
-                    new PropertyChangedCallback(SelectionLine_ValueChanged)));
-
-        private static void SelectionLine_ValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            
-        }
-
+                new FrameworkPropertyMetadata(0L));
+        
         private void LineInfoLabel_MouseMove(object sender, MouseEventArgs e)
         {
             Label line = sender as Label;
@@ -193,12 +182,12 @@ namespace WPFHexaEditor.Control
 
         private void Control_MovePageDown(object sender, EventArgs e)
         {
-
+            //Not implemented for now
         }
 
         private void Control_MovePageUp(object sender, EventArgs e)
         {
-
+            //Not implemented for now
         }
 
         private void Control_MoveDown(object sender, EventArgs e)
@@ -283,8 +272,6 @@ namespace WPFHexaEditor.Control
         {
             StringByteControl sbCtrl = sender as StringByteControl;
             HexByteControl ctrl = sender as HexByteControl;
-
-            //UnHighLightAll();
 
             if (ctrl != null)
             {
@@ -560,7 +547,6 @@ namespace WPFHexaEditor.Control
             {
                 VerticalScrollBar.Value--;
             }
-
 
             if (e.Delta < 0) //Down
             {
@@ -1089,10 +1075,7 @@ namespace WPFHexaEditor.Control
                 {
                     FileName = string.Empty;
                 }
-                catch
-                {
-
-                }
+                catch { }
 
                 ReadOnlyMode = false;
                 VerticalScrollBar.Value = 0;
@@ -1126,7 +1109,6 @@ namespace WPFHexaEditor.Control
             if (File.Exists(filename))
             {
                 CloseFile();
-                //bool readOnlyMode = false;
 
                 _provider = new ByteProvider(filename);
                 _provider.ReadOnlyChanged += Provider_ReadOnlyChanged;
@@ -1141,9 +1123,6 @@ namespace WPFHexaEditor.Control
                 UnSelectAll();
 
                 UpdateSelectionColorMode(FirstColor.HexByteData);
-
-                //if (readOnlyMode)
-                //ReadOnlyMode = _provider.ReadOnlyMode;
             }
             else
             {
@@ -1155,16 +1134,12 @@ namespace WPFHexaEditor.Control
         {
             LongProgressProgressBar.Visibility = Visibility.Collapsed;
             CancelLongProcessButton.Visibility = Visibility.Collapsed;
-
-            //this.IsEnabled = true;
         }
 
         private void Provider_LongProcessProgressStarted(object sender, EventArgs e)
         {
             LongProgressProgressBar.Visibility = Visibility.Visible;
             CancelLongProcessButton.Visibility = Visibility.Visible;
-            
-            //this.IsEnabled = false;
         }
 
         private void Provider_LongProcessProgressChanged(object sender, EventArgs e)
@@ -1234,16 +1209,8 @@ namespace WPFHexaEditor.Control
         private void VerticalScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {            
             RefreshView(false);
-
-            //Debug.Print($"VScroll ActualHeight :  {VerticalScrollBar.ActualHeight}");
-            //Debug.Print($"VScroll Track ActualHeight :  {VerticalScrollBar.Track.ActualHeight}");
-            //Debug.Print($"VScroll Arrow ActualHeight :  {(VerticalScrollBar.ActualHeight - VerticalScrollBar.Track.ActualHeight) / 2}");
-            //Debug.Print($"VScroll Track Top ActualHeight :  { VerticalScrollBar.Track.Top() }");
-            //Debug.Print($"VScroll Track Down ActualHeight :  { VerticalScrollBar.Track.Bottom() }");
-            //Debug.Print($"VScroll Track TickHeight :  { VerticalScrollBar.Track.TickHeight()}");
-
-            //BookMarkTest.Margin = new Thickness(0, (GetLineNumber(4000000) * VerticalScrollBar.Track.TickHeight() - VerticalScrollBar.Track.ButtonHeight()) + BookMarkTest.ActualHeight, 0, 0);
         }
+
         /// <summary>
         /// Update vertical scrollbar with file info
         /// </summary>
@@ -1260,7 +1227,6 @@ namespace WPFHexaEditor.Control
                 VerticalScrollBar.LargeChange = ScrollLargeChange;
                 VerticalScrollBar.Maximum = GetMaxLine() - GetMaxVisibleLine() + 1;
             }
-
         }
 
         /// <summary>
@@ -1752,10 +1718,6 @@ namespace WPFHexaEditor.Control
                     HexHeaderStackPanel.Children.Add(LineInfoLabel);
                 }
             }
-            else
-            {
-
-            }
         }
 
         /// <summary>
@@ -1792,10 +1754,6 @@ namespace WPFHexaEditor.Control
                         LinesInfoStackPanel.Children.Add(LineInfoLabel);
                     }
                 }
-            }
-            else
-            {
-
             }
         }
 

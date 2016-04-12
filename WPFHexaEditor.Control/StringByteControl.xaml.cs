@@ -121,7 +121,7 @@ namespace WPFHexaEditor.Control
         public string HexString
         {
             get { return (string)GetValue(HexStringProperty); }
-            set { SetValue(HexStringProperty, value); }
+            internal set { SetValue(HexStringProperty, value); }
         }
 
         public static readonly DependencyProperty HexStringProperty =
@@ -225,7 +225,6 @@ namespace WPFHexaEditor.Control
         /// </summary>
         private void UpdateBackGround()
         {
-
             if (IsSelected)
             {
                 this.FontWeight = (FontWeight)TryFindResource("NormalFontWeight");
@@ -361,8 +360,6 @@ namespace WPFHexaEditor.Control
                 }
             }
             
-                        
-
             //MODIFY ASCII... 
             //TODO : MAKE BETTER KEYDETECTION AND EXPORT IN KEYVALIDATOR
             if (!ReadOnlyMode)

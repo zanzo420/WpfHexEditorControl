@@ -51,11 +51,11 @@ namespace WPFHexaEditor.Core.MethodExtention
         /// </summary>
         public static double TickHeight(this Track s)
         {
-            Grid parent = s.Parent as Grid;
+            //Grid parent = s.Parent as Grid;
 
-            Track TrackControl = (Track)parent.Children[2];
+            //Track TrackControl = (Track)parent.Children[2];
 
-            return TrackControl.ActualHeight / TrackControl.Maximum;
+            return s.ActualHeight / s.Maximum;
         }
 
         /// <summary>
@@ -63,11 +63,11 @@ namespace WPFHexaEditor.Core.MethodExtention
         /// </summary>
         public static double TickHeight(this Track s, long maximum)
         {
-            Grid parent = s.Parent as Grid;
+            //Grid parent = s.Parent as Grid;
 
-            Track TrackControl = (Track)parent.Children[2];
+            //Track TrackControl = (Track)parent.Children[2];
 
-            return TrackControl.ActualHeight / maximum;
+            return s.ActualHeight / maximum;
         }
 
     }

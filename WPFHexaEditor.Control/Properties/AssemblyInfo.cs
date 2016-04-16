@@ -7,12 +7,12 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("WPFHexaEditor.Control")]
+[assembly: AssemblyTitle("WPF Hexadecimal editor control")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("derektremblay666@gmail.com")]
 [assembly: AssemblyProduct("WPFHexaEditor.Control")]
-[assembly: AssemblyCopyright("Copyright ©  2016")]
+[assembly: AssemblyCopyright("Copyright ©  2016 Derek Tremblay")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

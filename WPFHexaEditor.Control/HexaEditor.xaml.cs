@@ -339,13 +339,13 @@ namespace WPFHexaEditor.Control
         private void BottomRectangle_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
-                VerticalScrollBar.Value++;            
+                VerticalScrollBar.Value += 5;            
         }
 
         private void TopRectangle_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
-                VerticalScrollBar.Value--;            
+                VerticalScrollBar.Value -= 5;            
         }
 
         /// <summary>

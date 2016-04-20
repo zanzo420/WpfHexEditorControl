@@ -144,7 +144,7 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public long GetMaxVisibleLine()
         {
-            return (long)(LinesInfoStackPanel.ActualHeight / _lineInfoHeight); // + 1; //TEST
+            return (long)(StringDataStackPanel.ActualHeight / _lineInfoHeight); // + 1; //TEST
         }
         #endregion Lines methods
 
@@ -213,16 +213,51 @@ namespace WPFHexaEditor.Control
             if (SelectionStart > GetLastVisibleBytePosition())
                 VerticalScrollBar.Value++;
 
-            if (hbCtrl != null)
+            if (hbCtrl != null || sbCtrl != null)
+            {
+                VerticalScrollBar.Value += GetMaxVisibleLine() - 1;
                 SetFocusHexDataPanel(SelectionStart);
-
-            if (sbCtrl != null)
-                SetFocusStringDataPanel(SelectionStart);
+            }
         }
 
         private void Control_MovePageUp(object sender, EventArgs e)
         {
-            //Not implemented for now
+            HexByteControl hbCtrl = sender as HexByteControl;
+            StringByteControl sbCtrl = sender as StringByteControl;
+
+            long byteToMove = (BytePerLine * GetMaxVisibleLine());
+            long test = SelectionStart - byteToMove;
+
+            //TODO : Validation
+            if (Keyboard.Modifiers == ModifierKeys.Shift)
+            {
+                if (test > -1)
+                    SelectionStart -= byteToMove;
+                else
+                    SelectionStart = 0;
+            }
+            else
+            {
+                if (SelectionStart > SelectionStop)
+                    SelectionStart = SelectionStop;
+                else
+                    SelectionStop = SelectionStart;
+
+                if (test > -1)
+                {
+                    SelectionStart -= byteToMove;
+                    SelectionStop -= byteToMove;
+                }
+            }
+
+            if (SelectionStart < GetFirstVisibleBytePosition())
+                VerticalScrollBar.Value--;
+
+            if (hbCtrl != null || sbCtrl != null)
+            {
+                VerticalScrollBar.Value -= GetMaxVisibleLine() - 1;
+                SetFocusHexDataPanel(SelectionStart);
+            }                
         }
 
         private void Control_MoveDown(object sender, EventArgs e)

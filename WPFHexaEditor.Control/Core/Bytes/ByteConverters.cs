@@ -32,16 +32,18 @@ namespace WPFHexaEditor.Core.Bytes
         public static string ByteToHex(byte[] data)
         {
             StringBuilder sb = new StringBuilder();
+
             foreach (byte b in data)
             {
                 string hex = ByteToHex(b);
                 sb.Append(hex);
                 sb.Append(" ");
             }
+
             if (sb.Length > 0)
                 sb.Remove(sb.Length - 1, 1);
-            string result = sb.ToString();
-            return result;
+            
+            return sb.ToString();
         }
         /// <summary>
         /// Converts the byte to a hex string. For example: "10" = "0A";
@@ -49,8 +51,10 @@ namespace WPFHexaEditor.Core.Bytes
         public static string ByteToHex(byte b)
         {
             string sB = b.ToString(ConstantReadOnly.HexStringFormat, CultureInfo.InvariantCulture );//System.Threading.Thread.CurrentThread.CurrentCulture);
+
             if (sB.Length == 1)
                 sB = "0" + sB;
+
             return sB;
         }
 
@@ -65,10 +69,9 @@ namespace WPFHexaEditor.Core.Bytes
                     return Encoding.ASCII.GetString(buffer, 0, buffer.Length);
                 case ByteToString.ByteToCharProcess:
                     StringBuilder builder = new StringBuilder();
-                    foreach (byte @byte in buffer)
-                    {
-                        builder.Append(ByteToChar(@byte));
-                    }
+
+                    foreach (byte @byte in buffer)                    
+                        builder.Append(ByteToChar(@byte));                    
 
                     return builder.ToString();
             }
@@ -103,9 +106,7 @@ namespace WPFHexaEditor.Core.Bytes
 
         public static bool HexToByte(string hex, out byte b)
         {
-            //bool isByte = byte.TryParse(hex, System.Globalization.NumberStyles.HexNumber, System.Threading.Thread.CurrentThread.CurrentCulture, out b);
-            bool isByte = byte.TryParse(hex, System.Globalization.NumberStyles.HexNumber, CultureInfo.InvariantCulture, out b);
-            return isByte;
+            return byte.TryParse(hex, System.Globalization.NumberStyles.HexNumber, CultureInfo.InvariantCulture, out b);
         }
 
         public static long HexLiteralToLong(string hex)
@@ -142,10 +143,8 @@ namespace WPFHexaEditor.Core.Bytes
         {
             List<byte> byteList = new List<byte>();
 
-            foreach (char c in str)
-            {
-                byteList.Add(CharToByte(c));
-            }
+            foreach (char c in str)            
+                byteList.Add(CharToByte(c));            
 
             return byteList.ToArray();
         }

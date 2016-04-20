@@ -2170,8 +2170,8 @@ namespace WPFHexaEditor.Control
             rect.VerticalAlignment = VerticalAlignment.Top;
             rect.HorizontalAlignment = HorizontalAlignment.Left;
             rect.Tag = bookMark;
-            rect.Width = 4;
-            rect.Height = 4;
+            rect.Width = 5;
+            rect.Height = 3;
 
             var byteinfo = new ByteModified();
             byteinfo.BytePositionInFile = position;
@@ -2187,6 +2187,7 @@ namespace WPFHexaEditor.Control
                 case ScrollMarker.SearchHighLight:
                     rect.ToolTip = TryFindResource("ScrollMarkerSearchToolTip");
                     rect.Fill = (SolidColorBrush)TryFindResource("SearchBookMarkColor");
+                    rect.HorizontalAlignment = HorizontalAlignment.Center;
                     break;
                 case ScrollMarker.SelectionStart:
                     rect.Fill = (SolidColorBrush)TryFindResource("SelectionStartBookMarkColor");

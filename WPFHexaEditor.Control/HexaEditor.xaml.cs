@@ -182,7 +182,42 @@ namespace WPFHexaEditor.Control
 
         private void Control_MovePageDown(object sender, EventArgs e)
         {
-            //Not implemented for now
+            HexByteControl hbCtrl = sender as HexByteControl;
+            StringByteControl sbCtrl = sender as StringByteControl;
+
+            long byteToMove = (BytePerLine * GetMaxVisibleLine());
+            long test = SelectionStart + byteToMove;
+
+            //TODO : Validation
+            if (Keyboard.Modifiers == ModifierKeys.Shift)
+            {
+                if (test < _provider.Length)
+                    SelectionStart += byteToMove;
+                else
+                    SelectionStart = _provider.Length;
+            }
+            else
+            {
+                if (SelectionStart > SelectionStop)
+                    SelectionStart = SelectionStop;
+                else
+                    SelectionStop = SelectionStart;
+
+                if (test < _provider.Length)
+                {
+                    SelectionStart += byteToMove;
+                    SelectionStop += byteToMove;
+                }
+            }
+
+            if (SelectionStart > GetLastVisibleBytePosition())
+                VerticalScrollBar.Value++;
+
+            if (hbCtrl != null)
+                SetFocusHexDataPanel(SelectionStart);
+
+            if (sbCtrl != null)
+                SetFocusStringDataPanel(SelectionStart);
         }
 
         private void Control_MovePageUp(object sender, EventArgs e)
@@ -2019,8 +2054,6 @@ namespace WPFHexaEditor.Control
 
             if (highLight)
             {
-                //UnHighLightAll();
-
                 var positions = FindAll(bytes);
 
                 foreach (long position in positions)
@@ -2039,10 +2072,8 @@ namespace WPFHexaEditor.Control
 
                 return positions;
             }
-            else
-            {
-                return FindAll(bytes);
-            }
+            else            
+                return FindAll(bytes);            
         }
 
         /// <summary>
@@ -2051,11 +2082,8 @@ namespace WPFHexaEditor.Control
         /// <returns>Return null if no occurence found</returns>
         public IEnumerable<long> FindAllSelection(bool highLight)
         {
-            if (SelectionLenght > 0)
-            {
-                
-                return FindAll(SelectionByteArray, highLight);
-            }
+            if (SelectionLenght > 0)                            
+                return FindAll(SelectionByteArray, highLight);            
             else
                 return null;
         }

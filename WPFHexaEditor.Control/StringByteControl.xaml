@@ -4,8 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WPFHexaEditor.Control" 
-             mc:Ignorable="d"  KeyDown="UserControl_KeyDown" MouseEnter="UserControl_MouseEnter" MouseLeave="UserControl_MouseLeave"
-             Width="12" Height="22" Focusable="True">
+             mc:Ignorable="d"  
+             KeyDown="UserControl_KeyDown"
+             MouseEnter="UserControl_MouseEnter"
+             MouseLeave="UserControl_MouseLeave"
+             Width="12" 
+             Height="22"
+             Focusable="True">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -16,7 +21,16 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
+    
     <Grid ToolTip="{Binding Source={StaticResource ByteToolTip}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
-        <Label x:Name="StringByteLabel" Content="X" Padding="0" MouseDown="StringByteLabel_MouseDown" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Focusable="True"/>
+        
+        <Label x:Name="StringByteLabel"
+               Content="X"
+               Padding="0" 
+               MouseDown="StringByteLabel_MouseDown"
+               HorizontalContentAlignment="Center"
+               VerticalContentAlignment="Center"
+               Focusable="True"/>
+    
     </Grid>
 </UserControl>

@@ -5,20 +5,28 @@
     <ToolTip x:Key="ByteToolTip">
         <StackPanel>
             <StackPanel Orientation="Horizontal">
-                <Label Content="Byte value" FontWeight="Bold" Width="120"/>
+                <Label Content="Byte value" 
+                       FontWeight="Bold"
+                       Width="120"/>
                 <Label Content="{Binding Byte, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <Label Content="Hexadecimal value" FontWeight="Bold" Width="120"/>
+                <Label Content="Hexadecimal value"
+                       FontWeight="Bold"
+                       Width="120"/>
                 <Label Content="{Binding HexString, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <Label Content="File position (byte)" FontWeight="Bold" Width="120"/>
+                <Label Content="File position (byte)"
+                       FontWeight="Bold"
+                       Width="120"/>
                 <Label Content="{Binding BytePositionInFile, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
             <Separator/>
             <StackPanel Orientation="Horizontal">
-                <Label Content="ByteAction" FontWeight="Bold" Width="120"/>
+                <Label Content="ByteAction"
+                       FontWeight="Bold"
+                       Width="120"/>
                 <Label Content="{Binding Action, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>            
         </StackPanel>
@@ -27,8 +35,10 @@
 
     <ToolTip x:Key="ScrollMarkerSearchToolTip">
         <StackPanel>            
-            <StackPanel Orientation="Horizontal">
-                <Label Content="File position (byte)" FontWeight="Bold" Width="120"/>
+            <StackPanel Orientation="Horizontal">                
+                <Label Content="File position (byte)"
+                       FontWeight="Bold"
+                       Width="120"/>
                 <Label Content="{Binding BytePositionInFile, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
             <Separator/>

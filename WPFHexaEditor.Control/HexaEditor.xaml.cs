@@ -54,6 +54,7 @@ namespace WPFHexaEditor.Control
                 UpdateVerticalScroll();
             }
         }
+                
         #endregion Miscellaneous property/methods
 
         #region ReadOnly property/event
@@ -463,11 +464,9 @@ namespace WPFHexaEditor.Control
             ctrl.UpdateSelectionLine();
             ctrl.SetScrollMarker(0, ScrollMarker.SelectionStart);
 
-            if (ctrl.SelectionStartChanged != null)
-                ctrl.SelectionStartChanged(ctrl, new EventArgs());
+            ctrl.SelectionStartChanged?.Invoke(ctrl, new EventArgs());
 
-            if (ctrl.SelectionLenghtChanged != null)
-                ctrl.SelectionLenghtChanged(ctrl, new EventArgs());
+            ctrl.SelectionLenghtChanged?.Invoke(ctrl, new EventArgs());
         }
               
 
@@ -511,11 +510,9 @@ namespace WPFHexaEditor.Control
             ctrl.UpdateSelection();
             ctrl.UpdateSelectionLine();
 
-            if (ctrl.SelectionStopChanged != null)
-                ctrl.SelectionStopChanged(ctrl, new EventArgs());
+            ctrl.SelectionStopChanged?.Invoke(ctrl, new EventArgs());
 
-            if (ctrl.SelectionLenghtChanged != null)
-                ctrl.SelectionLenghtChanged(ctrl, new EventArgs());            
+            ctrl.SelectionLenghtChanged?.Invoke(ctrl, new EventArgs());
         }
 
         /// <summary>
@@ -613,15 +610,12 @@ namespace WPFHexaEditor.Control
 
         private void UserControl_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            if (e.Delta > 0) //UP
-            {
+            if (e.Delta > 0) //UP            
                 VerticalScrollBar.Value--;
-            }
-
-            if (e.Delta < 0) //Down
-            {
+            
+            if (e.Delta < 0) //Down            
                 VerticalScrollBar.Value++;
-            }
+            
         }
 
         private void Control_MoveRight(object sender, EventArgs e)
@@ -827,8 +821,7 @@ namespace WPFHexaEditor.Control
         /// </summary>
         private void Provider_DataCopied(object sender, EventArgs e)
         {
-            if (DataCopied != null)
-                DataCopied(sender, e);
+            DataCopied?.Invoke(sender, e);
         }
 
         #endregion Copy/Paste/Cut Methods
@@ -844,10 +837,8 @@ namespace WPFHexaEditor.Control
             SelectionStart = position;
             SelectionStop = position + byteLenght - 1;
 
-            if (ByteProvider.CheckIsOpen(_provider))
-            {
-                VerticalScrollBar.Value = GetLineNumber(position);
-            }
+            if (ByteProvider.CheckIsOpen(_provider))            
+                VerticalScrollBar.Value = GetLineNumber(position);            
             else
                 VerticalScrollBar.Value = 0;
 
@@ -1081,7 +1072,7 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Clear undo and change
         /// </summary>
-        private void ClearUndoChange()
+        public void ClearAllChange()
         {
             if (ByteProvider.CheckIsOpen(_provider))
                 _provider.ClearUndoChange();
@@ -1102,10 +1093,11 @@ namespace WPFHexaEditor.Control
                 RefreshView(false);
             }
         }
+        
         #endregion Undo / Redo
 
         #region Open, Close, Save... Methods/Property
-        
+
         private void Provider_ChangesSubmited(object sender, EventArgs e)
         {
             //Refresh filename
@@ -1158,7 +1150,7 @@ namespace WPFHexaEditor.Control
             }
 
             UnHighLightAll();
-            ClearUndoChange();
+            ClearAllChange();
             ClearAllScrollMarker();
             UnSelectAll();
             RefreshView();
@@ -2222,6 +2214,9 @@ namespace WPFHexaEditor.Control
             //Set position in scrollbar 
             topPosition = (GetLineNumber(bookMark.BytePositionInFile) * VerticalScrollBar.Track.TickHeight(GetMaxLine()) - 1);
 
+            if (topPosition == double.NaN)
+                topPosition = 0;
+
             //Check if position already exist and exit if exist
             if (marker != ScrollMarker.SelectionStart)
                 foreach (Rectangle ctrl in MarkerGrid.Children)
@@ -2313,11 +2308,9 @@ namespace WPFHexaEditor.Control
         /// </summary>
         private void UpdateScrollMarkerPosition()
         {
-            foreach (Rectangle rect in MarkerGrid.Children)
-            {
+            foreach (Rectangle rect in MarkerGrid.Children)            
                 if (((BookMark)rect.Tag).Marker != ScrollMarker.SelectionStart)
-                    rect.Margin = new Thickness(0, (GetLineNumber(((BookMark)rect.Tag).BytePositionInFile) * VerticalScrollBar.Track.TickHeight(GetMaxLine())) - rect.ActualHeight, 0, 0);
-            }
+                    rect.Margin = new Thickness(0, (GetLineNumber(((BookMark)rect.Tag).BytePositionInFile) * VerticalScrollBar.Track.TickHeight(GetMaxLine())) - rect.ActualHeight, 0, 0);            
         }
 
         /// <summary>

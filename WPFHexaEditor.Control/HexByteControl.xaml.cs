@@ -121,8 +121,7 @@ namespace WPFHexaEditor.Control
             HexByteControl ctrl = d as HexByteControl;
 
             if (ctrl.Action != ByteAction.Nothing && ctrl.InternalChange == false)
-                if (ctrl.ByteModified != null)
-                    ctrl.ByteModified(ctrl, new EventArgs());
+                ctrl.ByteModified?.Invoke(ctrl, new EventArgs());
 
             ctrl.UpdateLabelFromByte();
             ctrl.UpdateHexString();
@@ -286,8 +285,7 @@ namespace WPFHexaEditor.Control
             {
                 this.Focus();
 
-                if (Click != null)
-                    Click(this, e);
+                Click?.Invoke(this, e);
             }
         }
 
@@ -296,67 +294,58 @@ namespace WPFHexaEditor.Control
             if (KeyValidator.IsUpKey(e.Key))
             {
                 e.Handled = true;
-                if (MoveUp != null)
-                    MoveUp(this, new EventArgs());
-                
+                MoveUp?.Invoke(this, new EventArgs());
+
                 return;
             }
             else if(KeyValidator.IsDownKey(e.Key))
             {
                 e.Handled = true;
-                if (MoveDown != null)
-                    MoveDown(this, new EventArgs());
+                MoveDown?.Invoke(this, new EventArgs());
 
                 return;
             }
             else if (KeyValidator.IsLeftKey(e.Key))
             {
                 e.Handled = true;
-                if (MoveLeft != null)
-                    MoveLeft(this, new EventArgs());
+                MoveLeft?.Invoke(this, new EventArgs());
 
                 return;
             }
             else if (KeyValidator.IsRightKey(e.Key))
             {
                 e.Handled = true;
-                if (MoveRight != null)
-                    MoveRight(this, new EventArgs());
+                MoveRight?.Invoke(this, new EventArgs());
 
                 return;
             }
             else if (KeyValidator.IsPageDownKey(e.Key))
             {
                 e.Handled = true;
-                if (MovePageDown != null)
-                    MovePageDown(this, new EventArgs());
+                MovePageDown?.Invoke(this, new EventArgs());
 
                 return;
             }
             else if (KeyValidator.IsPageUpKey(e.Key))
             {
                 e.Handled = true;
-                if (MovePageUp != null)
-                    MovePageUp(this, new EventArgs());
+                MovePageUp?.Invoke(this, new EventArgs());
 
                 return;
             }
             else if (KeyValidator.IsDeleteKey(e.Key))
             {
                 e.Handled = true;
-                if (ByteDeleted != null)
-                    ByteDeleted(this, new EventArgs());
+                ByteDeleted?.Invoke(this, new EventArgs());
 
                 return;
             }
             else if (KeyValidator.IsBackspaceKey(e.Key))
             {
                 e.Handled = true;
-                if (ByteDeleted != null)
-                    ByteDeleted(this, new EventArgs());
+                ByteDeleted?.Invoke(this, new EventArgs());
 
-                if (MovePrevious != null)
-                    MovePrevious(this, new EventArgs());
+                MovePrevious?.Invoke(this, new EventArgs());
 
                 return;
             }
@@ -385,10 +374,9 @@ namespace WPFHexaEditor.Control
 
                             Action = ByteAction.Modified;                            
                             Byte = ByteConverters.HexToByte(FirstHexChar.Content.ToString() + SecondHexChar.Content.ToString())[0];
-                            
+
                             //Move focus event
-                            if (MoveNext != null)
-                                MoveNext(this, new EventArgs());
+                            MoveNext?.Invoke(this, new EventArgs());
                             break;
                     }
                 }            
@@ -409,8 +397,7 @@ namespace WPFHexaEditor.Control
                     this.Background = (SolidColorBrush)TryFindResource("MouseOverColor");
 
             if (e.LeftButton == MouseButtonState.Pressed)
-                if (MouseSelection != null)
-                    MouseSelection(this, e);
+                MouseSelection?.Invoke(this, e);
         }
 
         private void UserControl_MouseLeave(object sender, MouseEventArgs e)

@@ -13,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
+using WPFHexaEditorExample.Properties;
+
 namespace WPFHexaEditorExample
 {
     /// <summary>
@@ -20,9 +22,17 @@ namespace WPFHexaEditorExample
     /// </summary>
     public partial class MainWindow : Window
     {
+        private enum SettingEnum
+        {
+            HeaderVisibility,
+            ReadOnly
+        }
+
         public MainWindow()
         {
             InitializeComponent();
+
+            UpdateAllSettings();
         }
 
         private void OpenMenu_Click(object sender, RoutedEventArgs e)
@@ -34,7 +44,7 @@ namespace WPFHexaEditorExample
                 if (File.Exists(fileDialog.FileName))
                     HexEdit.FileName = fileDialog.FileName;
                 else
-                    MessageBox.Show("File not found!", Properties.Settings.Default.ApplicationName, MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("File not found!", Settings.Default.ApplicationName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -50,11 +60,46 @@ namespace WPFHexaEditorExample
 
         private void SetReadOnlyMenu_Click(object sender, RoutedEventArgs e)
         {
-            HexEdit.ReadOnlyMode = !HexEdit.ReadOnlyMode;            
-            SetReadOnlyMenu.IsChecked = HexEdit.ReadOnlyMode;
+            UpdateSetting(SettingEnum.ReadOnly);
+        }
 
-            HexEdit.ClearAllChange();
-            HexEdit.RefreshView();
+        private void ShowHeaderMenu_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateSetting(SettingEnum.HeaderVisibility);
+        }
+
+        private void UpdateSetting(SettingEnum setting)
+        {
+            switch (setting)
+            {
+                case SettingEnum.HeaderVisibility:
+                    if (!Settings.Default.HeaderVisibility)
+                        HexEdit.HeaderVisibility = Visibility.Collapsed;
+                    else
+                        HexEdit.HeaderVisibility = Visibility.Visible;
+
+                    Settings.Default.HeaderVisibility = HexEdit.HeaderVisibility == Visibility.Visible;
+                    break;
+                case SettingEnum.ReadOnly:
+                    HexEdit.ReadOnlyMode = Settings.Default.ReadOnly; 
+                    
+                    HexEdit.ClearAllChange();
+                    HexEdit.RefreshView();
+                    break;
+            }
+        }
+
+        private void UpdateAllSettings()
+        {
+            UpdateSetting(SettingEnum.HeaderVisibility);
+            UpdateSetting(SettingEnum.ReadOnly);
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+
+            Settings.Default.Save();
+        
         }
     }
 }

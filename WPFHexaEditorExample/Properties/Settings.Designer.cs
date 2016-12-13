@@ -34,5 +34,29 @@ namespace WPFHexaEditorExample.Properties {
                 this["ApplicationName"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool HeaderVisibility {
+            get {
+                return ((bool)(this["HeaderVisibility"]));
+            }
+            set {
+                this["HeaderVisibility"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ReadOnly {
+            get {
+                return ((bool)(this["ReadOnly"]));
+            }
+            set {
+                this["ReadOnly"] = value;
+            }
+        }
     }
 }

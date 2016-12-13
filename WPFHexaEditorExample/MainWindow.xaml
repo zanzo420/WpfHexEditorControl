@@ -5,7 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPFHexaEditorExample"
         xmlns:Control="clr-namespace:WPFHexaEditor.Control;assembly=WPFHexaEditor" x:Class="WPFHexaEditorExample.MainWindow"
+        xmlns:properties="clr-namespace:WPFHexaEditorExample.Properties"
         mc:Ignorable="d"
+    Closing="Window_Closing"
+        Background="WhiteSmoke"
         Title="WPF Hexa Editor control sample" Height="400" Width="800">
     <Grid>
         <DockPanel>
@@ -19,15 +22,18 @@
                     <MenuItem Header="Exit"/>
                 </MenuItem>
                 <MenuItem Header="Edit">
-                    <MenuItem x:Name="SetReadOnlyMenu" Header="Read only" Click="SetReadOnlyMenu_Click" IsCheckable="True"/>
+                    <MenuItem x:Name="SetReadOnlyMenu" Header="Read only" Click="SetReadOnlyMenu_Click" 
+                              IsCheckable="True"
+                              IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=ReadOnly, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                              />
+                </MenuItem>
+                <MenuItem Header="View">
+                    <MenuItem x:Name="ShowHeaderMenu" Header="Header visibility" Click="ShowHeaderMenu_Click"
+                              IsCheckable="True"
+                              IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HeaderVisibility, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                 </MenuItem>
             </Menu>
 
-            <!--<ToolBarTray DockPanel.Dock="Top" Height="26">
-                <ToolBar>
-                    
-                </ToolBar>
-            </ToolBarTray>-->
             <Control:HexaEditor x:Name="HexEdit" Width="Auto" Height="Auto" Margin="10,20,10,10"  />
         </DockPanel>
     </Grid>

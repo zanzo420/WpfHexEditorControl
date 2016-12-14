@@ -111,20 +111,37 @@ namespace WPFHexaEditor.Control
             HexByteControl ctrl = sender as HexByteControl;
             StringByteControl sbCtrl = sender as StringByteControl;
 
-            long position = -1;
+            DeleteSelection();
 
-            if (SelectionStart > SelectionStop)
-                position = SelectionStop;
-            else
-                position = SelectionStart;
+            //UpdateByteModified();
+            //UpdateSelection();
+            //UpdateStatusBar();
+        }
 
-            _provider.AddByteDeleted(position, SelectionLenght);
+        /// <summary>
+        /// Delete selection, add scroll marker and update control
+        /// </summary>
+        public void DeleteSelection()
+        {
+            if (!CanDelete()) return;
 
-            SetScrollMarker(position, ScrollMarker.ByteDeleted);
+            if (ByteProvider.CheckIsOpen(_provider))
+            {
+                long position = -1;
 
-            UpdateByteModified();
-            UpdateSelection();
-            UpdateStatusBar();
+                if (SelectionStart > SelectionStop)
+                    position = SelectionStop;
+                else
+                    position = SelectionStart;
+
+                _provider.AddByteDeleted(position, SelectionLenght);
+
+                SetScrollMarker(position, ScrollMarker.ByteDeleted);
+
+                UpdateByteModified();
+                UpdateSelection();
+                UpdateStatusBar();
+            }
         }
         #endregion Add modify delete bytes methods/event
 
@@ -766,6 +783,14 @@ namespace WPFHexaEditor.Control
                 return false;
             
             return true;
+        }
+
+        /// <summary>
+        /// Return true if delete method could be invoked.
+        /// </summary>
+        public bool CanDelete()
+        {
+            return CanCopy() && !ReadOnlyMode;
         }
         
         /// <summary>

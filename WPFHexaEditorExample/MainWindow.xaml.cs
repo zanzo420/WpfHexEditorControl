@@ -12,7 +12,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-
+using WPFHexaEditor.Core;
+using WPFHexaEditor.Core.Bytes;
 using WPFHexaEditorExample.Properties;
 
 namespace WPFHexaEditorExample
@@ -100,6 +101,26 @@ namespace WPFHexaEditorExample
 
             Settings.Default.Save();
         
+        }
+
+        private void ExitMenu_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void CopyHexaMenu_Click(object sender, RoutedEventArgs e)
+        {
+            HexEdit.CopyToClipboard(CopyPasteMode.HexaString);
+        }
+
+        private void CopyStringMenu_Click(object sender, RoutedEventArgs e)
+        {
+            HexEdit.CopyToClipboard();
+        }
+
+        private void DeleteSelectionMenu_Click(object sender, RoutedEventArgs e)
+        {
+            HexEdit.DeleteSelection();
         }
     }
 }

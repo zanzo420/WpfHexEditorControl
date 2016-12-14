@@ -19,13 +19,18 @@
                     <MenuItem Header="Save as..." IsEnabled="False"/>
                     <MenuItem x:Name="CloseFileMenu" Header="Close file" Click="CloseFileMenu_Click"/>
                     <Separator/>
-                    <MenuItem Header="Exit"/>
+                    <MenuItem x:Name="ExitMenu" Header="Exit" Click="ExitMenu_Click"/>
                 </MenuItem>
                 <MenuItem Header="Edit">
                     <MenuItem x:Name="SetReadOnlyMenu" Header="Read only" Click="SetReadOnlyMenu_Click" 
                               IsCheckable="True"
                               IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=ReadOnly, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                               />
+                    <Separator/>
+                    <MenuItem x:Name="CopyHexaMenu" Header="Copy hexadecimal string" Click="CopyHexaMenu_Click"/>
+                    <MenuItem x:Name="CopyStringMenu" Header="Copy ASCII string" Click="CopyStringMenu_Click"/>
+                    <Separator/>
+                    <MenuItem x:Name="DeleteSelectionMenu" Header="Delete selection" Click="DeleteSelectionMenu_Click"/>
                 </MenuItem>
                 <MenuItem Header="View">
                     <MenuItem x:Name="ShowHeaderMenu" Header="Header visibility" Click="ShowHeaderMenu_Click"

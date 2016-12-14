@@ -335,10 +335,13 @@ namespace WPFHexaEditor.Control
             }
             else if (KeyValidator.IsDeleteKey(e.Key))
             {
-                e.Handled = true;
-                ByteDeleted?.Invoke(this, new EventArgs());
+                if (!ReadOnlyMode)
+                {
+                    e.Handled = true;
+                    ByteDeleted?.Invoke(this, new EventArgs());
 
-                return;
+                    return;
+                }
             }
             else if (KeyValidator.IsBackspaceKey(e.Key))
             {

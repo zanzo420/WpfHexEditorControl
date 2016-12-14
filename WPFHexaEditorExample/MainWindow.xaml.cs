@@ -26,7 +26,8 @@ namespace WPFHexaEditorExample
         private enum SettingEnum
         {
             HeaderVisibility,
-            ReadOnly
+            ReadOnly,
+            ScrollVisibility
         }
 
         public MainWindow()
@@ -81,6 +82,15 @@ namespace WPFHexaEditorExample
 
                     Settings.Default.HeaderVisibility = HexEdit.HeaderVisibility == Visibility.Visible;
                     break;
+                case SettingEnum.ScrollVisibility:
+                    if (!Settings.Default.ScrollVisibility)
+                        HexEdit.VerticalScrollBarVisibility = Visibility.Collapsed;
+                    else
+                        HexEdit.VerticalScrollBarVisibility = Visibility.Visible;
+
+                    Settings.Default.ScrollVisibility = HexEdit.VerticalScrollBarVisibility == Visibility.Visible;
+                    break;
+
                 case SettingEnum.ReadOnly:
                     HexEdit.ReadOnlyMode = Settings.Default.ReadOnly; 
                     
@@ -94,6 +104,7 @@ namespace WPFHexaEditorExample
         {
             UpdateSetting(SettingEnum.HeaderVisibility);
             UpdateSetting(SettingEnum.ReadOnly);
+            UpdateSetting(SettingEnum.ScrollVisibility);
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -121,6 +132,11 @@ namespace WPFHexaEditorExample
         private void DeleteSelectionMenu_Click(object sender, RoutedEventArgs e)
         {
             HexEdit.DeleteSelection();
+        }
+
+        private void ShowScrollMenu_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateSetting(SettingEnum.ScrollVisibility);
         }
     }
 }

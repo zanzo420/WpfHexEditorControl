@@ -39,6 +39,7 @@ namespace WPFHexaEditor.Control
             RefreshView(true);
 
             StatusBarGrid.DataContext = this;
+                        
         }
         
         #region Miscellaneous property/methods
@@ -77,6 +78,13 @@ namespace WPFHexaEditor.Control
             HexaEditor ctrl = d as HexaEditor;
 
             ctrl.RefreshView(false);
+
+            //TODO: ADD VISIBILITY CONVERTER FOR BINDING READONLY PROPERTY
+            if (ctrl.ReadOnlyMode)
+                ctrl.ReadOnlyLabel.Visibility = Visibility.Visible;
+            else
+                ctrl.ReadOnlyLabel.Visibility = Visibility.Collapsed;
+
         }
         
         private void Provider_ReadOnlyChanged(object sender, EventArgs e)
@@ -112,10 +120,6 @@ namespace WPFHexaEditor.Control
             StringByteControl sbCtrl = sender as StringByteControl;
 
             DeleteSelection();
-
-            //UpdateByteModified();
-            //UpdateSelection();
-            //UpdateStatusBar();
         }
 
         /// <summary>

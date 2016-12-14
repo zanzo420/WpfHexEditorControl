@@ -19,7 +19,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    
+
     <Grid SizeChanged="Grid_SizeChanged" 
           Background="White">
         <Grid.ColumnDefinitions>
@@ -55,13 +55,13 @@
                    Grid.Column="4"
                    Grid.Row="0"
                    Grid.RowSpan="2"/>
-        
+
         <StackPanel x:Name="HexHeaderStackPanel"
                     Orientation="Horizontal" 
                     Grid.Column="1" 
                     Grid.Row="0"
                     Margin="10,0"/>
-        
+
         <StackPanel x:Name="StringDataStackPanel" 
                     Grid.Row="1" 
                     Grid.Column="2"
@@ -74,7 +74,7 @@
               Height="30"
               Visibility="Visible"
               VerticalAlignment="Top" >
-            
+
             <Separator Height="1"
                        Margin="0,0,0,29" 
                        Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HexaEditor}}, Path=BorderBrush}"/>
@@ -111,7 +111,7 @@
                    Grid.RowSpan="2"
                    Height="42" 
                    VerticalAlignment="Bottom"/>
-        
+
         <Rectangle x:Name="TopRectangle" 
                    Fill="#FFF4F4F5" 
                    Opacity="0"
@@ -134,6 +134,11 @@
         <Grid x:Name="MarkerGrid" 
               Grid.Column="4"
               Grid.RowSpan="2"
-              Margin="0,17"/>        
+              Margin="0,17"/>
+        
+        <!--TODO: ADD VISIBILITY CONVERTER-->
+        <Label x:Name="ReadOnlyLabel" Content="ReadOnly" FontWeight="Bold" Grid.ColumnSpan="2" Grid.Column="2" 
+               Visibility="Collapsed"
+               Margin="0,1,5,1" Grid.Row="2" HorizontalAlignment="Right" Width="64" Grid.RowSpan="2"/> 
     </Grid>
 </UserControl>

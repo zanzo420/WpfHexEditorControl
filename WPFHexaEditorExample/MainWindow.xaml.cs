@@ -138,5 +138,21 @@ namespace WPFHexaEditorExample
         {
             UpdateSetting(SettingEnum.ScrollVisibility);
         }
+
+        private void SetPositionMenu_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void GOPosition_Click(object sender, RoutedEventArgs e)
+        {
+            long position = 0;
+            if (long.TryParse(PositionText.Text, out position))
+                HexEdit.SetPosition(position, 1);
+            else
+                MessageBox.Show("Enter long value.");
+
+            ViewMenu.IsSubmenuOpen = false;
+        }
     }
 }

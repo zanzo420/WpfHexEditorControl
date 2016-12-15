@@ -183,7 +183,7 @@ namespace WPFHexaEditor.Control
         public static readonly DependencyProperty SelectionLineProperty =
             DependencyProperty.Register("SelectionLine", typeof(long), typeof(HexaEditor), 
                 new FrameworkPropertyMetadata(0L));
-        
+                
         private void LineInfoLabel_MouseMove(object sender, MouseEventArgs e)
         {
             Label line = sender as Label;
@@ -1289,7 +1289,22 @@ namespace WPFHexaEditor.Control
 
         public static readonly DependencyProperty BytePerLineProperty =
             DependencyProperty.Register("BytePerLine", typeof(int), typeof(HexaEditor), 
-                new FrameworkPropertyMetadata(16, new PropertyChangedCallback(BytePerLine_PropertyChanged)));
+                new FrameworkPropertyMetadata(16, new PropertyChangedCallback(BytePerLine_PropertyChanged),
+                    new CoerceValueCallback(BytePerLine_CoerceValue)));
+
+        private static object BytePerLine_CoerceValue(DependencyObject d, object baseValue)
+        {
+            HexaEditor ctrl = d as HexaEditor;
+            
+            var value = (int)baseValue;
+
+            if (value < 8)
+                return 8;
+            else if (value > 32)
+                return 32;
+            else
+                return baseValue;
+        }
 
         private static void BytePerLine_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -1334,7 +1349,7 @@ namespace WPFHexaEditor.Control
             if (ByteProvider.CheckIsOpen(_provider))
                 SelectionLine = (SelectionStart / BytePerLine) + 1;
             else
-                SelectionLine = 0;
+                SelectionLine = 0;            
         }
         
         /// <summary>

@@ -242,6 +242,11 @@ namespace WPFHexaEditor.Control
             }
         }
 
+        private void Control_EscapeKey(object sender, EventArgs e)
+        {
+            UnSelectAll();
+        }
+
         private void Control_MovePageUp(object sender, EventArgs e)
         {
             HexByteControl hbCtrl = sender as HexByteControl;
@@ -1475,6 +1480,7 @@ namespace WPFHexaEditor.Control
                             sbCtrl.MoveLeft += Control_MoveLeft;
                             sbCtrl.MoveRight += Control_MoveRight;
                             sbCtrl.ByteDeleted += Control_ByteDeleted;
+                            sbCtrl.EscapeKey += Control_EscapeKey;
 
                             sbCtrl.Byte = (byte)_provider.ReadByte();
 
@@ -1776,6 +1782,7 @@ namespace WPFHexaEditor.Control
                             byteControl.MovePageUp += Control_MovePageUp;
                             byteControl.MovePageDown += Control_MovePageDown;
                             byteControl.ByteDeleted += Control_ByteDeleted;
+                            byteControl.EscapeKey += Control_EscapeKey;
 
                             byteControl.Byte = (byte)_provider.ReadByte();
 

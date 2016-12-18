@@ -192,5 +192,35 @@ namespace WPFHexaEditorExample
         {
             HexEdit.Undo();
         }
+
+        private void SetBookMarkButton_Click(object sender, RoutedEventArgs e)
+        {
+            HexEdit.SetBookMark();
+        }
+
+        private void DeleteBookmark_Click(object sender, RoutedEventArgs e)
+        {
+            HexEdit.ClearScrollMarker(ScrollMarker.Bookmark);
+        }
+
+        private void FindText_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void FindFirstButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void FindPreviousButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void FindAllSelection_Click(object sender, RoutedEventArgs e)
+        {
+            HexEdit.FindAllSelection(true);
+        }
     }
 }

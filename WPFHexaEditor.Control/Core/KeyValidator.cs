@@ -90,9 +90,10 @@ namespace WPFHexaEditor.Core
                    key == Key.F1 || key == Key.F2 || key == Key.F3 || key == Key.F4 || key == Key.F5 || key == Key.F6 || key == Key.F7 || key == Key.F8 || key == Key.F9 || key == Key.F10 || key == Key.F11 || key == Key.F12 ||
                    key == Key.Home ||
                    key == Key.Insert ||
-                   key == Key.End ||
-                   key == Key.Escape;
-        }  
+                   key == Key.End;
+        }
+
+        public static bool IsEscapeKey(Key key) { return key == Key.Escape; }
 
         public static bool IsUpKey(Key key) { return key == Key.Up; }
 

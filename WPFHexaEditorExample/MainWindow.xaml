@@ -9,7 +9,7 @@
         mc:Ignorable="d"
     Closing="Window_Closing"
         Background="WhiteSmoke"
-        Title="WPF Hexa Editor control sample" Height="400" Width="800">
+        Title="WPF Hexa Editor control sample" Height="530" Width="800">
     <Grid>
         <DockPanel>
             <Menu DockPanel.Dock="Top">
@@ -33,6 +33,21 @@
                     <MenuItem x:Name="CopyStringMenu" Header="Copy ASCII string" Click="CopyStringMenu_Click"/>
                     <Separator/>
                     <MenuItem x:Name="DeleteSelectionMenu" Header="Delete selection" Click="DeleteSelectionMenu_Click"/>
+                    <Separator/>
+                    <MenuItem Header="Bookmarks">
+                        <MenuItem x:Name="SetBookMarkButton" Header="Set position as bookmark" Click="SetBookMarkButton_Click"/>
+                        <MenuItem x:Name="DeleteBookmark" Header="Remove all bookmarks" Click="DeleteBookmark_Click"/>
+                    </MenuItem>
+                    <Separator/>
+                    <MenuItem Header="Find">
+                        <MenuItem x:Name="FindAllSelection" Header="Find all occurence of selection" Click="FindAllSelection_Click"/>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Width="75" Content="SetPosition"/>
+                            <TextBox x:Name="FindText" Width="75" VerticalContentAlignment="Center" TextChanged="FindText_TextChanged"/>
+                            <Button x:Name="FindFirstButton" Content="|&lt;--" IsEnabled="False" Click="FindFirstButton_Click"/>
+                            <Button x:Name="FindPreviousButton" Content="&lt;" IsEnabled="False" Click="FindPreviousButton_Click"/>
+                        </StackPanel>
+                    </MenuItem>
                 </MenuItem>
                 <MenuItem x:Name="PositionMenu" Header="Position">
                     <StackPanel Margin="0" Orientation="Horizontal">
@@ -45,14 +60,12 @@
                         <Label Width="100" Content="SetPosition"/>
                         <TextBox x:Name="PositionText" Width="75" VerticalContentAlignment="Center" TextChanged="PositionText_TextChanged"/>
                         <Button x:Name="GoPositionButton" IsEnabled="False" Content="GO" Click="GOPosition_Click"/>
-                        <Label Content="byte"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Label Width="75" Content="SetPosition"/>
                         <Label Width="25" Content="0x" />
                         <TextBox x:Name="PositionHexText" Width="75" VerticalContentAlignment="Center" TextChanged="PositionHexText_TextChanged"/>
                         <Button x:Name="GoPositionHexaButton" Content="GO" IsEnabled="False" Click="GOHexPosition_Click"/>
-                        <Label Content="byte"/>
                     </StackPanel>
                 </MenuItem>
                 <MenuItem x:Name="ViewMenu" Header="View">

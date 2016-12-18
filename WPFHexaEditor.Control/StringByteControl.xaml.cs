@@ -37,6 +37,7 @@ namespace WPFHexaEditor.Control
         public event EventHandler MovePageDown;
         public event EventHandler MovePageUp;
         public event EventHandler ByteDeleted;
+        public event EventHandler EscapeKey;
 
         public StringByteControl()
         {
@@ -345,6 +346,12 @@ namespace WPFHexaEditor.Control
 
                     return;
                 }
+            }
+            else if (KeyValidator.IsEscapeKey(e.Key))
+            {
+                e.Handled = true;
+                EscapeKey?.Invoke(this, new EventArgs());
+                return;
             }
             
             //MODIFY ASCII... 

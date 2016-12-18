@@ -22,6 +22,8 @@
                     <MenuItem x:Name="ExitMenu" Header="Exit" Click="ExitMenu_Click"/>
                 </MenuItem>
                 <MenuItem Header="Edit">
+                    <MenuItem x:Name="UndoMenu" Header="Undo" Click="UndoMenu_Click"/>
+                    <Separator/>
                     <MenuItem x:Name="SetReadOnlyMenu" Header="Read only" Click="SetReadOnlyMenu_Click" 
                               IsCheckable="True"
                               IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=ReadOnly, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"

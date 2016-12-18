@@ -187,5 +187,10 @@ namespace WPFHexaEditorExample
                 GoPositionButton.IsEnabled = false;        
 
         }
+
+        private void UndoMenu_Click(object sender, RoutedEventArgs e)
+        {
+            HexEdit.Undo();
+        }
     }
 }

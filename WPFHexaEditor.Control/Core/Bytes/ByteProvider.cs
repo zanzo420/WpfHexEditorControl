@@ -657,6 +657,22 @@ namespace WPFHexaEditor.Core.Bytes
             }
         }
 
+        public long UndoCount
+        {
+            get
+            {
+                return _byteModifiedList.Count;
+            }
+        }
+
+        public List<ByteModified> UndosList
+        {
+            get
+            {
+                return _byteModifiedList;
+            }
+        }
+
         /// <summary>
         /// Get or set for indicate if control CanUndo
         /// </summary>

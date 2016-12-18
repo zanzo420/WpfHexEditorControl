@@ -1122,7 +1122,29 @@ namespace WPFHexaEditor.Control
                 RefreshView(false);
             }
         }
-        
+
+        public long UndoCount
+        {
+            get
+            {
+                if (ByteProvider.CheckIsOpen(_provider))
+                    return _provider.UndoCount;
+                else
+                    return 0;
+            }
+        }
+
+        public List<ByteModified> UndosList
+        {
+            get
+            {
+                if (ByteProvider.CheckIsOpen(_provider))
+                    return _provider.UndosList;
+                else
+                    return null;
+            }
+        }
+
         #endregion Undo / Redo
 
         #region Open, Close, Save... Methods/Property

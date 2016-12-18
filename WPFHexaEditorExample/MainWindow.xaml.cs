@@ -221,6 +221,17 @@ namespace WPFHexaEditorExample
         private void FindAllSelection_Click(object sender, RoutedEventArgs e)
         {
             HexEdit.FindAllSelection(true);
+
+        }
+
+        private void SelectAllButton_Click(object sender, RoutedEventArgs e)
+        {
+            HexEdit.SelectAll();
+        }
+
+        private void FindNextButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

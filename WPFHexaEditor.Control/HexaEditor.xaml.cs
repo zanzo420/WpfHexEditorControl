@@ -245,6 +245,7 @@ namespace WPFHexaEditor.Control
         private void Control_EscapeKey(object sender, EventArgs e)
         {
             UnSelectAll();
+            UnHighLightAll();
         }
 
         private void Control_MovePageUp(object sender, EventArgs e)
@@ -452,6 +453,7 @@ namespace WPFHexaEditor.Control
         {
             _markedPositionList.Clear();
             UpdateHighLightByte();
+            ClearScrollMarker(ScrollMarker.SearchHighLight);
         }
 
         /// <summary>

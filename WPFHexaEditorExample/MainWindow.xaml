@@ -31,8 +31,9 @@
                     <Separator/>
                     <MenuItem x:Name="CopyHexaMenu" Header="Copy hexadecimal string" Click="CopyHexaMenu_Click"/>
                     <MenuItem x:Name="CopyStringMenu" Header="Copy ASCII string" Click="CopyStringMenu_Click"/>
-                    <Separator/>
                     <MenuItem x:Name="DeleteSelectionMenu" Header="Delete selection" Click="DeleteSelectionMenu_Click"/>
+                    <Separator/>
+                    <MenuItem x:Name="SelectAllButton" Header="Select all" Click="SelectAllButton_Click"/>
                     <Separator/>
                     <MenuItem Header="Bookmarks">
                         <MenuItem x:Name="SetBookMarkButton" Header="Set position as bookmark" Click="SetBookMarkButton_Click"/>
@@ -42,10 +43,12 @@
                     <MenuItem Header="Find">
                         <MenuItem x:Name="FindAllSelection" Header="Find all occurence of selection" Click="FindAllSelection_Click"/>
                         <StackPanel Orientation="Horizontal">
-                            <Label Width="75" Content="SetPosition"/>
+                            <Label Width="75" Content="Find string" Padding="0,5,5,5"/>
                             <TextBox x:Name="FindText" Width="75" VerticalContentAlignment="Center" TextChanged="FindText_TextChanged"/>
                             <Button x:Name="FindFirstButton" Content="|&lt;--" IsEnabled="False" Click="FindFirstButton_Click"/>
-                            <Button x:Name="FindPreviousButton" Content="&lt;" IsEnabled="False" Click="FindPreviousButton_Click"/>
+                            <Button x:Name="FindPreviousButton" Content=" &lt; " IsEnabled="False" Click="FindPreviousButton_Click"/>
+                            <Button x:Name="FindNextButton" Content=" &gt; " IsEnabled="False" Click="FindNextButton_Click"/>
+                            <Button x:Name="FindLastButton" Content="--&gt;|" IsEnabled="False" Click="FindFirstButton_Click"/>
                         </StackPanel>
                     </MenuItem>
                 </MenuItem>

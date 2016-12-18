@@ -162,7 +162,7 @@ namespace WPFHexaEditor.Core.Bytes
         {
             get
             {
-                return _stream.Position == _stream.Length;
+                return (_stream.Position == _stream.Length) || (_stream.Position > _stream.Length);
             }
         }
 

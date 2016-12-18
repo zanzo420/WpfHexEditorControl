@@ -32,6 +32,27 @@
                     <Separator/>
                     <MenuItem x:Name="DeleteSelectionMenu" Header="Delete selection" Click="DeleteSelectionMenu_Click"/>
                 </MenuItem>
+                <MenuItem x:Name="PositionMenu" Header="Position">
+                    <StackPanel Margin="0" Orientation="Horizontal">
+                        <Label Content="BytePerline" Width="100" />
+                        <TextBox TextWrapping="Wrap" Text="{Binding BytePerLine, ElementName=HexEdit, UpdateSourceTrigger=LostFocus}" Width="75" VerticalContentAlignment="Center"/>
+                        <Label Content="(Lost focus)"/>
+                    </StackPanel>
+                    <Separator/>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Width="100" Content="SetPosition"/>
+                        <TextBox x:Name="PositionText" Width="75" VerticalContentAlignment="Center" TextChanged="PositionText_TextChanged"/>
+                        <Button x:Name="GoPositionButton" IsEnabled="False" Content="GO" Click="GOPosition_Click"/>
+                        <Label Content="byte"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Width="75" Content="SetPosition"/>
+                        <Label Width="25" Content="0x" />
+                        <TextBox x:Name="PositionHexText" Width="75" VerticalContentAlignment="Center" TextChanged="PositionHexText_TextChanged"/>
+                        <Button x:Name="GoPositionHexaButton" Content="GO" IsEnabled="False" Click="GOHexPosition_Click"/>
+                        <Label Content="byte"/>
+                    </StackPanel>
+                </MenuItem>
                 <MenuItem x:Name="ViewMenu" Header="View">
                     <MenuItem x:Name="ShowHeaderMenu" Header="Header visibility" Click="ShowHeaderMenu_Click"
                               IsCheckable="True"
@@ -40,23 +61,12 @@
                     <MenuItem x:Name="ShowScrollMenu" Header="Scroll visibility" Click="ShowScrollMenu_Click"
                               IsCheckable="True"
                               IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=ScrollVisibility, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
-                    <Separator/>
-                    <StackPanel Margin="0" Orientation="Horizontal">
-                        <Label Content="BytePerline" Width="100" />
-                        <TextBox TextWrapping="Wrap" Text="{Binding BytePerLine, ElementName=HexEdit, UpdateSourceTrigger=LostFocus}" Width="75" VerticalContentAlignment="Center"/>
-                        <Label Content="(Lost focus)"/>
-                    </StackPanel>                    
-                    <StackPanel Orientation="Horizontal">
-                        <Label Width="100" Content="SetPosition"/>
-                        <TextBox x:Name="PositionText" Text="0" Width="75" VerticalContentAlignment="Center"/>
-                        <Button Content="GO" Click="GOPosition_Click"/>
-                    </StackPanel>
+
                 </MenuItem>
-                
             </Menu>
 
             <Control:HexaEditor x:Name="HexEdit" Width="Auto" Height="Auto" Margin="10,20,10,10"  />
-            
+
         </DockPanel>
     </Grid>
 </Window>

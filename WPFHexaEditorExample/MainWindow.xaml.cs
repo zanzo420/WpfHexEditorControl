@@ -154,5 +154,38 @@ namespace WPFHexaEditorExample
 
             ViewMenu.IsSubmenuOpen = false;
         }
+
+        private void GOHexPosition_Click(object sender, RoutedEventArgs e)
+        {
+
+            if (ByteConverters.IsHexaValue(PositionHexText.Text))
+            {
+                long position = ByteConverters.HexLiteralToLong(PositionHexText.Text);
+                if (position > 0)
+                    HexEdit.SetPosition(position, 1);
+                else
+                    MessageBox.Show("Enter hexa value.");
+            }
+
+            ViewMenu.IsSubmenuOpen = false;
+        }
+
+        private void PositionHexText_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (ByteConverters.IsHexaValue(PositionHexText.Text))
+                GoPositionHexaButton.IsEnabled = true;
+            else
+                GoPositionHexaButton.IsEnabled = false;
+        }
+
+        private void PositionText_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            long position = 0;
+            if (long.TryParse(PositionText.Text, out position))
+                GoPositionButton.IsEnabled = true;
+            else
+                GoPositionButton.IsEnabled = false;        
+
+        }
     }
 }

@@ -137,6 +137,25 @@ namespace WPFHexaEditor.Core.Bytes
         }
 
         /// <summary>
+        /// Check if is an hexa string
+        /// </summary>
+        /// <param name="hexastring"></param>
+        /// <returns></returns>
+        public static bool IsHexaValue(string hexastring)
+        {
+            long position = 0;
+            try
+            {
+                position = HexLiteralToLong(hexastring);
+                return true;
+            }
+            catch (ArgumentOutOfRangeException e)
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Convert string to byte array
         /// </summary>
         public static byte[] StringToByte(string str)

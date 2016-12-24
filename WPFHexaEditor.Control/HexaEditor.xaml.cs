@@ -365,12 +365,6 @@ namespace WPFHexaEditor.Control
                 SetFocusStringDataPanel(SelectionStart);
         }
 
-
-        private void Control_RightClick(object sender, EventArgs e)
-        {
-            CMenu.Visibility = Visibility.Visible;   
-        }
-
         private void Control_Click(object sender, EventArgs e)
         {
             StringByteControl sbCtrl = sender as StringByteControl;
@@ -2427,6 +2421,31 @@ namespace WPFHexaEditor.Control
         #endregion Bookmark and other scrollmarker
 
         #region Context menu
+
+        private void Control_RightClick(object sender, EventArgs e)
+        {
+            CopyASCIICMenu.IsEnabled = false;
+            FindAllCMenu.IsEnabled = false;
+            CopyHexaCMenu.IsEnabled = false;
+            UndoCMenu.IsEnabled = false;
+            DeleteCMenu.IsEnabled = false;
+
+            if (SelectionLenght > 0)
+            {
+                CopyASCIICMenu.IsEnabled = true;
+                FindAllCMenu.IsEnabled = true;
+                CopyHexaCMenu.IsEnabled = true;
+                DeleteCMenu.IsEnabled = true;
+            }
+
+            if (UndoCount > 0)
+                UndoCMenu.IsEnabled = true;
+
+            //Show context menu
+            Focus();
+            CMenu.Visibility = Visibility.Visible;
+        }
+
         private void FindAllCMenu_Click(object sender, RoutedEventArgs e)
         {
             FindAll(SelectionByteArray, true);
@@ -2440,6 +2459,16 @@ namespace WPFHexaEditor.Control
         private void CopyASCIICMenu_Click(object sender, RoutedEventArgs e)
         {
             CopyToClipboard(CopyPasteMode.ASCIIString);
+        }
+
+        private void DeleteCMenu_Click(object sender, RoutedEventArgs e)
+        {
+            DeleteSelection();
+        }
+
+        private void UndoCMenu_Click(object sender, RoutedEventArgs e)
+        {
+            Undo();
         }
 
         #endregion

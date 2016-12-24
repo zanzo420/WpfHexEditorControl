@@ -28,6 +28,7 @@ namespace WPFHexaEditor.Control
         public event EventHandler ByteModified;
         public event EventHandler MouseSelection;
         public event EventHandler Click;
+        public event EventHandler RightClick;
         public event EventHandler MoveNext;
         public event EventHandler MovePrevious;
         public event EventHandler MoveRight;
@@ -288,6 +289,11 @@ namespace WPFHexaEditor.Control
 
                 Click?.Invoke(this, e);
             }
+
+            if (e.RightButton == MouseButtonState.Pressed)
+            {
+                RightClick?.Invoke(this, e);
+            }
         }
 
         private void UserControl_KeyDown(object sender, KeyEventArgs e)
@@ -394,7 +400,7 @@ namespace WPFHexaEditor.Control
 
         private void UpdateHexString()
         {
-            HexString = ((string)FirstHexChar.Content + (string)SecondHexChar.Content).ToString();
+            HexString = ((string)FirstHexChar.Content + (string)SecondHexChar.Content); //.ToString();
         }
 
         private void UserControl_MouseEnter(object sender, MouseEventArgs e)

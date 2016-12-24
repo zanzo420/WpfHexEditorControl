@@ -26,6 +26,7 @@ namespace WPFHexaEditor.Control
         private bool _readOnlyMode;
 
         public event EventHandler Click;
+        public event EventHandler RightClick;
         public event EventHandler MouseSelection;
         public event EventHandler StringByteModified;
         public event EventHandler MoveNext;
@@ -429,6 +430,11 @@ namespace WPFHexaEditor.Control
                 this.Focus();
 
                 Click?.Invoke(this, e);
+            }
+
+            if (e.RightButton == MouseButtonState.Pressed)
+            {
+                RightClick?.Invoke(this, e);
             }
         }
     }

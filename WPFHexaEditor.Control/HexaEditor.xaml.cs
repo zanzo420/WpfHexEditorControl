@@ -38,8 +38,7 @@ namespace WPFHexaEditor.Control
 
             RefreshView(true);
 
-            StatusBarGrid.DataContext = this;
-                        
+            StatusBarGrid.DataContext = this;                        
         }
         
         #region Miscellaneous property/methods
@@ -364,6 +363,12 @@ namespace WPFHexaEditor.Control
 
             if (sbCtrl != null)
                 SetFocusStringDataPanel(SelectionStart);
+        }
+
+
+        private void Control_RightClick(object sender, EventArgs e)
+        {
+            CMenu.Visibility = Visibility.Visible;   
         }
 
         private void Control_Click(object sender, EventArgs e)
@@ -1244,6 +1249,9 @@ namespace WPFHexaEditor.Control
                 _provider.LongProcessProgressStarted += Provider_LongProcessProgressStarted;
                 _provider.LongProcessProgressCompleted += Provider_LongProcessProgressCompleted;
 
+                UpdateVerticalScroll();
+                UpdateHexHeader();
+
                 RefreshView(true);
 
                 UnSelectAll();
@@ -1339,7 +1347,8 @@ namespace WPFHexaEditor.Control
         {
             HexaEditor ctrl = d as HexaEditor;
             
-            ctrl.RefreshView(true);
+            //ctrl.RefreshView(true);
+            ctrl.UpdateHexHeader();
         }
 
         private void Grid_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -1388,8 +1397,8 @@ namespace WPFHexaEditor.Control
         public void RefreshView(bool ControlResize = false)
         {
             UpdateLinesInfo();
-            UpdateVerticalScroll();
-            UpdateHexHeader();
+            //UpdateVerticalScroll();
+            //UpdateHexHeader();
             UpdateStringDataViewer(ControlResize);
             UpdateDataViewer(ControlResize);
             UpdateByteModified();
@@ -1476,7 +1485,8 @@ namespace WPFHexaEditor.Control
                             sbCtrl.MovePrevious += Control_MovePrevious;
                             sbCtrl.MouseSelection += Control_MouseSelection;
                             sbCtrl.Click += Control_Click;
-                            sbCtrl.BytePositionInFile = _provider.Position;
+                            sbCtrl.RightClick += Control_RightClick;
+                            //sbCtrl.BytePositionInFile = _provider.Position;
                             sbCtrl.MoveUp += Control_MoveUp;
                             sbCtrl.MoveDown += Control_MoveDown;
                             sbCtrl.MoveLeft += Control_MoveLeft;
@@ -1535,7 +1545,7 @@ namespace WPFHexaEditor.Control
                 StringDataStackPanel.Children.Clear();
             }
         }
-
+        
         /// <summary>
         /// Update byte are modified
         /// </summary>
@@ -1774,6 +1784,7 @@ namespace WPFHexaEditor.Control
                             byteControl.ReadOnlyMode = ReadOnlyMode;
                             byteControl.MouseSelection += Control_MouseSelection;
                             byteControl.Click += Control_Click;
+                            byteControl.RightClick += Control_RightClick;
                             byteControl.MoveNext += Control_MoveNext;
                             byteControl.MovePrevious += Control_MovePrevious;
                             byteControl.ByteModified += Control_ByteModified;
@@ -2414,5 +2425,23 @@ namespace WPFHexaEditor.Control
         }
 
         #endregion Bookmark and other scrollmarker
+
+        #region Context menu
+        private void FindAllCMenu_Click(object sender, RoutedEventArgs e)
+        {
+            FindAll(SelectionByteArray, true);
+        }
+
+        private void CopyHexaCMenu_Click(object sender, RoutedEventArgs e)
+        {
+            CopyToClipboard(CopyPasteMode.HexaString);
+        }
+
+        private void CopyASCIICMenu_Click(object sender, RoutedEventArgs e)
+        {
+            CopyToClipboard(CopyPasteMode.ASCIIString);
+        }
+
+        #endregion
     }
 }

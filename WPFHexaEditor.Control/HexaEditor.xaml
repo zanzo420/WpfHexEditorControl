@@ -24,6 +24,12 @@
         <ContextMenu x:Name="CMenu" Visibility="Collapsed">
             <MenuItem x:Name="UndoCMenu" Header="Undo" Click="UndoCMenu_Click"/>
             <Separator/>
+            <MenuItem Header="Bookmarks">
+                <MenuItem x:Name="BookMarkCMenu" Header="Set bookmark" Click="BookMarkCMenu_Click" Width="Auto"/>
+                <Separator/>
+                <MenuItem x:Name="ClearBookMarkCMenu" Header="Clear bookmark" Click="ClearBookMarkCMenu_Click" Width="Auto"/>
+            </MenuItem>
+            <Separator/>
             <MenuItem x:Name="CopyHexaCMenu" Header="Copy hexadecimal string" Click="CopyHexaCMenu_Click" />
             <MenuItem x:Name="CopyASCIICMenu" Header="Copy ASCII string" Click="CopyASCIICMenu_Click"/>
             <Separator/>

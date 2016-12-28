@@ -25,6 +25,7 @@ namespace WPFHexaEditor.Control
         private ByteProvider _provider = null;
         private double _scrollLargeChange = 100;
         private List<long> _markedPositionList = new List<long>();
+        private long _rightClickBytePosition = -1;
 
         //Event
         public event EventHandler SelectionStartChanged;
@@ -2424,11 +2425,22 @@ namespace WPFHexaEditor.Control
 
         private void Control_RightClick(object sender, EventArgs e)
         {
+            //position
+            StringByteControl sbCtrl = sender as StringByteControl;
+            HexByteControl ctrl = sender as HexByteControl;
+
+            if (sbCtrl != null)
+                _rightClickBytePosition = sbCtrl.BytePositionInFile;
+            else if (ctrl != null)
+                _rightClickBytePosition = ctrl.BytePositionInFile;
+
+            //update ctrl 
             CopyASCIICMenu.IsEnabled = false;
             FindAllCMenu.IsEnabled = false;
             CopyHexaCMenu.IsEnabled = false;
             UndoCMenu.IsEnabled = false;
             DeleteCMenu.IsEnabled = false;
+            //BookMarkCMenu.IsEnabled = false;
 
             if (SelectionLenght > 0)
             {
@@ -2437,10 +2449,10 @@ namespace WPFHexaEditor.Control
                 CopyHexaCMenu.IsEnabled = true;
                 DeleteCMenu.IsEnabled = true;
             }
-
+            
             if (UndoCount > 0)
                 UndoCMenu.IsEnabled = true;
-
+            
             //Show context menu
             Focus();
             CMenu.Visibility = Visibility.Visible;
@@ -2469,6 +2481,16 @@ namespace WPFHexaEditor.Control
         private void UndoCMenu_Click(object sender, RoutedEventArgs e)
         {
             Undo();
+        }
+                
+        private void BookMarkCMenu_Click(object sender, RoutedEventArgs e)
+        {
+            SetBookMark(_rightClickBytePosition);
+        }
+                
+        private void ClearBookMarkCMenu_Click(object sender, RoutedEventArgs e)
+        {
+            ClearScrollMarker(ScrollMarker.Bookmark);
         }
 
         #endregion

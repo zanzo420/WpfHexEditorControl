@@ -2493,6 +2493,16 @@ namespace WPFHexaEditor.Control
             ClearScrollMarker(ScrollMarker.Bookmark);
         }
 
-        #endregion
+        private void PasteMenu_Click(object sender, RoutedEventArgs e)
+        {
+            if (ByteProvider.CheckIsOpen(_provider))
+            {
+                _provider.PasteNotInsert(_rightClickBytePosition, Clipboard.GetText());
+
+                RefreshView();
+            }
+        }
+
+        #endregion Bookmark and other scrollmarker
     }
 }

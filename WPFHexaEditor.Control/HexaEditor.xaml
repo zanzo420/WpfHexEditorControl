@@ -33,6 +33,8 @@
             <MenuItem x:Name="CopyHexaCMenu" Header="Copy hexadecimal string" Click="CopyHexaCMenu_Click" />
             <MenuItem x:Name="CopyASCIICMenu" Header="Copy ASCII string" Click="CopyASCIICMenu_Click"/>
             <Separator/>
+            <MenuItem x:Name="PasteMenu" Header="Paste without inserting" Click="PasteMenu_Click"/>
+            <Separator/>
             <MenuItem x:Name="DeleteCMenu" Header="Delete" Click="DeleteCMenu_Click"/>
             <Separator/>
             <MenuItem x:Name="FindAllCMenu" Header="Find all occurence of selection" Click="FindAllCMenu_Click"/>

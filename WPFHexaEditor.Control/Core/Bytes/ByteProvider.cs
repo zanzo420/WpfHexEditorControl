@@ -36,6 +36,7 @@ namespace WPFHexaEditor.Core.Bytes
         public event EventHandler LongProcessProgressChanged;
         public event EventHandler LongProcessProgressStarted;
         public event EventHandler LongProcessProgressCompleted;
+        public event EventHandler DataPastedNotInserted;
 
         /// <summary>
         /// Default constructor
@@ -231,7 +232,7 @@ namespace WPFHexaEditor.Core.Bytes
         #region SubmitChanges to file/stream
         /// <summary>
         /// Submit change to files/stream
-        /// TODO : NEED UPTIMISATION FOR LARGE FILE... IT'S AS BEGINING :) USE TEMPS FILE ?  
+        /// TODO : NEED OPTIMISATION FOR LARGE FILE... IT'S AS BEGINING :) USE TEMPS FILE ?  
         /// TODO : USE TEMPS FILE FOR LARGE FILE
         /// </summary>
         public void SubmitChanges()
@@ -435,7 +436,7 @@ namespace WPFHexaEditor.Core.Bytes
         /// <summary>
         /// Add/Modifiy a ByteModifed in the list of byte have changed
         /// </summary>        
-        public void AddByteModified(byte? @byte, long bytePositionInFile)
+        public void AddByteModified(byte? @byte, long bytePositionInFile, long undoLenght = 1)
         {
             ByteModified bytemodifiedOriginal = CheckIfIsByteModified(bytePositionInFile, ByteAction.Modified);
 
@@ -445,7 +446,7 @@ namespace WPFHexaEditor.Core.Bytes
             ByteModified byteModified = new ByteModified();
             
             byteModified.Byte = @byte;
-            byteModified.UndoLenght = 1;
+            byteModified.UndoLenght = undoLenght;
             byteModified.BytePositionInFile = bytePositionInFile;
             byteModified.Action = ByteAction.Modified;
 
@@ -635,6 +636,41 @@ namespace WPFHexaEditor.Core.Bytes
                 throw new Exception("An error is occurs when writing");
 
             DataCopiedToStream?.Invoke(this, new EventArgs());
+        }
+
+        /// <summary>
+        /// Paste the string at position
+        /// </summary>
+        /// <param name="pasteString">The string to paste</param>
+        /// <param name="startPosition">The position to start pasting</param>
+        public void PasteNotInsert(long startPosition,string pasteString)
+        {
+            long lenght = pasteString.Length;
+            Position = startPosition;
+
+            foreach (char chr in pasteString)
+            {
+                if (!EOF)
+                {
+                    AddByteModified(ByteConverters.CharToByte(chr), Position, lenght);
+
+                    Position++;
+                }
+                else
+                    break;
+            }
+
+            DataPastedNotInserted?.Invoke(this, new EventArgs());
+        }
+
+        /// <summary>
+        /// Paste the string at position
+        /// </summary>
+        /// <param name="pasteString">The string to paste</param>
+        /// <param name="startPosition">The position to start pasting</param>
+        public void PasteNotInsert(string pasteString)
+        {
+            PasteNotInsert(Position, pasteString);
         }
 
         #endregion Copy/Paste/Cut Methods

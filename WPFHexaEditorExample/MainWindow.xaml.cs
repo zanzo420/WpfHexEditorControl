@@ -47,9 +47,9 @@ namespace WPFHexaEditorExample
                 {
                     Application.Current.MainWindow.Cursor = Cursors.Wait;
 
-                    //HexEdit.FileName = fileDialog.FileName;
-                    MemoryStream stream = new MemoryStream(File.ReadAllBytes(fileDialog.FileName));
-                    HexEdit.Stream = stream;
+                    HexEdit.FileName = fileDialog.FileName;
+                    //MemoryStream stream = new MemoryStream(File.ReadAllBytes(fileDialog.FileName));
+                    //HexEdit.Stream = stream;
 
                     Application.Current.MainWindow.Cursor = null;
                 }

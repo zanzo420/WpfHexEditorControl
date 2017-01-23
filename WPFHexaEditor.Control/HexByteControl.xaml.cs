@@ -221,36 +221,36 @@ namespace WPFHexaEditor.Control
         {            
             if (IsSelected)
             {
-                this.FontWeight = (FontWeight)TryFindResource("NormalFontWeight");
+                FontWeight = (FontWeight)TryFindResource("NormalFontWeight");
                 FirstHexChar.Foreground = Brushes.White;
                 SecondHexChar.Foreground = Brushes.White;
                 
                 if (HexByteFirstSelected)
-                    this.Background = (SolidColorBrush)TryFindResource("FirstColor"); 
+                    Background = (SolidColorBrush)TryFindResource("FirstColor"); 
                 else
-                    this.Background = (SolidColorBrush)TryFindResource("SecondColor");
+                    Background = (SolidColorBrush)TryFindResource("SecondColor");
             }
             else if (IsHighLight)
             {
-                this.FontWeight = (FontWeight)TryFindResource("NormalFontWeight");
+                FontWeight = (FontWeight)TryFindResource("NormalFontWeight");
                 FirstHexChar.Foreground = Brushes.Black;
                 SecondHexChar.Foreground = Brushes.Black;
 
-                this.Background = (SolidColorBrush)TryFindResource("HighLightColor");
+                Background = (SolidColorBrush)TryFindResource("HighLightColor");
             }
             else if (Action != ByteAction.Nothing)
             {
                 switch (Action)
                 {
                     case ByteAction.Modified:
-                        this.FontWeight = (FontWeight)TryFindResource("BoldFontWeight");
-                        this.Background = (SolidColorBrush)TryFindResource("ByteModifiedColor");
+                        FontWeight = (FontWeight)TryFindResource("BoldFontWeight");
+                        Background = (SolidColorBrush)TryFindResource("ByteModifiedColor");
                         FirstHexChar.Foreground = Brushes.Black;
                         SecondHexChar.Foreground = Brushes.Black;
                         break;
                     case ByteAction.Deleted:
-                        this.FontWeight = (FontWeight)TryFindResource("BoldFontWeight");
-                        this.Background = (SolidColorBrush)TryFindResource("ByteDeletedColor");
+                        FontWeight = (FontWeight)TryFindResource("BoldFontWeight");
+                        Background = (SolidColorBrush)TryFindResource("ByteDeletedColor");
                         FirstHexChar.Foreground = Brushes.Black;
                         SecondHexChar.Foreground = Brushes.Black;
                         break;
@@ -258,8 +258,8 @@ namespace WPFHexaEditor.Control
             }
             else
             {
-                this.FontWeight = (FontWeight)TryFindResource("NormalFontWeight");
-                this.Background = Brushes.Transparent;
+                FontWeight = (FontWeight)TryFindResource("NormalFontWeight");
+                Background = Brushes.Transparent;
                 FirstHexChar.Foreground = Brushes.Black;
                 SecondHexChar.Foreground = Brushes.Black;
             }
@@ -285,7 +285,7 @@ namespace WPFHexaEditor.Control
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                this.Focus();
+                Focus();
 
                 Click?.Invoke(this, e);
             }
@@ -410,7 +410,7 @@ namespace WPFHexaEditor.Control
                     Action != ByteAction.Deleted &&
                     Action != ByteAction.Added &&
                     !IsSelected && !IsHighLight)
-                    this.Background = (SolidColorBrush)TryFindResource("MouseOverColor");
+                    Background = (SolidColorBrush)TryFindResource("MouseOverColor");
 
             if (e.LeftButton == MouseButtonState.Pressed)
                 MouseSelection?.Invoke(this, e);
@@ -423,7 +423,7 @@ namespace WPFHexaEditor.Control
                     Action != ByteAction.Deleted &&
                     Action != ByteAction.Added &&
                     !IsSelected && !IsHighLight)
-                    this.Background = Brushes.Transparent;
+                    Background = Brushes.Transparent;
         }
     }
 }

@@ -24,11 +24,13 @@ namespace WPFHexaEditor.Core.Bytes
         private bool _isUndoEnabled = true;
         private double _longProcessProgress = 0;
         private bool _isOnLongProcess = false;
+        private ByteProviderStreamType _streamType = ByteProviderStreamType.Nothing;
 
         //Event
         public event EventHandler DataCopiedToClipboard;
         public event EventHandler ReadOnlyChanged;
-        public event EventHandler FileClosed;
+        public event EventHandler Closed;
+        public event EventHandler StreamOpened;
         public event EventHandler PositionChanged;
         public event EventHandler Undone;
         public event EventHandler DataCopiedToStream;
@@ -55,31 +57,75 @@ namespace WPFHexaEditor.Core.Bytes
         }
 
         /// <summary>
+        /// Constuct new ByteProvider with stream
+        /// </summary>
+        /// <param name="stream"></param>
+        public ByteProvider(MemoryStream stream)
+        {
+            Stream = stream;
+        }
+
+        /// <summary>
         /// Set or Get the file with the control will show hex
         /// </summary>
         public string FileName
         {
             get
             {
-                return this._fileName;
+                return _fileName;
             }
 
             set
             {
-                this._fileName = value;
+                _fileName = value;
 
                 OpenFile();
             }
         }
-        
+
         /// <summary>
-        /// Open file 
+        /// Get the type of stream are opened in byteprovider.
+        /// </summary>
+        public ByteProviderStreamType StreamType
+        {
+            get
+            {
+                return _streamType;
+            }
+        }
+        
+
+        /// <summary>
+        /// Get or set a MemoryStream for use with byteProvider
+        /// </summary>
+        public MemoryStream Stream
+        {
+            get
+            {
+                return (MemoryStream)_stream;
+            }
+            set
+            {
+                var readonlymode = _readOnlyMode;
+                Close();
+                _readOnlyMode = readonlymode;
+
+                _streamType = ByteProviderStreamType.MemoryStream;
+
+                _stream = value;
+
+                StreamOpened?.Invoke(this, new EventArgs());
+            }
+        }
+
+        /// <summary>
+        /// Open file are set in FileName property
         /// </summary>        
         public void OpenFile()
         {
             if (File.Exists(FileName))
             {
-                CloseFile();
+                Close();
 
                 bool readOnlyMode = false;
 
@@ -99,6 +145,10 @@ namespace WPFHexaEditor.Core.Bytes
                 
                 if (readOnlyMode)
                     ReadOnlyMode = true;
+
+                _streamType = ByteProviderStreamType.File;
+
+                StreamOpened?.Invoke(this, new EventArgs());
             }
             else
             {
@@ -125,20 +175,22 @@ namespace WPFHexaEditor.Core.Bytes
         }
 
         /// <summary>
-        /// Close file and clear control
+        /// Close stream
         /// ReadOnlyMode is reset to false
         /// </summary>
-        public void CloseFile()
+        public void Close()
         {
             if (IsOpen)
             {
-                this._stream.Close();
-                this._stream = null;
+                _stream.Close();
+                _stream = null;
                 ReadOnlyMode = false;
                 IsOnLongProcess = false;
                 LongProcessProgress = 0;
 
-                FileClosed?.Invoke(this, new EventArgs());
+                _streamType = ByteProviderStreamType.Nothing;
+
+                Closed?.Invoke(this, new EventArgs());
             }
         }
         
@@ -312,9 +364,13 @@ namespace WPFHexaEditor.Core.Bytes
 
                         //start read/write / use little block for optimize memory
                         while (Position != nextByteModified.BytePositionInFile)
-                        {                            
+                        {          
                             bufferlength = nextByteModified.BytePositionInFile - Position;
 
+                            //TEMPS
+                            if (bufferlength < 0)
+                                bufferlength = 1;
+                            
                             //EOF
                             if (bufferlength < ConstantReadOnly.COPY_BLOCK_SIZE)                                
                                 buffer = new byte[bufferlength];
@@ -715,7 +771,7 @@ namespace WPFHexaEditor.Core.Bytes
         public bool IsUndoEnabled
         {
             get { return _isUndoEnabled; }
-            set { this._isUndoEnabled = value; }
+            set { _isUndoEnabled = value; }
         }
 
         /// <summary>

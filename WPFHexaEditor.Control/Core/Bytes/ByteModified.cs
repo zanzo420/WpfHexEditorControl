@@ -110,9 +110,9 @@ namespace WPFHexaEditor.Core.Bytes
             ByteModified newByteModified = new ByteModified();
             object copied = null;
 
-            newByteModified.Action = this.Action;
-            newByteModified.Byte = this.Byte; //.Value;
-            newByteModified.BytePositionInFile = this.BytePositionInFile;
+            newByteModified.Action = Action;
+            newByteModified.Byte = Byte; //.Value;
+            newByteModified.BytePositionInFile = BytePositionInFile;
 
             copied = newByteModified;
             

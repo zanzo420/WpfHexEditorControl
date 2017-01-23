@@ -50,7 +50,7 @@ namespace WPFHexaEditor.Control
             }
             set
             {
-                this._scrollLargeChange = value;
+                _scrollLargeChange = value;
 
                 UpdateVerticalScroll();
             }
@@ -1160,10 +1160,21 @@ namespace WPFHexaEditor.Control
         {
             //Refresh filename
             var filename = FileName;
-            CloseFile();
+            Close();
             FileName = filename;
         }
-        
+
+        private void ProviderStream_ChangesSubmited(object sender, EventArgs e)
+        {
+            //Refresh stream
+            if (ByteProvider.CheckIsOpen(_provider))
+            {
+                MemoryStream stream = new MemoryStream(_provider.Stream.ToArray());
+                Close();
+                OpenStream(stream);
+            }
+        }
+
         /// <summary>
         /// Set or Get the file with the control will show hex
         /// </summary>
@@ -1183,19 +1194,42 @@ namespace WPFHexaEditor.Control
         {
             HexaEditor ctrl = d as HexaEditor;
 
-            ctrl.CloseFile();
+            ctrl.Close();
             ctrl.OpenFile((string)e.NewValue);
         }
-        
+
+        /// <summary>
+        /// Set the MemoryStream are used by ByteProvider
+        /// </summary>
+        public MemoryStream Stream
+        {
+            get { return (MemoryStream)GetValue(StreamProperty); }
+            set { SetValue(StreamProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Stream.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty StreamProperty =
+            DependencyProperty.Register("Stream", typeof(MemoryStream), typeof(HexaEditor),
+                new FrameworkPropertyMetadata(null,
+                    new PropertyChangedCallback(Stream_PropertyChanged)));
+
+        private static void Stream_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            HexaEditor ctrl = d as HexaEditor;
+
+            ctrl.Close();
+            ctrl.OpenStream((MemoryStream)e.NewValue);
+        }
+
         /// <summary>
         /// Close file and clear control
         /// ReadOnlyMode is reset to false
         /// </summary>
-        public void CloseFile()
+        public void Close()
         {
             if (ByteProvider.CheckIsOpen(_provider))
             {
-                _provider.CloseFile();
+                _provider.Close();
 
                 try
                 {
@@ -1234,7 +1268,7 @@ namespace WPFHexaEditor.Control
         {
             if (File.Exists(filename))
             {
-                CloseFile();
+                Close();
 
                 _provider = new ByteProvider(filename);
                 _provider.ReadOnlyChanged += Provider_ReadOnlyChanged;
@@ -1256,6 +1290,40 @@ namespace WPFHexaEditor.Control
             else
             {
                 throw new FileNotFoundException();
+            }
+        }
+
+
+        /// <summary>
+        /// Open file name
+        /// </summary>
+        /// <param name="filename"></param>
+        private void OpenStream(MemoryStream stream)
+        {
+            if (stream.CanRead)
+            {
+                Close();
+
+                _provider = new ByteProvider(stream);
+                _provider.ReadOnlyChanged += Provider_ReadOnlyChanged;
+                _provider.DataCopiedToClipboard += Provider_DataCopied;
+                _provider.ChangesSubmited += ProviderStream_ChangesSubmited;
+                _provider.LongProcessProgressChanged += Provider_LongProcessProgressChanged;
+                _provider.LongProcessProgressStarted += Provider_LongProcessProgressStarted;
+                _provider.LongProcessProgressCompleted += Provider_LongProcessProgressCompleted;
+
+                UpdateVerticalScroll();
+                UpdateHexHeader();
+
+                RefreshView(true);
+
+                UnSelectAll();
+
+                UpdateSelectionColorMode(FirstColor.HexByteData);
+            }
+            else
+            {
+                throw new Exception("Can't read MemoryStream");
             }
         }
 
@@ -2346,7 +2414,11 @@ namespace WPFHexaEditor.Control
                     break;
             }
 
-            rect.Margin = new Thickness(0, topPosition, rightPosition, 0);
+            try
+            {
+                rect.Margin = new Thickness(0, topPosition, rightPosition, 0);
+            }
+            catch { }
 
             //Add to grid
             MarkerGrid.Children.Add(rect);

@@ -44,7 +44,15 @@ namespace WPFHexaEditorExample
             if (fileDialog.ShowDialog() != null)
             {
                 if (File.Exists(fileDialog.FileName))
-                    HexEdit.FileName = fileDialog.FileName;
+                {
+                    Application.Current.MainWindow.Cursor = Cursors.Wait;
+
+                    //HexEdit.FileName = fileDialog.FileName;
+                    MemoryStream stream = new MemoryStream(File.ReadAllBytes(fileDialog.FileName));
+                    HexEdit.Stream = stream;
+
+                    Application.Current.MainWindow.Cursor = null;
+                }
                 else
                     MessageBox.Show("File not found!", Settings.Default.ApplicationName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
@@ -52,12 +60,14 @@ namespace WPFHexaEditorExample
 
         private void SaveMenu_Click(object sender, RoutedEventArgs e)
         {
+            Application.Current.MainWindow.Cursor = Cursors.Wait;
             HexEdit.SubmitChanges();
+            Application.Current.MainWindow.Cursor = null;
         }
 
         private void CloseFileMenu_Click(object sender, RoutedEventArgs e)
         {
-            HexEdit.CloseFile();
+            HexEdit.Close();
         }
 
         private void SetReadOnlyMenu_Click(object sender, RoutedEventArgs e)

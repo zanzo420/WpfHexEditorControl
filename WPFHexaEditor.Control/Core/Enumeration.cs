@@ -75,4 +75,14 @@ namespace WPFHexaEditor.Core
         ByteModified,
         ByteDeleted
     }
+
+    /// <summary>
+    /// Type are opened in byteprovider
+    /// </summary>
+    public enum ByteProviderStreamType
+    {
+        File,
+        MemoryStream,
+        Nothing
+    }
 }

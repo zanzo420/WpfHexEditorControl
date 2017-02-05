@@ -89,11 +89,14 @@ namespace WPFHexaEditor.Control
         {
             StringByteControl ctrl = d as StringByteControl;
 
-            if (ctrl.Action != ByteAction.Nothing && ctrl.InternalChange == false)
-                ctrl.StringByteModified?.Invoke(ctrl, new EventArgs());
+            if (e.NewValue != e.OldValue)
+            {
+                if (ctrl.Action != ByteAction.Nothing && ctrl.InternalChange == false)
+                    ctrl.StringByteModified?.Invoke(ctrl, new EventArgs());
 
-            ctrl.UpdateLabelFromByte();
-            ctrl.UpdateHexString();
+                ctrl.UpdateLabelFromByte();
+                ctrl.UpdateHexString();
+            }
         }
         
         /// <summary>
@@ -113,7 +116,8 @@ namespace WPFHexaEditor.Control
         {
             StringByteControl ctrl = d as StringByteControl;
 
-            ctrl.UpdateBackGround();
+            if (e.NewValue != e.OldValue)
+                ctrl.UpdateBackGround();
         }
         
         /// <summary>
@@ -147,7 +151,8 @@ namespace WPFHexaEditor.Control
         {
             StringByteControl ctrl = d as StringByteControl;
 
-            ctrl.UpdateBackGround();
+            if (e.NewValue != e.OldValue)
+                ctrl.UpdateBackGround();
         }
 
         /// <summary>
@@ -192,7 +197,8 @@ namespace WPFHexaEditor.Control
         {
             StringByteControl ctrl = d as StringByteControl;
 
-            ctrl.UpdateBackGround();
+            if (e.NewValue != e.OldValue)
+                ctrl.UpdateBackGround();
         }
 
 

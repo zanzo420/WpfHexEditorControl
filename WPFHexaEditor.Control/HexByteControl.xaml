@@ -26,7 +26,6 @@
     <Grid ToolTip="{Binding Source={StaticResource ByteToolTip}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
         
         <Label x:Name="FirstHexChar"
-               Content="X"
                HorizontalAlignment="Left"
                Padding="0"
                Width="9"
@@ -35,7 +34,6 @@
                Focusable="True"/>
         
         <Label x:Name="SecondHexChar"
-               Content="X" 
                Padding="0"
                VerticalContentAlignment="Center"
                Margin="9,0,0,0" 

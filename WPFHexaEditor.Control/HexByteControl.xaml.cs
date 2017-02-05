@@ -90,7 +90,8 @@ namespace WPFHexaEditor.Control
         {
             HexByteControl ctrl = d as HexByteControl;
 
-            ctrl.UpdateBackGround();
+            if (e.NewValue != e.OldValue)
+                ctrl.UpdateBackGround();
         }
 
         /// <summary>
@@ -122,11 +123,14 @@ namespace WPFHexaEditor.Control
         {
             HexByteControl ctrl = d as HexByteControl;
 
-            if (ctrl.Action != ByteAction.Nothing && ctrl.InternalChange == false)
-                ctrl.ByteModified?.Invoke(ctrl, new EventArgs());
+            if (e.NewValue != e.OldValue)
+            {
+                if (ctrl.Action != ByteAction.Nothing && ctrl.InternalChange == false)
+                    ctrl.ByteModified?.Invoke(ctrl, new EventArgs());
 
-            ctrl.UpdateLabelFromByte();
-            ctrl.UpdateHexString();
+                ctrl.UpdateLabelFromByte();
+                ctrl.UpdateHexString();
+            }
         }
 
         /// <summary>
@@ -188,8 +192,11 @@ namespace WPFHexaEditor.Control
         {
             HexByteControl ctrl = d as HexByteControl;
 
-            ctrl._keyDownLabel = KeyDownLabel.FirstChar;
-            ctrl.UpdateBackGround();
+            if (e.NewValue != e.OldValue)
+            {
+                ctrl._keyDownLabel = KeyDownLabel.FirstChar;
+                ctrl.UpdateBackGround();
+            }
         }
            
         /// <summary>
@@ -209,9 +216,12 @@ namespace WPFHexaEditor.Control
         private static void IsHighLight_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             HexByteControl ctrl = d as HexByteControl;
-            
-            ctrl._keyDownLabel = KeyDownLabel.FirstChar;
-            ctrl.UpdateBackGround();
+
+            if (e.NewValue != e.OldValue)
+            {
+                ctrl._keyDownLabel = KeyDownLabel.FirstChar;
+                ctrl.UpdateBackGround();
+            }
         }
         
         /// <summary>

@@ -25,7 +25,6 @@
     <Grid ToolTip="{Binding Source={StaticResource ByteToolTip}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
         
         <Label x:Name="StringByteLabel"
-               Content="X"
                Padding="0" 
                MouseDown="StringByteLabel_MouseDown"
                HorizontalContentAlignment="Center"

@@ -1108,7 +1108,7 @@ namespace WPFHexaEditor.Control
                     ctrl.StatusBarGrid.Visibility = Visibility.Collapsed;
                     break;
             }
-                        
+
             ctrl.RefreshView(false);
         }
         #endregion Visibility standard property
@@ -1134,8 +1134,8 @@ namespace WPFHexaEditor.Control
             {
                 for (int i = 0; i < repeat; i++)
                     _provider.Undo();
-
-                RefreshView(false);
+                               
+                RefreshView(false, false);
             }
         }
 
@@ -1466,19 +1466,22 @@ namespace WPFHexaEditor.Control
             else
                 SelectionLine = 0;            
         }
-        
+
         /// <summary>
         /// Refresh currentview of hexeditor
         /// </summary>
         /// <param name="ControlResize"></param>
-        public void RefreshView(bool ControlResize = false)
+        public void RefreshView(bool ControlResize = false, bool RefreshData = true)
         {
             UpdateLinesInfo();
             //UpdateVerticalScroll();
             //UpdateHexHeader();
 
-            UpdateStringDataViewer(ControlResize);
-            UpdateDataViewer(ControlResize);
+            if (RefreshData)
+            {
+                UpdateStringDataViewer(ControlResize);
+                UpdateDataViewer(ControlResize);
+            }
 
             UpdateByteModified();
             UpdateSelection();

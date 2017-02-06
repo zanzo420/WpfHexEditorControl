@@ -887,7 +887,7 @@ namespace WPFHexaEditor.Control
             else
                 VerticalScrollBar.Value = 0;
 
-            RefreshView(true);
+            //RefreshView(true);
         }
         
         /// <summary>

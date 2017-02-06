@@ -149,7 +149,7 @@ namespace WPFHexaEditor.Core.Bytes
                 position = HexLiteralToLong(hexastring);
                 return true;
             }
-            catch (ArgumentOutOfRangeException e)
+            catch (Exception e)
             {
                 return false;
             }

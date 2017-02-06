@@ -1572,7 +1572,9 @@ namespace WPFHexaEditor.Control
                             sbCtrl.ByteDeleted += Control_ByteDeleted;
                             sbCtrl.EscapeKey += Control_EscapeKey;
 
+                            sbCtrl.InternalChange = true;
                             sbCtrl.Byte = (byte)_provider.ReadByte();
+                            sbCtrl.InternalChange = false;
 
                             dataLineStack.Children.Add(sbCtrl);
                         }
@@ -1591,23 +1593,21 @@ namespace WPFHexaEditor.Control
                         {
                             _provider.Position = position++;
 
+                            sbCtrl.Action = ByteAction.Nothing;
+                            sbCtrl.ReadOnlyMode = ReadOnlyMode;
+
+                            sbCtrl.InternalChange = true;
                             if (_provider.Position >= _provider.Length)
                             {
                                 sbCtrl.Byte = null;
                                 sbCtrl.BytePositionInFile = -1;
-                                sbCtrl.Action = ByteAction.Nothing;
-                                sbCtrl.ReadOnlyMode = ReadOnlyMode;
-                                sbCtrl.IsSelected = false;
                             }
                             else
                             {
-                                sbCtrl.InternalChange = true;
                                 sbCtrl.Byte = (byte)_provider.ReadByte();
-                                sbCtrl.BytePositionInFile = _provider.Position - 1;
-                                sbCtrl.Action = ByteAction.Nothing;
-                                sbCtrl.ReadOnlyMode = ReadOnlyMode;
-                                sbCtrl.InternalChange = false;
+                                sbCtrl.BytePositionInFile = _provider.Position - 1;                                
                             }
+                            sbCtrl.InternalChange = false;
                         }
 
                         stackIndex++;
@@ -1839,7 +1839,6 @@ namespace WPFHexaEditor.Control
                         dataLineStack.Orientation = Orientation.Horizontal;
 
                         long position = ByteConverters.HexLiteralToLong(infolabel.Content.ToString());
-                        //long correction = 0;
 
                         for (int i = 0; i < BytePerLine; i++)
                         {
@@ -1847,14 +1846,6 @@ namespace WPFHexaEditor.Control
 
                             if (_provider.Position >= _provider.Length)
                                 break;
-
-                            //FOR TESTING PURPOSE ONLY... 
-                            //if (_provider.CheckIfIsByteModified(_provider.Position, ByteAction.Deleted) != null)
-                            //{
-                            //    correction++;
-                            //    i--;
-                            //    continue;
-                            //}
 
                             HexByteControl byteControl = new HexByteControl();
 
@@ -1875,7 +1866,9 @@ namespace WPFHexaEditor.Control
                             byteControl.ByteDeleted += Control_ByteDeleted;
                             byteControl.EscapeKey += Control_EscapeKey;
 
+                            byteControl.InternalChange = true;
                             byteControl.Byte = (byte)_provider.ReadByte();
+                            byteControl.InternalChange = false;
 
                             dataLineStack.Children.Add(byteControl);
                         }
@@ -1894,21 +1887,22 @@ namespace WPFHexaEditor.Control
                         {
                             _provider.Position = position++;
 
+                            byteControl.ReadOnlyMode = ReadOnlyMode;
+                            byteControl.Action = ByteAction.Nothing;
+
+                            byteControl.InternalChange = true;
                             if (_provider.Position >= _provider.Length)
                             {
-                                byteControl.Action = ByteAction.Nothing;
                                 byteControl.BytePositionInFile = -1;
-                                byteControl.ReadOnlyMode = ReadOnlyMode;
-                                byteControl.IsSelected = false;
                                 byteControl.Byte = null;
                             }
                             else
                             {
-                                byteControl.Action = ByteAction.Nothing;
                                 byteControl.ReadOnlyMode = ReadOnlyMode;
                                 byteControl.BytePositionInFile = _provider.Position;
-                                byteControl.Byte = (byte)_provider.ReadByte();
+                                byteControl.Byte = (byte)_provider.ReadByte();                                
                             }
+                            byteControl.InternalChange = false;
                         }
 
                         stackIndex++;

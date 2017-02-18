@@ -82,6 +82,10 @@
     <Compile Include="Core\Enumeration.cs" />
     <Compile Include="Core\KeyValidator.cs" />
     <Compile Include="Core\MethodExtention\TrackExtention.cs" />
+    <Compile Include="Core\ROMTable\Enum.cs" />
+    <Compile Include="Core\ROMTable\DTE.cs" />
+    <Compile Include="Core\ROMTable\Favoris.cs" />
+    <Compile Include="Core\ROMTable\TBLStream.cs" />
     <Compile Include="StringByteControl.xaml.cs">
       <DependentUpon>StringByteControl.xaml</DependentUpon>
     </Compile>

@@ -4,6 +4,8 @@ namespace WPFHexaEditor.Core.ROMTable
 {
     /// <summary>
     /// Represente une adresse favorite dans une ROM
+    /// 
+    /// Derek Tremblay 2003-2017
     /// </summary>
     public sealed class Bookmark
     {

@@ -4,6 +4,8 @@ namespace WPFHexaEditor.Core.ROMTable
 {
     /// <summary>
     /// Objet représentant un DTE.
+    /// 
+    /// Derek Tremblay 2003-2017
     /// </summary>
     public class DTE
     {

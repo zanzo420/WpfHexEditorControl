@@ -17,7 +17,7 @@ namespace WPFHexaEditor.Core
         Modified,
 
         /// <summary>
-        /// Used in ByteProvirder for get list
+        /// Used in ByteProvider for get list
         /// </summary>
         All 
     }
@@ -84,5 +84,14 @@ namespace WPFHexaEditor.Core
         File,
         MemoryStream,
         Nothing
+    }
+
+    /// <summary>
+    /// Type of character are used
+    /// </summary>
+    public enum CharacterTable
+    {
+        ASCII,
+        TBLFile
     }
 }

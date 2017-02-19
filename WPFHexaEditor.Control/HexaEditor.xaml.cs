@@ -12,6 +12,7 @@ using System.Windows.Shapes;
 using WPFHexaEditor.Core;
 using WPFHexaEditor.Core.Bytes;
 using WPFHexaEditor.Core.MethodExtention;
+using WPFHexaEditor.Core.ROMTable;
 
 namespace WPFHexaEditor.Control
 {
@@ -26,6 +27,7 @@ namespace WPFHexaEditor.Control
         private double _scrollLargeChange = 100;
         private List<long> _markedPositionList = new List<long>();
         private long _rightClickBytePosition = -1;
+        private TBLStream _TBLCharacterTable = null;
 
         //Event
         public event EventHandler SelectionStartChanged;
@@ -55,8 +57,46 @@ namespace WPFHexaEditor.Control
                 UpdateVerticalScroll();
             }
         }
-                
+
         #endregion Miscellaneous property/methods
+
+        #region Characters tables property/methods
+        /// <summary>
+        /// Type of caracter table are used un hexacontrol. 
+        /// For now, somes character table can be readonly but will change in future
+        /// </summary>
+        public  CharacterTable TypeOfCharacterTable
+        {
+            get { return ( CharacterTable)GetValue(TypeOfCharacterTableProperty); }
+            set { SetValue(TypeOfCharacterTableProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for TypeOfCharacterTable.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty TypeOfCharacterTableProperty =
+            DependencyProperty.Register("TypeOfCharacterTable", typeof( CharacterTable), typeof(HexaEditor), 
+                new FrameworkPropertyMetadata(CharacterTable.ASCII,
+                    new PropertyChangedCallback(TypeOfCharacterTable_PropertyChanged)));
+
+        private static void TypeOfCharacterTable_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            HexaEditor ctrl = d as HexaEditor;
+
+            ctrl.RefreshView();              
+        }
+
+        /// <summary>
+        /// Load TBL Character table file in control. (Used for ROM reverse engineering)
+        /// Change CharacterTable property for use.
+        /// </summary>
+        public void LoadTBLFile(string fileName)
+        {
+            if (File.Exists(FileName))
+            {
+                _TBLCharacterTable = new TBLStream();
+                _TBLCharacterTable.Load(fileName);
+            }
+        }
+        #endregion Characters tables
 
         #region ReadOnly property/event
         /// <summary>
@@ -117,14 +157,6 @@ namespace WPFHexaEditor.Control
             UpdateStatusBar();
         }
                                 
-        private void Control_ByteDeleted(object sender, EventArgs e)
-        {
-            HexByteControl ctrl = sender as HexByteControl;
-            StringByteControl sbCtrl = sender as StringByteControl;
-
-            DeleteSelection();
-        }
-
         /// <summary>
         /// Delete selection, add scroll marker and update control
         /// </summary>
@@ -243,6 +275,14 @@ namespace WPFHexaEditor.Control
                 VerticalScrollBar.Value += GetMaxVisibleLine() - 1;
                 SetFocusHexDataPanel(SelectionStart);
             }
+        }
+
+        private void Control_ByteDeleted(object sender, EventArgs e)
+        {
+            HexByteControl ctrl = sender as HexByteControl;
+            StringByteControl sbCtrl = sender as StringByteControl;
+
+            DeleteSelection();
         }
 
         private void Control_EscapeKey(object sender, EventArgs e)
@@ -1248,6 +1288,7 @@ namespace WPFHexaEditor.Control
 
                 ReadOnlyMode = false;
                 VerticalScrollBar.Value = 0;
+                _TBLCharacterTable = null;
             }
 
             UnHighLightAll();
@@ -1576,6 +1617,8 @@ namespace WPFHexaEditor.Control
                             sbCtrl.EscapeKey += Control_EscapeKey;
 
                             sbCtrl.InternalChange = true;
+                            sbCtrl.TBLCharacterTable = _TBLCharacterTable;
+                            sbCtrl.TypeOfCharacterTable = TypeOfCharacterTable;
                             sbCtrl.Byte = (byte)_provider.ReadByte();
                             sbCtrl.InternalChange = false;
 
@@ -1600,6 +1643,8 @@ namespace WPFHexaEditor.Control
                             sbCtrl.ReadOnlyMode = ReadOnlyMode;
 
                             sbCtrl.InternalChange = true;
+                            sbCtrl.TBLCharacterTable = _TBLCharacterTable;
+                            sbCtrl.TypeOfCharacterTable = TypeOfCharacterTable;
                             if (_provider.Position >= _provider.Length)
                             {
                                 sbCtrl.Byte = null;

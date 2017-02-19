@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WPFHexaEditor.Core;
 using WPFHexaEditor.Core.Bytes;
+using WPFHexaEditor.Core.ROMTable;
 
 namespace WPFHexaEditor.Control
 {
@@ -24,6 +25,7 @@ namespace WPFHexaEditor.Control
     {
         //private bool _isByteModified = false;
         private bool _readOnlyMode;
+        private TBLStream _TBLCharacterTable = null;
 
         public event EventHandler Click;
         public event EventHandler RightClick;
@@ -200,20 +202,69 @@ namespace WPFHexaEditor.Control
             if (e.NewValue != e.OldValue)
                 ctrl.UpdateBackGround();
         }
-
-
         #endregion
+
+        #region Characters tables
+        /// <summary>
+        /// Type of caracter table are used un hexacontrol. 
+        /// For now, somes character table can be readonly but will change in future
+        /// </summary>
+        public CharacterTable TypeOfCharacterTable
+        {
+            get { return (CharacterTable)GetValue(TypeOfCharacterTableProperty); }
+            set { SetValue(TypeOfCharacterTableProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for TypeOfCharacterTable.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty TypeOfCharacterTableProperty =
+            DependencyProperty.Register("TypeOfCharacterTable", typeof(CharacterTable), typeof(StringByteControl),
+                new FrameworkPropertyMetadata(CharacterTable.ASCII,
+                    new PropertyChangedCallback(TypeOfCharacterTable_PropertyChanged)));
+
+
+        private static void TypeOfCharacterTable_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            StringByteControl ctrl = d as StringByteControl;
+            
+
+            //TODO UPDATE CTRL
+        }
+
+        public TBLStream TBLCharacterTable
+        {
+            get
+            {
+                return _TBLCharacterTable;
+            }
+            set
+            {
+                _TBLCharacterTable = value;
+            }
+        }
+        #endregion Characters tables
 
         /// <summary>
         /// Update control label from byte property
         /// </summary>
         private void UpdateLabelFromByte()
         {
-            if (Byte != null)            
-                StringByteLabel.Content = ByteConverters.ByteToChar(Byte.Value);            
-            else            
-                StringByteLabel.Content = "";
-            
+            if (Byte != null)
+            {
+                switch (TypeOfCharacterTable)
+                {
+                    case CharacterTable.ASCII:
+                        StringByteLabel.Content = ByteConverters.ByteToChar(Byte.Value);
+                        break;
+                    case CharacterTable.TBLFile:
+                        if (_TBLCharacterTable != null)
+                            StringByteLabel.Content = _TBLCharacterTable.FindTBLMatch(ByteConverters.ByteToHex(Byte.Value), true);                       
+                        else
+                            goto case CharacterTable.ASCII;
+                        break;
+                }                
+            }
+            else
+                StringByteLabel.Content = "";            
         }
 
         private void UpdateHexString()

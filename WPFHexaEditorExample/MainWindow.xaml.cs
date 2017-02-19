@@ -243,5 +243,34 @@ namespace WPFHexaEditorExample
         {
 
         }
+
+        private void CTableASCIIButton_Click(object sender, RoutedEventArgs e)
+        {
+            HexEdit.TypeOfCharacterTable = CharacterTable.ASCII;
+            CTableASCIIButton.IsChecked = true;
+            CTableTBLButton.IsChecked = false;
+        }
+
+        private void CTableTBLButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog fileDialog = new OpenFileDialog();
+
+            if (fileDialog.ShowDialog() != null)
+            {
+                if (File.Exists(fileDialog.FileName))
+                {
+                    Application.Current.MainWindow.Cursor = Cursors.Wait;
+
+                    HexEdit.LoadTBLFile(fileDialog.FileName);
+                    HexEdit.TypeOfCharacterTable = CharacterTable.TBLFile;
+                    CTableASCIIButton.IsChecked = false;
+                    CTableTBLButton.IsChecked = true;
+
+                    Application.Current.MainWindow.Cursor = null;
+                }
+                else
+                    MessageBox.Show("File not found!", Settings.Default.ApplicationName, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
     }
 }

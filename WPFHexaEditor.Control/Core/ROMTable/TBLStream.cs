@@ -8,6 +8,8 @@ namespace WPFHexaEditor.Core.ROMTable
 {
     /// <summary>
     /// Cet objet représente un fichier TBL avec tous sais entré et valeur
+    /// 
+    /// Derek Tremblay 2003-2017
     /// </summary>
     public class TBLStream
     {

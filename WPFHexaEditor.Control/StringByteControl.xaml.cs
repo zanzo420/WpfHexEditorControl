@@ -103,7 +103,37 @@ namespace WPFHexaEditor.Control
 
             }
         }
-        
+
+        /// <summary>
+        /// Next Byte of this instance (used for TBL/MTE decoding)
+        /// </summary>
+        public byte? ByteNext
+        {
+            get { return (byte?)GetValue(ByteNextProperty); }
+            set { SetValue(ByteNextProperty, value); }
+        }
+
+        public static readonly DependencyProperty ByteNextProperty =
+            DependencyProperty.Register("ByteNext", typeof(byte?), typeof(StringByteControl),
+                new FrameworkPropertyMetadata(null, new PropertyChangedCallback(ByteNext_PropertyChanged)));
+
+        private static void ByteNext_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            StringByteControl ctrl = d as StringByteControl;
+
+            if (e.NewValue != e.OldValue)
+            {
+                //if (ctrl.Action != ByteAction.Nothing && ctrl.InternalChange == false)
+                //    ctrl.StringByteModified?.Invoke(ctrl, new EventArgs());
+
+                ctrl.UpdateLabelFromByte();
+                //ctrl.UpdateHexString();
+
+                ctrl.UpdateBackGround();
+
+            }
+        }
+
         /// <summary>
         /// Get or set if control as selected
         /// </summary>
@@ -263,8 +293,14 @@ namespace WPFHexaEditor.Control
                         ReadOnlyMode = true;
 
                         if (_TBLCharacterTable != null)
-                        {                            
-                            string content = _TBLCharacterTable.FindTBLMatch(ByteConverters.ByteToHex(Byte.Value).ToUpper(), true);
+                        {
+                            string content = "#";
+                            string MTE = (ByteConverters.ByteToHex(Byte.Value) + ByteConverters.ByteToHex(ByteNext.Value)).ToUpper();
+                            content = _TBLCharacterTable.FindTBLMatch(MTE, true);
+                            
+                            if (content == "#")
+                                content = _TBLCharacterTable.FindTBLMatch(ByteConverters.ByteToHex(Byte.Value).ToUpper().ToUpper(), true);
+
                             StringByteLabel.Content = content;
 
                             //Adjuste wight
@@ -273,7 +309,7 @@ namespace WPFHexaEditor.Control
                             else if (content.Length == 2)
                                 Width = 12 + content.Length * 2D;
                             else if (content.Length > 2)
-                                Width = 12 + content.Length * 3.5D;
+                                Width = 12 + content.Length * 3.8D;
                         }
                         else
                             goto case CharacterTable.ASCII;

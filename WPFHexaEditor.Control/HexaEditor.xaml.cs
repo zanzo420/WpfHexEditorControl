@@ -1625,6 +1625,21 @@ namespace WPFHexaEditor.Control
                             sbCtrl.TBLCharacterTable = _TBLCharacterTable;
                             sbCtrl.TypeOfCharacterTable = TypeOfCharacterTable;
                             sbCtrl.Byte = (byte)_provider.ReadByte();
+
+                            //bool MTE = false;
+                            //if (!_provider.EOF)
+                            //{
+                            //sbCtrl.ByteNext = (byte)_provider.ReadByte();
+
+                            //if (_TBLCharacterTable != null)
+                            //    if (DTE.TypeDTE(_TBLCharacterTable.FindTBLMatch(ByteConverters.ByteToHex(sbCtrl.Byte.Value).ToUpper() +
+                            //                                                    ByteConverters.ByteToHex(sbCtrl.ByteNext.Value).ToUpper(), true)) != DTEType.MultipleTitleEncoding)
+                            
+                            sbCtrl.ByteNext = (byte)_provider.ReadByte();
+
+                            _provider.Position--;
+
+                            //}
                             sbCtrl.InternalChange = false;
 
                             dataLineStack.Children.Add(sbCtrl);
@@ -1653,12 +1668,16 @@ namespace WPFHexaEditor.Control
                             if (_provider.Position >= _provider.Length)
                             {
                                 sbCtrl.Byte = null;
+                                sbCtrl.ByteNext = null;
                                 sbCtrl.BytePositionInFile = -1;
                             }
                             else
                             {
                                 sbCtrl.Byte = (byte)_provider.ReadByte();
-                                sbCtrl.BytePositionInFile = _provider.Position - 1;                                
+                                sbCtrl.BytePositionInFile = _provider.Position - 1;
+
+                                sbCtrl.ByteNext = (byte)_provider.ReadByte();
+                                _provider.Position--;
                             }
                             sbCtrl.InternalChange = false;
                         }

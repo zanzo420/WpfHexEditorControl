@@ -99,8 +99,7 @@ namespace WPFHexaEditor.Control
                 ctrl.UpdateLabelFromByte();
                 ctrl.UpdateHexString();
 
-                if (ctrl.TypeOfCharacterTable == CharacterTable.TBLFile)
-                    ctrl.UpdateBackGround();
+                ctrl.UpdateBackGround();
 
             }
         }
@@ -229,9 +228,9 @@ namespace WPFHexaEditor.Control
         private static void TypeOfCharacterTable_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             StringByteControl ctrl = d as StringByteControl;
-            
 
-            //TODO UPDATE CTRL
+            ctrl.UpdateLabelFromByte();
+            ctrl.UpdateHexString();
         }
 
         public TBLStream TBLCharacterTable
@@ -268,10 +267,13 @@ namespace WPFHexaEditor.Control
                             string content = _TBLCharacterTable.FindTBLMatch(ByteConverters.ByteToHex(Byte.Value).ToUpper(), true);
                             StringByteLabel.Content = content;
 
-                            if (content.Length > 1)
-                                Width = 12 + content.Length * 3.5D;
-                            else
+                            //Adjuste wight
+                            if (content.Length == 1)
                                 Width = 12;
+                            else if (content.Length == 2)
+                                Width = 12 + content.Length * 2D;
+                            else if (content.Length > 2)
+                                Width = 12 + content.Length * 3.5D;
                         }
                         else
                             goto case CharacterTable.ASCII;
@@ -304,6 +306,8 @@ namespace WPFHexaEditor.Control
                     Background = (SolidColorBrush)TryFindResource("FirstColor");
                 else
                     Background = (SolidColorBrush)TryFindResource("SecondColor");
+
+                return;
             }
             else if (IsHighLight)
             {
@@ -311,6 +315,8 @@ namespace WPFHexaEditor.Control
                 StringByteLabel.Foreground = Brushes.Black;
 
                 Background = (SolidColorBrush)TryFindResource("HighLightColor");
+
+                return;
             }
             else if (Action != ByteAction.Nothing)
             {
@@ -327,30 +333,29 @@ namespace WPFHexaEditor.Control
                         StringByteLabel.Foreground = Brushes.Black;
                         break;
                 }
-                
+
+                return;
             }
             else
             {
                 FontWeight = (FontWeight)TryFindResource("NormalFontWeight");
                 Background = Brushes.Transparent;
                 StringByteLabel.Foreground = Brushes.Black;
+                
+                if (TypeOfCharacterTable == CharacterTable.TBLFile)
+                    switch (DTE.TypeDTE((string)StringByteLabel.Content))
+                    {
+                        case DTEType.DualTitleEncoding:
+                            StringByteLabel.Foreground = Brushes.Red;
+                            break;
+                        case DTEType.MultipleTitleEncoding:
+                            StringByteLabel.Foreground = Brushes.Blue;
+                            break;
+                        default:
+                            StringByteLabel.Foreground = Brushes.Black;
+                            break;
+                    }
             }
-
-
-            if (TypeOfCharacterTable == CharacterTable.TBLFile)
-                //_TBLCharacterTable.FindTBLMatch(ByteConverters.ByteToHex(Byte.Value).ToUpper()
-                switch (DTE.TypeDTE((string)StringByteLabel.Content))
-                {
-                    case DTEType.DualTitleEncoding:
-                        StringByteLabel.Foreground = Brushes.Red;
-                        break;
-                    case DTEType.MultipleTitleEncoding:
-                        StringByteLabel.Foreground = Brushes.Blue;
-                        break;
-                    default:
-                        StringByteLabel.Foreground = Brushes.Black;
-                        break;
-                }
         }
         
         public bool ReadOnlyMode

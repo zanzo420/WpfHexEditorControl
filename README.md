@@ -7,6 +7,7 @@ A WPF Hexadecimal editor for view/modify file.
 https://www.nuget.org/packages/WPFHexaEditor/
 
 ## Features
+- Use TBL character table file insted of default ASCII.
 - Modify bytes
 - Delete bytes
 - Add bytes (soon) 
@@ -24,6 +25,9 @@ https://www.nuget.org/packages/WPFHexaEditor/
 - ...
 
 ##Release Notes (version of NUGET package)
+New in version 0.8.0
+- Implementation of TBL file format. (CHARACTER TABLE FOR ROM REVERSE ENGINEERING)
+
 New in version 0.7.0
 - Add FindSelection
 - HighLight for Find

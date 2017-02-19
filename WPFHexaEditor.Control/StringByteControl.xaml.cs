@@ -98,6 +98,10 @@ namespace WPFHexaEditor.Control
 
                 ctrl.UpdateLabelFromByte();
                 ctrl.UpdateHexString();
+
+                if (ctrl.TypeOfCharacterTable == CharacterTable.TBLFile)
+                    ctrl.UpdateBackGround();
+
             }
         }
         
@@ -265,15 +269,9 @@ namespace WPFHexaEditor.Control
                             StringByteLabel.Content = content;
 
                             if (content.Length > 1)
-                                Width = 12 + content.Length * 3D;
+                                Width = 12 + content.Length * 3.5D;
                             else
                                 Width = 12;
-
-                            //if (content[0] == '<')
-                            //    StringByteLabel.Foreground = Brushes.Blue;
-                            //else
-                            //    StringByteLabel.Foreground = Brushes.Black;
-
                         }
                         else
                             goto case CharacterTable.ASCII;
@@ -337,6 +335,22 @@ namespace WPFHexaEditor.Control
                 Background = Brushes.Transparent;
                 StringByteLabel.Foreground = Brushes.Black;
             }
+
+
+            if (TypeOfCharacterTable == CharacterTable.TBLFile)
+                //_TBLCharacterTable.FindTBLMatch(ByteConverters.ByteToHex(Byte.Value).ToUpper()
+                switch (DTE.TypeDTE((string)StringByteLabel.Content))
+                {
+                    case DTEType.DualTitleEncoding:
+                        StringByteLabel.Foreground = Brushes.Red;
+                        break;
+                    case DTEType.MultipleTitleEncoding:
+                        StringByteLabel.Foreground = Brushes.Blue;
+                        break;
+                    default:
+                        StringByteLabel.Foreground = Brushes.Black;
+                        break;
+                }
         }
         
         public bool ReadOnlyMode

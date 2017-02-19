@@ -95,6 +95,9 @@ namespace WPFHexaEditor.Control
                 _TBLCharacterTable = new TBLStream();
                 _TBLCharacterTable.Load(fileName);
 
+                TBLLabel.Visibility = Visibility.Visible;
+                TBLLabel.ToolTip = $"TBL file : {fileName}";
+
                 RefreshView();
             }
         }

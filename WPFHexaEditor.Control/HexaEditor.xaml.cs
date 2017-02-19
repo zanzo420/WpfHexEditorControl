@@ -90,10 +90,12 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public void LoadTBLFile(string fileName)
         {
-            if (File.Exists(FileName))
+            if (File.Exists(fileName))
             {
                 _TBLCharacterTable = new TBLStream();
                 _TBLCharacterTable.Load(fileName);
+
+                RefreshView();
             }
         }
         #endregion Characters tables
@@ -1288,7 +1290,7 @@ namespace WPFHexaEditor.Control
 
                 ReadOnlyMode = false;
                 VerticalScrollBar.Value = 0;
-                _TBLCharacterTable = null;
+                //_TBLCharacterTable = null;
             }
 
             UnHighLightAll();
@@ -1462,7 +1464,7 @@ namespace WPFHexaEditor.Control
 
             if (e.NewValue != e.OldValue)
             {
-                //ctrl.RefreshView(true);
+                ctrl.RefreshView(true);
                 ctrl.UpdateHexHeader();
             }
         }

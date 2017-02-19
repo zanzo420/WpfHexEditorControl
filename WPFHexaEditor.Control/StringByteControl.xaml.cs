@@ -254,10 +254,27 @@ namespace WPFHexaEditor.Control
                 {
                     case CharacterTable.ASCII:
                         StringByteLabel.Content = ByteConverters.ByteToChar(Byte.Value);
+                        Width = 12;
                         break;
                     case CharacterTable.TBLFile:
+                        ReadOnlyMode = true;
+
                         if (_TBLCharacterTable != null)
-                            StringByteLabel.Content = _TBLCharacterTable.FindTBLMatch(ByteConverters.ByteToHex(Byte.Value), true);                       
+                        {                            
+                            string content = _TBLCharacterTable.FindTBLMatch(ByteConverters.ByteToHex(Byte.Value).ToUpper(), true);
+                            StringByteLabel.Content = content;
+
+                            if (content.Length > 1)
+                                Width = 12 + content.Length * 3D;
+                            else
+                                Width = 12;
+
+                            //if (content[0] == '<')
+                            //    StringByteLabel.Foreground = Brushes.Blue;
+                            //else
+                            //    StringByteLabel.Foreground = Brushes.Black;
+
+                        }
                         else
                             goto case CharacterTable.ASCII;
                         break;

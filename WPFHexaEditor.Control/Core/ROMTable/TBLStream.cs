@@ -104,7 +104,7 @@ namespace WPFHexaEditor.Core.ROMTable
         /// <returns></returns>
         public string FindTBLMatch(string hex, bool showSpecialValue)
         {
-            string rtn = "#";
+            string rtn = ".";
             DTE dte;
             for (int i = 0; i < this._DTE.Count; i++)
             {
@@ -141,7 +141,7 @@ namespace WPFHexaEditor.Core.ROMTable
         /// <returns></returns>
         public string FindTBLMatch(string hex)
         {
-            string rtn = "#";
+            string rtn = ".";
             DTE dte;
             for (int i = 0; i < this._DTE.Count; i++)
             {
@@ -164,7 +164,7 @@ namespace WPFHexaEditor.Core.ROMTable
         /// <returns></returns>
         public string FindTBLMatch(string hex, bool showSpecialValue, bool NotShowDTE)
         {
-            string rtn = "#";
+            string rtn = ".";
             DTE dte;
             for (int i = 0; i < this._DTE.Count; i++)
             {

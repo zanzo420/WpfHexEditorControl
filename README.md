@@ -1,7 +1,12 @@
-# WPF Hexadecimal Editor control (Beta)
-A WPF Hexadecimal editor for view/modify file.
+# WPF Hexadecimal Editor control (Beta) 
+A WPF Hexadecimal editor for view/modify file.  (NOW SUPPORT THINGY CHARACTER TABLE (TBL))
 
-![example](WPFHexEditorControlSample5.png?raw=true)
+Sample with standard ASCII character table
+![example](WPFHexEditorControlSample6-NOTBL.png?raw=true)
+
+Sample with standard Thingy character table on SNES Final Fantasy II US
+![example](WPFHexEditorControlSample6-TBL.png?raw=true)
+
 
 ##NUGET
 https://www.nuget.org/packages/WPFHexaEditor/

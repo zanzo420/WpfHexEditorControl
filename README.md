@@ -61,8 +61,7 @@ Insert the control like this:
 
 ```xaml
 <Control:HexaEditor/>
-
+<Control:HexaEditor Width="NaN" Height="NaN"/>
 <Control:HexaEditor Width="Auto" Height="Auto"/>
-
 <Control:HexaEditor FileName={Binding FileNamePath} Width="Auto" Height="Auto"/>
 ```

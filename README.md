@@ -8,7 +8,7 @@ Sample with standard Thingy character table on SNES Final Fantasy II US
 ![example](WPFHexEditorControlSample6-TBL.png?raw=true)
 
 
-##NUGET
+##NUGET  Last version : 2017-02-26
 https://www.nuget.org/packages/WPFHexaEditor/
 
 ## Features

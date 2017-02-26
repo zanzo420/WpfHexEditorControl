@@ -60,5 +60,9 @@ xmlns:Control="clr-namespace:WPFHexaEditor.Control;assembly=WPFHexaEditor.Contro
 Insert the control like this:
 
 ```xaml
+<Control:HexaEditor/>
+
+<Control:HexaEditor Width="Auto" Height="Auto"/>
+
 <Control:HexaEditor FileName={Binding FileNamePath} Width="Auto" Height="Auto"/>
 ```

@@ -50,7 +50,7 @@ namespace WPFHexaEditor.Core.Bytes
         /// </summary>
         public static string ByteToHex(byte b)
         {
-            string sB = b.ToString(ConstantReadOnly.HexStringFormat, CultureInfo.InvariantCulture );//System.Threading.Thread.CurrentThread.CurrentCulture);
+            string sB = b.ToString(ConstantReadOnly.HexStringFormat, CultureInfo.InvariantCulture);
 
             if (sB.Length == 1)
                 sB = "0" + sB;

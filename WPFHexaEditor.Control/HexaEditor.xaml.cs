@@ -101,7 +101,91 @@ namespace WPFHexaEditor.Control
                 RefreshView();
             }
         }
-        #endregion Characters tables
+
+
+        /// <summary>
+        /// Get or set the color of DTE in string panel.
+        /// </summary>
+        public SolidColorBrush TBL_DTEColor
+        {
+            get { return (SolidColorBrush)GetValue(TBL_DTEColorProperty); }
+            set { SetValue(TBL_DTEColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for TBL_DTEColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty TBL_DTEColorProperty =
+            DependencyProperty.Register("TBL_DTEColor", typeof(SolidColorBrush), typeof(HexaEditor), 
+                new FrameworkPropertyMetadata(Brushes.Red,
+                    new PropertyChangedCallback(TBLColor_Changed)));
+
+        private static void TBLColor_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            HexaEditor ctrl = d as HexaEditor;
+
+            ctrl.RefreshView();
+        }
+
+        /// <summary>
+        /// Get or set the color of MTE in string panel.
+        /// </summary>
+        public SolidColorBrush TBL_MTEColor
+        {
+            get { return (SolidColorBrush)GetValue(TBL_MTEColorProperty); }
+            set { SetValue(TBL_MTEColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for TBL_DTEColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty TBL_MTEColorProperty =
+            DependencyProperty.Register("TBL_MTEColor", typeof(SolidColorBrush), typeof(HexaEditor),
+                new FrameworkPropertyMetadata(Brushes.DarkBlue,
+                    new PropertyChangedCallback(TBLColor_Changed)));
+
+        /// <summary>
+        /// Get or set the color of EndBlock in string panel.
+        /// </summary>
+        public SolidColorBrush TBL_EndBlockColor
+        {
+            get { return (SolidColorBrush)GetValue(TBL_EndBlockColorProperty); }
+            set { SetValue(TBL_EndBlockColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for TBL_DTEColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty TBL_EndBlockColorProperty =
+            DependencyProperty.Register("TBL_EndBlockColor", typeof(SolidColorBrush), typeof(HexaEditor),
+                new FrameworkPropertyMetadata(Brushes.Blue,
+                    new PropertyChangedCallback(TBLColor_Changed)));
+
+        /// <summary>
+        /// Get or set the color of EndBlock in string panel.
+        /// </summary>
+        public SolidColorBrush TBL_EndLineColor
+        {
+            get { return (SolidColorBrush)GetValue(TBL_EndLineColorProperty); }
+            set { SetValue(TBL_EndLineColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for TBL_DTEColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty TBL_EndLineColorProperty =
+            DependencyProperty.Register("TBL_EndLineColor", typeof(SolidColorBrush), typeof(HexaEditor),
+                new FrameworkPropertyMetadata(Brushes.Blue,
+                    new PropertyChangedCallback(TBLColor_Changed)));
+
+        /// <summary>
+        /// Get or set the color of EndBlock in string panel.
+        /// </summary>
+        public SolidColorBrush TBL_DefaultColor
+        {
+            get { return (SolidColorBrush)GetValue(TBL_DefaultColorProperty); }
+            set { SetValue(TBL_DefaultColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for TBL_DTEColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty TBL_DefaultColorProperty =
+            DependencyProperty.Register("TBL_DefaultColor", typeof(SolidColorBrush), typeof(HexaEditor),
+                new FrameworkPropertyMetadata(Brushes.Black,
+                    new PropertyChangedCallback(TBLColor_Changed)));
+
+        #endregion Characters tables property/methods
 
         #region ReadOnly property/event
         /// <summary>
@@ -1630,25 +1714,20 @@ namespace WPFHexaEditor.Control
                             sbCtrl.ByteDeleted += Control_ByteDeleted;
                             sbCtrl.EscapeKey += Control_EscapeKey;
 
-                            sbCtrl.InternalChange = true;
+                            sbCtrl.InternalChange = true;                            
                             sbCtrl.TBLCharacterTable = _TBLCharacterTable;
                             sbCtrl.TypeOfCharacterTable = TypeOfCharacterTable;
                             sbCtrl.Byte = (byte)_provider.ReadByte();
-
-                            //bool MTE = false;
-                            //if (!_provider.EOF)
-                            //{
-                            //sbCtrl.ByteNext = (byte)_provider.ReadByte();
-
-                            //if (_TBLCharacterTable != null)
-                            //    if (DTE.TypeDTE(_TBLCharacterTable.FindTBLMatch(ByteConverters.ByteToHex(sbCtrl.Byte.Value).ToUpper() +
-                            //                                                    ByteConverters.ByteToHex(sbCtrl.ByteNext.Value).ToUpper(), true)) != DTEType.MultipleTitleEncoding)
-                            
                             sbCtrl.ByteNext = (byte)_provider.ReadByte();
-
                             _provider.Position--;
 
-                            //}
+                            //TBL coloring
+                            sbCtrl.TBL_DTEColor = TBL_DTEColor;
+                            sbCtrl.TBL_MTEColor = TBL_MTEColor;
+                            sbCtrl.TBL_EndBlockColor = TBL_EndBlockColor;
+                            sbCtrl.TBL_EndLineColor = TBL_EndLineColor;
+                            sbCtrl.TBL_DefaultColor = TBL_DefaultColor;
+
                             sbCtrl.InternalChange = false;
 
                             dataLineStack.Children.Add(sbCtrl);
@@ -1689,10 +1768,16 @@ namespace WPFHexaEditor.Control
                                     sbCtrl.ByteNext = (byte)_provider.ReadByte();
                                     _provider.Position--;
                                 }
+
+                                //TBL coloring
+                                sbCtrl.TBL_DTEColor = TBL_DTEColor;
+                                sbCtrl.TBL_MTEColor = TBL_MTEColor;
+                                sbCtrl.TBL_EndBlockColor = TBL_EndBlockColor;
+                                sbCtrl.TBL_EndLineColor = TBL_EndLineColor;
+                                sbCtrl.TBL_DefaultColor = TBL_DefaultColor;
+
                                 sbCtrl.InternalChange = false;
                             }
-                        //else
-                        //    continue;
 
                         stackIndex++;
 

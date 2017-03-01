@@ -274,6 +274,89 @@ namespace WPFHexaEditor.Control
                 _TBLCharacterTable = value;
             }
         }
+
+        /// <summary>
+        /// Get or set the color of DTE in string panel.
+        /// </summary>
+        public SolidColorBrush TBL_DTEColor
+        {
+            get { return (SolidColorBrush)GetValue(TBL_DTEColorProperty); }
+            set { SetValue(TBL_DTEColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for TBL_DTEColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty TBL_DTEColorProperty =
+            DependencyProperty.Register("TBL_DTEColor", typeof(SolidColorBrush), typeof(StringByteControl),
+                new FrameworkPropertyMetadata(Brushes.Red,
+                    new PropertyChangedCallback(TBLColor_Changed)));
+
+        private static void TBLColor_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            StringByteControl ctrl = d as StringByteControl;
+                        
+            ctrl.UpdateBackGround();
+        }
+
+        /// <summary>
+        /// Get or set the color of MTE in string panel.
+        /// </summary>
+        public SolidColorBrush TBL_MTEColor
+        {
+            get { return (SolidColorBrush)GetValue(TBL_MTEColorProperty); }
+            set { SetValue(TBL_MTEColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for TBL_DTEColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty TBL_MTEColorProperty =
+            DependencyProperty.Register("TBL_MTEColor", typeof(SolidColorBrush), typeof(StringByteControl),
+                new FrameworkPropertyMetadata(Brushes.Red,
+                    new PropertyChangedCallback(TBLColor_Changed)));
+
+        /// <summary>
+        /// Get or set the color of EndBlock in string panel.
+        /// </summary>
+        public SolidColorBrush TBL_EndBlockColor
+        {
+            get { return (SolidColorBrush)GetValue(TBL_EndBlockColorProperty); }
+            set { SetValue(TBL_EndBlockColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for TBL_DTEColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty TBL_EndBlockColorProperty =
+            DependencyProperty.Register("TBL_EndBlockColor", typeof(SolidColorBrush), typeof(StringByteControl),
+                new FrameworkPropertyMetadata(Brushes.Blue,
+                    new PropertyChangedCallback(TBLColor_Changed)));
+
+        /// <summary>
+        /// Get or set the color of EndBlock in string panel.
+        /// </summary>
+        public SolidColorBrush TBL_EndLineColor
+        {
+            get { return (SolidColorBrush)GetValue(TBL_EndLineColorProperty); }
+            set { SetValue(TBL_EndLineColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for TBL_DTEColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty TBL_EndLineColorProperty =
+            DependencyProperty.Register("TBL_EndLineColor", typeof(SolidColorBrush), typeof(StringByteControl),
+                new FrameworkPropertyMetadata(Brushes.Blue,
+                    new PropertyChangedCallback(TBLColor_Changed)));
+
+        /// <summary>
+        /// Get or set the color of EndBlock in string panel.
+        /// </summary>
+        public SolidColorBrush TBL_DefaultColor
+        {
+            get { return (SolidColorBrush)GetValue(TBL_DefaultColorProperty); }
+            set { SetValue(TBL_DefaultColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for TBL_DTEColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty TBL_DefaultColorProperty =
+            DependencyProperty.Register("TBL_DefaultColor", typeof(SolidColorBrush), typeof(StringByteControl),
+                new FrameworkPropertyMetadata(Brushes.Black,
+                    new PropertyChangedCallback(TBLColor_Changed)));
+
         #endregion Characters tables
 
         /// <summary>
@@ -303,20 +386,20 @@ namespace WPFHexaEditor.Control
 
                             StringByteLabel.Content = content;
 
-                            //Adapt width to content... NOT COMPLETED
+                            //Adapt width to content... NOT COMPLETED. CHECK FOR AUTO ADAPT TO CONTENT
                             switch (DTE.TypeDTE(content))
                             {
                                 case DTEType.DualTitleEncoding:
-                                    Width = 12 + content.Length * 2D;
+                                    Width = 12 + content.Length * 2.2D;
                                     break;
                                 case DTEType.MultipleTitleEncoding:
-                                    Width = 12 + content.Length * 4D;
+                                    Width = 12 + content.Length * 4.2D;                                    
                                     break;
                                 case DTEType.EndLine:
                                     Width = 24;
                                     break;
                                 case DTEType.EndBlock:
-                                    Width = 30;
+                                    Width = 32;
                                     break;
                                 default:
                                     Width = 12;
@@ -384,7 +467,7 @@ namespace WPFHexaEditor.Control
 
                 return;
             }
-            else
+            else //TBL COLORING
             {
                 FontWeight = (FontWeight)TryFindResource("NormalFontWeight");
                 Background = Brushes.Transparent;
@@ -394,17 +477,19 @@ namespace WPFHexaEditor.Control
                     switch (DTE.TypeDTE((string)StringByteLabel.Content))
                     {
                         case DTEType.DualTitleEncoding:
-                            StringByteLabel.Foreground = Brushes.Red;
+                            StringByteLabel.Foreground = TBL_DTEColor;
                             break;
                         case DTEType.MultipleTitleEncoding:
-                            StringByteLabel.Foreground = Brushes.DarkBlue;
+                            StringByteLabel.Foreground = TBL_MTEColor;
                             break;
-                        case DTEType.EndLine:                            
+                        case DTEType.EndLine:
+                            StringByteLabel.Foreground = TBL_EndLineColor;
+                            break;
                         case DTEType.EndBlock:
-                            StringByteLabel.Foreground = Brushes.Blue;
+                            StringByteLabel.Foreground = TBL_EndBlockColor;
                             break;
                         default:
-                            StringByteLabel.Foreground = Brushes.Black;
+                            StringByteLabel.Foreground = TBL_DefaultColor;
                             break;
                     }
             }

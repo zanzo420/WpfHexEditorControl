@@ -4,7 +4,7 @@ A WPF Hexadecimal editor for view/modify file.  (NOW SUPPORT THINGY CHARACTER TA
 Sample with standard ASCII character table
 ![example](WPFHexEditorControlSample6-NOTBL.png?raw=true)
 
-Sample with standard Thingy character table on SNES Final Fantasy II US
+Sample with Thingy character table on SNES Final Fantasy II US
 ![example](WPFHexEditorControlSample6-TBL.png?raw=true)
 
 

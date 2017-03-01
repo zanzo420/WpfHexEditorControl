@@ -8,7 +8,7 @@ Sample with standard Thingy character table on SNES Final Fantasy II US
 ![example](WPFHexEditorControlSample6-TBL.png?raw=true)
 
 
-##NUGET
+##NUGET  Last version : 2017-02-26
 https://www.nuget.org/packages/WPFHexaEditor/
 
 ## Features
@@ -30,8 +30,10 @@ https://www.nuget.org/packages/WPFHexaEditor/
 - ...
 
 ##Release Notes (version of NUGET package)
-New in version 0.8.0
+New in version 0.9.0.1
 - Implementation of TBL file format. (CHARACTER TABLE FOR ROM REVERSE ENGINEERING)
+- Added key fonction like ESC to unselect/unlight
+- Code optimization and many bug fixed
 
 New in version 0.7.0
 - Add FindSelection
@@ -58,5 +60,8 @@ xmlns:Control="clr-namespace:WPFHexaEditor.Control;assembly=WPFHexaEditor.Contro
 Insert the control like this:
 
 ```xaml
+<Control:HexaEditor/>
+<Control:HexaEditor Width="NaN" Height="NaN"/>
+<Control:HexaEditor Width="Auto" Height="Auto"/>
 <Control:HexaEditor FileName={Binding FileNamePath} Width="Auto" Height="Auto"/>
 ```

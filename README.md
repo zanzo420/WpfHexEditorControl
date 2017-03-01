@@ -13,6 +13,7 @@ https://www.nuget.org/packages/WPFHexaEditor/
 
 ## Features
 - Use TBL character table file insted of default ASCII.
+- Choose color set of TBL string via dependency property
 - Modify bytes
 - Delete bytes
 - Add bytes (soon) 

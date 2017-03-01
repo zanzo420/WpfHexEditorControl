@@ -303,13 +303,25 @@ namespace WPFHexaEditor.Control
 
                             StringByteLabel.Content = content;
 
-                            //Adjuste wight
-                            if (content.Length == 1)
-                                Width = 12;
-                            else if (content.Length == 2)
-                                Width = 12 + content.Length * 2D;
-                            else if (content.Length > 2)
-                                Width = 12 + content.Length * 3.8D;
+                            //Adapt width to content... NOT COMPLETED
+                            switch (DTE.TypeDTE(content))
+                            {
+                                case DTEType.DualTitleEncoding:
+                                    Width = 12 + content.Length * 2D;
+                                    break;
+                                case DTEType.MultipleTitleEncoding:
+                                    Width = 12 + content.Length * 4D;
+                                    break;
+                                case DTEType.EndLine:
+                                    Width = 24;
+                                    break;
+                                case DTEType.EndBlock:
+                                    Width = 30;
+                                    break;
+                                default:
+                                    Width = 12;
+                                    break;
+                            }
                         }
                         else
                             goto case CharacterTable.ASCII;
@@ -385,6 +397,10 @@ namespace WPFHexaEditor.Control
                             StringByteLabel.Foreground = Brushes.Red;
                             break;
                         case DTEType.MultipleTitleEncoding:
+                            StringByteLabel.Foreground = Brushes.DarkBlue;
+                            break;
+                        case DTEType.EndLine:                            
+                        case DTEType.EndBlock:
                             StringByteLabel.Foreground = Brushes.Blue;
                             break;
                         default:

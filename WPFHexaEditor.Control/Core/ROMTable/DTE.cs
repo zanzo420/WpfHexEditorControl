@@ -155,23 +155,21 @@ namespace WPFHexaEditor.Core.ROMTable
         {
             try
             {
+                switch (DTEValue)
+                {
+                    case @"<end>":
+                        return DTEType.EndBlock;
+                    case @"<ln>":
+                        return DTEType.EndLine;
+                        //case @"\":
+                }
+
                 if (DTEValue.Length == 1)
                     return DTEType.ASCII;
                 else if (DTEValue.Length == 2)
                     return DTEType.DualTitleEncoding;
                 else if (DTEValue.Length > 2)
                     return DTEType.MultipleTitleEncoding;
-            }
-            catch (IndexOutOfRangeException)
-            {
-                switch (DTEValue)
-                {
-                    case @"/":
-                        return DTEType.EndBlock;
-                    case @"*":
-                        return DTEType.EndLine;
-                        //case @"\":
-                }
             }
             catch (ArgumentOutOfRangeException)
             { //Du a une entre qui a 2 = de suite... EX:  XX==

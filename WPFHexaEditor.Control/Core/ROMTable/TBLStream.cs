@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections;
 using System.Text;
 using System.ComponentModel;
+using System.Collections.Generic;
 
 namespace WPFHexaEditor.Core.ROMTable
 {
@@ -16,7 +17,7 @@ namespace WPFHexaEditor.Core.ROMTable
         /// <summary>Chemin vers le fichier (path)</summary>
         private string _FileName;
         /// <summary>Tableau de DTE représentant tous les les entrée du fichier</summary>
-        private ArrayList _DTE = new ArrayList();
+        private List<DTE> _DTE = new List<DTE>();
 
         //HACK: Corrige un bug de conception pour retourner la key du projet pour la tbl selectioner
         public string key = "";
@@ -34,8 +35,8 @@ namespace WPFHexaEditor.Core.ROMTable
         public TBLStream()
         {
             //			this._Commentaire = "";
-            this._FileName = "";
-            this._DTE.Clear();
+            _FileName = "";
+            _DTE.Clear();
         }
 
         /// <summary>
@@ -45,11 +46,11 @@ namespace WPFHexaEditor.Core.ROMTable
         public TBLStream(string FileName)
         {
             //			this._Commentaire = "";
-            this._DTE.Clear();
+            _DTE.Clear();
 
             //Chargé le fichier dans l'objet
             //if (File.Exists(FileName)){
-            this._FileName = FileName;
+            _FileName = FileName;
             //TODO: Charger le fichier dans la collection		
             //}//else
             //TODO: cree le fichier TBL
@@ -65,15 +66,15 @@ namespace WPFHexaEditor.Core.ROMTable
             get
             {
                 // verifie la limite de l'index
-                if (index < 0 || index > this._DTE.Count)
+                if (index < 0 || index > _DTE.Count)
                     throw new IndexOutOfRangeException("Cette item n'existe pas");
                 else
-                    return (DTE)this._DTE[index];
+                    return _DTE[index];
             }
             set
             {
-                if (!(index < 0 || index >= this._DTE.Count))
-                    this._DTE[index] = value;
+                if (!(index < 0 || index >= _DTE.Count))
+                    _DTE[index] = value;
             }
         }
         #endregion
@@ -92,8 +93,8 @@ namespace WPFHexaEditor.Core.ROMTable
         /// </summary>
         public void Dispose()
         {
-            this._DTE.Clear();
-            this._FileName = "";
+            _DTE.Clear();
+            _FileName = "";
         }
 
         /// <summary>
@@ -106,9 +107,9 @@ namespace WPFHexaEditor.Core.ROMTable
         {
             string rtn = "#";
             DTE dte;
-            for (int i = 0; i < this._DTE.Count; i++)
+            for (int i = 0; i < _DTE.Count; i++)
             {
-                dte = (DTE)this._DTE[i];
+                dte = _DTE[i];
                 if (dte.Entry == hex)
                 {
                     rtn = dte.Value;
@@ -138,14 +139,38 @@ namespace WPFHexaEditor.Core.ROMTable
         /// </summary>
         /// <param name="hex">Valeur hexa a rechercher dans la TBL</param>
         /// <param name="showSpecialValue">Afficher les valeurs de fin de block et de ligne</param>
+        /// <returns>Retourne le DTE/MTE trouvé. null si rien trouvé</returns>
+        public DTE GetDTE(string hex)
+        {
+            DTE dte = null;
+            for (int i = 0; i < _DTE.Count; i++)
+            {
+                dte = _DTE[i];
+                if (dte.Entry == hex)
+                    return dte;
+
+                if (dte.Entry == ("/" + hex))
+                    return dte;
+                else if (dte.Entry == ("*" + hex))
+                    return dte;
+            }
+
+            return dte;
+        }
+
+        /// <summary>
+        /// Trouver une entré dans la table de jeu qui corestpond a la valeur hexa
+        /// </summary>
+        /// <param name="hex">Valeur hexa a rechercher dans la TBL</param>
+        /// <param name="showSpecialValue">Afficher les valeurs de fin de block et de ligne</param>
         /// <returns></returns>
         public string FindTBLMatch(string hex)
         {
             string rtn = "#";
             DTE dte;
-            for (int i = 0; i < this._DTE.Count; i++)
+            for (int i = 0; i < _DTE.Count; i++)
             {
-                dte = (DTE)this._DTE[i];
+                dte = _DTE[i];
                 if (dte.Entry == hex)
                 {
                     rtn = dte.Value;
@@ -166,18 +191,16 @@ namespace WPFHexaEditor.Core.ROMTable
         {
             string rtn = "#";
             DTE dte;
-            for (int i = 0; i < this._DTE.Count; i++)
+            for (int i = 0; i < _DTE.Count; i++)
             {
-                dte = (DTE)this._DTE[i];
+                dte = _DTE[i];
 
                 if (dte.Entry == hex)
                 {
                     if (NotShowDTE)
                     {
-                        if (dte.Type == DTEType.DualTitleEncoding)
-                        {
-                            break;
-                        }
+                        if (dte.Type == DTEType.DualTitleEncoding)                        
+                            break;                        
                         else
                         {
                             rtn = dte.Value;
@@ -216,16 +239,16 @@ namespace WPFHexaEditor.Core.ROMTable
         public bool Load()
         {
             //Vide la collection
-            this._DTE.Clear();
+            _DTE.Clear();
             //ouverture du fichier
 
-            if (!File.Exists(this._FileName))
+            if (!File.Exists(_FileName))
             {
-                FileStream fs = File.Create(this._FileName);
+                FileStream fs = File.Create(_FileName);
                 fs.Close();
             }
 
-            StreamReader TBLFile = new StreamReader(this._FileName, Encoding.ASCII);
+            StreamReader TBLFile = new StreamReader(_FileName, Encoding.ASCII);
 
             if (TBLFile.BaseStream.CanRead)
             {
@@ -279,7 +302,7 @@ namespace WPFHexaEditor.Core.ROMTable
                         dte = new DTE(info[0], "=", DTEType.DualTitleEncoding);
                     }
 
-                    this._DTE.Add(dte);
+                    _DTE.Add(dte);
                 }
 
                 TBLFile.Close();
@@ -301,16 +324,16 @@ namespace WPFHexaEditor.Core.ROMTable
         public bool Load(string FileName)
         {
             //Cleen Object !
-            this.Dispose();
+            Dispose();
 
-            this._FileName = FileName;
+            _FileName = FileName;
 
-            return this.Load();
+            return Load();
         }
 
         private void LoadBookMark()
         {
-            StreamReader TBLFile = new StreamReader(this._FileName, Encoding.ASCII);
+            StreamReader TBLFile = new StreamReader(_FileName, Encoding.ASCII);
 
             Bookmark fav = null;
             string[] lineSplited;
@@ -333,7 +356,7 @@ namespace WPFHexaEditor.Core.ROMTable
 
                             lineSplited = line[i].Split(new char[] { 'h' });
                             fav.Position = lineSplited[0].Substring(1, lineSplited[0].Length - 1);
-                            this._Favoris.Add(fav);
+                            _Favoris.Add(fav);
                         }
                     }
                     catch { }
@@ -349,16 +372,16 @@ namespace WPFHexaEditor.Core.ROMTable
         public bool Save()
         {
             //ouverture du fichier
-            FileStream myFile = new FileStream(this._FileName, FileMode.Create, FileAccess.Write);
+            FileStream myFile = new FileStream(_FileName, FileMode.Create, FileAccess.Write);
             StreamWriter TBLFile = new StreamWriter(myFile, Encoding.ASCII);
 
             if (TBLFile.BaseStream.CanWrite)
             {
                 DTE dte;
 
-                for (int i = 0; i < this._DTE.Count; i++)
+                for (int i = 0; i < _DTE.Count; i++)
                 {
-                    dte = (DTE)this._DTE[i];
+                    dte = _DTE[i];
                     if (dte.Type != DTEType.EndBlock &&
                         dte.Type != DTEType.EndLine)
                     { //Si ce n'est pas une fin de ligne ou fin de block
@@ -386,9 +409,9 @@ namespace WPFHexaEditor.Core.ROMTable
         /// <returns>Retourne vrai si le fichier à été bien enregistré</returns>
         public bool SaveAs(string FileName)
         {
-            this._FileName = FileName;
+            _FileName = FileName;
 
-            return this.Save();
+            return Save();
         }
 
         /// <summary>
@@ -399,12 +422,12 @@ namespace WPFHexaEditor.Core.ROMTable
         public bool Save(string FileName)
         {
             //garder en le path dans une variable tempon
-            string Filetmp = this._FileName;
-            this._FileName = FileName;
+            string Filetmp = _FileName;
+            _FileName = FileName;
 
             //Enregister le fichier
-            bool rtn = this.Save();
-            this._FileName = Filetmp;
+            bool rtn = Save();
+            _FileName = Filetmp;
 
             //Valeur de retour
             return rtn;
@@ -416,7 +439,7 @@ namespace WPFHexaEditor.Core.ROMTable
         /// <param name="dte">objet DTE a ajouter fans la collection</param>
         public void Add(DTE dte)
         {
-            this._DTE.Add(dte);
+            _DTE.Add(dte);
         }
 
         /// <summary>
@@ -425,7 +448,7 @@ namespace WPFHexaEditor.Core.ROMTable
         /// <param name="dte"></param>
         public void Remove(DTE dte)
         {
-            this._DTE.Remove(dte);
+            _DTE.Remove(dte);
         }
 
         /// <summary>
@@ -434,7 +457,7 @@ namespace WPFHexaEditor.Core.ROMTable
         /// <param name="index">Index de l'element a effacer</param>
         public void Remove(int index)
         {
-            this._DTE.RemoveAt(index);
+            _DTE.RemoveAt(index);
         }
 
         /// <summary>
@@ -444,7 +467,7 @@ namespace WPFHexaEditor.Core.ROMTable
         /// <returns>Retourne la position ou ce trouve cette élément dans le tableau</returns>
         public int Find(DTE dte)
         {
-            return this._DTE.BinarySearch(dte);
+            return _DTE.BinarySearch(dte);
         }
 
         /// <summary>
@@ -456,7 +479,7 @@ namespace WPFHexaEditor.Core.ROMTable
         public int Find(string Entry, string Value)
         {
             DTE dte = new DTE(Entry, Value);
-            return this._DTE.BinarySearch(dte);
+            return _DTE.BinarySearch(dte);
         }
 
         /// <summary>
@@ -469,7 +492,7 @@ namespace WPFHexaEditor.Core.ROMTable
         public int Find(string Entry, string Value, DTEType Type)
         {
             DTE dte = new DTE(Entry, Value, Type);
-            return this._DTE.BinarySearch(dte);
+            return _DTE.BinarySearch(dte);
         }
         #endregion
 
@@ -483,11 +506,11 @@ namespace WPFHexaEditor.Core.ROMTable
         {
             get
             {
-                return this._FileName;
+                return _FileName;
             }
             set
             {
-                this._FileName = value;
+                _FileName = value;
             }
         }
 
@@ -498,7 +521,7 @@ namespace WPFHexaEditor.Core.ROMTable
         {
             get
             {
-                return this._DTE.Count;
+                return _DTE.Count;
             }
         }
 
@@ -510,7 +533,7 @@ namespace WPFHexaEditor.Core.ROMTable
         {
             get
             {
-                return this._Favoris;
+                return _Favoris;
             }
         }
 
@@ -523,9 +546,9 @@ namespace WPFHexaEditor.Core.ROMTable
             {
                 DTE dte;
                 short total = 0;
-                for (int i = 0; i < this._DTE.Count; i++)
+                for (int i = 0; i < _DTE.Count; i++)
                 {
-                    dte = (DTE)this._DTE[i];
+                    dte = _DTE[i];
                     if (dte.Type == DTEType.DualTitleEncoding)
                     {
                         total++;
@@ -545,9 +568,9 @@ namespace WPFHexaEditor.Core.ROMTable
             {
                 DTE dte;
                 short total = 0;
-                for (int i = 0; i < this._DTE.Count; i++)
+                for (int i = 0; i < _DTE.Count; i++)
                 {
-                    dte = (DTE)this._DTE[i];
+                    dte = _DTE[i];
                     if (dte.Type == DTEType.MultipleTitleEncoding)
                     {
                         total++;
@@ -567,9 +590,9 @@ namespace WPFHexaEditor.Core.ROMTable
             {
                 DTE dte;
                 short total = 0;
-                for (int i = 0; i < this._DTE.Count; i++)
+                for (int i = 0; i < _DTE.Count; i++)
                 {
-                    dte = (DTE)this._DTE[i];
+                    dte = _DTE[i];
                     if (dte.Type == DTEType.ASCII)
                     {
                         total++;
@@ -589,9 +612,9 @@ namespace WPFHexaEditor.Core.ROMTable
             {
                 DTE dte;
                 short total = 0;
-                for (int i = 0; i < this._DTE.Count; i++)
+                for (int i = 0; i < _DTE.Count; i++)
                 {
-                    dte = (DTE)this._DTE[i];
+                    dte = _DTE[i];
                     if (dte.Type == DTEType.Invalid)
                     {
                         total++;
@@ -611,9 +634,9 @@ namespace WPFHexaEditor.Core.ROMTable
             {
                 DTE dte;
                 short total = 0;
-                for (int i = 0; i < this._DTE.Count; i++)
+                for (int i = 0; i < _DTE.Count; i++)
                 {
-                    dte = (DTE)this._DTE[i];
+                    dte = _DTE[i];
                     if (dte.Type == DTEType.Japonais)
                     {
                         total++;
@@ -633,9 +656,9 @@ namespace WPFHexaEditor.Core.ROMTable
             {
                 DTE dte;
                 short total = 0;
-                for (int i = 0; i < this._DTE.Count; i++)
+                for (int i = 0; i < _DTE.Count; i++)
                 {
-                    dte = (DTE)this._DTE[i];
+                    dte = _DTE[i];
                     if (dte.Type == DTEType.EndLine)
                     {
                         total++;
@@ -655,9 +678,9 @@ namespace WPFHexaEditor.Core.ROMTable
             {
                 DTE dte;
                 short total = 0;
-                for (int i = 0; i < this._DTE.Count; i++)
+                for (int i = 0; i < _DTE.Count; i++)
                 {
-                    dte = (DTE)this._DTE[i];
+                    dte = _DTE[i];
                     if (dte.Type == DTEType.EndBlock)
                     {
                         total++;
@@ -677,9 +700,9 @@ namespace WPFHexaEditor.Core.ROMTable
             {
                 DTE dte;
                 string rtn = ""; //Valeur de retour
-                for (int i = 0; i < this._DTE.Count; i++)
+                for (int i = 0; i < _DTE.Count; i++)
                 {
-                    dte = (DTE)this._DTE[i];
+                    dte = _DTE[i];
                     if (dte.Type == DTEType.EndBlock)
                     {
                         rtn = dte.Entry;
@@ -700,9 +723,9 @@ namespace WPFHexaEditor.Core.ROMTable
             {
                 DTE dte;
                 string rtn = ""; //Valeur de retour
-                for (int i = 0; i < this._DTE.Count; i++)
+                for (int i = 0; i < _DTE.Count; i++)
                 {
-                    dte = (DTE)this._DTE[i];
+                    dte = _DTE[i];
                     if (dte.Type == DTEType.EndLine)
                     {
                         rtn = dte.Entry;

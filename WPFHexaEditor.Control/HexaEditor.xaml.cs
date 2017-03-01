@@ -1560,6 +1560,8 @@ namespace WPFHexaEditor.Control
 
             if (e.NewValue != e.OldValue)
             {
+
+                ctrl.UpdateVerticalScroll();
                 ctrl.RefreshView(true);
                 ctrl.UpdateHexHeader();
             }

@@ -378,9 +378,13 @@ namespace WPFHexaEditor.Control
                         if (_TBLCharacterTable != null)
                         {
                             string content = "#";
-                            string MTE = (ByteConverters.ByteToHex(Byte.Value) + ByteConverters.ByteToHex(ByteNext.Value)).ToUpper();
-                            content = _TBLCharacterTable.FindTBLMatch(MTE, true);
-                            
+
+                            if (ByteNext.HasValue)
+                            {
+                                string MTE = (ByteConverters.ByteToHex(Byte.Value) + ByteConverters.ByteToHex(ByteNext.Value)).ToUpper();
+                                content = _TBLCharacterTable.FindTBLMatch(MTE, true);
+                            }
+
                             if (content == "#")
                                 content = _TBLCharacterTable.FindTBLMatch(ByteConverters.ByteToHex(Byte.Value).ToUpper().ToUpper(), true);
 

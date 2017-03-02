@@ -390,14 +390,15 @@ namespace WPFHexaEditor.Control
 
                             StringByteLabel.Content = content;
 
-                            //Adapt width to content... NOT COMPLETED. CHECK FOR AUTO ADAPT TO CONTENT
+                            //Adapt width to content... NOT COMPLETED. 
+                            //TODO: CHECK FOR AUTO ADAPT TO CONTENT AND FONTSIZE
                             switch (DTE.TypeDTE(content))
                             {
                                 case DTEType.DualTitleEncoding:
                                     Width = 12 + content.Length * 2.2D;
                                     break;
                                 case DTEType.MultipleTitleEncoding:
-                                    Width = 12 + content.Length * 4.2D;                                    
+                                    Width = 12 + content.Length * 4.2D + (FontSize / 2);                                    
                                     break;
                                 case DTEType.EndLine:
                                     Width = 24;

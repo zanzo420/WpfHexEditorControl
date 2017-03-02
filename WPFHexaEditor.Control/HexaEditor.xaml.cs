@@ -543,10 +543,18 @@ namespace WPFHexaEditor.Control
             HexByteControl hbCtrl = sender as HexByteControl;
             StringByteControl sbCtrl = sender as StringByteControl;
 
+            IInputElement focusedControl = Keyboard.FocusedElement;
             if (hbCtrl != null)
             {
-                UpdateSelectionColorMode(FirstColor.HexByteData);
 
+                //Update coloring selection
+                var test = focusedControl as HexByteControl;
+                if (test !=null)
+                    UpdateSelectionColorMode(FirstColor.HexByteData);
+                else
+                    UpdateSelectionColorMode(FirstColor.StringByteData);
+
+                //update selection
                 if (hbCtrl.BytePositionInFile != -1)
                     SelectionStop = hbCtrl.BytePositionInFile;
                 else
@@ -555,8 +563,14 @@ namespace WPFHexaEditor.Control
 
             if (sbCtrl != null)
             {
-                UpdateSelectionColorMode(FirstColor.StringByteData);
+                //Update coloring selection
+                var test = focusedControl as StringByteControl;
+                if (test != null)
+                    UpdateSelectionColorMode(FirstColor.StringByteData);
+                else
+                    UpdateSelectionColorMode(FirstColor.HexByteData);
 
+                //update selection
                 if (sbCtrl.BytePositionInFile != -1)
                     SelectionStop = sbCtrl.BytePositionInFile;
                 else
@@ -1568,7 +1582,9 @@ namespace WPFHexaEditor.Control
         }
 
         private void Grid_SizeChanged(object sender, SizeChangedEventArgs e)
-        {            
+        {          
+            //TODO: PREVENT CHANGE ONLY FOR NEW LINE HEIGHT
+
             if (e.NewSize.Height > e.PreviousSize.Height || 
                 e.NewSize.Height < e.PreviousSize.Height)
                 RefreshView(true);

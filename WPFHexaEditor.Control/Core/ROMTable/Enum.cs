@@ -1,5 +1,3 @@
-using System;
-
 //Enumeration du Namespace VRS.Library.DTE
 namespace WPFHexaEditor.Core.ROMTable
 {

@@ -1,5 +1,3 @@
-using System;
-
 namespace WPFHexaEditor.Core.ROMTable
 {
     /// <summary>

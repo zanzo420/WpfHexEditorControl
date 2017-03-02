@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using WPFHexaEditor.Core.Bytes;
-
-namespace WPFHexaEditor.Core
+﻿namespace WPFHexaEditor.Core
 {
     /// <summary>
     /// BookMark class

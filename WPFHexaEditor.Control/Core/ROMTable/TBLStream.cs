@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace WPFHexaEditor.Core.ROMTable
 {
     /// <summary>
-    /// Cet objet représente un fichier TBL avec tous sais entré et valeur
+    /// Cet objet représente un fichier TBL (entrée + valeur)
     /// 
     /// Derek Tremblay 2003-2017
     /// </summary>
@@ -421,7 +421,7 @@ namespace WPFHexaEditor.Core.ROMTable
         /// <returns>Retourne vrai si le fichier à été bien enregistré</returns>
         public bool Save(string FileName)
         {
-            //garder en le path dans une variable tempon
+            //garder le path dans une variable tempon
             string Filetmp = _FileName;
             _FileName = FileName;
 

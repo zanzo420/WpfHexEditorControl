@@ -410,7 +410,7 @@ namespace WPFHexaEditor.Control
 
         private void UpdateHexString()
         {
-            HexString = ((string)FirstHexChar.Content + (string)SecondHexChar.Content); //.ToString();
+            HexString = $"0x{(string)FirstHexChar.Content + (string)SecondHexChar.Content}"; 
         }
 
         private void UserControl_MouseEnter(object sender, MouseEventArgs e)

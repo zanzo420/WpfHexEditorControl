@@ -423,7 +423,7 @@ namespace WPFHexaEditor.Control
         private void UpdateHexString()
         {
             if (Byte != null)
-                HexString = ByteConverters.ByteToHex(Byte.Value);
+                HexString = $"0x{ByteConverters.ByteToHex(Byte.Value)}";
             else
                 HexString = string.Empty;
         }

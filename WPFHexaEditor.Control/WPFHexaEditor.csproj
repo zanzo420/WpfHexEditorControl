@@ -59,6 +59,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="ResourceDictionary\MiscelanousDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ResourceDictionary\ToolTipDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -72,6 +76,7 @@
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="Core\BookMark.cs" />
+    <Compile Include="Core\Converters\LongToHexStringConverter.cs" />
     <Compile Include="Core\MethodExtention\ApplicationExtention.cs" />
     <Compile Include="Core\MethodExtention\ByteArrayExtention.cs" />
     <Compile Include="Core\Bytes\ByteModified.cs" />

@@ -2,59 +2,26 @@
 {
     public class ByteModified
     {
-        private byte? _byte = null;
-        private ByteAction _action = ByteAction.Nothing;
-        private long _position = -1;
-        private long _undoLenght = 1;
-        
         /// <summary>
         /// Byte mofidied
         /// </summary>
-        public byte? Byte
-        {
-            get
-            {
-                return _byte;
-            }
-
-            set
-            {
-                _byte = value;
-            }
-        }
+        public byte? Byte { get; set; } = null;
 
         /// <summary>
         /// Action have made in this byte
         /// </summary>
-        public ByteAction Action
-        {
-            get
-            {
-                return _action;
-            }
-
-            set
-            {
-                _action = value;
-            }
-        }
+        public ByteAction Action { get; set; } = ByteAction.Nothing;
 
         /// <summary>
         /// Get of Set te position in file
         /// </summary>
-        public long BytePositionInFile
-        {
-            get
-            {
-                return _position;
-            }
+        public long BytePositionInFile { get; set; } = -1;
 
-            set
-            {
-                _position = value;
-            }
-        }
-        
+        /// <summary>
+        /// Number of byte to undo when this byte is reach
+        /// </summary>
+        public long UndoLenght { get; set; } = 1;
+
         /// <summary>
         /// Check if the object is valid and data can be used for action
         /// </summary>
@@ -69,30 +36,15 @@
             }
         }
 
-        /// <summary>
-        /// Number of undo todo when this byte is reach
-        /// </summary>
-        public long UndoLenght
-        {
-            get
-            {
-                return _undoLenght;
-            }
-
-            set
-            {
-                _undoLenght = value;
-            }
-        }
 
         /// <summary>
         /// Clear object
         /// </summary>
         public void Clear()
         {
-            _byte = null;
-            _action = ByteAction.Nothing;
-            _position = -1;
+            Byte = null;
+            Action = ByteAction.Nothing;
+            BytePositionInFile = -1;
         }
 
         /// <summary>

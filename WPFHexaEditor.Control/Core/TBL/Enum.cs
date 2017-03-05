@@ -1,5 +1,4 @@
-//Enumeration du Namespace VRS.Library.DTE
-namespace WPFHexaEditor.Core.ROMTable
+namespace WPFHexaEditor.Core.TBL
 {
     /// <summary>
     /// Type de DTE qui sera utilisé dans les classe de DTE
@@ -15,6 +14,5 @@ namespace WPFHexaEditor.Core.ROMTable
         MultipleTitleEncoding,
         EndLine,
         EndBlock
-
     }
 }

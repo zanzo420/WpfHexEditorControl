@@ -12,7 +12,7 @@ using System.Windows.Shapes;
 using WPFHexaEditor.Core;
 using WPFHexaEditor.Core.Bytes;
 using WPFHexaEditor.Core.MethodExtention;
-using WPFHexaEditor.Core.ROMTable;
+using WPFHexaEditor.Core.TBL;
 
 namespace WPFHexaEditor.Control
 {

@@ -1,6 +1,6 @@
 using System;
 
-namespace WPFHexaEditor.Core.ROMTable
+namespace WPFHexaEditor.Core.TBL
 {
     /// <summary>
     /// Objet représentant un DTE.

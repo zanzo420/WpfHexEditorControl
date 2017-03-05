@@ -1,4 +1,4 @@
-namespace WPFHexaEditor.Core.ROMTable
+namespace WPFHexaEditor.Core.TBL
 {
     /// <summary>
     /// Represente une adresse favorite dans une ROM

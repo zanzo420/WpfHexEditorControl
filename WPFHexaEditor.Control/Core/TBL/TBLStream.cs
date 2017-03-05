@@ -5,7 +5,7 @@ using System.Text;
 using System.ComponentModel;
 using System.Collections.Generic;
 
-namespace WPFHexaEditor.Core.ROMTable
+namespace WPFHexaEditor.Core.TBL
 {
     /// <summary>
     /// Cet objet représente un fichier TBL (entrée + valeur)

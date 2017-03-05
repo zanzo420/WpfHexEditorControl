@@ -5,7 +5,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using WPFHexaEditor.Core;
 using WPFHexaEditor.Core.Bytes;
-using WPFHexaEditor.Core.ROMTable;
+using WPFHexaEditor.Core.TBL;
 
 namespace WPFHexaEditor.Control
 {

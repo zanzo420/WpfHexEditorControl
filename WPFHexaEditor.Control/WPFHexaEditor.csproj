@@ -142,7 +142,23 @@
     </None>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\Icon\AddPT.ico" />
+    <Resource Include="Resources\Icon\DTE.ico" />
+    <Resource Include="Resources\Icon\0x.ico" />
+    <Resource Include="Resources\Icon\hexa.ico" />
+    <Resource Include="Resources\Icon\MTE.ico" />
+    <Resource Include="Resources\Icon\PTConvert.ico" />
+    <Resource Include="Resources\Icon\PT.ico" />
+    <Resource Include="Resources\Icon\tbl.ico" />
+    <Resource Include="Resources\Icon\tbu.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icon\ASC.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icon\SPE.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

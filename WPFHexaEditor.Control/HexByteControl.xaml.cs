@@ -11,7 +11,7 @@ namespace WPFHexaEditor.Control
     /// <summary>
     /// Interaction logic for HexControl.xaml
     /// </summary>
-    public partial class HexByteControl : UserControl
+    internal partial class HexByteControl : UserControl
     {   
         private bool _readOnlyMode = false;
         private KeyDownLabel _keyDownLabel = KeyDownLabel.FirstChar;

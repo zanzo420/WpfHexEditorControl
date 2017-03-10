@@ -86,6 +86,7 @@ namespace WPFHexaEditor.Control
 
         /// <summary>
         /// Load TBL Character table file in control. (Used for ROM reverse engineering)
+        /// Load TBL Bookmark into control.
         /// Change CharacterTable property for use.
         /// </summary>
         public void LoadTBLFile(string fileName)
@@ -98,10 +99,23 @@ namespace WPFHexaEditor.Control
                 TBLLabel.Visibility = Visibility.Visible;
                 TBLLabel.ToolTip = $"TBL file : {fileName}";
 
+                UpdateTBLBookMark();
                 RefreshView();
             }
         }
 
+        /// <summary>
+        /// Update TBL bookmark in control
+        /// </summary>
+        private void UpdateTBLBookMark()
+        {
+            //Load from loaded TBL bookmark
+            if (_TBLCharacterTable != null)
+                foreach (BookMark mark in _TBLCharacterTable.BookMarks)
+                    SetScrollMarker(mark);
+
+            //UpdateScrollMarkerPosition();
+        }
 
         /// <summary>
         /// Get or set the color of DTE in string panel.
@@ -1447,6 +1461,7 @@ namespace WPFHexaEditor.Control
 
                 UnSelectAll();
 
+                UpdateTBLBookMark();
                 UpdateSelectionColorMode(FirstColor.HexByteData);
             }
             else
@@ -1459,7 +1474,6 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Open file name
         /// </summary>
-        /// <param name="filename"></param>
         private void OpenStream(MemoryStream stream)
         {
             if (stream.CanRead)
@@ -1481,6 +1495,7 @@ namespace WPFHexaEditor.Control
 
                 UnSelectAll();
 
+                UpdateTBLBookMark();
                 UpdateSelectionColorMode(FirstColor.HexByteData);
             }
             else
@@ -2155,7 +2170,7 @@ namespace WPFHexaEditor.Control
                     //LineInfo
 
                     long firstLineByte = ((long)VerticalScrollBar.Value + i) * BytePerLine;
-                    string info = "0x" + firstLineByte.ToString(ConstantReadOnly.HexLineInfoStringFormat, CultureInfo.InvariantCulture);
+                    string info = "0x" + ByteConverters.LongToHex(firstLineByte);
 
                     if (firstLineByte < _provider.Length)
                     {
@@ -2176,6 +2191,8 @@ namespace WPFHexaEditor.Control
                 }
             }
         }
+
+ 
 
         #endregion Update/Refresh view methods
 
@@ -2533,9 +2550,18 @@ namespace WPFHexaEditor.Control
         }
 
         /// <summary>
+        /// Set marker at position using bookmark object
+        /// </summary>
+        /// <param name="mark"></param>
+        private void SetScrollMarker(BookMark mark)
+        {
+            SetScrollMarker(mark.BytePositionInFile, mark.Marker, mark.Description);
+        }
+
+        /// <summary>
         /// Set marker at position
         /// </summary>
-        private void SetScrollMarker(long position, ScrollMarker marker)
+        private void SetScrollMarker(long position, ScrollMarker marker, string description = "")
         {
             Rectangle rect = new Rectangle();
             double topPosition = 0;
@@ -2545,6 +2571,7 @@ namespace WPFHexaEditor.Control
             var bookMark = new BookMark();
             bookMark.Marker = marker;
             bookMark.BytePositionInFile = position;
+            bookMark.Description = description;
 
             //Remove selection start marker and set position
             if (marker == ScrollMarker.SelectionStart)
@@ -2590,6 +2617,7 @@ namespace WPFHexaEditor.Control
             //Set somes properties for different marker
             switch (marker)
             {
+                case ScrollMarker.TBLBookmark:
                 case ScrollMarker.Bookmark:
                     rect.ToolTip = TryFindResource("ScrollMarkerSearchToolTip");
                     rect.Fill = (SolidColorBrush)TryFindResource("BookMarkColor");
@@ -2624,7 +2652,8 @@ namespace WPFHexaEditor.Control
             catch { }
 
             //Add to grid
-            MarkerGrid.Children.Add(rect);
+            if (ByteProvider.CheckIsOpen(_provider))
+                MarkerGrid.Children.Add(rect);
 
             //Update bookmarks properties
             UpdateBookMarkProperties();

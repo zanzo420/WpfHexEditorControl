@@ -5,6 +5,8 @@ using System.Text;
 using System.ComponentModel;
 using System.Collections.Generic;
 
+using WPFHexaEditor.Core.Bytes;
+
 namespace WPFHexaEditor.Core.TBL
 {
     /// <summary>
@@ -23,7 +25,7 @@ namespace WPFHexaEditor.Core.TBL
         public string key = "";
 
         /// <summary> Liste des favoris dans la TBL</summary>
-        private ArrayList _Favoris = new ArrayList();
+        private List<BookMark> _Favoris = new List<BookMark>();
 
         /// <summary>Commentaire du fichier TBL</summary>
         //		private string _Commentaire = "";
@@ -252,10 +254,15 @@ namespace WPFHexaEditor.Core.TBL
 
             if (TBLFile.BaseStream.CanRead)
             {
+
                 //lecture du fichier jusqua la fin et séparation par ligne
                 char[] sepEndLine = { '\n' }; //Fin de ligne
                 char[] sepEqual = { '=' }; //Fin de ligne
-                string[] line = TBLFile.ReadToEnd().Split(sepEndLine);
+                StringBuilder textFromFile = new StringBuilder(TBLFile.ReadToEnd());
+                textFromFile.Insert(textFromFile.Length, '\r');
+                textFromFile.Insert(textFromFile.Length, '\n');
+
+                string[] line = textFromFile.ToString().Split(sepEndLine);
 
                 //remplir la collection de DTE : this._DTE
                 for (int i = 0; i < line.Length; i++)
@@ -334,8 +341,9 @@ namespace WPFHexaEditor.Core.TBL
         private void LoadBookMark()
         {
             StreamReader TBLFile = new StreamReader(_FileName, Encoding.ASCII);
+            _Favoris.Clear();
 
-            Bookmark fav = null;
+            BookMark fav = null;
             string[] lineSplited;
 
             if (TBLFile.BaseStream.CanRead)
@@ -350,16 +358,17 @@ namespace WPFHexaEditor.Core.TBL
                     {
                         if (line[i].Substring(0, 1) == "(")
                         {
-                            fav = new Bookmark();
+                            fav = new BookMark();
                             lineSplited = line[i].Split(new char[] { ')' });
-                            fav.Name = lineSplited[1].Substring(0, lineSplited[1].Length - 1);
+                            fav.Description = lineSplited[1].Substring(0, lineSplited[1].Length - 1);
 
                             lineSplited = line[i].Split(new char[] { 'h' });
-                            fav.Position = lineSplited[0].Substring(1, lineSplited[0].Length - 1);
+                            fav.BytePositionInFile = ByteConverters.HexLiteralToLong(lineSplited[0].Substring(1, lineSplited[0].Length - 1));
+                            fav.Marker = ScrollMarker.TBLBookmark;
                             _Favoris.Add(fav);
                         }
                     }
-                    catch { }
+                    catch {  } //Nothing to add if error
                 }
 
             }
@@ -529,7 +538,7 @@ namespace WPFHexaEditor.Core.TBL
         /// Avoir acess au Bookmark
         /// </summary>
         [Browsable(false)]
-        public ArrayList BookMark
+        public List<BookMark> BookMarks
         {
             get
             {

@@ -41,7 +41,12 @@
             </StackPanel>
             <Separator/>
             <StackPanel Orientation="Horizontal">
-                <Label Content="Click to go to at position in file."/>                
+                <Label Content="Description :" FontWeight="Bold"/>
+                <Label Content="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+            <Separator/>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Click to go to at position." FontWeight="Bold"/>                
             </StackPanel>
         </StackPanel>
     </ToolTip>

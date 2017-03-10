@@ -11,6 +11,14 @@ namespace WPFHexaEditor.Core.Bytes
     public class ByteConverters
     {
         /// <summary>
+        /// Convert long to hex value
+        /// </summary>
+        public static string LongToHex(long l)
+        {
+            return l.ToString(ConstantReadOnly.HexLineInfoStringFormat, CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>
         /// Convert Byte to Char
         /// </summary>
         public static char ByteToChar(byte b)

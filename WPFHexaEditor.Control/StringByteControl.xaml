@@ -7,6 +7,7 @@
              KeyDown="UserControl_KeyDown"
              MouseEnter="UserControl_MouseEnter"
              MouseLeave="UserControl_MouseLeave"
+             x:ClassModifier="internal"
              Width="12" 
              Height="22"
              Focusable="True">

@@ -3,11 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WPFHexaEditorExample"
-        xmlns:Control="clr-namespace:WPFHexaEditor.Control;assembly=WPFHexaEditor" x:Class="WPFHexaEditorExample.MainWindow"
+        xmlns:Control="clr-namespace:WPFHexaEditor.Control;assembly=WPFHexaEditor"
+        x:Class="WPFHexaEditorExample.MainWindow"
         xmlns:properties="clr-namespace:WPFHexaEditorExample.Properties"
         mc:Ignorable="d"
-    Closing="Window_Closing"
+        Closing="Window_Closing"
         Background="WhiteSmoke"
         Title="WPF Hexa Editor control sample" Height="530" Width="900">
     <Grid>
@@ -88,7 +88,6 @@
             </Menu>
 
             <Control:HexaEditor x:Name="HexEdit" Width="Auto" Height="Auto" Margin="10,20,10,10"  />
-
         </DockPanel>
     </Grid>
 </Window>

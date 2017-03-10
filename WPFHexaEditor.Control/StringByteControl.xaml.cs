@@ -12,7 +12,7 @@ namespace WPFHexaEditor.Control
     /// <summary>
     /// Interaction logic for StringByteControl.xaml
     /// </summary>
-    public partial class StringByteControl : UserControl
+    internal partial class StringByteControl : UserControl
     {
         //private bool _isByteModified = false;
         private bool _readOnlyMode;

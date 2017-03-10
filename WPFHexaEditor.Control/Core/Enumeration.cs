@@ -67,7 +67,8 @@
         Bookmark,
         SelectionStart,
         ByteModified,
-        ByteDeleted
+        ByteDeleted,
+        TBLBookmark
     }
 
     /// <summary>

@@ -51,6 +51,12 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TBLEditor.xaml.cs">
+      <DependentUpon>TBLEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TBLEntryControl.xaml.cs">
+      <DependentUpon>TBLEntryControl.xaml</DependentUpon>
+    </Compile>
     <Page Include="ResourceDictionary\FontDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -84,7 +90,6 @@
     <Compile Include="Core\MethodExtention\TrackExtention.cs" />
     <Compile Include="Core\TBL\Enum.cs" />
     <Compile Include="Core\TBL\DTE.cs" />
-    <Compile Include="Core\TBL\BookMark.cs" />
     <Compile Include="Core\TBL\TBLStream.cs" />
     <Compile Include="StringByteControl.xaml.cs">
       <DependentUpon>StringByteControl.xaml</DependentUpon>
@@ -98,6 +103,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ResourceDictionary\BrushesDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TBLEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TBLEntryControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

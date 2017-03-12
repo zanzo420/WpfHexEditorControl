@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Collections;
 using System.Text;
 using System.Linq;
 using System.ComponentModel;
@@ -74,15 +73,6 @@ namespace WPFHexaEditor.Core.CharacterTable
 
         #region Méthodes
         /// <summary>
-        /// Clear ressources.
-        /// </summary>
-        public void Dispose()
-        {
-            _DTEList.Clear();
-            _FileName = "";
-        }
-
-        /// <summary>
         /// Trouver une entré dans la table de jeu qui corestpond a la valeur hexa
         /// </summary>
         /// <param name="hex">Valeur hexa a rechercher dans la TBL</param>
@@ -91,10 +81,8 @@ namespace WPFHexaEditor.Core.CharacterTable
         public string FindTBLMatch(string hex, bool showSpecialValue)
         {
             string rtn = "#";
-            DTE dte;
-            for (int i = 0; i < _DTEList.Count; i++)
+            foreach (DTE dte in _DTEList)
             {
-                dte = _DTEList[i];
                 if (dte.Entry == hex)
                 {
                     rtn = dte.Value;
@@ -127,10 +115,8 @@ namespace WPFHexaEditor.Core.CharacterTable
         /// <returns>Retourne le DTE/MTE trouvé. null si rien trouvé</returns>
         public DTE GetDTE(string hex)
         {
-            DTE dte = null;
-            for (int i = 0; i < _DTEList.Count; i++)
+            foreach (DTE dte in _DTEList)
             {
-                dte = _DTEList[i];
                 if (dte.Entry == hex)
                     return dte;
 
@@ -140,7 +126,7 @@ namespace WPFHexaEditor.Core.CharacterTable
                     return dte;
             }
 
-            return dte;
+            return null;
         }
 
         /// <summary>
@@ -152,17 +138,13 @@ namespace WPFHexaEditor.Core.CharacterTable
         public string FindTBLMatch(string hex)
         {
             string rtn = "#";
-            DTE dte;
-            for (int i = 0; i < _DTEList.Count; i++)
-            {
-                dte = _DTEList[i];
+            foreach (DTE dte in _DTEList)            
                 if (dte.Entry == hex)
                 {
                     rtn = dte.Value;
                     break;
                 }
-            }
-
+            
             return rtn;
         }
 
@@ -175,11 +157,8 @@ namespace WPFHexaEditor.Core.CharacterTable
         public string FindTBLMatch(string hex, bool showSpecialValue, bool NotShowDTE)
         {
             string rtn = "#";
-            DTE dte;
-            for (int i = 0; i < _DTEList.Count; i++)
+            foreach (DTE dte in _DTEList)
             {
-                dte = _DTEList[i];
-
                 if (dte.Entry == hex)
                 {
                     if (NotShowDTE)
@@ -246,13 +225,11 @@ namespace WPFHexaEditor.Core.CharacterTable
                 StringBuilder textFromFile = new StringBuilder(TBLFile.ReadToEnd());
                 textFromFile.Insert(textFromFile.Length, '\r');
                 textFromFile.Insert(textFromFile.Length, '\n');
-                string[] line = textFromFile.ToString().Split(sepEndLine);
+                string[] lines = textFromFile.ToString().Split(sepEndLine);
                 
                 //remplir la collection de DTE : this._DTE
-                for (int i = 0; i < line.Length; i++)
-                {
-                    //parser le ligne
-                    string[] info = line[i].Split(sepEqual);
+                foreach(string line in lines) { 
+                    string[] info = line.Split(sepEqual);
 
                     //ajout a la collection (ne prend pas encore en charge le Japonais)
                     DTE dte = new DTE();
@@ -301,17 +278,17 @@ namespace WPFHexaEditor.Core.CharacterTable
                 BookMark fav = null;
                 string[] lineSplited;
 
-                for (int i = 0; i < line.Length; i++)
+                foreach (string line in lines)
                 {
                     try
                     {
-                        if (line[i].Substring(0, 1) == "(")
+                        if (line.Substring(0, 1) == "(")
                         {
                             fav = new BookMark();
-                            lineSplited = line[i].Split(new char[] { ')' });
+                            lineSplited = line.Split(new char[] { ')' });
                             fav.Description = lineSplited[1].Substring(0, lineSplited[1].Length - 1);
 
-                            lineSplited = line[i].Split(new char[] { 'h' });
+                            lineSplited = line.Split(new char[] { 'h' });
                             fav.BytePositionInFile = ByteConverters.HexLiteralToLong(lineSplited[0].Substring(1, lineSplited[0].Length - 1));
                             fav.Marker = ScrollMarker.TBLBookmark;
                             _bookMark.Add(fav);

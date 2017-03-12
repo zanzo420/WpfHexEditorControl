@@ -1,4 +1,4 @@
-using System;
+using System; 
 
 namespace WPFHexaEditor.Core.CharacterTable
 {
@@ -9,12 +9,8 @@ namespace WPFHexaEditor.Core.CharacterTable
     /// </summary>
     public class DTE
     {
-        /// <summary>Valeur du DTE</summary>
-        private string _Value;
         /// <summary>Nom du DTE</summary>
         private string _Entry;
-        /// <summary>Type de DTE</summary>
-        private DTEType _Type;
 
         #region Constructeurs
         /// <summary>
@@ -22,9 +18,9 @@ namespace WPFHexaEditor.Core.CharacterTable
         /// </summary>
         public DTE()
         {
-            this._Entry = "";
-            this._Type = DTEType.Invalid;
-            this._Value = "";
+            _Entry = "";
+            Type = DTEType.Invalid;
+            Value = "";
         }
 
         /// <summary>
@@ -32,11 +28,11 @@ namespace WPFHexaEditor.Core.CharacterTable
         /// </summary>
         /// <param name="Entry">Nom du DTE</param>
         /// <param name="Value">Valeur du DTE</param>
-        public DTE(string Entry, string Value)
+        public DTE(string entry, string value)
         {
-            this._Entry = Entry.ToUpper();
-            this._Value = Value;
-            this._Type = DTEType.DualTitleEncoding;
+            _Entry = entry;
+            Value = value;
+            Type = DTEType.DualTitleEncoding;
         }
 
         /// <summary>
@@ -46,11 +42,11 @@ namespace WPFHexaEditor.Core.CharacterTable
         /// <param name="Value">Valeur du DTE</param>
         /// <param name="Description">Description du DTE</param>
         /// <param name="Type">Type de DTE</param>
-        public DTE(string Entry, string Value, DTEType Type)
+        public DTE(string entry, string value, DTEType type)
         {
-            this._Entry = Entry.ToUpper();
-            this._Value = Value;
-            this._Type = Type;
+            _Entry = entry;
+            Value = value;
+            Type = type;
         }
         #endregion
 
@@ -62,43 +58,23 @@ namespace WPFHexaEditor.Core.CharacterTable
         {
             set
             {
-                this._Entry = value.ToUpper();
+                _Entry = value.ToUpper();
             }
             get
             {
-                return this._Entry;
+                return _Entry;
             }
         }
 
         /// <summary>
         /// Valeur du DTE
         /// </summary>
-        public string Value
-        {
-            set
-            {
-                this._Value = value;
-            }
-            get
-            {
-                return this._Value;
-            }
-        }
+        public string Value { get; set; }
 
         /// <summary>
         /// Type de DTE
         /// </summary>
-        public DTEType Type
-        {
-            set
-            {
-                this._Type = value;
-            }
-            get
-            {
-                return this._Type;
-            }
-        }
+        public DTEType Type { get; set; }
         #endregion
 
         #region Méthodes
@@ -108,11 +84,11 @@ namespace WPFHexaEditor.Core.CharacterTable
         /// <returns>Retourne le DTE sous forme : [Entry]=[Valeur]</returns>
         public override string ToString()
         {
-            if (this._Type != DTEType.EndBlock &&
-                this._Type != DTEType.EndLine)
-                return this._Entry + "=" + this._Value;
+            if (Type != DTEType.EndBlock &&
+                Type != DTEType.EndLine)
+                return _Entry + "=" + Value;
             else
-                return this._Entry;
+                return _Entry;
         }
         #endregion
 
@@ -124,7 +100,7 @@ namespace WPFHexaEditor.Core.CharacterTable
                 switch (DTEValue._Entry.Length)
                 {
                     case 2:
-                        if (DTEValue._Value.Length == 2)
+                        if (DTEValue.Value.Length == 2)
                             return DTEType.ASCII;
                         else
                             return DTEType.DualTitleEncoding;

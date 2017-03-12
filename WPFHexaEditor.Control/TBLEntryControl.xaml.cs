@@ -31,7 +31,7 @@ namespace WPFHexaEditor.Control
         {
             get
             {
-                return this._dteType;
+                return _dteType;
             }
             set
             {

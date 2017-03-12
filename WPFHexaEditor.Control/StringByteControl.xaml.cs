@@ -5,7 +5,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using WPFHexaEditor.Core;
 using WPFHexaEditor.Core.Bytes;
-using WPFHexaEditor.Core.TBL;
+using WPFHexaEditor.Core.CharacterTable;
 
 namespace WPFHexaEditor.Control
 {
@@ -233,16 +233,16 @@ namespace WPFHexaEditor.Control
         /// Type of caracter table are used un hexacontrol. 
         /// For now, somes character table can be readonly but will change in future
         /// </summary>
-        public CharacterTable TypeOfCharacterTable
+        public CharacterTableType TypeOfCharacterTable
         {
-            get { return (CharacterTable)GetValue(TypeOfCharacterTableProperty); }
+            get { return (CharacterTableType)GetValue(TypeOfCharacterTableProperty); }
             set { SetValue(TypeOfCharacterTableProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for TypeOfCharacterTable.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TypeOfCharacterTableProperty =
-            DependencyProperty.Register("TypeOfCharacterTable", typeof(CharacterTable), typeof(StringByteControl),
-                new FrameworkPropertyMetadata(CharacterTable.ASCII,
+            DependencyProperty.Register("TypeOfCharacterTable", typeof(CharacterTableType), typeof(StringByteControl),
+                new FrameworkPropertyMetadata(CharacterTableType.ASCII,
                     new PropertyChangedCallback(TypeOfCharacterTable_PropertyChanged)));
 
 
@@ -359,11 +359,11 @@ namespace WPFHexaEditor.Control
             {
                 switch (TypeOfCharacterTable)
                 {
-                    case CharacterTable.ASCII:
+                    case CharacterTableType.ASCII:
                         StringByteLabel.Content = ByteConverters.ByteToChar(Byte.Value);
                         Width = 12;
                         break;
-                    case CharacterTable.TBLFile:
+                    case CharacterTableType.TBLFile:
                         ReadOnlyMode = true;
 
                         if (_TBLCharacterTable != null)
@@ -403,7 +403,7 @@ namespace WPFHexaEditor.Control
                             }
                         }
                         else
-                            goto case CharacterTable.ASCII;
+                            goto case CharacterTableType.ASCII;
                         break;
                 }                
             }
@@ -469,7 +469,7 @@ namespace WPFHexaEditor.Control
                 Background = Brushes.Transparent;
                 StringByteLabel.Foreground = Brushes.Black;
                 
-                if (TypeOfCharacterTable == CharacterTable.TBLFile)
+                if (TypeOfCharacterTable == CharacterTableType.TBLFile)
                     switch (DTE.TypeDTE((string)StringByteLabel.Content))
                     {
                         case DTEType.DualTitleEncoding:

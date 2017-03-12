@@ -237,7 +237,7 @@ namespace WPFHexaEditorExample
 
         private void CTableASCIIButton_Click(object sender, RoutedEventArgs e)
         {
-            HexEdit.TypeOfCharacterTable = CharacterTable.ASCII;
+            HexEdit.TypeOfCharacterTable = CharacterTableType.ASCII;
             CTableASCIIButton.IsChecked = true;
             CTableTBLButton.IsChecked = false;
         }
@@ -253,7 +253,7 @@ namespace WPFHexaEditorExample
                     Application.Current.MainWindow.Cursor = Cursors.Wait;
 
                     HexEdit.LoadTBLFile(fileDialog.FileName);
-                    HexEdit.TypeOfCharacterTable = CharacterTable.TBLFile;
+                    HexEdit.TypeOfCharacterTable = CharacterTableType.TBLFile;
                     CTableASCIIButton.IsChecked = false;
                     CTableTBLButton.IsChecked = true;
 

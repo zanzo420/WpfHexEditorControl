@@ -11,7 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using WPFHexaEditor.Core.TBL;
+using WPFHexaEditor.Core.CharacterTable;
 
 namespace WPFHexaEditor.Control
 {

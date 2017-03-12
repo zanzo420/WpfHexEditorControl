@@ -12,7 +12,7 @@ using System.Windows.Shapes;
 using WPFHexaEditor.Core;
 using WPFHexaEditor.Core.Bytes;
 using WPFHexaEditor.Core.MethodExtention;
-using WPFHexaEditor.Core.TBL;
+using WPFHexaEditor.Core.CharacterTable;
 
 namespace WPFHexaEditor.Control
 {
@@ -65,16 +65,16 @@ namespace WPFHexaEditor.Control
         /// Type of caracter table are used un hexacontrol. 
         /// For now, somes character table can be readonly but will change in future
         /// </summary>
-        public  CharacterTable TypeOfCharacterTable
+        public  CharacterTableType TypeOfCharacterTable
         {
-            get { return ( CharacterTable)GetValue(TypeOfCharacterTableProperty); }
+            get { return ( CharacterTableType)GetValue(TypeOfCharacterTableProperty); }
             set { SetValue(TypeOfCharacterTableProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for TypeOfCharacterTable.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TypeOfCharacterTableProperty =
-            DependencyProperty.Register("TypeOfCharacterTable", typeof( CharacterTable), typeof(HexaEditor), 
-                new FrameworkPropertyMetadata(CharacterTable.ASCII,
+            DependencyProperty.Register("TypeOfCharacterTable", typeof( CharacterTableType), typeof(HexaEditor), 
+                new FrameworkPropertyMetadata(CharacterTableType.ASCII,
                     new PropertyChangedCallback(TypeOfCharacterTable_PropertyChanged)));
 
         private static void TypeOfCharacterTable_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -1450,7 +1450,7 @@ namespace WPFHexaEditor.Control
 
                 //Load file with ASCII character table;
                 var previousTable = TypeOfCharacterTable;
-                TypeOfCharacterTable = CharacterTable.ASCII;
+                TypeOfCharacterTable = CharacterTableType.ASCII;
 
                 RefreshView(true);
 

@@ -84,7 +84,7 @@
     /// <summary>
     /// Type of character are used
     /// </summary>
-    public enum CharacterTable
+    public enum CharacterTableType
     {
         ASCII,
         TBLFile

@@ -51,6 +51,9 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\CharacterTable\DTE.cs" />
+    <Compile Include="Core\CharacterTable\Enum.cs" />
+    <Compile Include="Core\CharacterTable\TBLStream.cs" />
     <Compile Include="TBLEditor.xaml.cs">
       <DependentUpon>TBLEditor.xaml</DependentUpon>
     </Compile>
@@ -88,9 +91,6 @@
     <Compile Include="Core\Enumeration.cs" />
     <Compile Include="Core\KeyValidator.cs" />
     <Compile Include="Core\MethodExtention\TrackExtention.cs" />
-    <Compile Include="Core\TBL\Enum.cs" />
-    <Compile Include="Core\TBL\DTE.cs" />
-    <Compile Include="Core\TBL\TBLStream.cs" />
     <Compile Include="StringByteControl.xaml.cs">
       <DependentUpon>StringByteControl.xaml</DependentUpon>
     </Compile>

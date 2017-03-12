@@ -372,6 +372,8 @@ namespace WPFHexaEditor.Core.CharacterTable
                 }
 
             }
+
+            TBLFile.Close();
         }
 
         /// <summary>

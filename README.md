@@ -1,4 +1,4 @@
-# WPF Hexadecimal Editor control (Beta) 
+# WPF Hexadecimal Editor UserControl (Beta) 
 A WPF Hexadecimal editor for view/modify file.  (NOW SUPPORT THINGY CHARACTER TABLE (TBL))
 
 Sample with standard ASCII character table

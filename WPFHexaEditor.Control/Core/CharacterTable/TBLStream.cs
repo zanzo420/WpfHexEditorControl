@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Collections;
 using System.Text;
+using System.Linq;
 using System.ComponentModel;
 using System.Collections.Generic;
 
@@ -19,43 +20,33 @@ namespace WPFHexaEditor.Core.CharacterTable
         /// <summary>Chemin vers le fichier (path)</summary>
         private string _FileName;
         /// <summary>Tableau de DTE représentant tous les les entrée du fichier</summary>
-        private List<DTE> _DTE = new List<DTE>();
-
-        //HACK: Corrige un bug de conception pour retourner la key du projet pour la tbl selectioner
-        public string key = "";
-
+        private List<DTE> _DTEList = new List<DTE>();
+        
         /// <summary> Liste des favoris dans la TBL</summary>
-        private List<BookMark> _Favoris = new List<BookMark>();
+        private List<BookMark> _bookMark = new List<BookMark>();
 
         /// <summary>Commentaire du fichier TBL</summary>
         //		private string _Commentaire = "";
 
         #region Constructeurs
-        /// <summary>
-        /// Constructeur principal
-        /// </summary>
-        public TBLStream()
-        {
-            //			this._Commentaire = "";
-            _FileName = "";
-            _DTE.Clear();
-        }
-
+        
         /// <summary>
         /// Constructeur permétant de chargé le fichier DTE
         /// </summary>
         /// <param name="FileName"></param>
         public TBLStream(string FileName)
         {
-            //			this._Commentaire = "";
-            _DTE.Clear();
+            _DTEList.Clear();
 
-            //Chargé le fichier dans l'objet
-            //if (File.Exists(FileName)){
-            _FileName = FileName;
-            //TODO: Charger le fichier dans la collection		
-            //}//else
-            //TODO: cree le fichier TBL
+            //check if exist and load file
+            if (File.Exists(FileName))
+            {
+                _FileName = FileName;
+                Load();
+            }
+            else
+                throw new FileNotFoundException();
+            
         }
         #endregion
 
@@ -68,34 +59,26 @@ namespace WPFHexaEditor.Core.CharacterTable
             get
             {
                 // verifie la limite de l'index
-                if (index < 0 || index > _DTE.Count)
+                if (index < 0 || index > _DTEList.Count)
                     throw new IndexOutOfRangeException("Cette item n'existe pas");
                 else
-                    return _DTE[index];
+                    return _DTEList[index];
             }
             set
             {
-                if (!(index < 0 || index >= _DTE.Count))
-                    _DTE[index] = value;
+                if (!(index < 0 || index >= _DTEList.Count))
+                    _DTEList[index] = value;
             }
         }
         #endregion
 
         #region Méthodes
         /// <summary>
-        /// Vérifie le nombre d'entrée valide dans le fichier (methode static)
-        /// </summary>
-        /// <returns>Retourne le nombre d'entrée valide dans le fichier</returns>
-        //public static int isValid(string Filename){
-        //	return 0;
-        //}
-
-        /// <summary>
-        /// Nettoyage des ressources utilisées.
+        /// Clear ressources.
         /// </summary>
         public void Dispose()
         {
-            _DTE.Clear();
+            _DTEList.Clear();
             _FileName = "";
         }
 
@@ -109,9 +92,9 @@ namespace WPFHexaEditor.Core.CharacterTable
         {
             string rtn = "#";
             DTE dte;
-            for (int i = 0; i < _DTE.Count; i++)
+            for (int i = 0; i < _DTEList.Count; i++)
             {
-                dte = _DTE[i];
+                dte = _DTEList[i];
                 if (dte.Entry == hex)
                 {
                     rtn = dte.Value;
@@ -145,9 +128,9 @@ namespace WPFHexaEditor.Core.CharacterTable
         public DTE GetDTE(string hex)
         {
             DTE dte = null;
-            for (int i = 0; i < _DTE.Count; i++)
+            for (int i = 0; i < _DTEList.Count; i++)
             {
-                dte = _DTE[i];
+                dte = _DTEList[i];
                 if (dte.Entry == hex)
                     return dte;
 
@@ -170,9 +153,9 @@ namespace WPFHexaEditor.Core.CharacterTable
         {
             string rtn = "#";
             DTE dte;
-            for (int i = 0; i < _DTE.Count; i++)
+            for (int i = 0; i < _DTEList.Count; i++)
             {
-                dte = _DTE[i];
+                dte = _DTEList[i];
                 if (dte.Entry == hex)
                 {
                     rtn = dte.Value;
@@ -193,9 +176,9 @@ namespace WPFHexaEditor.Core.CharacterTable
         {
             string rtn = "#";
             DTE dte;
-            for (int i = 0; i < _DTE.Count; i++)
+            for (int i = 0; i < _DTEList.Count; i++)
             {
-                dte = _DTE[i];
+                dte = _DTEList[i];
 
                 if (dte.Entry == hex)
                 {
@@ -238,10 +221,10 @@ namespace WPFHexaEditor.Core.CharacterTable
         /// Chargé le fichier dans l'objet
         /// </summary>
         /// <returns>Retoune vrai si le fichier est bien charger</returns>
-        public bool Load()
+        private bool Load()
         {
             //Vide la collection
-            _DTE.Clear();
+            _DTEList.Clear();
             //ouverture du fichier
 
             if (!File.Exists(_FileName))
@@ -258,12 +241,13 @@ namespace WPFHexaEditor.Core.CharacterTable
                 //lecture du fichier jusqua la fin et séparation par ligne
                 char[] sepEndLine = { '\n' }; //Fin de ligne
                 char[] sepEqual = { '=' }; //Fin de ligne
+                
+                //build strings line
                 StringBuilder textFromFile = new StringBuilder(TBLFile.ReadToEnd());
                 textFromFile.Insert(textFromFile.Length, '\r');
                 textFromFile.Insert(textFromFile.Length, '\n');
-
                 string[] line = textFromFile.ToString().Split(sepEndLine);
-
+                
                 //remplir la collection de DTE : this._DTE
                 for (int i = 0; i < line.Length; i++)
                 {
@@ -309,48 +293,13 @@ namespace WPFHexaEditor.Core.CharacterTable
                         dte = new DTE(info[0], "=", DTEType.DualTitleEncoding);
                     }
 
-                    _DTE.Add(dte);
+                    _DTEList.Add(dte);                    
                 }
 
-                TBLFile.Close();
-
-                //Chargement des bookmark
-                LoadBookMark();
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Chargé le fichier dans l'objet en lui passant le chemin du fichier en parametre
-        /// </summary>
-        /// <returns>Retoune vrai si le fichier est bien charger</returns>
-        public bool Load(string FileName)
-        {
-            //Cleen Object !
-            Dispose();
-
-            _FileName = FileName;
-
-            return Load();
-        }
-
-        private void LoadBookMark()
-        {
-            StreamReader TBLFile = new StreamReader(_FileName, Encoding.ASCII);
-            _Favoris.Clear();
-
-            BookMark fav = null;
-            string[] lineSplited;
-
-            if (TBLFile.BaseStream.CanRead)
-            {
-                //lecture du fichier jusqua la fin et séparation par ligne
-                char[] sepEndLine = { '\n' }; //Fin de ligne				
-                string[] line = TBLFile.ReadToEnd().Split(sepEndLine);
+                //Load bookmark
+                _bookMark.Clear();
+                BookMark fav = null;
+                string[] lineSplited;
 
                 for (int i = 0; i < line.Length; i++)
                 {
@@ -365,17 +314,22 @@ namespace WPFHexaEditor.Core.CharacterTable
                             lineSplited = line[i].Split(new char[] { 'h' });
                             fav.BytePositionInFile = ByteConverters.HexLiteralToLong(lineSplited[0].Substring(1, lineSplited[0].Length - 1));
                             fav.Marker = ScrollMarker.TBLBookmark;
-                            _Favoris.Add(fav);
+                            _bookMark.Add(fav);
                         }
                     }
-                    catch {  } //Nothing to add if error
+                    catch { } //Nothing to add if error
                 }
 
+                TBLFile.Close();
+                
+                return true;
             }
-
-            TBLFile.Close();
+            else
+            {
+                return false;
+            }
         }
-
+        
         /// <summary>
         /// Enregistrer dans le fichier 
         /// </summary>
@@ -388,69 +342,37 @@ namespace WPFHexaEditor.Core.CharacterTable
 
             if (TBLFile.BaseStream.CanWrite)
             {
-                DTE dte;
-
-                for (int i = 0; i < _DTE.Count; i++)
-                {
-                    dte = _DTE[i];
-                    if (dte.Type != DTEType.EndBlock &&
-                        dte.Type != DTEType.EndLine)
-                    { //Si ce n'est pas une fin de ligne ou fin de block
+                //Save tbl set
+                foreach (DTE dte in _DTEList)
+                    if (dte.Type != DTEType.EndBlock && dte.Type != DTEType.EndLine)
                         TBLFile.WriteLine(dte.Entry + "=" + dte.Value);
-                    }
                     else
                         TBLFile.WriteLine(dte.Entry);
-                }
-            }
-            //Ecriture de 2 saut de ligne a la fin du fichier. 
-            //(obligatoire pour certain logiciel utilisant les TBL)
-            TBLFile.WriteLine();
-            TBLFile.WriteLine();
 
+                //Save bookmark
+                TBLFile.WriteLine();
+                foreach (BookMark mark in _bookMark)
+                    TBLFile.WriteLine(mark.ToString());
+
+                //Ecriture de 2 saut de ligne a la fin du fichier. 
+                //(obligatoire pour certain logiciel utilisant les TBL)
+                TBLFile.WriteLine();
+                TBLFile.WriteLine();
+            }
+            
             //Ferme le fichier TBL
             TBLFile.Close();
 
             return true;
         }
-
-        /// <summary>
-        /// Enregistrer dans un autre fichier et attribu FileName a l'objet comme etant le fichier en cours.
-        /// </summary>
-        /// <param name="FileName">Nom du fichier sur lequel enregistrer la TBL</param>
-        /// <returns>Retourne vrai si le fichier à été bien enregistré</returns>
-        public bool SaveAs(string FileName)
-        {
-            _FileName = FileName;
-
-            return Save();
-        }
-
-        /// <summary>
-        /// Enregistrer dans un autre fichier.
-        /// </summary>
-        /// <param name="FileName">Nom du fichier sur lequel enregistrer la TBL</param>
-        /// <returns>Retourne vrai si le fichier à été bien enregistré</returns>
-        public bool Save(string FileName)
-        {
-            //garder le path dans une variable tempon
-            string Filetmp = _FileName;
-            _FileName = FileName;
-
-            //Enregister le fichier
-            bool rtn = Save();
-            _FileName = Filetmp;
-
-            //Valeur de retour
-            return rtn;
-        }
-
+        
         /// <summary>
         /// Ajouter un element a la collection
         /// </summary>
         /// <param name="dte">objet DTE a ajouter fans la collection</param>
         public void Add(DTE dte)
         {
-            _DTE.Add(dte);
+            _DTEList.Add(dte);
         }
 
         /// <summary>
@@ -459,7 +381,7 @@ namespace WPFHexaEditor.Core.CharacterTable
         /// <param name="dte"></param>
         public void Remove(DTE dte)
         {
-            _DTE.Remove(dte);
+            _DTEList.Remove(dte);
         }
 
         /// <summary>
@@ -468,7 +390,7 @@ namespace WPFHexaEditor.Core.CharacterTable
         /// <param name="index">Index de l'element a effacer</param>
         public void Remove(int index)
         {
-            _DTE.RemoveAt(index);
+            _DTEList.RemoveAt(index);
         }
 
         /// <summary>
@@ -478,7 +400,7 @@ namespace WPFHexaEditor.Core.CharacterTable
         /// <returns>Retourne la position ou ce trouve cette élément dans le tableau</returns>
         public int Find(DTE dte)
         {
-            return _DTE.BinarySearch(dte);
+            return _DTEList.BinarySearch(dte);
         }
 
         /// <summary>
@@ -490,7 +412,7 @@ namespace WPFHexaEditor.Core.CharacterTable
         public int Find(string Entry, string Value)
         {
             DTE dte = new DTE(Entry, Value);
-            return _DTE.BinarySearch(dte);
+            return _DTEList.BinarySearch(dte);
         }
 
         /// <summary>
@@ -503,7 +425,7 @@ namespace WPFHexaEditor.Core.CharacterTable
         public int Find(string Entry, string Value, DTEType Type)
         {
             DTE dte = new DTE(Entry, Value, Type);
-            return _DTE.BinarySearch(dte);
+            return _DTEList.BinarySearch(dte);
         }
         #endregion
 
@@ -519,9 +441,11 @@ namespace WPFHexaEditor.Core.CharacterTable
             {
                 return _FileName;
             }
-            set
+            internal set
             {
                 _FileName = value;
+
+                Load();
             }
         }
 
@@ -532,7 +456,7 @@ namespace WPFHexaEditor.Core.CharacterTable
         {
             get
             {
-                return _DTE.Count;
+                return _DTEList.Count;
             }
         }
 
@@ -544,161 +468,84 @@ namespace WPFHexaEditor.Core.CharacterTable
         {
             get
             {
-                return _Favoris;
+                return _bookMark;
             }
         }
 
         /// <summary>
         /// Obtenir le total d'entré DTE dans la Table
         /// </summary>
-        public short TotalDTE
+        public int TotalDTE
         {
             get
-            {
-                DTE dte;
-                short total = 0;
-                for (int i = 0; i < _DTE.Count; i++)
-                {
-                    dte = _DTE[i];
-                    if (dte.Type == DTEType.DualTitleEncoding)
-                    {
-                        total++;
-                    }
-                }
-
-                return total;
+            {                
+                return _DTEList.Count(l => l.Type == DTEType.DualTitleEncoding);
             }
         }
 
         /// <summary>
         /// Obtenir le total d'entré MTE dans la Table
         /// </summary>
-        public short TotalMTE
+        public int TotalMTE
         {
             get
             {
-                DTE dte;
-                short total = 0;
-                for (int i = 0; i < _DTE.Count; i++)
-                {
-                    dte = _DTE[i];
-                    if (dte.Type == DTEType.MultipleTitleEncoding)
-                    {
-                        total++;
-                    }
-                }
-
-                return total;
+                return _DTEList.Count(l => l.Type == DTEType.MultipleTitleEncoding);
             }
         }
 
         /// <summary>
         /// Obtenir le total d'entré ASCII dans la Table
         /// </summary>
-        public short TotalASCII
+        public int TotalASCII
         {
             get
             {
-                DTE dte;
-                short total = 0;
-                for (int i = 0; i < _DTE.Count; i++)
-                {
-                    dte = _DTE[i];
-                    if (dte.Type == DTEType.ASCII)
-                    {
-                        total++;
-                    }
-                }
-
-                return total;
+                return _DTEList.Count(l => l.Type == DTEType.ASCII);
             }
         }
 
         /// <summary>
         /// Obtenir le total d'entré Invalide dans la Table
         /// </summary>
-        public short TotalInvalid
+        public int TotalInvalid
         {
             get
             {
-                DTE dte;
-                short total = 0;
-                for (int i = 0; i < _DTE.Count; i++)
-                {
-                    dte = _DTE[i];
-                    if (dte.Type == DTEType.Invalid)
-                    {
-                        total++;
-                    }
-                }
-
-                return total;
+                return _DTEList.Count(l => l.Type == DTEType.Invalid);
             }
         }
 
         /// <summary>
         /// Obtenir le total d'entré Japonais dans la Table
         /// </summary>
-        public short TotalJaponais
+        public int TotalJaponais
         {
             get
             {
-                DTE dte;
-                short total = 0;
-                for (int i = 0; i < _DTE.Count; i++)
-                {
-                    dte = _DTE[i];
-                    if (dte.Type == DTEType.Japonais)
-                    {
-                        total++;
-                    }
-                }
-
-                return total;
+                return _DTEList.Count(l => l.Type == DTEType.Japonais);
             }
         }
 
         /// <summary>
         /// Obtenir le total d'entré Fin de ligne dans la Table
         /// </summary>
-        public short TotalEndLine
+        public int TotalEndLine
         {
             get
             {
-                DTE dte;
-                short total = 0;
-                for (int i = 0; i < _DTE.Count; i++)
-                {
-                    dte = _DTE[i];
-                    if (dte.Type == DTEType.EndLine)
-                    {
-                        total++;
-                    }
-                }
-
-                return total;
+                return _DTEList.Count(l => l.Type == DTEType.EndLine);
             }
         }
 
         /// <summary>
         /// Obtenir le total d'entré Fin de Block dans la Table
         /// </summary>
-        public short TotalEndBlock
+        public int TotalEndBlock
         {
             get
             {
-                DTE dte;
-                short total = 0;
-                for (int i = 0; i < _DTE.Count; i++)
-                {
-                    dte = _DTE[i];
-                    if (dte.Type == DTEType.EndBlock)
-                    {
-                        total++;
-                    }
-                }
-
-                return total;
+                return _DTEList.Count(l => l.Type == DTEType.EndBlock);
             }
         }
 
@@ -709,19 +556,11 @@ namespace WPFHexaEditor.Core.CharacterTable
         {
             get
             {
-                DTE dte;
-                string rtn = ""; //Valeur de retour
-                for (int i = 0; i < _DTE.Count; i++)
-                {
-                    dte = _DTE[i];
+                foreach (DTE dte in _DTEList)
                     if (dte.Type == DTEType.EndBlock)
-                    {
-                        rtn = dte.Entry;
-                        break;
-                    }
-                }
+                        return dte.Entry;
 
-                return rtn;
+                return "";
             }
         }
 
@@ -732,19 +571,11 @@ namespace WPFHexaEditor.Core.CharacterTable
         {
             get
             {
-                DTE dte;
-                string rtn = ""; //Valeur de retour
-                for (int i = 0; i < _DTE.Count; i++)
-                {
-                    dte = _DTE[i];
+                foreach(DTE dte in _DTEList)
                     if (dte.Type == DTEType.EndLine)
-                    {
-                        rtn = dte.Entry;
-                        break;
-                    }
-                }
+                        return dte.Entry;  
 
-                return rtn;
+                return "";
             }
         }
         #endregion

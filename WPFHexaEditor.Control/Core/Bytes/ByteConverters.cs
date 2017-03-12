@@ -19,8 +19,11 @@ namespace WPFHexaEditor.Core.Bytes
         }
 
         /// <summary>
-        /// Convert Byte to Char
+        /// Convert Byte to Char (can be used as visible text)
         /// </summary>
+        /// <remarks>
+        /// Code from : https://github.com/pleonex/tinke/blob/master/Be.Windows.Forms.HexBox/ByteCharConverters.cs
+        /// </remarks>
         public static char ByteToChar(byte b)
         {
             return b > 0x1F && !(b > 0x7E && b < 0xA0) ? (char)b : '.';

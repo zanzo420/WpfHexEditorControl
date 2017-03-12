@@ -381,7 +381,6 @@ namespace WPFHexaEditor.Control
 
                             StringByteLabel.Content = content;
 
-                            //Adapt width to content... NOT COMPLETED. 
                             //TODO: CHECK FOR AUTO ADAPT TO CONTENT AND FONTSIZE
                             switch (DTE.TypeDTE(content))
                             {
@@ -395,7 +394,7 @@ namespace WPFHexaEditor.Control
                                     Width = 24;
                                     break;
                                 case DTEType.EndBlock:
-                                    Width = 32;
+                                    Width = 34;
                                     break;
                                 default:
                                     Width = 12;

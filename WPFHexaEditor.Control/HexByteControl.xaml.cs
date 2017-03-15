@@ -356,7 +356,8 @@ namespace WPFHexaEditor.Control
                 e.Handled = true;
                 ByteDeleted?.Invoke(this, new EventArgs());
 
-                MovePrevious?.Invoke(this, new EventArgs());
+                if (BytePositionInFile > 0)
+                    MovePrevious?.Invoke(this, new EventArgs());
 
                 return;
             }

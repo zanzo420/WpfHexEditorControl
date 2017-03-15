@@ -32,7 +32,8 @@
     {
         Byte,
         HexaString,
-        ASCIIString
+        ASCIIString,
+        TBLString
     }
 
     /// <summary>

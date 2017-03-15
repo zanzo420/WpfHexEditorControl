@@ -52,6 +52,7 @@ namespace WPFHexaEditorExample
         private void SaveMenu_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.MainWindow.Cursor = Cursors.Wait;
+            ///HexEdit.SaveTBLFile();
             HexEdit.SubmitChanges();
             Application.Current.MainWindow.Cursor = null;
         }

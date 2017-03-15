@@ -10,7 +10,7 @@ using WPFHexaEditor.Core.Bytes;
 namespace WPFHexaEditor.Core.CharacterTable
 {
     /// <summary>
-    /// Cet objet représente un fichier TBL (entrée + valeur)
+    /// Cet objet représente un fichier Thingy TBL (entrée + valeur)
     /// 
     /// Derek Tremblay 2003-2017
     /// </summary>
@@ -20,9 +20,6 @@ namespace WPFHexaEditor.Core.CharacterTable
         private string _FileName;
         /// <summary>Tableau de DTE représentant tous les les entrée du fichier</summary>
         private List<DTE> _DTEList = new List<DTE>();
-        
-        /// <summary> Liste des favoris dans la TBL</summary>
-        private List<BookMark> _bookMark = new List<BookMark>();
 
         /// <summary>Commentaire du fichier TBL</summary>
         //		private string _Commentaire = "";
@@ -274,7 +271,7 @@ namespace WPFHexaEditor.Core.CharacterTable
                 }
 
                 //Load bookmark
-                _bookMark.Clear();
+                BookMarks.Clear();
                 BookMark fav = null;
                 string[] lineSplited;
 
@@ -291,7 +288,7 @@ namespace WPFHexaEditor.Core.CharacterTable
                             lineSplited = line.Split(new char[] { 'h' });
                             fav.BytePositionInFile = ByteConverters.HexLiteralToLong(lineSplited[0].Substring(1, lineSplited[0].Length - 1));
                             fav.Marker = ScrollMarker.TBLBookmark;
-                            _bookMark.Add(fav);
+                            BookMarks.Add(fav);
                         }
                     }
                     catch { } //Nothing to add if error
@@ -328,7 +325,7 @@ namespace WPFHexaEditor.Core.CharacterTable
 
                 //Save bookmark
                 TBLFile.WriteLine();
-                foreach (BookMark mark in _bookMark)
+                foreach (BookMark mark in BookMarks)
                     TBLFile.WriteLine(mark.ToString());
 
                 //Ecriture de 2 saut de ligne a la fin du fichier. 
@@ -441,13 +438,8 @@ namespace WPFHexaEditor.Core.CharacterTable
         /// Avoir acess au Bookmark
         /// </summary>
         [Browsable(false)]
-        public List<BookMark> BookMarks
-        {
-            get
-            {
-                return _bookMark;
-            }
-        }
+        public List<BookMark> BookMarks { get; set; } = new List<BookMark>();
+
 
         /// <summary>
         /// Obtenir le total d'entré DTE dans la Table
@@ -556,6 +548,5 @@ namespace WPFHexaEditor.Core.CharacterTable
             }
         }
         #endregion
-
     }
 }

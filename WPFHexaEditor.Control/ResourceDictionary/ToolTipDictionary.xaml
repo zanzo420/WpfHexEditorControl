@@ -39,9 +39,8 @@
                 <Label Content="Hex:" FontWeight="Bold"/>
                 <Label Content="{Binding BytePositionInFile, Converter={StaticResource LongHexConverter}, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
-            <Separator/>
             <StackPanel Orientation="Horizontal">
-                <Label Content="Description :" FontWeight="Bold"/>
+                <Label Content="Description :" FontWeight="Bold" Width="120"/>
                 <Label Content="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
             <Separator/>

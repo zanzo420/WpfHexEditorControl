@@ -1,4 +1,9 @@
-﻿<UserControl x:Class="WPFHexaEditor.Control.HexByteControl"
+﻿ <!--
+      MIT License  - 2016-2017
+      Author : Derek Tremblay (derektremblay666@gmail.com)
+ -->
+
+<UserControl x:Class="WPFHexaEditor.Control.HexByteControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"

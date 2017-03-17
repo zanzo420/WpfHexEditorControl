@@ -1,4 +1,9 @@
-﻿using System.Windows.Controls;
+﻿//////////////////////////////////////////////
+// MIT License  - 2016-2017
+// Author : Derek Tremblay (derektremblay666@gmail.com)
+//////////////////////////////////////////////
+
+using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
 namespace WPFHexaEditor.Core.MethodExtention

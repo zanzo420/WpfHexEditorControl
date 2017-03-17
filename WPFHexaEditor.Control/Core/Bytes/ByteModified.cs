@@ -1,4 +1,9 @@
-﻿namespace WPFHexaEditor.Core.Bytes
+﻿//////////////////////////////////////////////
+// MIT License  - 2016-2017
+// Author : Derek Tremblay (derektremblay666@gmail.com)
+//////////////////////////////////////////////
+
+namespace WPFHexaEditor.Core.Bytes
 {
     public class ByteModified
     {

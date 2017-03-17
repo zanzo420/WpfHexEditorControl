@@ -1,4 +1,9 @@
-﻿namespace WPFHexaEditor.Core
+﻿//////////////////////////////////////////////
+// MIT License  - 2016-2017
+// Author : Derek Tremblay (derektremblay666@gmail.com)
+//////////////////////////////////////////////
+
+namespace WPFHexaEditor.Core
 {
     /// <summary>
     /// ByteAction used for ByteModified class

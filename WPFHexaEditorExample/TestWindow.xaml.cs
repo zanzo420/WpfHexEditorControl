@@ -1,4 +1,9 @@
-﻿using Microsoft.Win32;
+﻿//////////////////////////////////////////////
+// MIT License  - 2016-2017
+// Author : Derek Tremblay (derektremblay666@gmail.com)
+//////////////////////////////////////////////
+
+using Microsoft.Win32;
 using System;
 using System.IO;
 using System.Windows;

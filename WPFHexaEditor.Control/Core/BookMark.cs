@@ -1,4 +1,9 @@
-﻿using WPFHexaEditor.Core.Bytes;
+﻿//////////////////////////////////////////////
+// MIT License  - 2016-2017
+// Author : Derek Tremblay (derektremblay666@gmail.com)
+//////////////////////////////////////////////
+
+using WPFHexaEditor.Core.Bytes;
 
 namespace WPFHexaEditor.Core
 {

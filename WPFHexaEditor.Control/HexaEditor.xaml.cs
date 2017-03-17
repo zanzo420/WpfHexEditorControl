@@ -393,6 +393,19 @@ namespace WPFHexaEditor.Control
             UnHighLightAll();
         }
 
+        private void Control_CTRLZKey(object sender, EventArgs e)
+        {
+            //HexByteControl hbCtrl = sender as HexByteControl;
+            //StringByteControl sbCtrl = sender as StringByteControl;
+            
+            Undo();
+
+            //if (hbCtrl != null)
+            //    SetFocusHexDataPanel(GetFirstVisibleBytePosition());
+            //else if (sbCtrl != null)
+            //    SetFocusStringDataPanel(GetFirstVisibleBytePosition());
+        }
+
         private void Control_MovePageUp(object sender, EventArgs e)
         {
             HexByteControl hbCtrl = sender as HexByteControl;
@@ -1291,7 +1304,7 @@ namespace WPFHexaEditor.Control
                 for (int i = 0; i < repeat; i++)
                     _provider.Undo();
                                
-                RefreshView(false, false);
+                RefreshView(false, true);
             }
         }
 
@@ -1745,6 +1758,7 @@ namespace WPFHexaEditor.Control
                             sbCtrl.MoveRight += Control_MoveRight;
                             sbCtrl.ByteDeleted += Control_ByteDeleted;
                             sbCtrl.EscapeKey += Control_EscapeKey;
+                            sbCtrl.CTRLZKey += Control_CTRLZKey;
 
                             sbCtrl.InternalChange = true;                            
                             sbCtrl.TBLCharacterTable = _TBLCharacterTable;
@@ -1824,7 +1838,7 @@ namespace WPFHexaEditor.Control
                 StringDataStackPanel.Children.Clear();
             }
         }
-        
+
         /// <summary>
         /// Update byte are modified
         /// </summary>
@@ -2072,6 +2086,7 @@ namespace WPFHexaEditor.Control
                             byteControl.MovePageDown += Control_MovePageDown;
                             byteControl.ByteDeleted += Control_ByteDeleted;
                             byteControl.EscapeKey += Control_EscapeKey;
+                            byteControl.CTRLZKey += Control_CTRLZKey;
 
                             byteControl.InternalChange = true;
                             byteControl.Byte = (byte)_provider.ReadByte();

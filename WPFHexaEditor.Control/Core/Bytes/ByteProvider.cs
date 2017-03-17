@@ -664,7 +664,7 @@ namespace WPFHexaEditor.Core.Bytes
             }
 
             //set memorystream (BinaryData) clipboard data
-            System.IO.MemoryStream ms = new System.IO.MemoryStream(buffer, 0, buffer.Length, false, true);
+            MemoryStream ms = new MemoryStream(buffer, 0, buffer.Length, false, true);
             da.SetData("BinaryData", ms);
 
             Clipboard.SetDataObject(da, true);

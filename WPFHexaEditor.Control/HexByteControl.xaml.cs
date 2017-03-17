@@ -30,6 +30,7 @@ namespace WPFHexaEditor.Control
         public event EventHandler MovePageUp;
         public event EventHandler ByteDeleted;
         public event EventHandler EscapeKey;
+        public event EventHandler CTRLZKey;
 
         public HexByteControl()
         {
@@ -365,6 +366,12 @@ namespace WPFHexaEditor.Control
             {
                 e.Handled = true;
                 EscapeKey?.Invoke(this, new EventArgs());
+                return;
+            }
+            else if (KeyValidator.IsCtrlZKey(e.Key))
+            {
+                e.Handled = true;
+                CTRLZKey?.Invoke(this, new EventArgs());
                 return;
             }
 

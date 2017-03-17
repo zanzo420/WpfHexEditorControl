@@ -26,8 +26,8 @@ namespace WPFHexaEditor.Core.MethodExtention
 
         /// <summary>
         /// Check if match is finded
-        /// </summary>        
-        static bool IsMatch(byte[] array, long position, byte[] candidate)
+        /// </summary>
+        private static bool IsMatch(byte[] array, long position, byte[] candidate)
         {
             if (candidate.Length > (array.Length - position))
                 return false;
@@ -41,8 +41,8 @@ namespace WPFHexaEditor.Core.MethodExtention
 
         /// <summary>
         /// Check if can find
-        /// </summary>        
-        static bool IsEmptyLocate(byte[] array, byte[] candidate)
+        /// </summary>
+        private static bool IsEmptyLocate(byte[] array, byte[] candidate)
         {
             return array == null
                 || candidate == null
@@ -50,6 +50,5 @@ namespace WPFHexaEditor.Core.MethodExtention
                 || candidate.Length == 0
                 || candidate.Length > array.Length;
         }
-
     }
 }

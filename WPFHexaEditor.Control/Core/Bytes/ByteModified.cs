@@ -36,7 +36,6 @@
             }
         }
 
-
         /// <summary>
         /// Clear object
         /// </summary>
@@ -61,7 +60,7 @@
             newByteModified.BytePositionInFile = BytePositionInFile;
 
             copied = newByteModified;
-            
+
             return (ByteModified)copied;
         }
 
@@ -69,7 +68,6 @@
         {
             return $"ByteModified - Action:{Action} Position:{BytePositionInFile} Byte:{Byte}";
         }
-
 
         /// <summary>
         /// Get if file is open

@@ -1,10 +1,10 @@
-using System; 
+using System;
 
 namespace WPFHexaEditor.Core.CharacterTable
 {
     /// <summary>
     /// Objet représentant un DTE.
-    /// 
+    ///
     /// Derek Tremblay 2003-2017
     /// </summary>
     public class DTE
@@ -13,6 +13,7 @@ namespace WPFHexaEditor.Core.CharacterTable
         private string _Entry;
 
         #region Constructeurs
+
         /// <summary>
         /// Constructeur principal
         /// </summary>
@@ -48,9 +49,11 @@ namespace WPFHexaEditor.Core.CharacterTable
             Value = value;
             Type = type;
         }
-        #endregion
+
+        #endregion Constructeurs
 
         #region Propriétés
+
         /// <summary>
         /// Nom du DTE
         /// </summary>
@@ -75,9 +78,11 @@ namespace WPFHexaEditor.Core.CharacterTable
         /// Type de DTE
         /// </summary>
         public DTEType Type { get; set; }
-        #endregion
+
+        #endregion Propriétés
 
         #region Méthodes
+
         /// <summary>
         /// Cette fonction permet de retourner le DTE sous forme : [Entry]=[Valeur]
         /// </summary>
@@ -90,9 +95,11 @@ namespace WPFHexaEditor.Core.CharacterTable
             else
                 return _Entry;
         }
-        #endregion
+
+        #endregion Méthodes
 
         #region Methodes Static
+
         public static DTEType TypeDTE(DTE DTEValue)
         {
             try
@@ -104,7 +111,8 @@ namespace WPFHexaEditor.Core.CharacterTable
                             return DTEType.ASCII;
                         else
                             return DTEType.DualTitleEncoding;
-                    case 4: // >2								
+
+                    case 4: // >2
                         return DTEType.MultipleTitleEncoding;
                 }
             }
@@ -114,6 +122,7 @@ namespace WPFHexaEditor.Core.CharacterTable
                 {
                     case @"/":
                         return DTEType.EndBlock;
+
                     case @"*":
                         return DTEType.EndLine;
                         //case @"\":
@@ -135,6 +144,7 @@ namespace WPFHexaEditor.Core.CharacterTable
                 {
                     case @"<end>":
                         return DTEType.EndBlock;
+
                     case @"<ln>":
                         return DTEType.EndLine;
                         //case @"\":
@@ -154,6 +164,7 @@ namespace WPFHexaEditor.Core.CharacterTable
 
             return DTEType.Invalid;
         }
-        #endregion
+
+        #endregion Methodes Static
     }
 }

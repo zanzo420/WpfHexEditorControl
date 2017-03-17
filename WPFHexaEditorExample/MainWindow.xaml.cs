@@ -84,6 +84,7 @@ namespace WPFHexaEditorExample
 
                     Settings.Default.HeaderVisibility = HexEdit.HeaderVisibility == Visibility.Visible;
                     break;
+
                 case SettingEnum.ScrollVisibility:
                     if (!Settings.Default.ScrollVisibility)
                         HexEdit.VerticalScrollBarVisibility = Visibility.Collapsed;
@@ -94,8 +95,8 @@ namespace WPFHexaEditorExample
                     break;
 
                 case SettingEnum.ReadOnly:
-                    HexEdit.ReadOnlyMode = Settings.Default.ReadOnly; 
-                    
+                    HexEdit.ReadOnlyMode = Settings.Default.ReadOnly;
+
                     HexEdit.ClearAllChange();
                     HexEdit.RefreshView();
                     break;
@@ -111,9 +112,7 @@ namespace WPFHexaEditorExample
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-
             Settings.Default.Save();
-        
         }
 
         private void ExitMenu_Click(object sender, RoutedEventArgs e)
@@ -143,7 +142,6 @@ namespace WPFHexaEditorExample
 
         private void SetPositionMenu_Click(object sender, RoutedEventArgs e)
         {
-
         }
 
         private void GOPosition_Click(object sender, RoutedEventArgs e)
@@ -159,7 +157,6 @@ namespace WPFHexaEditorExample
 
         private void GOHexPosition_Click(object sender, RoutedEventArgs e)
         {
-
             if (ByteConverters.IsHexaValue(PositionHexText.Text))
             {
                 long position = ByteConverters.HexLiteralToLong(PositionHexText.Text);
@@ -186,8 +183,7 @@ namespace WPFHexaEditorExample
             if (long.TryParse(PositionText.Text, out position))
                 GoPositionButton.IsEnabled = true;
             else
-                GoPositionButton.IsEnabled = false;        
-
+                GoPositionButton.IsEnabled = false;
         }
 
         private void UndoMenu_Click(object sender, RoutedEventArgs e)
@@ -207,23 +203,19 @@ namespace WPFHexaEditorExample
 
         private void FindText_TextChanged(object sender, TextChangedEventArgs e)
         {
-
         }
 
         private void FindFirstButton_Click(object sender, RoutedEventArgs e)
         {
-
         }
 
         private void FindPreviousButton_Click(object sender, RoutedEventArgs e)
         {
-
         }
 
         private void FindAllSelection_Click(object sender, RoutedEventArgs e)
         {
             HexEdit.FindAllSelection(true);
-
         }
 
         private void SelectAllButton_Click(object sender, RoutedEventArgs e)
@@ -233,7 +225,6 @@ namespace WPFHexaEditorExample
 
         private void FindNextButton_Click(object sender, RoutedEventArgs e)
         {
-
         }
 
         private void CTableASCIIButton_Click(object sender, RoutedEventArgs e)

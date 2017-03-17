@@ -30,7 +30,7 @@ namespace WPFHexaEditor.Core.Bytes
         }
 
         /// <summary>
-        /// Convert Char to Byte 
+        /// Convert Char to Byte
         /// </summary>
         public static byte CharToByte(char c)
         {
@@ -53,9 +53,10 @@ namespace WPFHexaEditor.Core.Bytes
 
             if (sb.Length > 0)
                 sb.Remove(sb.Length - 1, 1);
-            
+
             return sb.ToString();
         }
+
         /// <summary>
         /// Converts the byte to a hex string. For example: "10" = "0A";
         /// </summary>
@@ -78,16 +79,17 @@ namespace WPFHexaEditor.Core.Bytes
             {
                 case ByteToString.ASCIIEncoding:
                     return Encoding.ASCII.GetString(buffer, 0, buffer.Length);
+
                 case ByteToString.ByteToCharProcess:
                     StringBuilder builder = new StringBuilder();
 
-                    foreach (byte @byte in buffer)                    
-                        builder.Append(ByteToChar(@byte));                    
+                    foreach (byte @byte in buffer)
+                        builder.Append(ByteToChar(@byte));
 
                     return builder.ToString();
             }
 
-            return "";         
+            return "";
         }
 
         /// <summary>
@@ -141,7 +143,6 @@ namespace WPFHexaEditor.Core.Bytes
                     throw new ArgumentOutOfRangeException("hex");
 
                 value = 16 * value + x;
-
             }
 
             return value;
@@ -173,8 +174,8 @@ namespace WPFHexaEditor.Core.Bytes
         {
             List<byte> byteList = new List<byte>();
 
-            foreach (char c in str)            
-                byteList.Add(CharToByte(c));            
+            foreach (char c in str)
+                byteList.Add(CharToByte(c));
 
             return byteList.ToArray();
         }

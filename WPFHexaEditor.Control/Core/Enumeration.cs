@@ -13,7 +13,7 @@
         /// <summary>
         /// Used in ByteProvider for get list
         /// </summary>
-        All 
+        All
     }
 
     /// <summary>
@@ -52,6 +52,7 @@
         /// Build-in convertion mode. (recommended)
         /// </summary>
         ByteToCharProcess,
+
         /// <summary>
         /// System.Text.Encoding.ASCII string encoder
         /// </summary>

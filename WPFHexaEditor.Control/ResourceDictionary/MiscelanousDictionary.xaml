@@ -3,10 +3,8 @@
                     xmlns:conv="clr-namespace:WPFHexaEditor.Core.Converters"
                     xmlns:local="clr-namespace:WPFHexaEditor.Control.ResourceDictionary">
 
-    <!--THIS DICTIONNARY IS USED TO PUT VARIOUS RESSOURCES TYPE--> 
-    
-    
-    <!--VALUE CONVERTER-->
-    <conv:LongToHexStringConverter x:Key="LongHexConverter"/>
+    <!--THIS DICTIONNARY IS USED TO PUT VARIOUS RESSOURCES TYPE-->
 
+    <!--VALUE CONVERTER-->
+    <conv:LongToHexStringConverter x:Key="LongHexConverter" />
 </ResourceDictionary>

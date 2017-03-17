@@ -14,80 +14,78 @@
         <DockPanel>
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="File" Height="26" RenderTransformOrigin="0.656,0.769">
-                    <MenuItem x:Name="OpenMenu" Header="Open..." Click="OpenMenu_Click"/>
-                    <MenuItem x:Name="SaveMenu" Header="Save" Click="SaveMenu_Click"/>
-                    <MenuItem Header="Save as..." IsEnabled="False"/>
-                    <MenuItem x:Name="CloseFileMenu" Header="Close file" Click="CloseFileMenu_Click"/>
-                    <Separator/>
-                    <MenuItem x:Name="ExitMenu" Header="Exit" Click="ExitMenu_Click"/>
+                    <MenuItem x:Name="OpenMenu" Header="Open..." Click="OpenMenu_Click" />
+                    <MenuItem x:Name="SaveMenu" Header="Save" Click="SaveMenu_Click" />
+                    <MenuItem Header="Save as..." IsEnabled="False" />
+                    <MenuItem x:Name="CloseFileMenu" Header="Close file" Click="CloseFileMenu_Click" />
+                    <Separator />
+                    <MenuItem x:Name="ExitMenu" Header="Exit" Click="ExitMenu_Click" />
                 </MenuItem>
                 <MenuItem Header="Edit">
-                    <MenuItem x:Name="UndoMenu" Header="Undo" Click="UndoMenu_Click"/>
-                    <Separator/>
-                    <MenuItem x:Name="SetReadOnlyMenu" Header="Read only" Click="SetReadOnlyMenu_Click" 
+                    <MenuItem x:Name="UndoMenu" Header="Undo" Click="UndoMenu_Click" />
+                    <Separator />
+                    <MenuItem x:Name="SetReadOnlyMenu" Header="Read only" Click="SetReadOnlyMenu_Click"
                               IsCheckable="True"
-                              IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=ReadOnly, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                              />
-                    <Separator/>
-                    <MenuItem x:Name="CopyHexaMenu" Header="Copy hexadecimal string" Click="CopyHexaMenu_Click"/>
-                    <MenuItem x:Name="CopyStringMenu" Header="Copy ASCII string" Click="CopyStringMenu_Click"/>
-                    <MenuItem x:Name="DeleteSelectionMenu" Header="Delete selection" Click="DeleteSelectionMenu_Click"/>
-                    <Separator/>
-                    <MenuItem x:Name="SelectAllButton" Header="Select all" Click="SelectAllButton_Click"/>
-                    <Separator/>
+                              IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=ReadOnly, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                    <Separator />
+                    <MenuItem x:Name="CopyHexaMenu" Header="Copy hexadecimal string" Click="CopyHexaMenu_Click" />
+                    <MenuItem x:Name="CopyStringMenu" Header="Copy ASCII string" Click="CopyStringMenu_Click" />
+                    <MenuItem x:Name="DeleteSelectionMenu" Header="Delete selection" Click="DeleteSelectionMenu_Click" />
+                    <Separator />
+                    <MenuItem x:Name="SelectAllButton" Header="Select all" Click="SelectAllButton_Click" />
+                    <Separator />
                     <MenuItem Header="Bookmarks">
-                        <MenuItem x:Name="SetBookMarkButton" Header="Set position as bookmark" Click="SetBookMarkButton_Click"/>
-                        <MenuItem x:Name="DeleteBookmark" Header="Remove all bookmarks" Click="DeleteBookmark_Click"/>
+                        <MenuItem x:Name="SetBookMarkButton" Header="Set position as bookmark" Click="SetBookMarkButton_Click" />
+                        <MenuItem x:Name="DeleteBookmark" Header="Remove all bookmarks" Click="DeleteBookmark_Click" />
                     </MenuItem>
-                    <Separator/>
+                    <Separator />
                     <MenuItem Header="Find">
-                        <MenuItem x:Name="FindAllSelection" Header="Find all occurence of selection" Click="FindAllSelection_Click"/>
+                        <MenuItem x:Name="FindAllSelection" Header="Find all occurence of selection" Click="FindAllSelection_Click" />
                         <StackPanel Orientation="Horizontal">
-                            <Label Width="75" Content="Find string" Padding="0,5,5,5"/>
-                            <TextBox x:Name="FindText" Width="75" VerticalContentAlignment="Center" TextChanged="FindText_TextChanged"/>
-                            <Button x:Name="FindFirstButton" Content="|&lt;--" IsEnabled="False" Click="FindFirstButton_Click"/>
-                            <Button x:Name="FindPreviousButton" Content=" &lt; " IsEnabled="False" Click="FindPreviousButton_Click"/>
-                            <Button x:Name="FindNextButton" Content=" &gt; " IsEnabled="False" Click="FindNextButton_Click"/>
-                            <Button x:Name="FindLastButton" Content="--&gt;|" IsEnabled="False" Click="FindFirstButton_Click"/>
+                            <Label Width="75" Content="Find string" Padding="0,5,5,5" />
+                            <TextBox x:Name="FindText" Width="75" VerticalContentAlignment="Center" TextChanged="FindText_TextChanged" />
+                            <Button x:Name="FindFirstButton" Content="|&lt;--" IsEnabled="False" Click="FindFirstButton_Click" />
+                            <Button x:Name="FindPreviousButton" Content=" &lt; " IsEnabled="False" Click="FindPreviousButton_Click" />
+                            <Button x:Name="FindNextButton" Content=" &gt; " IsEnabled="False" Click="FindNextButton_Click" />
+                            <Button x:Name="FindLastButton" Content="--&gt;|" IsEnabled="False" Click="FindFirstButton_Click" />
                         </StackPanel>
                     </MenuItem>
                     <MenuItem Header="CharacterTable">
-                        <MenuItem x:Name="CTableASCIIButton" IsCheckable="True" IsChecked="True" Header="ASCII" Click="CTableASCIIButton_Click"/>
-                        <MenuItem x:Name="CTableTBLButton" IsCheckable="True" Header="Load TBL file" Click="CTableTBLButton_Click"/>
+                        <MenuItem x:Name="CTableASCIIButton" IsCheckable="True" IsChecked="True" Header="ASCII" Click="CTableASCIIButton_Click" />
+                        <MenuItem x:Name="CTableTBLButton" IsCheckable="True" Header="Load TBL file" Click="CTableTBLButton_Click" />
                     </MenuItem>
                 </MenuItem>
                 <MenuItem x:Name="PositionMenu" Header="Position">
                     <StackPanel Margin="0" Orientation="Horizontal">
                         <Label Content="BytePerline" Width="100" />
-                        <TextBox TextWrapping="Wrap" Text="{Binding BytePerLine, ElementName=HexEdit, UpdateSourceTrigger=LostFocus}" Width="75" VerticalContentAlignment="Center"/>
-                        <Label Content="(Lost focus)"/>
+                        <TextBox TextWrapping="Wrap" Text="{Binding BytePerLine, ElementName=HexEdit, UpdateSourceTrigger=LostFocus}" Width="75" VerticalContentAlignment="Center" />
+                        <Label Content="(Lost focus)" />
                     </StackPanel>
-                    <Separator/>
+                    <Separator />
                     <StackPanel Orientation="Horizontal">
-                        <Label Width="100" Content="SetPosition"/>
-                        <TextBox x:Name="PositionText" Width="75" VerticalContentAlignment="Center" TextChanged="PositionText_TextChanged"/>
-                        <Button x:Name="GoPositionButton" IsEnabled="False" Content="GO" Click="GOPosition_Click"/>
+                        <Label Width="100" Content="SetPosition" />
+                        <TextBox x:Name="PositionText" Width="75" VerticalContentAlignment="Center" TextChanged="PositionText_TextChanged" />
+                        <Button x:Name="GoPositionButton" IsEnabled="False" Content="GO" Click="GOPosition_Click" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <Label Width="75" Content="SetPosition"/>
+                        <Label Width="75" Content="SetPosition" />
                         <Label Width="25" Content="0x" />
-                        <TextBox x:Name="PositionHexText" Width="75" VerticalContentAlignment="Center" TextChanged="PositionHexText_TextChanged"/>
-                        <Button x:Name="GoPositionHexaButton" Content="GO" IsEnabled="False" Click="GOHexPosition_Click"/>
+                        <TextBox x:Name="PositionHexText" Width="75" VerticalContentAlignment="Center" TextChanged="PositionHexText_TextChanged" />
+                        <Button x:Name="GoPositionHexaButton" Content="GO" IsEnabled="False" Click="GOHexPosition_Click" />
                     </StackPanel>
                 </MenuItem>
                 <MenuItem x:Name="ViewMenu" Header="View">
                     <MenuItem x:Name="ShowHeaderMenu" Header="Header visibility" Click="ShowHeaderMenu_Click"
                               IsCheckable="True"
-                              IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HeaderVisibility, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                              IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HeaderVisibility, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
                     <MenuItem x:Name="ShowScrollMenu" Header="Scroll visibility" Click="ShowScrollMenu_Click"
                               IsCheckable="True"
-                              IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=ScrollVisibility, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
-
+                              IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=ScrollVisibility, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                 </MenuItem>
             </Menu>
 
-            <Control:HexaEditor x:Name="HexEdit" Width="Auto" Height="Auto" Margin="10,20,10,10"  />
+            <Control:HexaEditor x:Name="HexEdit" Width="Auto" Height="Auto" Margin="10,20,10,10" />
         </DockPanel>
     </Grid>
 </Window>

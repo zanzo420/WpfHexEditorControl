@@ -8,7 +8,7 @@ namespace WPFHexaEditorExample
     /// </summary>
     public partial class App : Application
     {
-        void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             var comException = e.Exception as System.Runtime.InteropServices.COMException;
 

@@ -13,7 +13,7 @@ namespace WPFHexaEditor.Core.MethodExtention
             DispatcherFrame frame = new DispatcherFrame();
 
             Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Background,
-                new DispatcherOperationCallback(ExitFrame), 
+                new DispatcherOperationCallback(ExitFrame),
                 frame);
 
             Dispatcher.PushFrame(frame);

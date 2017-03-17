@@ -16,22 +16,37 @@ namespace WPFHexaEditor.Control
     {
         //private bool _isByteModified = false;
         private bool _readOnlyMode;
+
         private TBLStream _TBLCharacterTable = null;
 
         public event EventHandler Click;
+
         public event EventHandler RightClick;
+
         public event EventHandler MouseSelection;
+
         public event EventHandler StringByteModified;
+
         public event EventHandler MoveNext;
+
         public event EventHandler MovePrevious;
+
         public event EventHandler MoveRight;
+
         public event EventHandler MoveLeft;
+
         public event EventHandler MoveUp;
+
         public event EventHandler MoveDown;
+
         public event EventHandler MovePageDown;
+
         public event EventHandler MovePageUp;
+
         public event EventHandler ByteDeleted;
+
         public event EventHandler EscapeKey;
+
         public event EventHandler CTRLZKey;
 
         public StringByteControl()
@@ -42,6 +57,7 @@ namespace WPFHexaEditor.Control
         }
 
         #region DependencyProperty
+
         /// <summary>
         /// Position in file
         /// </summary>
@@ -92,7 +108,6 @@ namespace WPFHexaEditor.Control
                 ctrl.UpdateHexString();
 
                 ctrl.UpdateBackGround();
-
             }
         }
 
@@ -122,7 +137,6 @@ namespace WPFHexaEditor.Control
                 //ctrl.UpdateHexString();
 
                 ctrl.UpdateBackGround();
-
             }
         }
 
@@ -136,7 +150,7 @@ namespace WPFHexaEditor.Control
         }
 
         public static readonly DependencyProperty IsSelectedProperty =
-            DependencyProperty.Register("IsSelected", typeof(bool), typeof(StringByteControl), 
+            DependencyProperty.Register("IsSelected", typeof(bool), typeof(StringByteControl),
                 new FrameworkPropertyMetadata(false, new PropertyChangedCallback(IsSelected_PropertyChangedCallBack)));
 
         private static void IsSelected_PropertyChangedCallBack(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -146,7 +160,7 @@ namespace WPFHexaEditor.Control
             if (e.NewValue != e.OldValue)
                 ctrl.UpdateBackGround();
         }
-        
+
         /// <summary>
         /// Get the hex string {00} representation of this byte
         /// </summary>
@@ -157,12 +171,12 @@ namespace WPFHexaEditor.Control
         }
 
         public static readonly DependencyProperty HexStringProperty =
-            DependencyProperty.Register("HexString", typeof(string), typeof(StringByteControl), 
+            DependencyProperty.Register("HexString", typeof(string), typeof(StringByteControl),
                 new FrameworkPropertyMetadata(string.Empty));
-        
+
         /// <summary>
         /// Get of Set if control as marked as highlighted
-        /// </summary>                        
+        /// </summary>
         public bool IsHighLight
         {
             get { return (bool)GetValue(IsHighLightProperty); }
@@ -183,7 +197,7 @@ namespace WPFHexaEditor.Control
         }
 
         /// <summary>
-        /// Used to prevent StringByteModified event occurc when we dont want! 
+        /// Used to prevent StringByteModified event occurc when we dont want!
         /// </summary>
         public bool InternalChange
         {
@@ -194,7 +208,7 @@ namespace WPFHexaEditor.Control
         // Using a DependencyProperty as the backing store for InternalChange.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty InternalChangeProperty =
             DependencyProperty.Register("InternalChange", typeof(bool), typeof(StringByteControl), new PropertyMetadata(false));
-                
+
         /// <summary>
         /// Action with this byte
         /// </summary>
@@ -203,7 +217,7 @@ namespace WPFHexaEditor.Control
             get { return (ByteAction)GetValue(ActionProperty); }
             set { SetValue(ActionProperty, value); }
         }
-                
+
         public static readonly DependencyProperty ActionProperty =
             DependencyProperty.Register("Action", typeof(ByteAction), typeof(StringByteControl),
                 new FrameworkPropertyMetadata(ByteAction.Nothing,
@@ -227,11 +241,13 @@ namespace WPFHexaEditor.Control
             if (e.NewValue != e.OldValue)
                 ctrl.UpdateBackGround();
         }
-        #endregion
+
+        #endregion DependencyProperty
 
         #region Characters tables
+
         /// <summary>
-        /// Type of caracter table are used un hexacontrol. 
+        /// Type of caracter table are used un hexacontrol.
         /// For now, somes character table can be readonly but will change in future
         /// </summary>
         public CharacterTableType TypeOfCharacterTable
@@ -245,7 +261,6 @@ namespace WPFHexaEditor.Control
             DependencyProperty.Register("TypeOfCharacterTable", typeof(CharacterTableType), typeof(StringByteControl),
                 new FrameworkPropertyMetadata(CharacterTableType.ASCII,
                     new PropertyChangedCallback(TypeOfCharacterTable_PropertyChanged)));
-
 
         private static void TypeOfCharacterTable_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -285,7 +300,7 @@ namespace WPFHexaEditor.Control
         private static void TBLColor_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             StringByteControl ctrl = d as StringByteControl;
-                        
+
             ctrl.UpdateBackGround();
         }
 
@@ -364,6 +379,7 @@ namespace WPFHexaEditor.Control
                         StringByteLabel.Content = ByteConverters.ByteToChar(Byte.Value);
                         Width = 12;
                         break;
+
                     case CharacterTableType.TBLFile:
                         ReadOnlyMode = true;
 
@@ -388,15 +404,19 @@ namespace WPFHexaEditor.Control
                                 case DTEType.DualTitleEncoding:
                                     Width = 12 + content.Length * 2.2D;
                                     break;
+
                                 case DTEType.MultipleTitleEncoding:
-                                    Width = 12 + content.Length * 4.2D + (FontSize / 2);                                    
+                                    Width = 12 + content.Length * 4.2D + (FontSize / 2);
                                     break;
+
                                 case DTEType.EndLine:
                                     Width = 24;
                                     break;
+
                                 case DTEType.EndBlock:
                                     Width = 34;
                                     break;
+
                                 default:
                                     Width = 12;
                                     break;
@@ -405,10 +425,10 @@ namespace WPFHexaEditor.Control
                         else
                             goto case CharacterTableType.ASCII;
                         break;
-                }                
+                }
             }
             else
-                StringByteLabel.Content = "";            
+                StringByteLabel.Content = "";
         }
 
         private void UpdateHexString()
@@ -418,7 +438,7 @@ namespace WPFHexaEditor.Control
             else
                 HexString = string.Empty;
         }
-        
+
         /// <summary>
         /// Update Background
         /// </summary>
@@ -454,6 +474,7 @@ namespace WPFHexaEditor.Control
                         Background = (SolidColorBrush)TryFindResource("ByteModifiedColor");
                         StringByteLabel.Foreground = Brushes.Black;
                         break;
+
                     case ByteAction.Deleted:
                         FontWeight = (FontWeight)TryFindResource("BoldFontWeight");
                         Background = (SolidColorBrush)TryFindResource("ByteDeletedColor");
@@ -468,29 +489,33 @@ namespace WPFHexaEditor.Control
                 FontWeight = (FontWeight)TryFindResource("NormalFontWeight");
                 Background = Brushes.Transparent;
                 StringByteLabel.Foreground = Brushes.Black;
-                
+
                 if (TypeOfCharacterTable == CharacterTableType.TBLFile)
                     switch (DTE.TypeDTE((string)StringByteLabel.Content))
                     {
                         case DTEType.DualTitleEncoding:
                             StringByteLabel.Foreground = TBL_DTEColor;
                             break;
+
                         case DTEType.MultipleTitleEncoding:
                             StringByteLabel.Foreground = TBL_MTEColor;
                             break;
+
                         case DTEType.EndLine:
                             StringByteLabel.Foreground = TBL_EndLineColor;
                             break;
+
                         case DTEType.EndBlock:
                             StringByteLabel.Foreground = TBL_EndBlockColor;
                             break;
+
                         default:
                             StringByteLabel.Foreground = TBL_DefaultColor;
                             break;
                     }
             }
         }
-        
+
         public bool ReadOnlyMode
         {
             get
@@ -502,7 +527,7 @@ namespace WPFHexaEditor.Control
                 _readOnlyMode = value;
             }
         }
-        
+
         private void UserControl_KeyDown(object sender, KeyEventArgs e)
         {
             if (KeyValidator.IsIgnoredKey(e.Key))
@@ -588,10 +613,10 @@ namespace WPFHexaEditor.Control
                 return;
             }
 
-            //MODIFY ASCII... 
+            //MODIFY ASCII...
             //TODO : MAKE BETTER KEYDETECTION AND EXPORT IN KEYVALIDATOR
             if (!ReadOnlyMode)
-            {                
+            {
                 bool isok = false;
 
                 if (Keyboard.GetKeyStates(Key.CapsLock) == KeyStates.Toggled)
@@ -617,7 +642,7 @@ namespace WPFHexaEditor.Control
                     else if (Keyboard.Modifiers == ModifierKeys.Shift && e.Key != Key.RightShift && e.Key != Key.LeftShift)
                     {
                         isok = true;
-                        StringByteLabel.Content = ByteConverters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key));    
+                        StringByteLabel.Content = ByteConverters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key));
                     }
                 }
 
@@ -638,7 +663,7 @@ namespace WPFHexaEditor.Control
             if (Byte != null)
                 if (Action != ByteAction.Modified &&
                     Action != ByteAction.Deleted &&
-                    Action != ByteAction.Added && 
+                    Action != ByteAction.Added &&
                     !IsSelected && !IsHighLight)
                     Background = (SolidColorBrush)TryFindResource("MouseOverColor");
 

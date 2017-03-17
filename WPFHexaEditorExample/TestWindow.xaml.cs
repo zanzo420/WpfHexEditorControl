@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using Microsoft.Win32;
-using System.IO;
 using WPFHexaEditor.Core.Bytes;
 
 namespace WPFHexaEditorExample
@@ -43,7 +43,7 @@ namespace WPFHexaEditorExample
 
             if (fileDialog.ShowDialog() != null)
             {
-                if (File.Exists(fileDialog.FileName))                    
+                if (File.Exists(fileDialog.FileName))
                     HexEdit.FileName = fileDialog.FileName;
             }
         }
@@ -67,7 +67,7 @@ namespace WPFHexaEditorExample
         {
             HexEdit.UnSelectAll();
         }
-        
+
         private void HexDataVisibilityButton_Click(object sender, RoutedEventArgs e)
         {
             if (HexEdit.HexDataVisibility == Visibility.Visible)
@@ -94,22 +94,20 @@ namespace WPFHexaEditorExample
 
         private void StringDataVisibilityButton_Click(object sender, RoutedEventArgs e)
         {
-
             if (HexEdit.StringDataVisibility == Visibility.Visible)
                 HexEdit.StringDataVisibility = Visibility.Collapsed;
             else
-                HexEdit.StringDataVisibility = Visibility.Visible;            
+                HexEdit.StringDataVisibility = Visibility.Visible;
         }
 
         private void StatusBarVisibilityButton_Click(object sender, RoutedEventArgs e)
         {
-
             if (HexEdit.StatusBarVisibility == Visibility.Visible)
                 HexEdit.StatusBarVisibility = Visibility.Collapsed;
             else
                 HexEdit.StatusBarVisibility = Visibility.Visible;
         }
-        
+
         private void HexEdit_SelectionLenghtChanged(object sender, EventArgs e)
         {
             SelectionLenghtLabel.Content = HexEdit.SelectionLenght;
@@ -175,7 +173,7 @@ namespace WPFHexaEditorExample
         }
 
         private void Findtextbox_TextChanged(object sender, TextChangedEventArgs e)
-        {            
+        {
             try
             {
                 findHexLabel.Content = ByteConverters.StringToHex(Findtextbox.Text);
@@ -193,7 +191,6 @@ namespace WPFHexaEditorExample
 
         private void button2_Click(object sender, RoutedEventArgs e)
         {
-
             if (Findtextbox.Text != "")
                 HexEdit.FindLast(Findtextbox.Text);
             else

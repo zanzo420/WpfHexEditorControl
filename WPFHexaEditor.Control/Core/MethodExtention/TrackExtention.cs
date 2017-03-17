@@ -20,13 +20,13 @@ namespace WPFHexaEditor.Core.MethodExtention
         /// Get actual bottom position of track
         /// </summary>
         public static double Bottom(this Track s)
-        {            
+        {
             Grid parent = s.Parent as Grid;
 
             Track TrackControl = (Track)parent.Children[2];
 
-            return TrackControl.Top() + 
-                TrackControl.ActualHeight + 
+            return TrackControl.Top() +
+                TrackControl.ActualHeight +
                 parent.Margin.Top + 1;
         }
 
@@ -38,7 +38,7 @@ namespace WPFHexaEditor.Core.MethodExtention
             //Grid parent = s.Parent as Grid;
 
             //Track TrackControl = (Track)parent.Children[2];
-            
+
             return s.Top() - 1;
         }
 
@@ -57,6 +57,5 @@ namespace WPFHexaEditor.Core.MethodExtention
         {
             return s.ActualHeight / maximum;
         }
-
     }
 }

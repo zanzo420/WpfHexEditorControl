@@ -96,4 +96,5 @@ namespace WPFHexaEditor.Core
         ASCII,
         TBLFile
     }
+
 }

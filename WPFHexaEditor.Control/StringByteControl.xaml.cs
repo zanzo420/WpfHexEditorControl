@@ -619,7 +619,6 @@ namespace WPFHexaEditor.Control
             }
 
             //MODIFY ASCII...
-            //TODO : MAKE BETTER KEYDETECTION AND EXPORT IN KEYVALIDATOR
             if (!ReadOnlyMode)
             {
                 bool isok = false;
@@ -628,26 +627,26 @@ namespace WPFHexaEditor.Control
                 {
                     if (Keyboard.Modifiers != ModifierKeys.Shift && e.Key != Key.RightShift && e.Key != Key.LeftShift)
                     {
-                        StringByteLabel.Content = ByteConverters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key));
+                        StringByteLabel.Content = KeyValidator.GetCharFromKey(e.Key); //ByteConverters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key));
                         isok = true;
                     }
                     else if (Keyboard.Modifiers == ModifierKeys.Shift && e.Key != Key.RightShift && e.Key != Key.LeftShift)
                     {
                         isok = true;
-                        StringByteLabel.Content = ByteConverters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key)).ToString().ToLower();
+                        StringByteLabel.Content = KeyValidator.GetCharFromKey(e.Key).ToString().ToLower(); //ByteConverters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key)).ToString().ToLower();
                     }
                 }
                 else
                 {
                     if (Keyboard.Modifiers != ModifierKeys.Shift && e.Key != Key.RightShift && e.Key != Key.LeftShift)
                     {
-                        StringByteLabel.Content = ByteConverters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key)).ToString().ToLower();
+                        StringByteLabel.Content = KeyValidator.GetCharFromKey(e.Key).ToString().ToLower(); //ByteConverters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key)).ToString().ToLower();
                         isok = true;
                     }
                     else if (Keyboard.Modifiers == ModifierKeys.Shift && e.Key != Key.RightShift && e.Key != Key.LeftShift)
                     {
                         isok = true;
-                        StringByteLabel.Content = ByteConverters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key));
+                        StringByteLabel.Content = KeyValidator.GetCharFromKey(e.Key); //ByteConverters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key));
                     }
                 }
 

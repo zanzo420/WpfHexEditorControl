@@ -173,7 +173,7 @@ namespace WPFHexaEditor.Core
         }
 
         #region DllImport for key detection (Thank to : Inbar Barkai for help)
-
+        
         /// <summary>
         /// Used for key detection
         /// </summary>
@@ -201,6 +201,14 @@ namespace WPFHexaEditor.Core
         [DllImport("user32.dll")]
         private static extern uint MapVirtualKey(uint uCode, MapType uMapType);
 
+        /// <summary>
+        /// Capture character on different locale keyboards in WPF. Convert key to appropiate char?
+        /// </summary>        
+        /// <remarks>
+        /// Code from 
+        /// http://stackoverflow.com/questions/5825820/how-to-capture-the-character-on-different-locale-keyboards-in-wpf-c
+        /// </remarks>
+        /// <returns>return a char represent the key passed in parameter</returns>
         public static char GetCharFromKey(Key key)
         {
             char ch = ' ';

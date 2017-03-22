@@ -468,6 +468,7 @@ namespace WPFHexaEditor.Control
             StringByteControl sbCtrl = sender as StringByteControl;
 
             long test = SelectionStart + BytePerLine;
+                        
 
             //TODO : Validation
             if (Keyboard.Modifiers == ModifierKeys.Shift)
@@ -490,6 +491,9 @@ namespace WPFHexaEditor.Control
                     SelectionStop += BytePerLine;
                 }
             }
+
+            //if (!GetSelectionStartIsVisible() && SelectionLenght == 1)
+            //    SetPosition(SelectionStart, 1);
 
             if (SelectionStart > GetLastVisibleBytePosition())
                 VerticalScrollBar.Value++;
@@ -866,6 +870,9 @@ namespace WPFHexaEditor.Control
             }
 
             //Validation and refresh
+            //if (!GetSelectionStartIsVisible() && SelectionLenght == 1)
+            //    SetPosition(SelectionStart, 1);
+
             if (SelectionStart >= _provider.Length)
                 SelectionStart = _provider.Length;
 
@@ -911,6 +918,9 @@ namespace WPFHexaEditor.Control
             //Validation and refresh
             if (SelectionStart < 0)
                 SelectionStart = 0;
+
+            //if (!GetSelectionStartIsVisible() && SelectionLenght == 1)
+            //    SetPosition(SelectionStart, 1);
 
             if (SelectionStart < GetFirstVisibleBytePosition())
                 VerticalScrollBar.Value--;
@@ -2082,7 +2092,7 @@ namespace WPFHexaEditor.Control
 
                         for (int i = 0; i < BytePerLine; i++)
                         {
-                            _provider.Position = position + i; //+ correction;
+                            _provider.Position = position + i; 
 
                             if (_provider.Position >= _provider.Length)
                                 break;
@@ -2252,6 +2262,26 @@ namespace WPFHexaEditor.Control
                 return -1;
         }
 
+
+        /// <summary>
+        /// Return True if SelectionStart are visible in control
+        /// </summary>
+        public bool GetSelectionStartIsVisible()
+        {
+            int stackIndex = 0;
+            foreach (Label infolabel in LinesInfoStackPanel.Children)
+            {
+                if (HexDataStackPanel.Children.Count > 0)
+                    foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
+                        if (byteControl.BytePositionInFile == SelectionStart)
+                            return true;
+
+                stackIndex++;
+            }
+
+            return false;
+        }
+
         /// <summary>
         /// Get last visible byte position in control
         /// </summary>
@@ -2308,8 +2338,8 @@ namespace WPFHexaEditor.Control
                 if (VerticalScrollBar.Value < VerticalScrollBar.Maximum)
                     VerticalScrollBar.Value++;
 
-                SetFocusHexDataPanel(bytePositionInFile);
-                //SetPosition(bytePositionInFile);
+                if (!GetSelectionStartIsVisible() && SelectionLenght == 1)
+                    SetPosition(SelectionStart, 1);
             }
         }
 
@@ -2341,8 +2371,8 @@ namespace WPFHexaEditor.Control
                 if (VerticalScrollBar.Value < VerticalScrollBar.Maximum)
                     VerticalScrollBar.Value++;
 
-                SetFocusStringDataPanel(bytePositionInFile);
-                //SetPosition(bytePositionInFile);
+                if (!GetSelectionStartIsVisible() && SelectionLenght == 1)
+                    SetPosition(SelectionStart, 1);
             }
         }
 

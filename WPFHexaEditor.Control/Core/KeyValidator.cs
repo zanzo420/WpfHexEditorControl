@@ -172,7 +172,7 @@ namespace WPFHexaEditor.Core
             return key == Key.V && Keyboard.Modifiers == ModifierKeys.Control;
         }
 
-        #region DllImport for key detection (Thank to : Inbar Barkai for help)
+        #region DllImport/methods for key detection (Thank to : Inbar Barkai for help)
         
         /// <summary>
         /// Used for key detection

@@ -294,16 +294,21 @@ namespace WPFHexaEditor.Core.Bytes
         }
 
         /// <summary>
-        /// Readbytes, lenght of reading are definid with parameter byteCount at position if file CanRead. Return -1 is file is closed of EOF.
+        /// Read bytes, lenght of reading are definid with parameter count. Start at position if file CanRead. Return null is file is closed or can be read.
         /// </summary>
         /// <returns></returns>
-        public byte[] ReadLine(int byteCount)
+        public byte[] Read(int count)
         {
             if (IsOpen)
                 if (_stream.CanRead)
                 {
-                    byte[] bytesReaded = new byte[byteCount];
-                    _stream.Read(bytesReaded, 0, byteCount);
+                    int countAdjusted = count;
+
+                    if ((Length - Position) <= count)
+                        countAdjusted = (int)(Length - Position);
+
+                    byte[] bytesReaded = new byte[countAdjusted];
+                    _stream.Read(bytesReaded, 0, countAdjusted);
                     return bytesReaded;
                 }
 

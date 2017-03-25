@@ -21,6 +21,6 @@
 
         <Image Grid.Column="0" />
         <TextBox Grid.Column="1" Margin="0,1,1,1" />
-        <TextBox Grid.Column="2" Margin="0,1,0,1" />
+        <TextBox Grid.Column="2" Margin="0,1,1,1" />
     </Grid>
 </UserControl>

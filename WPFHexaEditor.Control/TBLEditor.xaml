@@ -11,6 +11,7 @@
              xmlns:local="clr-namespace:WPFHexaEditor.Control"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-    </Grid>
+
+    <Expander x:Name="TBLExpander"/>
+    
 </UserControl>

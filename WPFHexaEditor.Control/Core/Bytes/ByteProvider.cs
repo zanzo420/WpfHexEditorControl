@@ -564,14 +564,15 @@ namespace WPFHexaEditor.Core.Bytes
                 if (bytemodifiedOriginal != null)
                     _byteModifiedList.Remove(bytemodifiedOriginal);
 
-                ByteModified byteModified = new ByteModified();
-
-                byteModified.Byte = new byte();
-                byteModified.UndoLenght = length;
-                byteModified.BytePositionInFile = position;
-                byteModified.Action = ByteAction.Deleted;
-
-                _byteModifiedList.Add(byteModified);
+                var byteModified = new ByteModified()
+                {
+                    Byte = new byte(),
+                    UndoLenght = length,
+                    BytePositionInFile = position,
+                    Action = ByteAction.Deleted
+                };
+                _byteModifiedDictionary.Add(position, byteModified);
+                UndoStack.Push(byteModified);
 
                 position++;
             }

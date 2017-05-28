@@ -1350,12 +1350,12 @@ namespace WPFHexaEditor.Control
             }
         }
 
-        public List<ByteModified> UndosList
+        public Stack<ByteModified> UndoStack
         {
             get
             {
                 if (ByteProvider.CheckIsOpen(_provider))
-                    return _provider.UndosList;
+                    return _provider.UndoStack;
                 else
                     return null;
             }
@@ -1871,66 +1871,30 @@ namespace WPFHexaEditor.Control
         /// </summary>
         private void UpdateByteModified()
         {
-            int stackIndex = 0;
-            ByteModified byteModifiedCopy = null;
-
             if (ByteProvider.CheckIsOpen(_provider))
-                foreach (ByteModified byteModified in _provider.ByteModifieds(ByteAction.All))
+            {
+                ByteModified byteModified;
+                var ModifiedBytesDictionary = _provider.GetModifiedBytes(ByteAction.All);
+
+                var stringStackPanels = StringDataStackPanel.Children.Cast<StackPanel>().SelectMany(s => s.Children.Cast<StringByteControl>());
+                var hexStackPanels = HexDataStackPanel.Children.Cast<StackPanel>().SelectMany(s => s.Children.Cast<HexByteControl>());
+                var stackPanels = stringStackPanels.Zip(hexStackPanels, (s, h) => new { HexByte = h, StringByte = s });
+
+                foreach (var byteControl in stackPanels)
                 {
-                    stackIndex = 0;
-                    byteModifiedCopy = byteModified.GetCopy();
-
-                    foreach (Label infolabel in LinesInfoStackPanel.Children)
+                    if (ModifiedBytesDictionary.TryGetValue(byteControl.HexByte.BytePositionInFile, out byteModified))
                     {
-                        foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
+                        byteControl.HexByte.InternalChange = byteControl.StringByte.InternalChange = true;
+                        byteControl.HexByte.Byte = byteControl.StringByte.Byte = byteModified.Byte;
+
+                        if (byteModified.Action == ByteAction.Modified || byteModified.Action == ByteAction.Deleted)
                         {
-                            if (byteModifiedCopy.BytePositionInFile == byteControl.BytePositionInFile)
-                            {
-                                byteControl.InternalChange = true;
-                                byteControl.Byte = byteModifiedCopy.Byte;
-
-                                switch (byteModifiedCopy.Action)
-                                {
-                                    case ByteAction.Modified:
-                                        byteControl.Action = ByteAction.Modified;
-                                        break;
-
-                                    case ByteAction.Deleted:
-                                        byteControl.Action = ByteAction.Deleted;
-                                        break;
-                                }
-                                byteControl.InternalChange = false;
-                            }
+                            byteControl.HexByte.Action = byteControl.StringByte.Action = byteModified.Action;
                         }
-
-                        foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
-                        {
-                            if (byteModifiedCopy.BytePositionInFile == byteControl.BytePositionInFile)
-                            {
-                                byteControl.InternalChange = true;
-                                byteControl.Byte = byteModifiedCopy.Byte;
-
-                                switch (byteModifiedCopy.Action)
-                                {
-                                    case ByteAction.Modified:
-                                        byteControl.Action = ByteAction.Modified;
-                                        break;
-
-                                    case ByteAction.Deleted:
-                                        byteControl.Action = ByteAction.Deleted;
-                                        break;
-                                }
-                                byteControl.InternalChange = false;
-                            }
-                        }
-
-                        stackIndex++;
-
-                        //Prevent index out off range exception when resize at EOF
-                        if (stackIndex == HexDataStackPanel.Children.Count && VerticalScrollBar.Value == VerticalScrollBar.Maximum)
-                            stackIndex--;
+                        byteControl.HexByte.InternalChange = byteControl.StringByte.InternalChange = false;
                     }
                 }
+            }
         }
 
         /// <summary>
@@ -2562,7 +2526,7 @@ namespace WPFHexaEditor.Control
                 if (ByteProvider.CheckIsOpen(_provider))
                 {
                     bool MB = false;
-                    long deletedBytesCount = _provider.ByteModifieds(ByteAction.Deleted).Count();
+                    long deletedBytesCount = _provider.GetModifiedBytes(ByteAction.Deleted).Count();
 
                     FileLengthLabel.Content = _provider.Length - deletedBytesCount;
 

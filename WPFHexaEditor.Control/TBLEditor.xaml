@@ -11,7 +11,8 @@
              xmlns:local="clr-namespace:WPFHexaEditor.Control"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
-
-    <Expander x:Name="TBLExpander"/>
     
+    <StackPanel x:Name="TBLEntryPanel"  Orientation="Vertical">
+        <!--expander Header and content will be added in code-->
+    </StackPanel>
 </UserControl>

@@ -42,9 +42,13 @@ namespace WPFHexaEditor.Control
         #region methods
         public void Load()
         {
-            if(TBL != null)
+            if (TBL != null)
             {
                 //Load section and content
+                //foreach (DTE dte in TBL)
+                //{
+
+                //}
             }
         }
         #endregion methods

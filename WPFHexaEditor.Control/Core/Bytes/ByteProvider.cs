@@ -561,7 +561,7 @@ namespace WPFHexaEditor.Core.Bytes
                     Byte = new byte(),
                     UndoLenght = length,
                     BytePositionInFile = position,
-                    Action = ByteAction.Modified // Treat deleted bytes as modified
+                    Action = ByteAction.Deleted
                 };
                 _byteModifiedDictionary.Add(position, byteModified);
                 UndoStack.Push(byteModified);

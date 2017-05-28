@@ -19,7 +19,8 @@ namespace WPFHexaEditor.Core.Bytes
     public class ByteProvider
     {
         //Global variable
-        private List<ByteModified> _byteModifiedList = new List<ByteModified>();
+        private IDictionary<long, ByteModified> _byteModifiedDictionary = new Dictionary<long, ByteModified>();
+        private Stack<ByteModified> _undoStack = new Stack<ByteModified>();
 
         private string _fileName = string.Empty;
         private Stream _stream = null;
@@ -339,20 +340,20 @@ namespace WPFHexaEditor.Core.Bytes
                     NewStream = File.Open(Path.GetTempFileName(), FileMode.Open, FileAccess.ReadWrite);
 
                 //Fast change only nothing byte deleted or added
-                if (ByteModifieds(ByteAction.Deleted).Count() == 0 &&
-                    ByteModifieds(ByteAction.Added).Count() == 0)
+                if (GetModifiedBytes(ByteAction.Deleted).Count() == 0 &&
+                    GetModifiedBytes(ByteAction.Added).Count() == 0)
                 {
                     //Launch event at process strated
                     IsOnLongProcess = true;
                     LongProcessProgressStarted?.Invoke(this, new EventArgs());
 
-                    var bytemodifiedList = ByteModifieds(ByteAction.Modified);
+                    var bytemodifiedList = GetModifiedBytes(ByteAction.Modified);
                     double countChange = bytemodifiedList.Count();
                     i = 0;
 
                     //Fast save. only save byteaction=modified
-                    foreach (ByteModified bm in bytemodifiedList)
-                        if (bm.IsValid)
+                    foreach (var bm in bytemodifiedList)
+                        if (bm.Value.IsValid)
                         {
                             //Set percent of progress
                             LongProcessProgress = i++ / countChange;
@@ -361,8 +362,8 @@ namespace WPFHexaEditor.Core.Bytes
                             if (!IsOnLongProcess)
                                 break;
 
-                            _stream.Position = bm.BytePositionInFile;
-                            _stream.WriteByte(bm.Byte.Value);
+                            _stream.Position = bm.Key;
+                            _stream.WriteByte(bm.Value.Byte.Value);
                         }
 
                     //Launch event at process completed
@@ -377,7 +378,7 @@ namespace WPFHexaEditor.Core.Bytes
 
                     byte[] buffer = new byte[ConstantReadOnly.COPY_BLOCK_SIZE];
                     long bufferlength = 0;
-                    var SortedBM = ByteModifieds(ByteAction.All).OrderBy(b => b.BytePositionInFile);
+                    var SortedBM = GetModifiedBytes(ByteAction.All).OrderBy(b => b.Key);
                     double countChange = SortedBM.Count();
                     i = 0;
 
@@ -385,7 +386,7 @@ namespace WPFHexaEditor.Core.Bytes
                     Position = 0;
 
                     ////Start update and rewrite file.
-                    foreach (ByteModified nextByteModified in SortedBM)
+                    foreach (var nextByteModified in SortedBM)
                     {
                         //Set percent of progress
                         LongProcessProgress = (i++ / countChange);
@@ -398,9 +399,9 @@ namespace WPFHexaEditor.Core.Bytes
                         buffer = new byte[ConstantReadOnly.COPY_BLOCK_SIZE];
 
                         //start read/write / use little block for optimize memory
-                        while (Position != nextByteModified.BytePositionInFile)
+                        while (Position != nextByteModified.Key)
                         {
-                            bufferlength = nextByteModified.BytePositionInFile - Position;
+                            bufferlength = nextByteModified.Key - Position;
 
                             //TEMPS
                             if (bufferlength < 0)
@@ -415,7 +416,7 @@ namespace WPFHexaEditor.Core.Bytes
                         }
 
                         //Apply ByteAction!
-                        switch (nextByteModified.Action)
+                        switch (nextByteModified.Value.Action)
                         {
                             case ByteAction.Added:
                                 //TODO : IMPLEMENTING ADD BYTE
@@ -428,12 +429,12 @@ namespace WPFHexaEditor.Core.Bytes
 
                             case ByteAction.Modified:
                                 Position++;
-                                NewStream.WriteByte(nextByteModified.Byte.Value);
+                                NewStream.WriteByte(nextByteModified.Value.Byte.Value);
                                 break;
                         }
 
                         //Read/Write the last section of file
-                        if (nextByteModified.BytePositionInFile == SortedBM.Last().BytePositionInFile)
+                        if (nextByteModified.Key == SortedBM.Last().Key)
                         {
                             while (!EOF)
                             {
@@ -499,8 +500,8 @@ namespace WPFHexaEditor.Core.Bytes
         /// </summary>
         public void ClearUndoChange()
         {
-            if (_byteModifiedList != null)
-                _byteModifiedList.Clear();
+            if (_byteModifiedDictionary != null)
+                _byteModifiedDictionary.Clear();
         }
 
         /// <summary>
@@ -508,23 +509,13 @@ namespace WPFHexaEditor.Core.Bytes
         /// </summary>
         public ByteModified CheckIfIsByteModified(long bytePositionInFile, ByteAction action = ByteAction.Modified)
         {
-            foreach (ByteModified byteModified in _byteModifiedList)
+            ByteModified byteModified;
+            if (_byteModifiedDictionary.TryGetValue(bytePositionInFile, out byteModified)
+                && byteModified.IsValid
+                && (byteModified.Action == action || action == ByteAction.All))
             {
-                if (action != ByteAction.All)
-                {
-                    if (byteModified.BytePositionInFile == bytePositionInFile &&
-                        byteModified.IsValid == true &&
-                        byteModified.Action == action)
-                        return byteModified;
-                }
-                else
-                {
-                    if (byteModified.BytePositionInFile == bytePositionInFile &&
-                        byteModified.IsValid == true)
-                        return byteModified;
-                }
+                return byteModified;
             }
-
             return null;
         }
 
@@ -533,19 +524,20 @@ namespace WPFHexaEditor.Core.Bytes
         /// </summary>
         public void AddByteModified(byte? @byte, long bytePositionInFile, long undoLenght = 1)
         {
-            ByteModified bytemodifiedOriginal = CheckIfIsByteModified(bytePositionInFile, ByteAction.Modified);
+            var bytemodifiedOriginal = CheckIfIsByteModified(bytePositionInFile, ByteAction.Modified);
 
             if (bytemodifiedOriginal != null)
-                _byteModifiedList.Remove(bytemodifiedOriginal);
+                _byteModifiedDictionary.Remove(bytePositionInFile);
 
-            ByteModified byteModified = new ByteModified();
-
-            byteModified.Byte = @byte;
-            byteModified.UndoLenght = undoLenght;
-            byteModified.BytePositionInFile = bytePositionInFile;
-            byteModified.Action = ByteAction.Modified;
-
-            _byteModifiedList.Add(byteModified);
+            var byteModified = new ByteModified()
+            {
+                Byte = @byte,
+                UndoLenght = undoLenght,
+                BytePositionInFile = bytePositionInFile,
+                Action = ByteAction.Modified
+            };
+            _byteModifiedDictionary.Add(bytePositionInFile, byteModified);
+            UndoStack.Push(byteModified);
         }
 
         /// <summary>
@@ -559,19 +551,20 @@ namespace WPFHexaEditor.Core.Bytes
             {
                 if (i % 100 == 0) Application.Current.DoEvents();
 
-                ByteModified bytemodifiedOriginal = CheckIfIsByteModified(position, ByteAction.All);
+                var bytemodifiedOriginal = CheckIfIsByteModified(position, ByteAction.All);
 
                 if (bytemodifiedOriginal != null)
-                    _byteModifiedList.Remove(bytemodifiedOriginal);
+                    _byteModifiedDictionary.Remove(position);
 
-                ByteModified byteModified = new ByteModified();
-
-                byteModified.Byte = new byte();
-                byteModified.UndoLenght = length;
-                byteModified.BytePositionInFile = position;
-                byteModified.Action = ByteAction.Deleted;
-
-                _byteModifiedList.Add(byteModified);
+                var byteModified = new ByteModified()
+                {
+                    Byte = new byte(),
+                    UndoLenght = length,
+                    BytePositionInFile = position,
+                    Action = ByteAction.Modified // Treat deleted bytes as modified
+                };
+                _byteModifiedDictionary.Add(position, byteModified);
+                UndoStack.Push(byteModified);
 
                 position++;
             }
@@ -581,16 +574,16 @@ namespace WPFHexaEditor.Core.Bytes
         /// Return an IEnumerable ByteModified have action set to Modified
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<ByteModified> ByteModifieds(ByteAction action)
+        public IDictionary<long, ByteModified> GetModifiedBytes(ByteAction action)
         {
-            foreach (ByteModified byteModified in _byteModifiedList)
-                if (action != ByteAction.All)
-                {
-                    if (byteModified.Action == action)
-                        yield return byteModified;
-                }
-                else
-                    yield return byteModified;
+            if (action == ByteAction.All)
+            {
+                return _byteModifiedDictionary;
+            }
+            else
+            {
+                return _byteModifiedDictionary.Where(b => b.Value.Action == action).ToDictionary(k => k.Key, v => v.Value);
+            }
         }
 
         #endregion Bytes modifications methods
@@ -787,29 +780,38 @@ namespace WPFHexaEditor.Core.Bytes
         {
             if (CanUndo)
             {
-                ByteModified last = _byteModifiedList.Last<ByteModified>();
+                ByteModified last = this.UndoStack.Pop();
+                var undoLenght = last.UndoLenght;
+                _byteModifiedDictionary.Remove(last.BytePositionInFile);
 
-                for (int i = 0; i < last.UndoLenght; i++)
-                    _byteModifiedList.RemoveAt(_byteModifiedList.Count - 1);
+                for (int i = 0; i < undoLenght; i++)
+                {
+                    last = this.UndoStack.Pop();
+                    _byteModifiedDictionary.Remove(last.BytePositionInFile);
+                }
 
                 Undone?.Invoke(this, new EventArgs());
             }
         }
 
-        public long UndoCount
+        /// <summary>
+        /// Gets the undo count.
+        /// </summary>
+        public int UndoCount
         {
             get
             {
-                return _byteModifiedList.Count;
+                return this.UndoStack.Count;
             }
         }
 
-        public List<ByteModified> UndosList
+        /// <summary>
+        /// Gets or sets the undo stack.
+        /// </summary>
+        public Stack<ByteModified> UndoStack
         {
-            get
-            {
-                return _byteModifiedList;
-            }
+            get { return _undoStack; }
+            set { _undoStack = value; }
         }
 
         /// <summary>
@@ -830,7 +832,7 @@ namespace WPFHexaEditor.Core.Bytes
             get
             {
                 if (IsUndoEnabled)
-                    return _byteModifiedList.Count > 0;
+                    return _byteModifiedDictionary.Count > 0;
                 else
                     return false;
             }

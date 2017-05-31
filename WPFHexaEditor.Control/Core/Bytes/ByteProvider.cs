@@ -688,8 +688,7 @@ namespace WPFHexaEditor.Core.Bytes
             string sBuffer = "";
 
             DataObject da = new DataObject();
-            StringBuilder sb = new StringBuilder();
-
+            
             switch (copypastemode)
             {
                 case CopyPasteMode.TBLString:
@@ -707,32 +706,7 @@ namespace WPFHexaEditor.Core.Bytes
                     throw new NotImplementedException();
 
                 case CopyPasteMode.CSharpCode:
-                    int i = 0;
-                    long lenght = 0;
-                    if (selectionStop > selectionStart)
-                        lenght = selectionStop - selectionStart;
-                    else
-                        lenght = selectionStart - selectionStop;
-
-                    sb.Append($"/* {FileName} ({DateTime.Now.ToString()}), \r\n StartPosition: {ByteConverters.LongToHex(selectionStart)}, StopPosition: {ByteConverters.LongToHex(selectionStop)}, Lenght:{ByteConverters.LongToHex(lenght)} */");
-                    sb.AppendLine();
-                    sb.Append("byte[] rawData = {");
-                    sb.AppendLine();
-                    foreach (byte b in buffer)
-                    {
-                        i++;
-                        sb.Append($"0x{ByteConverters.ByteToHex(b)}, ");
-                        if (i == 12)
-                        {
-                            i = 0;
-                            sb.AppendLine();
-                            sb.Append("\t");
-                        }
-                    }
-                    sb.AppendLine();
-                    sb.Append("};");
-
-                    da.SetText(sb.ToString(), TextDataFormat.Text);
+                    CopyToClipboard_CSharp(selectionStart, selectionStop, copyChange, da);
                     break;
             }
 
@@ -743,6 +717,45 @@ namespace WPFHexaEditor.Core.Bytes
             Clipboard.SetDataObject(da, true);
 
             DataCopiedToClipboard?.Invoke(this, new EventArgs());
+        }
+
+        /// <summary>
+        /// Copy selection of to clipboard in C# code format 
+        /// </summary>
+        private void CopyToClipboard_CSharp(long selectionStart, long selectionStop, bool copyChange, DataObject da)
+        {
+            if (!CanCopy(selectionStart, selectionStop)) return;
+
+            //Variables
+            byte[] buffer = GetCopyData(selectionStart, selectionStop, copyChange);
+            int i = 0;
+            long lenght = 0;
+            StringBuilder sb = new StringBuilder();
+
+            if (selectionStop > selectionStart)
+                lenght = selectionStop - selectionStart;
+            else
+                lenght = selectionStart - selectionStop;
+
+            sb.Append($"/* {FileName} ({DateTime.Now.ToString()}), \r\n StartPosition: {ByteConverters.LongToHex(selectionStart)}, StopPosition: {ByteConverters.LongToHex(selectionStop)}, Lenght:{ByteConverters.LongToHex(lenght)} */");
+            sb.AppendLine();
+            sb.Append("byte[] rawData = {");
+            sb.AppendLine();
+            foreach (byte b in buffer)
+            {
+                i++;
+                sb.Append($"0x{ByteConverters.ByteToHex(b)}, ");
+                if (i == 12)
+                {
+                    i = 0;
+                    sb.AppendLine();
+                    sb.Append("\t");
+                }
+            }
+            sb.AppendLine();
+            sb.Append("};");
+
+            da.SetText(sb.ToString(), TextDataFormat.Text);
         }
 
         /// <summary>

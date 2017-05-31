@@ -2825,6 +2825,21 @@ namespace WPFHexaEditor.Control
             CopyToClipboard(CopyPasteMode.VBNetCode);
         }
 
+        private void CopyCCMenu_Click(object sender, RoutedEventArgs e)
+        {
+            CopyToClipboard(CopyPasteMode.CCode);
+        }
+
+        private void CopyJavaCMenu_Click(object sender, RoutedEventArgs e)
+        {
+            CopyToClipboard(CopyPasteMode.JavaCode);
+        }
+        
+        private void CopyTBLCMenu_Click(object sender, RoutedEventArgs e)
+        {
+            CopyToClipboard(CopyPasteMode.TBLString);
+        }
+
         private void DeleteCMenu_Click(object sender, RoutedEventArgs e)
         {
             DeleteSelection();
@@ -2859,6 +2874,7 @@ namespace WPFHexaEditor.Control
         {
             SelectAll();
         }
+
 
         #endregion Context menu
 

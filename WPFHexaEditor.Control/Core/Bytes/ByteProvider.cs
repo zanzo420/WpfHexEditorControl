@@ -706,7 +706,13 @@ namespace WPFHexaEditor.Core.Bytes
                     throw new NotImplementedException();
 
                 case CopyPasteMode.CSharpCode:
-                    CopyToClipboard_CSharp(selectionStart, selectionStop, copyChange, da);
+                    CopyToClipboard_CStyle(selectionStart, selectionStop, copyChange, da, CStyleLanguage.CSharp);
+                    break;
+                case CopyPasteMode.CCode:
+                    CopyToClipboard_CStyle(selectionStart, selectionStop, copyChange, da, CStyleLanguage.C);
+                    break;
+                case CopyPasteMode.JavaCode:
+                    CopyToClipboard_CStyle(selectionStart, selectionStop, copyChange, da, CStyleLanguage.Java);
                     break;
                 case CopyPasteMode.VBNetCode:
                     CopyToClipboard_VBNet(selectionStart, selectionStop, copyChange, da);
@@ -725,7 +731,7 @@ namespace WPFHexaEditor.Core.Bytes
         /// <summary>
         /// Copy selection of to clipboard in C# code format 
         /// </summary>
-        private void CopyToClipboard_CSharp(long selectionStart, long selectionStop, bool copyChange, DataObject da)
+        private void CopyToClipboard_CStyle(long selectionStart, long selectionStop, bool copyChange, DataObject da, CStyleLanguage language)
         {
             if (!CanCopy(selectionStart, selectionStop)) return;
 
@@ -743,12 +749,27 @@ namespace WPFHexaEditor.Core.Bytes
             sb.Append($"/* {FileName} ({DateTime.Now.ToString()}), \r\n StartPosition: 0x{ByteConverters.LongToHex(selectionStart)}, StopPosition: 0x{ByteConverters.LongToHex(selectionStop)}, Lenght: 0x{ByteConverters.LongToHex(lenght)} */");
             sb.AppendLine();
             sb.AppendLine();
-            sb.Append("byte[] rawData = {");
+
+            switch (language)
+            {
+                case CStyleLanguage.CSharp:
+                    sb.Append("byte[] rawData = {");
+                    break;
+                case CStyleLanguage.Java:
+                    sb.Append("byte rawData[] = {");
+                    break;
+                case CStyleLanguage.C:
+                    sb.Append($"unsigned char rawData[{lenght}] ");
+                    break;
+            }
+
+
             sb.AppendLine();
             sb.Append("\t");
             foreach (byte b in buffer)
             {
                 i++;
+                if (language == CStyleLanguage.Java) sb.Append("(byte)");
                 sb.Append($"0x{ByteConverters.ByteToHex(b)}, ");
                 if (i == 12)
                 {

@@ -40,7 +40,19 @@ namespace WPFHexaEditor.Core
         ASCIIString,
         TBLString,
         CSharpCode,
-        VBNetCode
+        VBNetCode,
+        JavaCode,
+        CCode
+    }
+
+    /// <summary>
+    /// Used with Copy to code fonction for language are similar to C.
+    /// </summary>
+    internal enum CStyleLanguage
+    {
+        C,
+        CSharp,
+        Java
     }
 
     /// <summary>

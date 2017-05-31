@@ -38,7 +38,8 @@ namespace WPFHexaEditor.Core
         Byte,
         HexaString,
         ASCIIString,
-        TBLString
+        TBLString,
+        CSharpCode
     }
 
     /// <summary>

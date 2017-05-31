@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows;
 
 using WPFHexaEditor.Core.MethodExtention;
@@ -687,6 +688,7 @@ namespace WPFHexaEditor.Core.Bytes
             string sBuffer = "";
 
             DataObject da = new DataObject();
+            StringBuilder sb = new StringBuilder();
 
             switch (copypastemode)
             {
@@ -703,6 +705,35 @@ namespace WPFHexaEditor.Core.Bytes
 
                 case CopyPasteMode.Byte:
                     throw new NotImplementedException();
+
+                case CopyPasteMode.CSharpCode:
+                    int i = 0;
+                    long lenght = 0;
+                    if (selectionStop > selectionStart)
+                        lenght = selectionStop - selectionStart;
+                    else
+                        lenght = selectionStart - selectionStop;
+
+                    sb.Append($"/* {FileName} ({DateTime.Now.ToString()}), \r\n StartPosition: {ByteConverters.LongToHex(selectionStart)}, StopPosition: {ByteConverters.LongToHex(selectionStop)}, Lenght:{ByteConverters.LongToHex(lenght)} */");
+                    sb.AppendLine();
+                    sb.Append("byte[] rawData = {");
+                    sb.AppendLine();
+                    foreach (byte b in buffer)
+                    {
+                        i++;
+                        sb.Append($"0x{ByteConverters.ByteToHex(b)}, ");
+                        if (i == 12)
+                        {
+                            i = 0;
+                            sb.AppendLine();
+                            sb.Append("\t");
+                        }
+                    }
+                    sb.AppendLine();
+                    sb.Append("};");
+
+                    da.SetText(sb.ToString(), TextDataFormat.Text);
+                    break;
             }
 
             //set memorystream (BinaryData) clipboard data
@@ -1011,5 +1042,7 @@ namespace WPFHexaEditor.Core.Bytes
         }
 
         #endregion Long process progress
+
+
     }
 }

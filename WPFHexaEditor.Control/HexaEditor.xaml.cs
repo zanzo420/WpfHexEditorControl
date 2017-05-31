@@ -2776,6 +2776,7 @@ namespace WPFHexaEditor.Control
 
             //update ctrl
             CopyASCIICMenu.IsEnabled = false;
+            CopyCSharpCMenu.IsEnabled = false;
             FindAllCMenu.IsEnabled = false;
             CopyHexaCMenu.IsEnabled = false;
             UndoCMenu.IsEnabled = false;
@@ -2785,6 +2786,7 @@ namespace WPFHexaEditor.Control
             if (SelectionLenght > 0)
             {
                 CopyASCIICMenu.IsEnabled = true;
+                CopyCSharpCMenu.IsEnabled = true;
                 FindAllCMenu.IsEnabled = true;
                 CopyHexaCMenu.IsEnabled = true;
                 DeleteCMenu.IsEnabled = true;
@@ -2811,6 +2813,11 @@ namespace WPFHexaEditor.Control
         private void CopyASCIICMenu_Click(object sender, RoutedEventArgs e)
         {
             CopyToClipboard(CopyPasteMode.ASCIIString);
+        }
+
+        private void CopyCSharpCMenu_Click(object sender, RoutedEventArgs e)
+        {
+            CopyToClipboard(CopyPasteMode.CSharpCode);
         }
 
         private void DeleteCMenu_Click(object sender, RoutedEventArgs e)
@@ -2849,6 +2856,5 @@ namespace WPFHexaEditor.Control
         }
 
         #endregion Context menu
-
     }
 }

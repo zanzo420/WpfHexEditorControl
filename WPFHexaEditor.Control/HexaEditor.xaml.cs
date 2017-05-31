@@ -2168,7 +2168,7 @@ namespace WPFHexaEditor.Control
         public void UpdateLinesInfo()
         {
             LinesInfoStackPanel.Children.Clear();
-
+            
             if (ByteProvider.CheckIsOpen(_provider))
             {
                 for (int i = 0; i < GetMaxVisibleLine(); i++)
@@ -2843,6 +2843,12 @@ namespace WPFHexaEditor.Control
             }
         }
 
+        private void SelectAllCMenu_Click(object sender, RoutedEventArgs e)
+        {
+            SelectAll();
+        }
+
         #endregion Context menu
+
     }
 }

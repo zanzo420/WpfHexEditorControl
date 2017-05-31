@@ -3,11 +3,6 @@
       Author : Derek Tremblay (derektremblay666@gmail.com)
  -->
 
-<!--
-      MIT License  - 2016-2017
-      Author : Derek Tremblay (derektremblay666@gmail.com)
- -->
-
 <UserControl x:Class="WPFHexaEditor.Control.HexaEditor"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -48,6 +43,8 @@
             <MenuItem x:Name="DeleteCMenu" Header="Delete" Click="DeleteCMenu_Click" />
             <Separator />
             <MenuItem x:Name="FindAllCMenu" Header="Find all occurence of selection" Click="FindAllCMenu_Click" />
+            <Separator />
+            <MenuItem x:Name="SelectAllCMenu" Header="Select all" Click="SelectAllCMenu_Click" />
         </ContextMenu>
     </UserControl.ContextMenu>
 

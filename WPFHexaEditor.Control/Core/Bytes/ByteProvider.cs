@@ -708,6 +708,9 @@ namespace WPFHexaEditor.Core.Bytes
                 case CopyPasteMode.CSharpCode:
                     CopyToClipboard_CSharp(selectionStart, selectionStop, copyChange, da);
                     break;
+                case CopyPasteMode.VBNetCode:
+                    CopyToClipboard_VBNet(selectionStart, selectionStop, copyChange, da);
+                    break;
             }
 
             //set memorystream (BinaryData) clipboard data
@@ -737,10 +740,12 @@ namespace WPFHexaEditor.Core.Bytes
             else
                 lenght = selectionStart - selectionStop;
 
-            sb.Append($"/* {FileName} ({DateTime.Now.ToString()}), \r\n StartPosition: {ByteConverters.LongToHex(selectionStart)}, StopPosition: {ByteConverters.LongToHex(selectionStop)}, Lenght:{ByteConverters.LongToHex(lenght)} */");
+            sb.Append($"/* {FileName} ({DateTime.Now.ToString()}), \r\n StartPosition: 0x{ByteConverters.LongToHex(selectionStart)}, StopPosition: 0x{ByteConverters.LongToHex(selectionStop)}, Lenght: 0x{ByteConverters.LongToHex(lenght)} */");
+            sb.AppendLine();
             sb.AppendLine();
             sb.Append("byte[] rawData = {");
             sb.AppendLine();
+            sb.Append("\t");
             foreach (byte b in buffer)
             {
                 i++;
@@ -754,6 +759,49 @@ namespace WPFHexaEditor.Core.Bytes
             }
             sb.AppendLine();
             sb.Append("};");
+
+            da.SetText(sb.ToString(), TextDataFormat.Text);
+        }
+
+        /// <summary>
+        /// Copy selection of to clipboard in C# code format 
+        /// </summary>
+        private void CopyToClipboard_VBNet(long selectionStart, long selectionStop, bool copyChange, DataObject da)
+        {
+            if (!CanCopy(selectionStart, selectionStop)) return;
+
+            //Variables
+            byte[] buffer = GetCopyData(selectionStart, selectionStop, copyChange);
+            int i = 0;
+            long lenght = 0;
+            StringBuilder sb = new StringBuilder();
+
+            if (selectionStop > selectionStart)
+                lenght = selectionStop - selectionStart;
+            else
+                lenght = selectionStart - selectionStop;
+
+            sb.Append($"' {FileName} ({DateTime.Now.ToString()}), \r\n' StartPosition: &H{ByteConverters.LongToHex(selectionStart)}, StopPosition: &H{ByteConverters.LongToHex(selectionStop)}, Lenght: &H{ByteConverters.LongToHex(lenght)}");
+            sb.AppendLine();
+            sb.AppendLine();
+            sb.Append("Dim rawData As Byte() = { _");
+            sb.AppendLine();
+            sb.Append("\t");
+            foreach (byte b in buffer)
+            {
+                i++;
+                sb.Append($"&H{ByteConverters.ByteToHex(b)}, ");
+                if (i == 12)
+                {
+                    i = 0;
+                    sb.Append("_");
+                    sb.AppendLine();
+                    sb.Append("\t");
+                }
+            }
+            sb.Append("_");
+            sb.AppendLine();
+            sb.Append("}");
 
             da.SetText(sb.ToString(), TextDataFormat.Text);
         }

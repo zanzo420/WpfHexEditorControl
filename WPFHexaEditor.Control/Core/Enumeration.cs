@@ -39,7 +39,8 @@ namespace WPFHexaEditor.Core
         HexaString,
         ASCIIString,
         TBLString,
-        CSharpCode
+        CSharpCode,
+        VBNetCode
     }
 
     /// <summary>

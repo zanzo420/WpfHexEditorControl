@@ -12,7 +12,7 @@ Sample with Thingy character table on SNES Final Fantasy II US
 https://www.nuget.org/packages/WPFHexaEditor/
 
 ## Features
-- Copy to clipboard as code like C#, VB.Net... (More language comming soon)
+- Copy to clipboard as code like C#, VB.Net, C, Java ... (More language comming soon)
 - Use TBL character table file insted of default ASCII.
 - Choose color set of TBL string via dependency property
 - Modify bytes
@@ -26,9 +26,10 @@ https://www.nuget.org/packages/WPFHexaEditor/
 - Unlimited Undo (no redo for now)
 - Move in file with mouse wheel / or keyboard
 - Modify mode (hexa / char)
-- Finds methods (FindFirst, FindNext, FindAll, FindLast, FindSelection) and overlord for (string, byte[])
+- Finds methods (FindFirst, FindNext, FindAll, FindLast, FindSelection) and overload for (string, byte[])
 - Highlight byte with somes find methods
-- Scollbar marker for selection start and byte finded (soon bookmark will be added)
+- Scollbar marker for selection start and byte finded
+- Set Bookmark (cannot save for now)
 - ...
 
 ##Release Notes (version of NUGET package)

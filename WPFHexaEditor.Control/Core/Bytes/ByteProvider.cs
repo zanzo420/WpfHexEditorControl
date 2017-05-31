@@ -771,7 +771,7 @@ namespace WPFHexaEditor.Core.Bytes
                 i++;
                 if (language == CStyleLanguage.Java) sb.Append("(byte)");
                 sb.Append($"0x{ByteConverters.ByteToHex(b)}, ");
-                if (i == 12)
+                if (i == (language == CStyleLanguage.Java ? 6:12))
                 {
                     i = 0;
                     sb.AppendLine();

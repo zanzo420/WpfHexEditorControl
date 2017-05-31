@@ -1,4 +1,4 @@
-# WPF Hexadecimal Editor UserControl (Beta) 
+# WPF Hexadecimal Editor UserControl
 A WPF Hexadecimal editor for view/modify file.  (NOW SUPPORT THINGY CHARACTER TABLE (TBL))
 
 Sample with standard ASCII character table
@@ -12,6 +12,7 @@ Sample with Thingy character table on SNES Final Fantasy II US
 https://www.nuget.org/packages/WPFHexaEditor/
 
 ## Features
+- Copy to clipboard as code like C#, VB.Net... (More language comming soon)
 - Use TBL character table file insted of default ASCII.
 - Choose color set of TBL string via dependency property
 - Modify bytes

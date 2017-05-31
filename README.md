@@ -1,5 +1,5 @@
 # WPF Hexadecimal Editor UserControl
-A WPF Hexadecimal editor for view/modify file.  (NOW SUPPORT THINGY CHARACTER TABLE (TBL))
+A WPF Hexadecimal editor for view/modify file.  (SUPPORT THINGY CHARACTER TABLE (TBL))
 
 Sample with standard ASCII character table
 ![example](WPFHexEditorControlSample6-NOTBL.png?raw=true)

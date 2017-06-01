@@ -759,6 +759,11 @@ namespace WPFHexaEditor.Core.Bytes
             sb.AppendLine();
             sb.AppendLine();
 
+            //TODO : integrate VB.NET and change function name to CopyToClipboard_Language and enum CStyleLanguage to CodeLanguage
+            //TODO : Add this... sample
+            //string sData = "½D'è×..ísü.;.×ÄÀß0Ij..à."
+            //string sDataHexa = "bd 44 27 e8 d7 84 1e" 
+
             switch (language)
             {
                 case CStyleLanguage.CSharp:

@@ -8,7 +8,7 @@ Sample with Thingy character table on SNES Final Fantasy II US
 ![example](WPFHexEditorControlSample6-TBL.png?raw=true)
 
 
-##NUGET  Last version : 2017-02-26
+## NUGET  Last version : 2017-02-26
 https://www.nuget.org/packages/WPFHexaEditor/
 
 ## Features
@@ -32,7 +32,7 @@ https://www.nuget.org/packages/WPFHexaEditor/
 - Set Bookmark (cannot save for now)
 - ...
 
-##Release Notes (version of NUGET package)
+## Release Notes (version of NUGET package)
 New in version 0.9.0.1
 - Implementation of TBL file format. (CHARACTER TABLE FOR ROM REVERSE ENGINEERING)
 - Added key fonction like ESC to unselect/unlight

@@ -39,7 +39,8 @@
             <MenuItem x:Name="CopyASCIICMenu" Header="Copy ASCII" Click="CopyASCIICMenu_Click" />
             <MenuItem Header="Copy selection as">
                 <MenuItem x:Name="CopyCCMenu" Header="C" Click="CopyCCMenu_Click" />
-                <MenuItem x:Name="CopyCSharpCMenu" Header="C#" Click="CopyCSharpCMenu_Click" />                                
+                <MenuItem x:Name="CopyCSharpCMenu" Header="C#" Click="CopyCSharpCMenu_Click" />
+                <MenuItem x:Name="CopyFSharpCMenu" Header="F#" Click="CopyFSharpCMenu_Click" />
                 <MenuItem x:Name="CopyJavaCMenu" Header="Java" Click="CopyJavaCMenu_Click" />
                 <MenuItem x:Name="CopyVBNetCMenu" Header="Visual Basic.Net" Click="CopyVBNetCMenu_Click" />
                 <MenuItem x:Name="CopyTBLCMenu" Header="TBL (string from TBL loaded)" Click="CopyTBLCMenu_Click" IsEnabled="False"/>

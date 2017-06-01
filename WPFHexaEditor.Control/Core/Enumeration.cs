@@ -42,7 +42,8 @@ namespace WPFHexaEditor.Core
         CSharpCode,
         VBNetCode,
         JavaCode,
-        CCode
+        CCode,
+        FSharp
     }
 
     /// <summary>
@@ -52,7 +53,8 @@ namespace WPFHexaEditor.Core
     {
         C,
         CSharp,
-        Java
+        Java,
+        FSharp
     }
 
     /// <summary>

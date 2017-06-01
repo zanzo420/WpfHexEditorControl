@@ -714,6 +714,9 @@ namespace WPFHexaEditor.Core.Bytes
                 case CopyPasteMode.JavaCode:
                     CopyToClipboard_CStyle(selectionStart, selectionStop, copyChange, da, CStyleLanguage.Java);
                     break;
+                case CopyPasteMode.FSharp:
+                    CopyToClipboard_CStyle(selectionStart, selectionStop, copyChange, da, CStyleLanguage.FSharp);
+                    break;
                 case CopyPasteMode.VBNetCode:
                     CopyToClipboard_VBNet(selectionStart, selectionStop, copyChange, da);
                     break;
@@ -739,6 +742,8 @@ namespace WPFHexaEditor.Core.Bytes
             byte[] buffer = GetCopyData(selectionStart, selectionStop, copyChange);
             int i = 0;
             long lenght = 0;
+            string delimiter = language == CStyleLanguage.FSharp ? ";" : ",";
+
             StringBuilder sb = new StringBuilder();
 
             if (selectionStop > selectionStart)
@@ -746,7 +751,11 @@ namespace WPFHexaEditor.Core.Bytes
             else
                 lenght = selectionStart - selectionStop;
 
-            sb.Append($"/* {FileName} ({DateTime.Now.ToString()}), \r\n StartPosition: 0x{ByteConverters.LongToHex(selectionStart)}, StopPosition: 0x{ByteConverters.LongToHex(selectionStop)}, Lenght: 0x{ByteConverters.LongToHex(lenght)} */");
+            if (language != CStyleLanguage.FSharp)
+                sb.Append($"/* {FileName} ({DateTime.Now.ToString()}), \r\n StartPosition: 0x{ByteConverters.LongToHex(selectionStart)}, StopPosition: 0x{ByteConverters.LongToHex(selectionStop)}, Lenght: 0x{ByteConverters.LongToHex(lenght)} */");
+            else
+                sb.Append($"// {FileName} ({DateTime.Now.ToString()}), \r\n// StartPosition: 0x{ByteConverters.LongToHex(selectionStart)}, StopPosition: 0x{ByteConverters.LongToHex(selectionStop)}, Lenght: 0x{ByteConverters.LongToHex(lenght)}");
+
             sb.AppendLine();
             sb.AppendLine();
 
@@ -761,25 +770,38 @@ namespace WPFHexaEditor.Core.Bytes
                 case CStyleLanguage.C:
                     sb.Append($"unsigned char rawData[{lenght}] ");
                     break;
+                case CStyleLanguage.FSharp:
+                    sb.Append("let bytes = [|");
+                    break;
             }
 
-
             sb.AppendLine();
-            sb.Append("\t");
+
+            if (language != CStyleLanguage.FSharp)
+                sb.Append("\t");
+            else
+                sb.Append("    ");
+
             foreach (byte b in buffer)
             {
                 i++;
                 if (language == CStyleLanguage.Java) sb.Append("(byte)");
-                sb.Append($"0x{ByteConverters.ByteToHex(b)}, ");
+                sb.Append($"0x{ByteConverters.ByteToHex(b)}{delimiter} ");
                 if (i == (language == CStyleLanguage.Java ? 6:12))
                 {
                     i = 0;
                     sb.AppendLine();
-                    sb.Append("\t");
+                    if (language != CStyleLanguage.FSharp)
+                        sb.Append("\t");
+                    else
+                        sb.Append("    ");
                 }
             }
             sb.AppendLine();
-            sb.Append("};");
+            if (language != CStyleLanguage.FSharp)
+                sb.Append("};");
+            else
+                sb.Append("|]");
 
             da.SetText(sb.ToString(), TextDataFormat.Text);
         }

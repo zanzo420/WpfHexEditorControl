@@ -2819,7 +2819,12 @@ namespace WPFHexaEditor.Control
         {
             CopyToClipboard(CopyPasteMode.CSharpCode);
         }
-        
+
+        private void CopyFSharpCMenu_Click(object sender, RoutedEventArgs e)
+        {
+            CopyToClipboard(CopyPasteMode.FSharp);
+        }
+
         private void CopyVBNetCMenu_Click(object sender, RoutedEventArgs e)
         {
             CopyToClipboard(CopyPasteMode.VBNetCode);

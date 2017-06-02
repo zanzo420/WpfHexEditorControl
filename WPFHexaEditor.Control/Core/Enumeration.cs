@@ -49,12 +49,13 @@ namespace WPFHexaEditor.Core
     /// <summary>
     /// Used with Copy to code fonction for language are similar to C.
     /// </summary>
-    internal enum CStyleLanguage
+    internal enum CLanguage
     {
         C,
         CSharp,
         Java,
-        FSharp
+        FSharp,
+        VBNET
     }
 
     /// <summary>

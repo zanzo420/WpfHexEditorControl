@@ -706,19 +706,19 @@ namespace WPFHexaEditor.Core.Bytes
                     throw new NotImplementedException();
 
                 case CopyPasteMode.CSharpCode:
-                    CopyToClipboard_CStyle(selectionStart, selectionStop, copyChange, da, CStyleLanguage.CSharp);
+                    CopyToClipboard_Language(selectionStart, selectionStop, copyChange, da, CLanguage.CSharp);
                     break;
                 case CopyPasteMode.CCode:
-                    CopyToClipboard_CStyle(selectionStart, selectionStop, copyChange, da, CStyleLanguage.C);
+                    CopyToClipboard_Language(selectionStart, selectionStop, copyChange, da, CLanguage.C);
                     break;
                 case CopyPasteMode.JavaCode:
-                    CopyToClipboard_CStyle(selectionStart, selectionStop, copyChange, da, CStyleLanguage.Java);
+                    CopyToClipboard_Language(selectionStart, selectionStop, copyChange, da, CLanguage.Java);
                     break;
                 case CopyPasteMode.FSharp:
-                    CopyToClipboard_CStyle(selectionStart, selectionStop, copyChange, da, CStyleLanguage.FSharp);
+                    CopyToClipboard_Language(selectionStart, selectionStop, copyChange, da, CLanguage.FSharp);
                     break;
                 case CopyPasteMode.VBNetCode:
-                    CopyToClipboard_VBNet(selectionStart, selectionStop, copyChange, da);
+                    CopyToClipboard_Language(selectionStart, selectionStop, copyChange, da, CLanguage.VBNET);
                     break;
             }
 
@@ -732,9 +732,9 @@ namespace WPFHexaEditor.Core.Bytes
         }
 
         /// <summary>
-        /// Copy selection of to clipboard in C# code format 
+        /// Copy selection to clipboard in code block
         /// </summary>
-        private void CopyToClipboard_CStyle(long selectionStart, long selectionStop, bool copyChange, DataObject da, CStyleLanguage language)
+        private void CopyToClipboard_Language(long selectionStart, long selectionStop, bool copyChange, DataObject da, CLanguage language)
         {
             if (!CanCopy(selectionStart, selectionStop)) return;
 
@@ -742,7 +742,7 @@ namespace WPFHexaEditor.Core.Bytes
             byte[] buffer = GetCopyData(selectionStart, selectionStop, copyChange);
             int i = 0;
             long lenght = 0;
-            string delimiter = language == CStyleLanguage.FSharp ? ";" : ",";
+            string delimiter = language == CLanguage.FSharp ? ";" : ",";
 
             StringBuilder sb = new StringBuilder();
 
@@ -751,109 +751,109 @@ namespace WPFHexaEditor.Core.Bytes
             else
                 lenght = selectionStart - selectionStop;
 
-            if (language != CStyleLanguage.FSharp)
-                sb.Append($"/* {FileName} ({DateTime.Now.ToString()}), \r\n StartPosition: 0x{ByteConverters.LongToHex(selectionStart)}, StopPosition: 0x{ByteConverters.LongToHex(selectionStop)}, Lenght: 0x{ByteConverters.LongToHex(lenght)} */");
-            else
-                sb.Append($"// {FileName} ({DateTime.Now.ToString()}), \r\n// StartPosition: 0x{ByteConverters.LongToHex(selectionStart)}, StopPosition: 0x{ByteConverters.LongToHex(selectionStop)}, Lenght: 0x{ByteConverters.LongToHex(lenght)}");
+            switch (language )
+            {
+                case CLanguage.C:
+                case CLanguage.CSharp:
+                case CLanguage.Java:
+                    sb.Append($"/* {FileName} ({DateTime.Now.ToString()}), \r\n StartPosition: 0x{ByteConverters.LongToHex(selectionStart)}, StopPosition: 0x{ByteConverters.LongToHex(selectionStop)}, Lenght: 0x{ByteConverters.LongToHex(lenght)} */");
+                    break;
+                case CLanguage.VBNET:
+                    sb.Append($"' {FileName} ({DateTime.Now.ToString()}), \r\n' StartPosition: &H{ByteConverters.LongToHex(selectionStart)}, StopPosition: &H{ByteConverters.LongToHex(selectionStop)}, Lenght: &H{ByteConverters.LongToHex(lenght)}");
+                    break;
+                case CLanguage.FSharp:
+                    sb.Append($"// {FileName} ({DateTime.Now.ToString()}), \r\n// StartPosition: 0x{ByteConverters.LongToHex(selectionStart)}, StopPosition: 0x{ByteConverters.LongToHex(selectionStop)}, Lenght: 0x{ByteConverters.LongToHex(lenght)}");
+                    break;
+            }                
 
             sb.AppendLine();
             sb.AppendLine();
-
-            //TODO : integrate VB.NET and change function name to CopyToClipboard_Language and enum CStyleLanguage to CodeLanguage
-            //TODO : Add this... sample
-            //string sData = "½D'è×..ísü.;.×ÄÀß0Ij..à."
-            //string sDataHexa = "bd 44 27 e8 d7 84 1e" 
-
+            
             switch (language)
             {
-                case CStyleLanguage.CSharp:
+                case CLanguage.CSharp:
+                    sb.Append($"string sData =\"{ByteConverters.BytesToString(buffer)}\";");
+                    sb.AppendLine();
+                    sb.Append($"string sDataHex =\"{ByteConverters.StringToHex(ByteConverters.BytesToString(buffer))}\";");
+                    sb.AppendLine();
+                    sb.AppendLine();
                     sb.Append("byte[] rawData = {");
+                    sb.AppendLine();
+                    sb.Append("\t");
                     break;
-                case CStyleLanguage.Java:
+                case CLanguage.Java:
+                    sb.Append($"String sData =\"{ByteConverters.BytesToString(buffer)}\";");
+                    sb.AppendLine();
+                    sb.Append($"String sDataHex =\"{ByteConverters.StringToHex(ByteConverters.BytesToString(buffer))}\";");
+                    sb.AppendLine();
+                    sb.AppendLine();
                     sb.Append("byte rawData[] = {");
+                    sb.AppendLine();
+                    sb.Append("\t");
                     break;
-                case CStyleLanguage.C:
+                case CLanguage.C:
+                    sb.Append($"char sData[] =\"{ByteConverters.BytesToString(buffer)}\";");
+                    sb.AppendLine();
+                    sb.Append($"char sDataHex[] =\"{ByteConverters.StringToHex(ByteConverters.BytesToString(buffer))}\";");
+                    sb.AppendLine();
+                    sb.AppendLine();
                     sb.Append($"unsigned char rawData[{lenght}] ");
+                    sb.AppendLine();
+                    sb.Append("\t");
                     break;
-                case CStyleLanguage.FSharp:
+                case CLanguage.FSharp:
+                    sb.Append($"let sData = @\"{ByteConverters.BytesToString(buffer)}\";");
+                    sb.AppendLine();
+                    sb.Append($"let sDataHex = @\"{ByteConverters.StringToHex(ByteConverters.BytesToString(buffer))}\";");
+                    sb.AppendLine();
+                    sb.AppendLine();
                     sb.Append("let bytes = [|");
+                    sb.AppendLine();
+                    sb.Append("    ");
+                    break;
+                case CLanguage.VBNET:
+                    sb.Append($"Dim sData as String =\"{ByteConverters.BytesToString(buffer)}\";");
+                    sb.AppendLine();
+                    sb.Append($"Dim sDataHex as String =\"{ByteConverters.StringToHex(ByteConverters.BytesToString(buffer))}\";");
+                    sb.AppendLine();
+                    sb.AppendLine();
+                    sb.Append("Dim rawData As Byte() = { _");
+                    sb.AppendLine();
+                    sb.Append("\t");
                     break;
             }
-
-            sb.AppendLine();
-
-            if (language != CStyleLanguage.FSharp)
-                sb.Append("\t");
-            else
-                sb.Append("    ");
-
+            
             foreach (byte b in buffer)
             {
                 i++;
-                if (language == CStyleLanguage.Java) sb.Append("(byte)");
-                sb.Append($"0x{ByteConverters.ByteToHex(b)}{delimiter} ");
-                if (i == (language == CStyleLanguage.Java ? 6:12))
+                if (language == CLanguage.Java) sb.Append("(byte)");
+                
+                if (language == CLanguage.VBNET)
+                    sb.Append($"&H{ByteConverters.ByteToHex(b)}, ");
+                else
+                    sb.Append($"0x{ByteConverters.ByteToHex(b)}{delimiter} ");
+
+                if (i == (language == CLanguage.Java ? 6:12))
                 {
                     i = 0;
+                    if (language == CLanguage.VBNET) sb.Append("_");
                     sb.AppendLine();
-                    if (language != CStyleLanguage.FSharp)
+                    if (language != CLanguage.FSharp)
                         sb.Append("\t");
                     else
                         sb.Append("    ");
                 }
             }
+            if (language == CLanguage.VBNET) sb.Append("_");
             sb.AppendLine();
-            if (language != CStyleLanguage.FSharp)
+            if (language != CLanguage.FSharp)
                 sb.Append("};");
             else
                 sb.Append("|]");
 
             da.SetText(sb.ToString(), TextDataFormat.Text);
         }
-
-        /// <summary>
-        /// Copy selection of to clipboard in C# code format 
-        /// </summary>
-        private void CopyToClipboard_VBNet(long selectionStart, long selectionStop, bool copyChange, DataObject da)
-        {
-            if (!CanCopy(selectionStart, selectionStop)) return;
-
-            //Variables
-            byte[] buffer = GetCopyData(selectionStart, selectionStop, copyChange);
-            int i = 0;
-            long lenght = 0;
-            StringBuilder sb = new StringBuilder();
-
-            if (selectionStop > selectionStart)
-                lenght = selectionStop - selectionStart;
-            else
-                lenght = selectionStart - selectionStop;
-
-            sb.Append($"' {FileName} ({DateTime.Now.ToString()}), \r\n' StartPosition: &H{ByteConverters.LongToHex(selectionStart)}, StopPosition: &H{ByteConverters.LongToHex(selectionStop)}, Lenght: &H{ByteConverters.LongToHex(lenght)}");
-            sb.AppendLine();
-            sb.AppendLine();
-            sb.Append("Dim rawData As Byte() = { _");
-            sb.AppendLine();
-            sb.Append("\t");
-            foreach (byte b in buffer)
-            {
-                i++;
-                sb.Append($"&H{ByteConverters.ByteToHex(b)}, ");
-                if (i == 12)
-                {
-                    i = 0;
-                    sb.Append("_");
-                    sb.AppendLine();
-                    sb.Append("\t");
-                }
-            }
-            sb.Append("_");
-            sb.AppendLine();
-            sb.Append("}");
-
-            da.SetText(sb.ToString(), TextDataFormat.Text);
-        }
-
+        
         /// <summary>
         /// Copy selection of byte to a stream
         /// </summary>

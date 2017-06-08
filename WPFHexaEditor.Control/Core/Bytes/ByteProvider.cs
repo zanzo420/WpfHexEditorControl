@@ -706,19 +706,19 @@ namespace WPFHexaEditor.Core.Bytes
                     throw new NotImplementedException();
 
                 case CopyPasteMode.CSharpCode:
-                    CopyToClipboard_Language(selectionStart, selectionStop, copyChange, da, CLanguage.CSharp);
+                    CopyToClipboard_Language(selectionStart, selectionStop, copyChange, da, CodeLanguage.CSharp);
                     break;
                 case CopyPasteMode.CCode:
-                    CopyToClipboard_Language(selectionStart, selectionStop, copyChange, da, CLanguage.C);
+                    CopyToClipboard_Language(selectionStart, selectionStop, copyChange, da, CodeLanguage.C);
                     break;
                 case CopyPasteMode.JavaCode:
-                    CopyToClipboard_Language(selectionStart, selectionStop, copyChange, da, CLanguage.Java);
+                    CopyToClipboard_Language(selectionStart, selectionStop, copyChange, da, CodeLanguage.Java);
                     break;
                 case CopyPasteMode.FSharp:
-                    CopyToClipboard_Language(selectionStart, selectionStop, copyChange, da, CLanguage.FSharp);
+                    CopyToClipboard_Language(selectionStart, selectionStop, copyChange, da, CodeLanguage.FSharp);
                     break;
                 case CopyPasteMode.VBNetCode:
-                    CopyToClipboard_Language(selectionStart, selectionStop, copyChange, da, CLanguage.VBNET);
+                    CopyToClipboard_Language(selectionStart, selectionStop, copyChange, da, CodeLanguage.VBNET);
                     break;
             }
 
@@ -734,7 +734,7 @@ namespace WPFHexaEditor.Core.Bytes
         /// <summary>
         /// Copy selection to clipboard in code block
         /// </summary>
-        private void CopyToClipboard_Language(long selectionStart, long selectionStop, bool copyChange, DataObject da, CLanguage language)
+        private void CopyToClipboard_Language(long selectionStart, long selectionStop, bool copyChange, DataObject da, CodeLanguage language)
         {
             if (!CanCopy(selectionStart, selectionStop)) return;
 
@@ -742,26 +742,26 @@ namespace WPFHexaEditor.Core.Bytes
             byte[] buffer = GetCopyData(selectionStart, selectionStop, copyChange);
             int i = 0;
             long lenght = 0;
-            string delimiter = language == CLanguage.FSharp ? ";" : ",";
+            string delimiter = language == CodeLanguage.FSharp ? ";" : ",";
 
             StringBuilder sb = new StringBuilder();
 
             if (selectionStop > selectionStart)
-                lenght = selectionStop - selectionStart;
+                lenght = selectionStop - selectionStart + 1;
             else
-                lenght = selectionStart - selectionStop;
+                lenght = selectionStart - selectionStop + 1;
 
             switch (language )
             {
-                case CLanguage.C:
-                case CLanguage.CSharp:
-                case CLanguage.Java:
+                case CodeLanguage.C:
+                case CodeLanguage.CSharp:
+                case CodeLanguage.Java:
                     sb.Append($"/* {FileName} ({DateTime.Now.ToString()}), \r\n StartPosition: 0x{ByteConverters.LongToHex(selectionStart)}, StopPosition: 0x{ByteConverters.LongToHex(selectionStop)}, Lenght: 0x{ByteConverters.LongToHex(lenght)} */");
                     break;
-                case CLanguage.VBNET:
+                case CodeLanguage.VBNET:
                     sb.Append($"' {FileName} ({DateTime.Now.ToString()}), \r\n' StartPosition: &H{ByteConverters.LongToHex(selectionStart)}, StopPosition: &H{ByteConverters.LongToHex(selectionStop)}, Lenght: &H{ByteConverters.LongToHex(lenght)}");
                     break;
-                case CLanguage.FSharp:
+                case CodeLanguage.FSharp:
                     sb.Append($"// {FileName} ({DateTime.Now.ToString()}), \r\n// StartPosition: 0x{ByteConverters.LongToHex(selectionStart)}, StopPosition: 0x{ByteConverters.LongToHex(selectionStop)}, Lenght: 0x{ByteConverters.LongToHex(lenght)}");
                     break;
             }                
@@ -771,7 +771,7 @@ namespace WPFHexaEditor.Core.Bytes
             
             switch (language)
             {
-                case CLanguage.CSharp:
+                case CodeLanguage.CSharp:
                     sb.Append($"string sData =\"{ByteConverters.BytesToString(buffer)}\";");
                     sb.AppendLine();
                     sb.Append($"string sDataHex =\"{ByteConverters.StringToHex(ByteConverters.BytesToString(buffer))}\";");
@@ -781,7 +781,7 @@ namespace WPFHexaEditor.Core.Bytes
                     sb.AppendLine();
                     sb.Append("\t");
                     break;
-                case CLanguage.Java:
+                case CodeLanguage.Java:
                     sb.Append($"String sData =\"{ByteConverters.BytesToString(buffer)}\";");
                     sb.AppendLine();
                     sb.Append($"String sDataHex =\"{ByteConverters.StringToHex(ByteConverters.BytesToString(buffer))}\";");
@@ -791,7 +791,7 @@ namespace WPFHexaEditor.Core.Bytes
                     sb.AppendLine();
                     sb.Append("\t");
                     break;
-                case CLanguage.C:
+                case CodeLanguage.C:
                     sb.Append($"char sData[] =\"{ByteConverters.BytesToString(buffer)}\";");
                     sb.AppendLine();
                     sb.Append($"char sDataHex[] =\"{ByteConverters.StringToHex(ByteConverters.BytesToString(buffer))}\";");
@@ -801,7 +801,7 @@ namespace WPFHexaEditor.Core.Bytes
                     sb.AppendLine();
                     sb.Append("\t");
                     break;
-                case CLanguage.FSharp:
+                case CodeLanguage.FSharp:
                     sb.Append($"let sData = @\"{ByteConverters.BytesToString(buffer)}\";");
                     sb.AppendLine();
                     sb.Append($"let sDataHex = @\"{ByteConverters.StringToHex(ByteConverters.BytesToString(buffer))}\";");
@@ -811,7 +811,7 @@ namespace WPFHexaEditor.Core.Bytes
                     sb.AppendLine();
                     sb.Append("    ");
                     break;
-                case CLanguage.VBNET:
+                case CodeLanguage.VBNET:
                     sb.Append($"Dim sData as String =\"{ByteConverters.BytesToString(buffer)}\";");
                     sb.AppendLine();
                     sb.Append($"Dim sDataHex as String =\"{ByteConverters.StringToHex(ByteConverters.BytesToString(buffer))}\";");
@@ -826,27 +826,27 @@ namespace WPFHexaEditor.Core.Bytes
             foreach (byte b in buffer)
             {
                 i++;
-                if (language == CLanguage.Java) sb.Append("(byte)");
+                if (language == CodeLanguage.Java) sb.Append("(byte)");
                 
-                if (language == CLanguage.VBNET)
+                if (language == CodeLanguage.VBNET)
                     sb.Append($"&H{ByteConverters.ByteToHex(b)}, ");
                 else
                     sb.Append($"0x{ByteConverters.ByteToHex(b)}{delimiter} ");
 
-                if (i == (language == CLanguage.Java ? 6:12))
+                if (i == (language == CodeLanguage.Java ? 6:12))
                 {
                     i = 0;
-                    if (language == CLanguage.VBNET) sb.Append("_");
+                    if (language == CodeLanguage.VBNET) sb.Append("_");
                     sb.AppendLine();
-                    if (language != CLanguage.FSharp)
+                    if (language != CodeLanguage.FSharp)
                         sb.Append("\t");
                     else
                         sb.Append("    ");
                 }
             }
-            if (language == CLanguage.VBNET) sb.Append("_");
+            if (language == CodeLanguage.VBNET) sb.Append("_");
             sb.AppendLine();
-            if (language != CLanguage.FSharp)
+            if (language != CodeLanguage.FSharp)
                 sb.Append("};");
             else
                 sb.Append("|]");

@@ -2775,8 +2775,8 @@ namespace WPFHexaEditor.Control
                 _rightClickBytePosition = ctrl.BytePositionInFile;
 
             //update ctrl
+            CopyAsCMenu.IsEnabled = false;
             CopyASCIICMenu.IsEnabled = false;
-            CopyCSharpCMenu.IsEnabled = false;
             FindAllCMenu.IsEnabled = false;
             CopyHexaCMenu.IsEnabled = false;
             UndoCMenu.IsEnabled = false;
@@ -2786,7 +2786,7 @@ namespace WPFHexaEditor.Control
             if (SelectionLenght > 0)
             {
                 CopyASCIICMenu.IsEnabled = true;
-                CopyCSharpCMenu.IsEnabled = true;
+                CopyAsCMenu.IsEnabled = true;
                 FindAllCMenu.IsEnabled = true;
                 CopyHexaCMenu.IsEnabled = true;
                 DeleteCMenu.IsEnabled = true;

@@ -90,7 +90,7 @@
                 </MenuItem>
             </Menu>
 
-            <Control:HexaEditor x:Name="HexEdit" Width="Auto" Height="Auto" Margin="10,20,10,10" />
+            <Control:HexaEditor x:Name="HexEdit" Width="Auto" Height="Auto" Margin="10,20,10,10" isAllowContextMenu="False" />
         </DockPanel>
     </Grid>
 </Window>

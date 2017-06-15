@@ -1078,8 +1078,6 @@ namespace WPFHexaEditor.Control
                 VerticalScrollBar.Value = GetLineNumber(position);
             else
                 VerticalScrollBar.Value = 0;
-
-            //RefreshView(true);
         }
 
         /// <summary>
@@ -1646,6 +1644,7 @@ namespace WPFHexaEditor.Control
         private void VerticalScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             RefreshView(false);
+            Debug.WriteLine($"Progressbar value : {VerticalScrollBar.Value}");
         }
 
         /// <summary>
@@ -1685,14 +1684,14 @@ namespace WPFHexaEditor.Control
         {
             UpdateLinesInfo();
             //UpdateVerticalScroll();
-            //UpdateHexHeader();
 
             if (RefreshData)
             {
                 UpdateStringDataViewer(ControlResize);
-                UpdateDataViewer(ControlResize);
+                UpdateDataViewer(ControlResize);                
             }
 
+            //Update visual of byte
             UpdateByteModified();
             UpdateSelection();
             UpdateHighLightByte();
@@ -1701,7 +1700,10 @@ namespace WPFHexaEditor.Control
             CheckProviderIsOnProgress();
 
             if (ControlResize)
+            {
                 UpdateScrollMarkerPosition();
+                UpdateHexHeader();
+            }
         }
 
         /// <summary>

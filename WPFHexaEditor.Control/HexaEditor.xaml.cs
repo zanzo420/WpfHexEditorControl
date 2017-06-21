@@ -1636,9 +1636,8 @@ namespace WPFHexaEditor.Control
         {
             //TODO: PREVENT CHANGE ONLY FOR NEW LINE HEIGHT
 
-            if (e.NewSize.Height > e.PreviousSize.Height ||
-                e.NewSize.Height < e.PreviousSize.Height)
-                RefreshView(true);
+            if (e.HeightChanged) RefreshView(true);
+
         }
 
         private void VerticalScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)

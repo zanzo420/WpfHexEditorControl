@@ -114,6 +114,21 @@ namespace WPFHexaEditor.Control
         }
 
         /// <summary>
+        /// Load TBL Character table file in control. (Used for ROM reverse engineering)
+        /// Load TBL Bookmark into control.
+        /// Change CharacterTable property for use.
+        /// </summary>
+        public void LoadDefaultTBL(DefaultCharacterTableType type = DefaultCharacterTableType.ASCII)
+        {
+            _TBLCharacterTable = TBLStream.CreateDefaultASCII();
+
+            TBLLabel.Visibility = Visibility.Visible;
+            TBLLabel.ToolTip = $"Default TBL : {type}";
+
+            RefreshView();
+        }
+
+        /// <summary>
         /// Update TBL bookmark in control
         /// </summary>
         private void UpdateTBLBookMark()

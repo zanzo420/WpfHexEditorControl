@@ -49,6 +49,16 @@ namespace WPFHexaEditor.Core.CharacterTable
                 throw new FileNotFoundException();
         }
 
+        /// <summary>
+        /// Constructeur permétant de chargé le fichier DTE
+        /// </summary>
+        /// <param name="FileName"></param>
+        public TBLStream()
+        {
+            _DTEList.Clear();
+            _FileName = "";
+        }
+
         #endregion Constructeurs
 
         #region Indexer
@@ -419,7 +429,7 @@ namespace WPFHexaEditor.Core.CharacterTable
 
         /// <summary>
         /// Chemin d'acces au fichier (path)
-        /// La fonction load doit etre appeler pour rafaichir la fonction
+        /// La fonction load doit etre appeler pour rafraichir la fonction
         /// </summary>
         [ReadOnly(true)]
         public string FileName
@@ -561,5 +571,25 @@ namespace WPFHexaEditor.Core.CharacterTable
         }
 
         #endregion Propriétés
+
+        #region Build default TBL
+        public static TBLStream CreateDefaultASCII(DefaultCharacterTableType type = DefaultCharacterTableType.ASCII)
+        {
+            TBLStream tbl = new TBLStream();
+
+            switch (type)
+            {
+                case DefaultCharacterTableType.ASCII:
+                    for (byte i = 0; i < 255; i++)
+                    {
+                        DTE dte = new DTE(ByteConverters.ByteToHex(i), $"{ByteConverters.ByteToChar(i)}");
+                        tbl.Add(dte);
+                    }
+                    break;
+            }
+
+            return tbl;
+        }
+        #endregion
     }
 }

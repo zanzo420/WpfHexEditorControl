@@ -20,4 +20,10 @@ namespace WPFHexaEditor.Core.CharacterTable
         EndLine,
         EndBlock
     }
+
+    public enum DefaultCharacterTableType
+    {
+        ASCII
+        //ADD OTHERTYPE...
+    }
 }

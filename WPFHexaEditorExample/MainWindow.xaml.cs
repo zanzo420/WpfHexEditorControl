@@ -237,6 +237,7 @@ namespace WPFHexaEditorExample
             HexEdit.TypeOfCharacterTable = CharacterTableType.ASCII;
             CTableASCIIButton.IsChecked = true;
             CTableTBLButton.IsChecked = false;
+            CTableTBLDefaultASCIIButton.IsChecked = false;
         }
 
         private void CTableTBLButton_Click(object sender, RoutedEventArgs e)
@@ -253,12 +254,26 @@ namespace WPFHexaEditorExample
                     HexEdit.TypeOfCharacterTable = CharacterTableType.TBLFile;
                     CTableASCIIButton.IsChecked = false;
                     CTableTBLButton.IsChecked = true;
+                    CTableTBLDefaultASCIIButton.IsChecked = false;
 
                     Application.Current.MainWindow.Cursor = null;
                 }
                 //else
                 //    MessageBox.Show("File not found!", Settings.Default.ApplicationName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void CTableTBLDefaultASCIIButton_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.MainWindow.Cursor = Cursors.Wait;
+
+            HexEdit.TypeOfCharacterTable = CharacterTableType.TBLFile;
+            HexEdit.LoadDefaultTBL(WPFHexaEditor.Core.CharacterTable.DefaultCharacterTableType.ASCII);
+            CTableASCIIButton.IsChecked = false;
+            CTableTBLButton.IsChecked = false;
+            CTableTBLDefaultASCIIButton.IsChecked = true;
+
+            Application.Current.MainWindow.Cursor = null;
         }
     }
 }

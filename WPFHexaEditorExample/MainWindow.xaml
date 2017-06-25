@@ -58,6 +58,7 @@
                     <MenuItem Header="CharacterTable">
                         <MenuItem x:Name="CTableASCIIButton" IsCheckable="True" IsChecked="True" Header="ASCII" Click="CTableASCIIButton_Click" />
                         <MenuItem x:Name="CTableTBLButton" IsCheckable="True" Header="Load TBL file" Click="CTableTBLButton_Click" />
+                        <MenuItem x:Name="CTableTBLDefaultASCIIButton" IsCheckable="True" Header="Load Build-in TBL : ASCII" Click="CTableTBLDefaultASCIIButton_Click" />
                     </MenuItem>
                 </MenuItem>
                 <MenuItem x:Name="PositionMenu" Header="Position">

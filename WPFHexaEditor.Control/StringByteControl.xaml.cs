@@ -252,6 +252,28 @@ namespace WPFHexaEditor.Control
         #region Characters tables
 
         /// <summary>
+        /// Show or not Multi Title Enconding (MTE) are loaded in TBL file
+        /// </summary>
+        public bool TBL_ShowMTE
+        {
+            get { return (bool)GetValue(TBL_ShowMTEProperty); }
+            set { SetValue(TBL_ShowMTEProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for TBL_ShowMTE.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty TBL_ShowMTEProperty =
+            DependencyProperty.Register("TBL_ShowMTE", typeof(bool), typeof(StringByteControl), 
+                new FrameworkPropertyMetadata(true, 
+                    new PropertyChangedCallback(TBL_ShowMTE_PropetyChanged)));
+
+        private static void TBL_ShowMTE_PropetyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            StringByteControl ctrl = d as StringByteControl;
+
+            ctrl.UpdateLabelFromByte();
+        }
+
+        /// <summary>
         /// Type of caracter table are used un hexacontrol.
         /// For now, somes character table can be readonly but will change in future
         /// </summary>
@@ -392,11 +414,12 @@ namespace WPFHexaEditor.Control
                         {
                             string content = "#";
 
-                            if (ByteNext.HasValue)
-                            {
-                                string MTE = (ByteConverters.ByteToHex(Byte.Value) + ByteConverters.ByteToHex(ByteNext.Value)).ToUpper();
-                                content = _TBLCharacterTable.FindTBLMatch(MTE, true);
-                            }
+                            if (TBL_ShowMTE)
+                                if (ByteNext.HasValue)
+                                {
+                                    string MTE = (ByteConverters.ByteToHex(Byte.Value) + ByteConverters.ByteToHex(ByteNext.Value)).ToUpper();
+                                    content = _TBLCharacterTable.FindTBLMatch(MTE, true);
+                                }
 
                             if (content == "#")
                                 content = _TBLCharacterTable.FindTBLMatch(ByteConverters.ByteToHex(Byte.Value).ToUpper().ToUpper(), true);

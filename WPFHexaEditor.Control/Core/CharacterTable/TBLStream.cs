@@ -582,7 +582,7 @@ namespace WPFHexaEditor.Core.CharacterTable
                 case DefaultCharacterTableType.ASCII:
                     for (byte i = 0; i < 255; i++)
                     {
-                        DTE dte = new DTE(ByteConverters.ByteToHex(i), $"{ByteConverters.ByteToChar(i)}");
+                        DTE dte = new DTE(ByteConverters.ByteToHex(i).ToUpper(), $"{ByteConverters.ByteToChar(i)}");
                         tbl.Add(dte);
                     }
                     break;

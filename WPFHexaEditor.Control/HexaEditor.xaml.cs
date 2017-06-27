@@ -95,6 +95,28 @@ namespace WPFHexaEditor.Control
         }
 
         /// <summary>
+        /// Show or not Multi Title Enconding (MTE) are loaded in TBL file
+        /// </summary>
+        public bool TBL_ShowMTE
+        {
+            get { return (bool)GetValue(TBL_ShowMTEProperty); }
+            set { SetValue(TBL_ShowMTEProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for TBL_ShowMTE.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty TBL_ShowMTEProperty =
+            DependencyProperty.Register("TBL_ShowMTE", typeof(bool), typeof(HexaEditor),
+                new FrameworkPropertyMetadata(true,
+                    new PropertyChangedCallback(TBL_ShowMTE_PropetyChanged)));
+
+        private static void TBL_ShowMTE_PropetyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            HexaEditor ctrl = d as HexaEditor;
+
+            ctrl.RefreshView();
+        }
+
+        /// <summary>
         /// Load TBL Character table file in control. (Used for ROM reverse engineering)
         /// Load TBL Bookmark into control.
         /// Change CharacterTable property for use.
@@ -121,6 +143,7 @@ namespace WPFHexaEditor.Control
         public void LoadDefaultTBL(DefaultCharacterTableType type = DefaultCharacterTableType.ASCII)
         {
             _TBLCharacterTable = TBLStream.CreateDefaultASCII();
+            TBL_ShowMTE = false;
 
             TBLLabel.Visibility = Visibility.Visible;
             TBLLabel.ToolTip = $"Default TBL : {type}";
@@ -1805,6 +1828,7 @@ namespace WPFHexaEditor.Control
 
                             sbCtrl.InternalChange = true;
                             sbCtrl.TBLCharacterTable = _TBLCharacterTable;
+                            sbCtrl.TBL_ShowMTE = TBL_ShowMTE;
                             sbCtrl.TypeOfCharacterTable = TypeOfCharacterTable;
                             sbCtrl.Byte = (byte)_provider.ReadByte();
                             sbCtrl.ByteNext = (byte)_provider.ReadByte();
@@ -1842,6 +1866,7 @@ namespace WPFHexaEditor.Control
 
                                 sbCtrl.InternalChange = true;
                                 sbCtrl.TBLCharacterTable = _TBLCharacterTable;
+                                sbCtrl.TBL_ShowMTE = TBL_ShowMTE;
                                 sbCtrl.TypeOfCharacterTable = TypeOfCharacterTable;
                                 if (_provider.Position >= _provider.Length)
                                 {

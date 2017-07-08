@@ -44,7 +44,7 @@ namespace WPFHexaEditor.Control
 
         public HexaEditor()
         {
-            InitializeComponent();
+            InitializeComponent(); 
 
             //Load default build-in TBL
             TypeOfCharacterTable = CharacterTableType.TBLFile;
@@ -382,19 +382,19 @@ namespace WPFHexaEditor.Control
 
         private void LineInfoLabel_MouseMove(object sender, MouseEventArgs e)
         {
-            Label line = sender as Label;
+            TextBlock line = sender as TextBlock;
 
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                SelectionStop = ByteConverters.HexLiteralToLong(line.Content.ToString()) + BytePerLine - 1;
+                SelectionStop = ByteConverters.HexLiteralToLong(line.Text) + BytePerLine - 1;
             }
         }
 
         private void LineInfoLabel_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            Label line = sender as Label;
+            TextBlock line = sender as TextBlock;
 
-            SelectionStart = ByteConverters.HexLiteralToLong(line.Content.ToString());
+            SelectionStart = ByteConverters.HexLiteralToLong(line.Text);
             SelectionStop = SelectionStart + BytePerLine - 1;
         }
 
@@ -1759,7 +1759,7 @@ namespace WPFHexaEditor.Control
             {
                 case FirstColor.HexByteData:
                     stackIndex = 0;
-                    foreach (Label infolabel in LinesInfoStackPanel.Children)
+                    foreach (TextBlock infolabel in LinesInfoStackPanel.Children)
                     {
                         foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
                             byteControl.HexByteFirstSelected = true;
@@ -1773,7 +1773,7 @@ namespace WPFHexaEditor.Control
 
                 case FirstColor.StringByteData:
                     stackIndex = 0;
-                    foreach (Label infolabel in LinesInfoStackPanel.Children)
+                    foreach (TextBlock infolabel in LinesInfoStackPanel.Children)
                     {
                         foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
                             byteControl.HexByteFirstSelected = false;
@@ -1798,13 +1798,13 @@ namespace WPFHexaEditor.Control
                 {
                     StringDataStackPanel.Children.Clear();
 
-                    foreach (Label infolabel in LinesInfoStackPanel.Children)
+                    foreach (TextBlock infolabel in LinesInfoStackPanel.Children)
                     {
                         StackPanel dataLineStack = new StackPanel();
                         dataLineStack.Height = _lineInfoHeight;
                         dataLineStack.Orientation = Orientation.Horizontal;
 
-                        long position = ByteConverters.HexLiteralToLong(infolabel.Content.ToString());
+                        long position = ByteConverters.HexLiteralToLong(infolabel.Text);
 
                         for (int i = 0; i < BytePerLine; i++)
                         {
@@ -1857,9 +1857,9 @@ namespace WPFHexaEditor.Control
                 else
                 {
                     int stackIndex = 0;
-                    foreach (Label infolabel in LinesInfoStackPanel.Children)
+                    foreach (TextBlock infolabel in LinesInfoStackPanel.Children)
                     {
-                        long position = ByteConverters.HexLiteralToLong(infolabel.Content.ToString());
+                        long position = ByteConverters.HexLiteralToLong(infolabel.Text);
 
                         if (StringDataStackPanel.Children.Count > 0)
                             foreach (StringByteControl sbCtrl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
@@ -1949,7 +1949,7 @@ namespace WPFHexaEditor.Control
         private void UpdateSelection()
         {
             int stackIndex = 0;
-            foreach (Label infolabel in LinesInfoStackPanel.Children)
+            foreach (TextBlock infolabel in LinesInfoStackPanel.Children)
             {
                 if (SelectionStart <= SelectionStop)
                 {
@@ -2017,7 +2017,7 @@ namespace WPFHexaEditor.Control
                 //         where hlb >= GetFirstVisibleBytePosition() + BytePerLine && hlb <= GetLastVisibleBytePosition() + BytePerLine
                 //         select hlb;
 
-                foreach (Label infolabel in LinesInfoStackPanel.Children)
+                foreach (TextBlock infolabel in LinesInfoStackPanel.Children)
                 {
                     //Stringbyte panel
                     foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
@@ -2060,7 +2060,7 @@ namespace WPFHexaEditor.Control
             {
                 stackIndex = 0;
 
-                foreach (Label infolabel in LinesInfoStackPanel.Children)
+                foreach (TextBlock infolabel in LinesInfoStackPanel.Children)
                 {
                     //Stringbyte panel
                     if (StringDataStackPanel.Children.Count > 0)
@@ -2092,13 +2092,13 @@ namespace WPFHexaEditor.Control
                 {
                     HexDataStackPanel.Children.Clear();
 
-                    foreach (Label infolabel in LinesInfoStackPanel.Children)
+                    foreach (TextBlock infolabel in LinesInfoStackPanel.Children)
                     {
                         StackPanel dataLineStack = new StackPanel();
                         dataLineStack.Height = _lineInfoHeight;
                         dataLineStack.Orientation = Orientation.Horizontal;
 
-                        long position = ByteConverters.HexLiteralToLong(infolabel.Content.ToString());
+                        long position = ByteConverters.HexLiteralToLong(infolabel.Text);
 
                         for (int i = 0; i < BytePerLine; i++)
                         {
@@ -2140,9 +2140,9 @@ namespace WPFHexaEditor.Control
                 else
                 {
                     int stackIndex = 0;
-                    foreach (Label infolabel in LinesInfoStackPanel.Children)
+                    foreach (TextBlock infolabel in LinesInfoStackPanel.Children)
                     {
-                        long position = ByteConverters.HexLiteralToLong(infolabel.Content.ToString());
+                        long position = ByteConverters.HexLiteralToLong(infolabel.Text);
 
                         if (HexDataStackPanel.Children.Count > 0)
                             foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
@@ -2193,14 +2193,13 @@ namespace WPFHexaEditor.Control
                 for (int i = 0; i < BytePerLine; i++)
                 {
                     //Create control
-                    Label LineInfoLabel = new Label();
+                    TextBlock LineInfoLabel = new TextBlock();
                     LineInfoLabel.Height = _lineInfoHeight;
                     LineInfoLabel.Padding = new Thickness(0, 0, 10, 0);
                     LineInfoLabel.Foreground = Brushes.Gray;
                     LineInfoLabel.Width = 25;
-                    LineInfoLabel.HorizontalContentAlignment = HorizontalAlignment.Right;
-                    LineInfoLabel.VerticalContentAlignment = VerticalAlignment.Center;
-                    LineInfoLabel.Content = ByteConverters.ByteToHex((byte)i);
+                    LineInfoLabel.TextAlignment = TextAlignment.Center;
+                    LineInfoLabel.Text = ByteConverters.ByteToHex((byte)i);
                     LineInfoLabel.ToolTip = $"Column : {i.ToString()}";
 
                     HexHeaderStackPanel.Children.Add(LineInfoLabel);
@@ -2228,15 +2227,15 @@ namespace WPFHexaEditor.Control
                     if (firstLineByte < _provider.Length)
                     {
                         //Create control
-                        Label LineInfoLabel = new Label();
+                        TextBlock LineInfoLabel = new TextBlock();
                         LineInfoLabel.Height = _lineInfoHeight;
                         LineInfoLabel.Padding = new Thickness(0, 0, 10, 0);
                         LineInfoLabel.Foreground = Brushes.Gray;
                         LineInfoLabel.MouseDown += LineInfoLabel_MouseDown;
                         LineInfoLabel.MouseMove += LineInfoLabel_MouseMove;
-                        LineInfoLabel.HorizontalContentAlignment = HorizontalAlignment.Right;
-                        LineInfoLabel.VerticalContentAlignment = VerticalAlignment.Center;
-                        LineInfoLabel.Content = info;
+                        //LineInfoLabel.HorizontalContentAlignment = HorizontalAlignment.Right;
+                        //LineInfoLabel.VerticalContentAlignment = VerticalAlignment.Center;
+                        LineInfoLabel.Text = info;
                         LineInfoLabel.ToolTip = $"Byte : {firstLineByte.ToString()}";
 
                         LinesInfoStackPanel.Children.Add(LineInfoLabel);
@@ -2258,7 +2257,7 @@ namespace WPFHexaEditor.Control
             if (ByteProvider.CheckIsOpen(_provider))
             {
                 int stackIndex = 0;
-                foreach (Label infolabel in LinesInfoStackPanel.Children)
+                foreach (TextBlock infolabel in LinesInfoStackPanel.Children)
                 {
                     foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
                         return byteControl.BytePositionInFile;
@@ -2279,7 +2278,7 @@ namespace WPFHexaEditor.Control
         public bool GetSelectionStartIsVisible()
         {
             int stackIndex = 0;
-            foreach (Label infolabel in LinesInfoStackPanel.Children)
+            foreach (TextBlock infolabel in LinesInfoStackPanel.Children)
             {
                 if (HexDataStackPanel.Children.Count > 0)
                     foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
@@ -2302,7 +2301,7 @@ namespace WPFHexaEditor.Control
             {
                 int stackIndex = 0;
                 long byteposition = GetFirstVisibleBytePosition();
-                foreach (Label infolabel in LinesInfoStackPanel.Children)
+                foreach (TextBlock infolabel in LinesInfoStackPanel.Children)
                 {
                     foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
                         byteposition++;
@@ -2331,7 +2330,7 @@ namespace WPFHexaEditor.Control
                     return;
 
                 int stackIndex = 0;
-                foreach (Label infolabel in LinesInfoStackPanel.Children)
+                foreach (TextBlock infolabel in LinesInfoStackPanel.Children)
                 {
                     foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
                     {
@@ -2364,7 +2363,7 @@ namespace WPFHexaEditor.Control
                     return;
 
                 int stackIndex = 0;
-                foreach (Label infolabel in LinesInfoStackPanel.Children)
+                foreach (TextBlock infolabel in LinesInfoStackPanel.Children)
                 {
                     foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
                     {

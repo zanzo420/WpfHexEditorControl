@@ -403,7 +403,7 @@ namespace WPFHexaEditor.Control
                 switch (TypeOfCharacterTable)
                 {
                     case CharacterTableType.ASCII:
-                        StringByteLabel.Content = ByteConverters.ByteToChar(Byte.Value);
+                        StringByteLabel.Text = ByteConverters.ByteToChar(Byte.Value).ToString();
                         Width = 12;
                         break;
 
@@ -424,7 +424,7 @@ namespace WPFHexaEditor.Control
                             if (content == "#")
                                 content = _TBLCharacterTable.FindTBLMatch(ByteConverters.ByteToHex(Byte.Value).ToUpper().ToUpper(), true);
 
-                            StringByteLabel.Content = content;
+                            StringByteLabel.Text = content;
 
                             //TODO: CHECK FOR AUTO ADAPT TO CONTENT AND FONTSIZE
                             switch (DTE.TypeDTE(content))
@@ -456,7 +456,7 @@ namespace WPFHexaEditor.Control
                 }
             }
             else
-                StringByteLabel.Content = "";
+                StringByteLabel.Text = "";
         }
 
         private void UpdateHexString()
@@ -519,7 +519,7 @@ namespace WPFHexaEditor.Control
                 StringByteLabel.Foreground = Brushes.Black;
 
                 if (TypeOfCharacterTable == CharacterTableType.TBLFile)
-                    switch (DTE.TypeDTE((string)StringByteLabel.Content))
+                    switch (DTE.TypeDTE(StringByteLabel.Text))
                     {
                         case DTEType.DualTitleEncoding:
                             StringByteLabel.Foreground = TBL_DTEColor;
@@ -650,26 +650,26 @@ namespace WPFHexaEditor.Control
                 {
                     if (Keyboard.Modifiers != ModifierKeys.Shift && e.Key != Key.RightShift && e.Key != Key.LeftShift)
                     {
-                        StringByteLabel.Content = KeyValidator.GetCharFromKey(e.Key); //ByteConverters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key));
+                        StringByteLabel.Text = KeyValidator.GetCharFromKey(e.Key).ToString(); //ByteConverters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key));
                         isok = true;
                     }
                     else if (Keyboard.Modifiers == ModifierKeys.Shift && e.Key != Key.RightShift && e.Key != Key.LeftShift)
                     {
                         isok = true;
-                        StringByteLabel.Content = KeyValidator.GetCharFromKey(e.Key).ToString().ToLower(); //ByteConverters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key)).ToString().ToLower();
+                        StringByteLabel.Text = KeyValidator.GetCharFromKey(e.Key).ToString().ToLower(); //ByteConverters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key)).ToString().ToLower();
                     }
                 }
                 else
                 {
                     if (Keyboard.Modifiers != ModifierKeys.Shift && e.Key != Key.RightShift && e.Key != Key.LeftShift)
                     {
-                        StringByteLabel.Content = KeyValidator.GetCharFromKey(e.Key).ToString().ToLower(); //ByteConverters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key)).ToString().ToLower();
+                        StringByteLabel.Text = KeyValidator.GetCharFromKey(e.Key).ToString().ToLower(); //ByteConverters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key)).ToString().ToLower();
                         isok = true;
                     }
                     else if (Keyboard.Modifiers == ModifierKeys.Shift && e.Key != Key.RightShift && e.Key != Key.LeftShift)
                     {
                         isok = true;
-                        StringByteLabel.Content = KeyValidator.GetCharFromKey(e.Key); //ByteConverters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key));
+                        StringByteLabel.Text = KeyValidator.GetCharFromKey(e.Key).ToString(); //ByteConverters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key));
                     }
                 }
 
@@ -678,7 +678,7 @@ namespace WPFHexaEditor.Control
                     if (MoveNext != null)
                     {
                         Action = ByteAction.Modified;
-                        Byte = ByteConverters.CharToByte(StringByteLabel.Content.ToString()[0]);
+                        Byte = ByteConverters.CharToByte(StringByteLabel.Text.ToString()[0]);
 
                         MoveNext(this, new EventArgs());
                     }

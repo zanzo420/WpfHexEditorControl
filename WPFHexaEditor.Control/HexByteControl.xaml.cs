@@ -292,13 +292,13 @@ namespace WPFHexaEditor.Control
             {
                 string hexabyte = ByteConverters.ByteToHex(Byte.Value);
 
-                FirstHexChar.Content = hexabyte.Substring(0, 1);
-                SecondHexChar.Content = hexabyte.Substring(1, 1);
+                FirstHexChar.Text = hexabyte.Substring(0, 1);
+                SecondHexChar.Text = hexabyte.Substring(1, 1);
             }
             else
             {
-                FirstHexChar.Content = "";
-                SecondHexChar.Content = "";
+                FirstHexChar.Text = "";
+                SecondHexChar.Text = "";
             }
         }
 
@@ -407,18 +407,17 @@ namespace WPFHexaEditor.Control
                     switch (_keyDownLabel)
                     {
                         case KeyDownLabel.FirstChar:
-                            FirstHexChar.Content = key;
+                            FirstHexChar.Text = key;
                             _keyDownLabel = KeyDownLabel.SecondChar;
                             Action = ByteAction.Modified;
-                            Byte = ByteConverters.HexToByte(FirstHexChar.Content.ToString() + SecondHexChar.Content.ToString())[0];
+                            Byte = ByteConverters.HexToByte(FirstHexChar.Text.ToString() + SecondHexChar.Text.ToString())[0];
                             break;
-
                         case KeyDownLabel.SecondChar:
-                            SecondHexChar.Content = key;
+                            SecondHexChar.Text = key;
                             _keyDownLabel = KeyDownLabel.NextPosition;
 
                             Action = ByteAction.Modified;
-                            Byte = ByteConverters.HexToByte(FirstHexChar.Content.ToString() + SecondHexChar.Content.ToString())[0];
+                            Byte = ByteConverters.HexToByte(FirstHexChar.Text.ToString() + SecondHexChar.Text.ToString())[0];
 
                             //Move focus event
                             MoveNext?.Invoke(this, new EventArgs());
@@ -429,7 +428,7 @@ namespace WPFHexaEditor.Control
 
         private void UpdateHexString()
         {
-            HexString = $"0x{(string)FirstHexChar.Content + (string)SecondHexChar.Content}";
+            HexString = ((string)FirstHexChar.Text + (string)SecondHexChar.Text); //.ToString();
         }
 
         private void UserControl_MouseEnter(object sender, MouseEventArgs e)

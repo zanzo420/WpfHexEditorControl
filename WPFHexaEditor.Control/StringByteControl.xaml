@@ -12,6 +12,7 @@
              KeyDown="UserControl_KeyDown"
              MouseEnter="UserControl_MouseEnter"
              MouseLeave="UserControl_MouseLeave"
+             MouseDown="StringByteLabel_MouseDown"
              x:ClassModifier="internal"
              Width="12"
              Height="22"
@@ -27,13 +28,11 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid ToolTip="{Binding Source={StaticResource ByteToolTip}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
+    <Canvas ToolTip="{Binding Source={StaticResource ByteToolTip}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
 
-        <Label x:Name="StringByteLabel"
-               Padding="0"
-               MouseDown="StringByteLabel_MouseDown"
-               HorizontalContentAlignment="Center"
-               VerticalContentAlignment="Center"
-               Focusable="True" />
-    </Grid>
+        <TextBlock x:Name="StringByteLabel"
+                   Padding="0"         
+                   TextAlignment="Center"
+                   Focusable="True" />
+    </Canvas>
 </UserControl>

@@ -570,6 +570,11 @@ namespace WPFHexaEditor.Core.CharacterTable
             }
         }
 
+        /// <summary>
+        /// Enable/Disable Readonly on control.
+        /// </summary>
+        public bool AllowEdit { get; set; } = false;
+
         #endregion Propriétés
 
         #region Build default TBL
@@ -588,6 +593,7 @@ namespace WPFHexaEditor.Core.CharacterTable
                     break;
             }
 
+            tbl.AllowEdit = true;
             return tbl;
         }
         #endregion

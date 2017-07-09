@@ -47,8 +47,8 @@ namespace WPFHexaEditor.Control
             InitializeComponent(); 
 
             //Load default build-in TBL
-            //TypeOfCharacterTable = CharacterTableType.TBLFile;
-            //LoadDefaultTBL(DefaultCharacterTableType.ASCII);
+            TypeOfCharacterTable = CharacterTableType.TBLFile;
+            LoadDefaultTBL(DefaultCharacterTableType.ASCII);
 
             //Refresh view
             RefreshView(true);

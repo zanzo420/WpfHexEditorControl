@@ -408,7 +408,7 @@ namespace WPFHexaEditor.Control
                         break;
 
                     case CharacterTableType.TBLFile:
-                        ReadOnlyMode = true;
+                        ReadOnlyMode = !_TBLCharacterTable.AllowEdit;
 
                         if (_TBLCharacterTable != null)
                         {

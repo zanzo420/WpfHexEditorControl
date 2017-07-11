@@ -12,7 +12,8 @@ Sample with Thingy character table on SNES Final Fantasy II US
 https://www.nuget.org/packages/WPFHexaEditor/
 
 ## Features
-- Copy to clipboard as code like C#, VB.Net, C, Java ... (More language comming soon)
+- Support of common key in window like CTRL+C, CTRL+V, CTRL+Z, CTRL+A, ESC...
+- Copy to clipboard as code like C#, VB.Net, C, Java, F# ... (More language comming soon)
 - Use TBL character table file insted of default ASCII.
 - Choose color set of TBL string via dependency property
 - Modify bytes

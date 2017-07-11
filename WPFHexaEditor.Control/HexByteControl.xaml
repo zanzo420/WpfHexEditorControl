@@ -28,17 +28,17 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Canvas ToolTip="{Binding Source={StaticResource ByteToolTip}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
+    <Grid ToolTip="{Binding Source={StaticResource ByteToolTip}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
         <TextBlock x:Name="FirstHexChar" 
                    Padding="0"
                    Width="9"
                    TextAlignment="Right"
-                   Focusable="True"
+                   Focusable="True" Margin="0,0,16,0"
                    />
         <TextBlock x:Name="SecondHexChar" 
                    Padding="0" 
                    Margin="9,0,0,0" 
                    Focusable="True"
                    />
-    </Canvas>
+    </Grid>
 </UserControl>

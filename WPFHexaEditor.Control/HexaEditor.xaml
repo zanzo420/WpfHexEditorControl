@@ -117,13 +117,27 @@
                        Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HexaEditor}}, Path=BorderBrush}" />
 
             <StackPanel Orientation="Horizontal">
-                <Label Content="Ln" Padding="5,5,0,5" />
-                <Label Content="{Binding SelectionLine, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource LongHexConverter}}"/>
-                <Label />
-                <Label Content="Position" Padding="5,5,0,5" />
-                <Label Content="{Binding SelectionStart, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource LongHexConverter}}"/>
-                <Label />
-                <!--Spacer-->
+                <Label Content="Ln" Padding="5,5,0,5" FontWeight="Bold" />
+                <Label Content="{Binding SelectionLine, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource LongHexConverter}}" Width="80">
+                    <Label.ToolTip>
+                        <StackPanel Orientation="Horizontal">
+                            <Label FontWeight="Bold" Content="Line :"/>
+                            <Label Content="{Binding SelectionLine, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Label Content="{Binding SelectionLine, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource LongHexConverter}}"/>
+                        </StackPanel>
+                    </Label.ToolTip>
+                </Label>                
+                <Label Content="Position" Padding="5,5,0,5" FontWeight="Bold" />
+                <Label Content="{Binding SelectionStart, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource LongHexConverter}}" Width="80">
+                    <Label.ToolTip>
+                        <StackPanel Orientation="Horizontal">
+                            <Label FontWeight="Bold" Content="Position :"/>
+                            <Label Content="{Binding SelectionStart, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Label Content="{Binding SelectionStart, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource LongHexConverter}}"/>
+                        </StackPanel>
+                    </Label.ToolTip>
+                </Label>
+                <Label Content="File lenght" Padding="5,5,0,5" FontWeight="Bold" />
                 <Label x:Name="FileLengthKBLabel" 
                        ContentStringFormat="N0" />
                 <Label Content="(" Padding="5,5,0,5" />

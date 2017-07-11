@@ -41,7 +41,7 @@ namespace WPFHexaEditor.Control
         public event EventHandler SelectionLenghtChanged;
 
         public event EventHandler DataCopied;
-
+        
         public HexaEditor()
         {
             InitializeComponent(); 
@@ -1703,8 +1703,14 @@ namespace WPFHexaEditor.Control
 
         private void VerticalScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            RefreshView(false);
-            Debug.WriteLine($"Progressbar value : {VerticalScrollBar.Value}");
+            //try
+            //{
+            //    if (VerticalScrollBar.Value > VerticalScrollBar.Maximum - 6)
+            //        RefreshView(true);
+            //    else
+                    RefreshView(false);
+            //}
+            //catch { }
         }
 
         /// <summary>
@@ -2160,7 +2166,7 @@ namespace WPFHexaEditor.Control
                     }
                 }
                 else
-                {
+                {                    
                     int stackIndex = 0;
                     foreach (TextBlock infolabel in LinesInfoStackPanel.Children)
                     {

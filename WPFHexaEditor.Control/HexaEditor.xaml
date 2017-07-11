@@ -118,7 +118,10 @@
 
             <StackPanel Orientation="Horizontal">
                 <Label Content="Ln" Padding="5,5,0,5" />
-                <Label Content="{Binding SelectionLine, UpdateSourceTrigger=PropertyChanged}" />
+                <Label Content="{Binding SelectionLine, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource LongHexConverter}}"/>
+                <Label />
+                <Label Content="Position" Padding="5,5,0,5" />
+                <Label Content="{Binding SelectionStart, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource LongHexConverter}}"/>
                 <Label />
                 <!--Spacer-->
                 <Label x:Name="FileLengthKBLabel" 

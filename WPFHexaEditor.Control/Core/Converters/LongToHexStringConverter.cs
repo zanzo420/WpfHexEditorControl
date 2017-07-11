@@ -18,7 +18,10 @@ namespace WPFHexaEditor.Core.Converters
         {
             var LongValue = Int32.Parse(value.ToString());
 
-            return "0x" + LongValue.ToString(ConstantReadOnly.HexLineInfoStringFormat, CultureInfo.InvariantCulture);
+            if (LongValue > -1)
+                return "0x" + LongValue.ToString(ConstantReadOnly.HexLineInfoStringFormat, CultureInfo.InvariantCulture).ToUpper();
+            else
+                return "0x00000000";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

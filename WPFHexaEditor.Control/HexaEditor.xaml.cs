@@ -462,6 +462,11 @@ namespace WPFHexaEditor.Control
             CopyToClipboard();
         }
 
+        private void Control_CTRLAKey(object sender, EventArgs e)
+        {
+            SelectAll();
+        }
+
         private void Control_CTRLVKey(object sender, EventArgs e)
         {
             PasteWithoutInsert();
@@ -1856,6 +1861,8 @@ namespace WPFHexaEditor.Control
                             sbCtrl.CTRLZKey += Control_CTRLZKey;
                             sbCtrl.CTRLCKey += Control_CTRLCKey;
                             sbCtrl.CTRLVKey += Control_CTRLVKey;
+                            sbCtrl.CTRLAKey += Control_CTRLAKey;
+
 
                             sbCtrl.InternalChange = true;
                             sbCtrl.TBLCharacterTable = _TBLCharacterTable;
@@ -2154,6 +2161,7 @@ namespace WPFHexaEditor.Control
                             byteControl.CTRLZKey += Control_CTRLZKey;
                             byteControl.CTRLCKey += Control_CTRLCKey;
                             byteControl.CTRLVKey += Control_CTRLVKey;
+                            byteControl.CTRLAKey += Control_CTRLAKey;
 
                             byteControl.InternalChange = true;
                             byteControl.Byte = (byte)_provider.ReadByte();

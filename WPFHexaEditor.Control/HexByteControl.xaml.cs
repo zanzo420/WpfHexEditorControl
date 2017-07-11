@@ -55,6 +55,8 @@ namespace WPFHexaEditor.Control
 
         public event EventHandler CTRLCKey;
 
+        public event EventHandler CTRLAKey;
+
         /// <summary>
         /// Default contructor
         /// </summary>
@@ -410,6 +412,12 @@ namespace WPFHexaEditor.Control
             {
                 e.Handled = true;
                 CTRLCKey?.Invoke(this, new EventArgs());
+                return;
+            }
+            else if (KeyValidator.IsCtrlAKey(e.Key))
+            {
+                e.Handled = true;
+                CTRLAKey?.Invoke(this, new EventArgs());
                 return;
             }
 

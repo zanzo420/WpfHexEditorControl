@@ -11,6 +11,7 @@
              xmlns:local="clr-namespace:WPFHexaEditor.Control"
              MouseWheel="UserControl_MouseWheel"
              DataContextChanged="UserControl_DataContextChanged"
+             xmlns:loc="clr-namespace:WPFHexaEditor.Core.Localization"
              mc:Ignorable="d"
              BorderBrush="#FF443E3E"
              BorderThickness="1"
@@ -23,7 +24,10 @@
                 <ResourceDictionary Source="./ResourceDictionary/ToolTipDictionary.xaml" />
                 <ResourceDictionary Source="./ResourceDictionary/FontDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
+            
+            <!--Global localization ressource-->
+            <loc:LocManager x:Key="locManager"/>
+        </ResourceDictionary>        
     </UserControl.Resources>
 
     <UserControl.ContextMenu>

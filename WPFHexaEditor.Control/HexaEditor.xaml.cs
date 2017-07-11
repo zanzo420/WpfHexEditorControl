@@ -1891,8 +1891,9 @@ namespace WPFHexaEditor.Control
                 {
                     int stackIndex = 0;
                     foreach (TextBlock infolabel in LinesInfoStackPanel.Children)
-                    {
-                        long position = ByteConverters.HexLiteralToLong(infolabel.Text);
+                    {                        
+                       long position = ByteConverters.HexLiteralToLong(infolabel.Text);
+                        
 
                         if (StringDataStackPanel.Children.Count > 0)
                             foreach (StringByteControl sbCtrl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
@@ -2269,10 +2270,17 @@ namespace WPFHexaEditor.Control
                         LineInfoLabel.Foreground = Brushes.Gray;
                         LineInfoLabel.MouseDown += LineInfoLabel_MouseDown;
                         LineInfoLabel.MouseMove += LineInfoLabel_MouseMove;
-                        //LineInfoLabel.HorizontalContentAlignment = HorizontalAlignment.Right;
-                        //LineInfoLabel.VerticalContentAlignment = VerticalAlignment.Center;
                         LineInfoLabel.Text = info;
                         LineInfoLabel.ToolTip = $"Byte : {firstLineByte.ToString()}";
+
+                        LinesInfoStackPanel.Children.Add(LineInfoLabel);
+                    }else
+                    {
+                        //ON WORKING: FOR PREVENT BUG AT END OF FILE...
+                        //Create control
+                        TextBlock LineInfoLabel = new TextBlock();
+                        LineInfoLabel.Foreground = LineInfoLabel.Background;
+                        LineInfoLabel.Text = "0x" + ByteConverters.LongToHex(_provider.Length +1);                        
 
                         LinesInfoStackPanel.Children.Add(LineInfoLabel);
                     }

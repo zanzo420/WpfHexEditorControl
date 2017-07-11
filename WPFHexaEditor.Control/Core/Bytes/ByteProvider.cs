@@ -884,19 +884,22 @@ namespace WPFHexaEditor.Core.Bytes
             long lenght = pasteString.Length;
             Position = startPosition;
 
-            foreach (char chr in pasteString)
+            if (Position > -1)
             {
-                if (!EOF)
+                foreach (char chr in pasteString)
                 {
-                    AddByteModified(ByteConverters.CharToByte(chr), Position, lenght);
+                    if (!EOF)
+                    {
+                        AddByteModified(ByteConverters.CharToByte(chr), Position, lenght);
 
-                    Position++;
+                        Position++;
+                    }
+                    else
+                        break;
                 }
-                else
-                    break;
-            }
 
-            DataPastedNotInserted?.Invoke(this, new EventArgs());
+                DataPastedNotInserted?.Invoke(this, new EventArgs());
+            }
         }
 
         /// <summary>

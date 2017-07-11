@@ -54,6 +54,13 @@ namespace WPFHexaEditor.Control
 
         public event EventHandler CTRLZKey;
 
+        public event EventHandler CTRLVKey;
+
+        public event EventHandler CTRLCKey;
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
         public StringByteControl()
         {
             InitializeComponent();
@@ -638,6 +645,18 @@ namespace WPFHexaEditor.Control
             {
                 e.Handled = true;
                 CTRLZKey?.Invoke(this, new EventArgs());
+                return;
+            }
+            else if (KeyValidator.IsCtrlVKey(e.Key))
+            {
+                e.Handled = true;
+                CTRLVKey?.Invoke(this, new EventArgs());
+                return;
+            }
+            else if (KeyValidator.IsCtrlCKey(e.Key))
+            {
+                e.Handled = true;
+                CTRLCKey?.Invoke(this, new EventArgs());
                 return;
             }
 

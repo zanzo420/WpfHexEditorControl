@@ -454,15 +454,17 @@ namespace WPFHexaEditor.Control
 
         private void Control_CTRLZKey(object sender, EventArgs e)
         {
-            //HexByteControl hbCtrl = sender as HexByteControl;
-            //StringByteControl sbCtrl = sender as StringByteControl;
-
             Undo();
+        }
 
-            //if (hbCtrl != null)
-            //    SetFocusHexDataPanel(GetFirstVisibleBytePosition());
-            //else if (sbCtrl != null)
-            //    SetFocusStringDataPanel(GetFirstVisibleBytePosition());
+        private void Control_CTRLCKey(object sender, EventArgs e)
+        {
+            CopyToClipboard();
+        }
+
+        private void Control_CTRLVKey(object sender, EventArgs e)
+        {
+            PasteWithoutInsert();
         }
 
         private void Control_MovePageUp(object sender, EventArgs e)
@@ -1028,6 +1030,22 @@ namespace WPFHexaEditor.Control
         #endregion Selection Property/Methods/Event
 
         #region Copy/Paste/Cut Methods
+
+        /// <summary>
+        /// Paste clipboard string without inserting byte at selection start
+        /// </summary>
+        private void PasteWithoutInsert()
+        {
+            if (ByteProvider.CheckIsOpen(_provider))
+            {
+                if (SelectionStart > -1)
+                {
+                    _provider.PasteNotInsert(SelectionStart, Clipboard.GetText());
+                    SetScrollMarker(SelectionStart, ScrollMarker.ByteModified, "Paste from clipboard");
+                    RefreshView();
+                }
+            }
+        }
 
         /// <summary>
         /// Return true if Copy method could be invoked.
@@ -1830,6 +1848,8 @@ namespace WPFHexaEditor.Control
                             sbCtrl.ByteDeleted += Control_ByteDeleted;
                             sbCtrl.EscapeKey += Control_EscapeKey;
                             sbCtrl.CTRLZKey += Control_CTRLZKey;
+                            sbCtrl.CTRLCKey += Control_CTRLCKey;
+                            sbCtrl.CTRLVKey += Control_CTRLVKey;
 
                             sbCtrl.InternalChange = true;
                             sbCtrl.TBLCharacterTable = _TBLCharacterTable;
@@ -2126,6 +2146,8 @@ namespace WPFHexaEditor.Control
                             byteControl.ByteDeleted += Control_ByteDeleted;
                             byteControl.EscapeKey += Control_EscapeKey;
                             byteControl.CTRLZKey += Control_CTRLZKey;
+                            byteControl.CTRLCKey += Control_CTRLCKey;
+                            byteControl.CTRLVKey += Control_CTRLVKey;
 
                             byteControl.InternalChange = true;
                             byteControl.Byte = (byte)_provider.ReadByte();
@@ -2927,12 +2949,7 @@ namespace WPFHexaEditor.Control
 
         private void PasteMenu_Click(object sender, RoutedEventArgs e)
         {
-            if (ByteProvider.CheckIsOpen(_provider))
-            {
-                _provider.PasteNotInsert(_rightClickBytePosition, Clipboard.GetText());
-
-                RefreshView();
-            }
+            PasteWithoutInsert();
         }
 
         private void SelectAllCMenu_Click(object sender, RoutedEventArgs e)
@@ -2943,5 +2960,9 @@ namespace WPFHexaEditor.Control
 
         #endregion Context menu
 
+        private void UserControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+
+        }
     }
 }

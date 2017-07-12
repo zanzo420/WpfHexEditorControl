@@ -1708,14 +1708,7 @@ namespace WPFHexaEditor.Control
 
         private void VerticalScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            //try
-            //{
-            //    if (VerticalScrollBar.Value > VerticalScrollBar.Maximum - 6)
-            //        RefreshView(true);
-            //    else
-                    RefreshView(false);
-            //}
-            //catch { }
+            RefreshView(false);
         }
 
         /// <summary>
@@ -1754,7 +1747,6 @@ namespace WPFHexaEditor.Control
         public void RefreshView(bool ControlResize = false, bool RefreshData = true)
         {
             UpdateLinesInfo();
-            //UpdateVerticalScroll();
 
             if (RefreshData)
             {

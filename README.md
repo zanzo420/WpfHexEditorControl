@@ -2,10 +2,10 @@
 A WPF Hexadecimal editor for view/modify file.  (SUPPORT THINGY CHARACTER TABLE (TBL))
 
 Sample with standard ASCII character table
-![example](WPFHexEditorControlSample6-NOTBL.png?raw=true)
+![example](WPFHexEditorControlSample7-NOTBL.png?raw=true)
 
 Sample with Thingy character table on SNES Final Fantasy II US
-![example](WPFHexEditorControlSample6-TBL.png?raw=true)
+![example](WPFHexEditorControlSample7-TBL.png?raw=true)
 
 
 ## NUGET  Last version : 2017-02-26

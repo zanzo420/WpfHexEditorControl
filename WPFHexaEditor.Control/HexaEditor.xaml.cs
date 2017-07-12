@@ -2847,7 +2847,7 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Allow or not the context menu to appear on right-click
         /// </summary>
-        public bool isAllowContextMenu
+        public bool IsAllowContextMenu
         {
             get { return (bool)GetValue(isAllowContextMenuProperty); }
             set { SetValue(isAllowContextMenuProperty, value); }
@@ -2859,7 +2859,7 @@ namespace WPFHexaEditor.Control
         
         private void Control_RightClick(object sender, EventArgs e)
         {
-            if (isAllowContextMenu)
+            if (IsAllowContextMenu)
             {
                 //position
                 StringByteControl sbCtrl = sender as StringByteControl;

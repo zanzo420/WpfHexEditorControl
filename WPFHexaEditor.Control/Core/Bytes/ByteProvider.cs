@@ -692,6 +692,7 @@ namespace WPFHexaEditor.Core.Bytes
             switch (copypastemode)
             {
                 case CopyPasteMode.TBLString:
+                    throw new NotImplementedException();
                 case CopyPasteMode.ASCIIString:
                     sBuffer = ByteConverters.BytesToString(buffer);
                     da.SetText(sBuffer, TextDataFormat.Text);

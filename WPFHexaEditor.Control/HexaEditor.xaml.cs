@@ -41,6 +41,8 @@ namespace WPFHexaEditor.Control
         public event EventHandler SelectionLenghtChanged;
 
         public event EventHandler DataCopied;
+
+        public event EventHandler TypeOfCharacterTableChanged;
         
         public HexaEditor()
         {
@@ -97,6 +99,7 @@ namespace WPFHexaEditor.Control
             HexaEditor ctrl = d as HexaEditor;
 
             ctrl.RefreshView();
+            ctrl.TypeOfCharacterTableChanged?.Invoke(ctrl, new EventArgs());
         }
 
         /// <summary>
@@ -2156,6 +2159,12 @@ namespace WPFHexaEditor.Control
                             byteControl.CTRLVKey += Control_CTRLVKey;
                             byteControl.CTRLAKey += Control_CTRLAKey;
 
+                            //Tooltip update
+                            if (position > _provider.Length)
+                                byteControl.HexByteGrid.ToolTip = null;
+                            else
+                                byteControl.HexByteGrid.ToolTip = TryFindResource("ByteToolTip");
+
                             byteControl.InternalChange = true;
                             byteControl.Byte = (byte)_provider.ReadByte();
                             byteControl.InternalChange = false;
@@ -2194,6 +2203,12 @@ namespace WPFHexaEditor.Control
                                     byteControl.Byte = (byte)_provider.ReadByte();
                                 }
                                 byteControl.InternalChange = false;
+
+                                //Tooltip update
+                                if (position > _provider.Length)
+                                    byteControl.HexByteGrid.ToolTip = null;
+                                else
+                                    byteControl.HexByteGrid.ToolTip = TryFindResource("ByteToolTip");
                             }
 
                         stackIndex++;
@@ -2974,9 +2989,5 @@ namespace WPFHexaEditor.Control
 
         #endregion Context menu
 
-        private void UserControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-
-        }
     }
 }

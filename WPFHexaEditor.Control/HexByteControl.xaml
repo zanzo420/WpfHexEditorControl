@@ -28,7 +28,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid ToolTip="{Binding Source={StaticResource ByteToolTip}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
+    <Grid x:Name="HexByteGrid" ToolTip="{Binding Source={StaticResource ByteToolTip}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
         <TextBlock x:Name="FirstHexChar" 
                    Padding="0"
                    Width="9"

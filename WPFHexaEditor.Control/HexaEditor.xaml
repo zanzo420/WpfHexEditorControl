@@ -10,7 +10,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:WPFHexaEditor.Control"
              MouseWheel="UserControl_MouseWheel"
-             DataContextChanged="UserControl_DataContextChanged"
              xmlns:loc="clr-namespace:WPFHexaEditor.Core.Localization"
              mc:Ignorable="d"
              BorderBrush="#FF443E3E"

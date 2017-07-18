@@ -322,7 +322,6 @@ namespace WPFHexaEditor.Core.Bytes
         /// <summary>
         /// Submit change to files/stream
         /// TODO : NEED OPTIMISATION FOR LARGE FILE... IT'S AS BEGINING :) USE TEMPS FILE ?
-        /// TODO : USE TEMPS FILE FOR LARGE FILE
         /// </summary>
         public void SubmitChanges()
         {

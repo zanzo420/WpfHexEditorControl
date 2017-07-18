@@ -33,17 +33,56 @@ namespace WPFHexaEditor.Control
         private long _rightClickBytePosition = -1;
         private TBLStream _TBLCharacterTable = null;
 
-        //Event
+        /// <summary>
+        /// Occurs when selection start are changed.
+        /// </summary>
         public event EventHandler SelectionStartChanged;
 
+        /// <summary>
+        /// Occurs when selection stop are changed.
+        /// </summary>
         public event EventHandler SelectionStopChanged;
 
+        /// <summary>
+        /// Occurs when the lenght of selection are changed.
+        /// </summary>
         public event EventHandler SelectionLenghtChanged;
 
+        /// <summary>
+        /// Occurs when data are copie to clipboard.
+        /// </summary>
         public event EventHandler DataCopied;
 
+        /// <summary>
+        /// Occurs when the type of character table are changed.
+        /// </summary>
         public event EventHandler TypeOfCharacterTableChanged;
-        
+
+        /// <summary>
+        /// Occurs when a long process percent changed.
+        /// </summary>
+        public event EventHandler LongProcessProgressChanged;
+
+        /// <summary>
+        /// Occurs when a long process are started.
+        /// </summary>
+        public event EventHandler LongProcessProgressStarted;
+
+        /// <summary>
+        /// Occurs when a long process are completed.
+        /// </summary>
+        public event EventHandler LongProcessProgressCompleted;
+
+        /// <summary>
+        /// Occurs when readonly property are changed.
+        /// </summary>
+        public event EventHandler ReadOnlyChanged;
+
+        /// <summary>
+        /// Occurs when data are saved to stream/file.
+        /// </summary>
+        public event EventHandler ChangesSubmited;
+
         public HexaEditor()
         {
             InitializeComponent(); 
@@ -291,7 +330,11 @@ namespace WPFHexaEditor.Control
         private void Provider_ReadOnlyChanged(object sender, EventArgs e)
         {
             if (ByteProvider.CheckIsOpen(_provider))
+            {
                 ReadOnlyMode = _provider.ReadOnlyMode;
+
+                ReadOnlyChanged?.Invoke(this, new EventArgs());
+            }
         }
 
         #endregion ReadOnly property/event
@@ -1438,6 +1481,8 @@ namespace WPFHexaEditor.Control
             var filename = FileName;
             Close();
             FileName = filename;
+
+            ChangesSubmited?.Invoke(this, new EventArgs());
         }
 
         private void ProviderStream_ChangesSubmited(object sender, EventArgs e)
@@ -1448,6 +1493,8 @@ namespace WPFHexaEditor.Control
                 MemoryStream stream = new MemoryStream(_provider.Stream.ToArray());
                 Close();
                 OpenStream(stream);
+
+                ChangesSubmited?.Invoke(this, new EventArgs());
             }
         }
 
@@ -1515,7 +1562,6 @@ namespace WPFHexaEditor.Control
 
                 ReadOnlyMode = false;
                 VerticalScrollBar.Value = 0;
-                //_TBLCharacterTable = null;
             }
 
             UnHighLightAll();
@@ -1523,6 +1569,7 @@ namespace WPFHexaEditor.Control
             ClearAllScrollMarker();
             UnSelectAll();
             RefreshView();
+            UpdateHexHeader();
         }
 
         /// <summary>
@@ -1614,12 +1661,16 @@ namespace WPFHexaEditor.Control
         {
             LongProgressProgressBar.Visibility = Visibility.Collapsed;
             CancelLongProcessButton.Visibility = Visibility.Collapsed;
+
+            LongProcessProgressCompleted?.Invoke(this, new EventArgs());
         }
 
         private void Provider_LongProcessProgressStarted(object sender, EventArgs e)
         {
             LongProgressProgressBar.Visibility = Visibility.Visible;
             CancelLongProcessButton.Visibility = Visibility.Visible;
+
+            LongProcessProgressStarted?.Invoke(this, new EventArgs());
         }
 
         private void Provider_LongProcessProgressChanged(object sender, EventArgs e)
@@ -1627,12 +1678,12 @@ namespace WPFHexaEditor.Control
             //Update progress bar
             LongProgressProgressBar.Value = (double)sender;
             Application.Current.DoEvents();
+
+            LongProcessProgressChanged?.Invoke(this, new EventArgs());
         }
 
         private void CancelLongProcessButton_Click(object sender, RoutedEventArgs e)
         {
-            //TODO: Add messagebox confirmation
-
             if (ByteProvider.CheckIsOpen(_provider))
                 _provider.IsOnLongProcess = false;
         }

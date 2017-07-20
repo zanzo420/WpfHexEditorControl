@@ -2936,6 +2936,13 @@ namespace WPFHexaEditor.Control
                 else if (ctrl != null)
                     _rightClickBytePosition = ctrl.BytePositionInFile;
 
+
+                if (SelectionLenght <= 1)
+                {
+                    SelectionStart = _rightClickBytePosition;
+                    SelectionStop = _rightClickBytePosition;
+                }
+
                 //update ctrl
                 CopyAsCMenu.IsEnabled = false;
                 CopyASCIICMenu.IsEnabled = false;

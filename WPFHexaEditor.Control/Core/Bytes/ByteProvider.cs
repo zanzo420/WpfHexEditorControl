@@ -921,20 +921,24 @@ namespace WPFHexaEditor.Core.Bytes
         /// </summary>
         public void Undo()
         {
-            if (CanUndo)
+            try
             {
-                ByteModified last = this.UndoStack.Pop();
-                var undoLenght = last.UndoLenght;
-                _byteModifiedDictionary.Remove(last.BytePositionInFile);
-
-                for (int i = 0; i < undoLenght; i++)
+                if (CanUndo)
                 {
-                    last = this.UndoStack.Pop();
+                    ByteModified last = this.UndoStack.Pop();
+                    var undoLenght = last.UndoLenght;
                     _byteModifiedDictionary.Remove(last.BytePositionInFile);
-                }
 
-                Undone?.Invoke(this, new EventArgs());
+                    for (int i = 0; i < undoLenght; i++)
+                    {
+                        last = this.UndoStack.Pop();
+                        _byteModifiedDictionary.Remove(last.BytePositionInFile);
+                    }
+
+                    Undone?.Invoke(this, new EventArgs());
+                }
             }
+            catch { }
         }
 
         /// <summary>

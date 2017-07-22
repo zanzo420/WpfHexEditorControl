@@ -1449,6 +1449,23 @@ namespace WPFHexaEditor.Control
             }
         }
 
+        /// <summary>
+        /// NOT COMPLETED/WORKING : Clear the scroll marker when undone
+        /// </summary>
+        /// <param name="sender">List of long representing position in file are undone</param>
+        /// <param name="e"></param>
+        private void Provider_Undone(object sender, EventArgs e)
+        {
+            List<long> bytePosition = sender as List<long>;
+
+            if (bytePosition != null)
+                foreach (long position in bytePosition)
+                    ClearScrollMarker(position);
+        }
+
+        /// <summary>
+        /// Get the undo count
+        /// </summary>
         public long UndoCount
         {
             get
@@ -1460,6 +1477,9 @@ namespace WPFHexaEditor.Control
             }
         }
 
+        /// <summary>
+        /// Get the undo stack
+        /// </summary>
         public Stack<ByteModified> UndoStack
         {
             get
@@ -1597,6 +1617,7 @@ namespace WPFHexaEditor.Control
                 _provider.ReadOnlyChanged += Provider_ReadOnlyChanged;
                 _provider.DataCopiedToClipboard += Provider_DataCopied;
                 _provider.ChangesSubmited += Provider_ChangesSubmited;
+                _provider.Undone += Provider_Undone;
                 _provider.LongProcessProgressChanged += Provider_LongProcessProgressChanged;
                 _provider.LongProcessProgressStarted += Provider_LongProcessProgressStarted;
                 _provider.LongProcessProgressCompleted += Provider_LongProcessProgressCompleted;
@@ -2892,6 +2913,7 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Clear ScrollMarker
         /// </summary>
+        /// <param name="marker">Type of marker to clear</param>
         public void ClearScrollMarker(ScrollMarker marker)
         {
             for (int i = 0; i < MarkerGrid.Children.Count; i++)
@@ -2899,6 +2921,42 @@ namespace WPFHexaEditor.Control
                 BookMark mark = (BookMark)((Rectangle)MarkerGrid.Children[i]).Tag;
 
                 if (mark.Marker == marker)
+                {
+                    MarkerGrid.Children.Remove(MarkerGrid.Children[i]);
+                    i--;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Clear ScrollMarker
+        /// </summary>
+        /// <param name="marker">Type of marker to clear</param>
+        public void ClearScrollMarker(ScrollMarker marker, long position)
+        {
+            for (int i = 0; i < MarkerGrid.Children.Count; i++)
+            {
+                BookMark mark = (BookMark)((Rectangle)MarkerGrid.Children[i]).Tag;
+
+                if (mark.Marker == marker && mark.BytePositionInFile == position)
+                {
+                    MarkerGrid.Children.Remove(MarkerGrid.Children[i]);
+                    i--;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Clear ScrollMarker at position
+        /// </summary>
+        /// <param name="marker">Type of marker to clear</param>
+        public void ClearScrollMarker(long position)
+        {
+            for (int i = 0; i < MarkerGrid.Children.Count; i++)
+            {
+                BookMark mark = (BookMark)((Rectangle)MarkerGrid.Children[i]).Tag;
+
+                if (mark.BytePositionInFile == position)
                 {
                     MarkerGrid.Children.Remove(MarkerGrid.Children[i]);
                     i--;

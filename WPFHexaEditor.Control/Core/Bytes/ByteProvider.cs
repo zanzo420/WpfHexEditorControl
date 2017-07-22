@@ -22,6 +22,7 @@ namespace WPFHexaEditor.Core.Bytes
         //Global variable
         private IDictionary<long, ByteModified> _byteModifiedDictionary = new Dictionary<long, ByteModified>();
         private Stack<ByteModified> _undoStack = new Stack<ByteModified>();
+        //private Stack<ByteModified> _redoStack = new Stack<ByteModified>();
 
         private string _fileName = string.Empty;
         private Stream _stream = null;
@@ -59,9 +60,7 @@ namespace WPFHexaEditor.Core.Bytes
         /// <summary>
         /// Default constructor
         /// </summary>
-        public ByteProvider()
-        {
-        }
+        public ByteProvider() { }
 
         /// <summary>
         /// Construct new ByteProvider with filename and try to open file
@@ -919,6 +918,7 @@ namespace WPFHexaEditor.Core.Bytes
         /// <summary>
         /// Undo last byteaction
         /// </summary>
+        /// <returns>Return a list of long contening the position are undone. Return null on error</returns>
         public void Undo()
         {
             try
@@ -926,16 +926,18 @@ namespace WPFHexaEditor.Core.Bytes
                 if (CanUndo)
                 {
                     ByteModified last = this.UndoStack.Pop();
+                    List<long> bytePositionList = new List<long>();
                     var undoLenght = last.UndoLenght;
                     _byteModifiedDictionary.Remove(last.BytePositionInFile);
 
                     for (int i = 0; i < undoLenght; i++)
                     {
                         last = this.UndoStack.Pop();
+                        bytePositionList.Add(last.BytePositionInFile);
                         _byteModifiedDictionary.Remove(last.BytePositionInFile);
                     }
 
-                    Undone?.Invoke(this, new EventArgs());
+                    Undone?.Invoke(bytePositionList, new EventArgs());
                 }
             }
             catch { }

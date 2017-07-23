@@ -17,11 +17,11 @@ namespace WPFHexaEditor.Core.Converters
         {
             get
             {
-                return this._color;
+                return _color;
             }
             set
             {
-                this._color = value;
+                _color = value;
             }
         }
 

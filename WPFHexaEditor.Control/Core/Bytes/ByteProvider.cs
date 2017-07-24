@@ -921,29 +921,28 @@ namespace WPFHexaEditor.Core.Bytes
         /// <returns>Return a list of long contening the position are undone. Return null on error</returns>
         public void Undo()
         {
-            //try
-            //{
             if (CanUndo)
             {
                 ByteModified last = UndoStack.Pop();
                 List<long> bytePositionList = new List<long>();
                 var undoLenght = last.UndoLenght;
+
+                bytePositionList.Add(last.BytePositionInFile);
                 _byteModifiedDictionary.Remove(last.BytePositionInFile);
 
-                for (int i = 0; i < undoLenght; i++)
-                {
-                    if (UndoStack.Count > 0)
+                if (undoLenght > 1)
+                    for (int i = 0; i < undoLenght; i++)
                     {
-                        last = UndoStack.Pop();
-                        bytePositionList.Add(last.BytePositionInFile);
-                        _byteModifiedDictionary.Remove(last.BytePositionInFile);
+                        if (UndoStack.Count > 0)
+                        {
+                            last = UndoStack.Pop();
+                            bytePositionList.Add(last.BytePositionInFile);
+                            _byteModifiedDictionary.Remove(last.BytePositionInFile);
+                        }
                     }
-                }
 
                 Undone?.Invoke(bytePositionList, new EventArgs());
             }
-            //}
-            //catch { }
         }
 
         /// <summary>

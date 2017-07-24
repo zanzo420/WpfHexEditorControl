@@ -30,65 +30,99 @@
     </UserControl.Resources>
 
     <UserControl.ContextMenu>
-        <ContextMenu x:Name="CMenu" Visibility="Collapsed">
-            <MenuItem x:Name="UndoCMenu" Header="Undo" Click="UndoCMenu_Click">
+        <ContextMenu x:Name="CMenu" 
+                     Visibility="Collapsed">
+            <MenuItem x:Name="UndoCMenu" 
+                      Header="Undo" 
+                      Click="UndoCMenu_Click">
                 <MenuItem.Icon>
                     <Image Source="/WPFHexaEditor;component/Resources/Icon/Undo-Icon.ico"/>
                 </MenuItem.Icon>
             </MenuItem>
             <Separator />
             <MenuItem Header="Bookmarks">
-                <MenuItem x:Name="BookMarkCMenu" Header="Set bookmark" Click="BookMarkCMenu_Click" Width="Auto">
+                <MenuItem x:Name="BookMarkCMenu" 
+                          Header="Set bookmark" 
+                          Click="BookMarkCMenu_Click" 
+                          Width="Auto">
                     <MenuItem.Icon>
                         <Image Source="/WPFHexaEditor;component/Resources/Icon/Add-Bookmark-Icon.ico"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator />
-                <MenuItem x:Name="ClearBookMarkCMenu" Header="Clear bookmark" Click="ClearBookMarkCMenu_Click" Width="Auto">
+                <MenuItem x:Name="ClearBookMarkCMenu" 
+                          Header="Clear bookmark" 
+                          Click="ClearBookMarkCMenu_Click"
+                          Width="Auto">
                     <MenuItem.Icon>
                         <Image Source="/WPFHexaEditor;component/Resources/Icon/Clear-Bookmark-Icon.ico"/>
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
             <Separator />
-            <MenuItem x:Name="CopyHexaCMenu" Header="Copy hexadecimal" Click="CopyHexaCMenu_Click" >
+            <MenuItem x:Name="CopyHexaCMenu"
+                      Header="Copy hexadecimal" 
+                      Click="CopyHexaCMenu_Click" >
                 <MenuItem.Icon>
                     <Image Source="/WPFHexaEditor;component/Resources/Icon/Copy-Icon.ico"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem x:Name="CopyASCIICMenu" Header="Copy ASCII" Click="CopyASCIICMenu_Click" >
+            <MenuItem x:Name="CopyASCIICMenu" 
+                      Header="Copy ASCII"
+                      Click="CopyASCIICMenu_Click" >
                 <MenuItem.Icon>
                     <Image Source="/WPFHexaEditor;component/Resources/Icon/Copy-Icon.ico"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem x:Name="CopyAsCMenu" Header="Copy selection as">
-                <MenuItem x:Name="CopyCCMenu" Header="C" Click="CopyCCMenu_Click" />
-                <MenuItem x:Name="CopyCSharpCMenu" Header="C#" Click="CopyCSharpCMenu_Click" />
-                <MenuItem x:Name="CopyFSharpCMenu" Header="F#" Click="CopyFSharpCMenu_Click" />
-                <MenuItem x:Name="CopyJavaCMenu" Header="Java" Click="CopyJavaCMenu_Click" />
-                <MenuItem x:Name="CopyVBNetCMenu" Header="Visual Basic.Net" Click="CopyVBNetCMenu_Click" />
-                <MenuItem x:Name="CopyTBLCMenu" Header="TBL (string from TBL loaded)" Click="CopyTBLCMenu_Click" IsEnabled="False"/>
+            <MenuItem x:Name="CopyAsCMenu" 
+                      Header="Copy selection as">
+                <MenuItem x:Name="CopyCCMenu" 
+                          Header="C" 
+                          Click="CopyCCMenu_Click" />
+                <MenuItem x:Name="CopyCSharpCMenu" 
+                          Header="C#" 
+                          Click="CopyCSharpCMenu_Click" />
+                <MenuItem x:Name="CopyFSharpCMenu" 
+                          Header="F#" 
+                          Click="CopyFSharpCMenu_Click" />
+                <MenuItem x:Name="CopyJavaCMenu" 
+                          Header="Java" Click="CopyJavaCMenu_Click" />
+                <MenuItem x:Name="CopyVBNetCMenu"
+                          Header="Visual Basic.Net" 
+                          Click="CopyVBNetCMenu_Click" />
+                <MenuItem x:Name="CopyTBLCMenu" 
+                          Header="TBL (string from TBL loaded)"
+                          Click="CopyTBLCMenu_Click"
+                          IsEnabled="False"/>
             </MenuItem>
             <Separator />
-            <MenuItem x:Name="PasteMenu" Header="Paste without inserting" Click="PasteMenu_Click" >
+            <MenuItem x:Name="PasteMenu"
+                      Header="Paste without inserting" 
+                      Click="PasteMenu_Click" >
                 <MenuItem.Icon>
                     <Image Source="/WPFHexaEditor;component/Resources/Icon/Paste-Icon.ico"/>
                 </MenuItem.Icon>
             </MenuItem>
             <Separator />
-            <MenuItem x:Name="DeleteCMenu" Header="Delete" Click="DeleteCMenu_Click" >
+            <MenuItem x:Name="DeleteCMenu" 
+                      Header="Delete" 
+                      Click="DeleteCMenu_Click" >
                 <MenuItem.Icon>
                     <Image Source="/WPFHexaEditor;component/Resources/Icon/Delete-Icon.ico"/>
                 </MenuItem.Icon>
             </MenuItem>
             <Separator />
-            <MenuItem x:Name="FindAllCMenu" Header="Find all occurence of selection" Click="FindAllCMenu_Click">
+            <MenuItem x:Name="FindAllCMenu" 
+                      Header="Find all occurence of selection" 
+                      Click="FindAllCMenu_Click">
                 <MenuItem.Icon>
                     <Image Source="/WPFHexaEditor;component/Resources/Icon/Find-Icon.ico"/>
                 </MenuItem.Icon>
             </MenuItem>
             <Separator />
-            <MenuItem x:Name="SelectAllCMenu" Header="Select all" Click="SelectAllCMenu_Click" />
+            <MenuItem x:Name="SelectAllCMenu" 
+                      Header="Select all" 
+                      Click="SelectAllCMenu_Click" />
         </ContextMenu>
     </UserControl.ContextMenu>
 
@@ -172,14 +206,17 @@
                         </StackPanel>
                     </Label.ToolTip>
                 </Label>
-                <Label Content="File lenght" Padding="5,5,0,5" FontWeight="Bold" />
+                <Label Content="File lenght" 
+                       Padding="5,5,0,5" 
+                       FontWeight="Bold" />
                 <Label x:Name="FileLengthKBLabel" 
                        ContentStringFormat="N0" />
                 <Label Content="(" Padding="5,5,0,5" />
                 <Label x:Name="FileLengthLabel"
                        ContentStringFormat="N0"
                        Padding="0,5,5,5" />
-                <Label Content="Bytes)" Padding="0,5,5,5" />
+                <Label Content="Bytes)" 
+                       Padding="0,5,5,5" />
             </StackPanel>
             <Label x:Name="TBLLabel" 
                    Content="TBL" 

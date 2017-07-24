@@ -1450,8 +1450,7 @@ namespace WPFHexaEditor.Control
         }
 
         /// <summary>
-        /// NOT COMPLETED : Clear the scroll marker when undone
-        /// BUG: SOMES TIME, NOT WORKING FOR FIRST BYTESMODIFIED... 
+        /// NOT COMPLETED : Clear the scroll marker when undone 
         /// </summary>
         /// <param name="sender">List of long representing position in file are undone</param>
         /// <param name="e"></param>

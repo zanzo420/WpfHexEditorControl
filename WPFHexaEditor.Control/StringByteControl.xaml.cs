@@ -489,9 +489,9 @@ namespace WPFHexaEditor.Control
                 StringByteLabel.Foreground = Brushes.White;
 
                 if (StringByteFirstSelected)
-                    Background = _parent.SelectionFirstColor; //(SolidColorBrush)TryFindResource("FirstColor");
+                    Background = _parent.SelectionFirstColor;
                 else
-                    Background = _parent.SelectionSecondColor; //(SolidColorBrush)TryFindResource("SecondColor");
+                    Background = _parent.SelectionSecondColor;
 
                 return;
             }
@@ -500,7 +500,7 @@ namespace WPFHexaEditor.Control
                 FontWeight = (FontWeight)TryFindResource("NormalFontWeight");
                 StringByteLabel.Foreground = Brushes.Black;
 
-                Background = _parent.HighLightColor; //(SolidColorBrush)TryFindResource("HighLightColor");
+                Background = _parent.HighLightColor;
 
                 return;
             }
@@ -510,13 +510,13 @@ namespace WPFHexaEditor.Control
                 {
                     case ByteAction.Modified:
                         FontWeight = (FontWeight)TryFindResource("BoldFontWeight");
-                        Background = _parent.ByteModifiedColor; //(SolidColorBrush)TryFindResource("ByteModifiedColor");
+                        Background = _parent.ByteModifiedColor; 
                         StringByteLabel.Foreground = Brushes.Black;
                         break;
 
                     case ByteAction.Deleted:
                         FontWeight = (FontWeight)TryFindResource("BoldFontWeight");
-                        Background = _parent.ByteDeletedColor; //(SolidColorBrush)TryFindResource("ByteDeletedColor");
+                        Background = _parent.ByteDeletedColor;
                         StringByteLabel.Foreground = Brushes.Black;
                         break;
                 }

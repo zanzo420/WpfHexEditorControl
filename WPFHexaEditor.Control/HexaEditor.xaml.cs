@@ -98,91 +98,89 @@ namespace WPFHexaEditor.Control
         }
 
         #region Colors/fonts property and methods
-        public SolidColorBrush SelectionFirstColor
+        public Brush SelectionFirstColor
         {
-            get { return (SolidColorBrush)GetValue(SelectionFirstColorProperty); }
+            get { return (Brush)GetValue(SelectionFirstColorProperty); }
             set { SetValue(SelectionFirstColorProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for SelectionFirstColor.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty SelectionFirstColorProperty =
-            DependencyProperty.Register("SelectionFirstColor", typeof(SolidColorBrush), typeof(HexaEditor), 
-                new FrameworkPropertyMetadata(new SolidColorBrush(Colors.RoyalBlue), new PropertyChangedCallback(Control_ColorPropertyChanged)));
+            DependencyProperty.Register("SelectionFirstColor", typeof(Brush), typeof(HexaEditor), 
+                new FrameworkPropertyMetadata(Brushes.RoyalBlue, new PropertyChangedCallback(Control_ColorPropertyChanged)));
 
-        public SolidColorBrush SelectionSecondColor
+        public Brush SelectionSecondColor
         {
-            get { return (SolidColorBrush)GetValue(SelectionSecondColorProperty); }
+            get { return (Brush)GetValue(SelectionSecondColorProperty); }
             set { SetValue(SelectionSecondColorProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for SelectionFirstColor.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty SelectionSecondColorProperty =
-            DependencyProperty.Register("SelectionSecondColor", typeof(SolidColorBrush), typeof(HexaEditor),
-                new FrameworkPropertyMetadata(new SolidColorBrush(Colors.LightSteelBlue), new PropertyChangedCallback(Control_ColorPropertyChanged)));
+            DependencyProperty.Register("SelectionSecondColor", typeof(Brush), typeof(HexaEditor),
+                new FrameworkPropertyMetadata(Brushes.LightSteelBlue, new PropertyChangedCallback(Control_ColorPropertyChanged)));
 
-        public SolidColorBrush ByteModifiedColor
+        public Brush ByteModifiedColor
         {
-            get { return (SolidColorBrush)GetValue(ByteModifiedColorProperty); }
+            get { return (Brush)GetValue(ByteModifiedColorProperty); }
             set { SetValue(ByteModifiedColorProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for ByteModifiedColor.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ByteModifiedColorProperty =
-            DependencyProperty.Register("ByteModifiedColor", typeof(SolidColorBrush), typeof(HexaEditor),
-                new FrameworkPropertyMetadata(new SolidColorBrush(Colors.DarkGray), new PropertyChangedCallback(Control_ColorPropertyChanged)));
+            DependencyProperty.Register("ByteModifiedColor", typeof(Brush), typeof(HexaEditor),
+                new FrameworkPropertyMetadata(Brushes.DarkGray, new PropertyChangedCallback(Control_ColorPropertyChanged)));
         
-        public SolidColorBrush MouseOverColor
+        public Brush MouseOverColor
         {
-            get { return (SolidColorBrush )GetValue(MouseOverColorProperty); }
+            get { return (Brush )GetValue(MouseOverColorProperty); }
             set { SetValue(MouseOverColorProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for MouseOverColor.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty MouseOverColorProperty =
-            DependencyProperty.Register("MouseOverColor", typeof(SolidColorBrush ), typeof(HexaEditor),
-                new FrameworkPropertyMetadata(new SolidColorBrush(Colors.LightSkyBlue), new PropertyChangedCallback(Control_ColorPropertyChanged)));
+            DependencyProperty.Register("MouseOverColor", typeof(Brush ), typeof(HexaEditor),
+                new FrameworkPropertyMetadata(Brushes.LightSkyBlue, new PropertyChangedCallback(Control_ColorPropertyChanged)));
         
-        public SolidColorBrush ByteDeletedColor
+        public Brush ByteDeletedColor
         {
-            get { return (SolidColorBrush)GetValue(ByteDeletedColorProperty); }
+            get { return (Brush)GetValue(ByteDeletedColorProperty); }
             set { SetValue(ByteDeletedColorProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for ByteDeletedColor.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ByteDeletedColorProperty =
-            DependencyProperty.Register("ByteDeletedColor", typeof(SolidColorBrush), typeof(HexaEditor),
-                new FrameworkPropertyMetadata(new SolidColorBrush(Colors.Red), new PropertyChangedCallback(Control_ColorPropertyChanged)));
+            DependencyProperty.Register("ByteDeletedColor", typeof(Brush), typeof(HexaEditor),
+                new FrameworkPropertyMetadata(Brushes.Red, new PropertyChangedCallback(Control_ColorPropertyChanged)));
         
-        public SolidColorBrush HighLightColor
+        public Brush HighLightColor
         {
-            get { return (SolidColorBrush)GetValue(HighLightColorProperty); }
+            get { return (Brush)GetValue(HighLightColorProperty); }
             set { SetValue(HighLightColorProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for HighLightColor.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty HighLightColorProperty =
-            DependencyProperty.Register("HighLightColor", typeof(SolidColorBrush), typeof(HexaEditor),
-                new FrameworkPropertyMetadata(new SolidColorBrush(Colors.Gold), new PropertyChangedCallback(Control_ColorPropertyChanged)));
-
-
-
-        public new SolidColorBrush Background
+            DependencyProperty.Register("HighLightColor", typeof(Brush), typeof(HexaEditor),
+                new FrameworkPropertyMetadata(Brushes.Gold, new PropertyChangedCallback(Control_ColorPropertyChanged)));
+        
+        public new Brush Background
         {
-            get { return (SolidColorBrush)GetValue( BackgroundProperty); }
+            get { return (Brush)GetValue( BackgroundProperty); }
             set { SetValue( BackgroundProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for  Background.  This enables animation, styling, binding, etc...
         public new static readonly DependencyProperty  BackgroundProperty =
-            DependencyProperty.Register("Background", typeof(SolidColorBrush), typeof(HexaEditor),
-                new FrameworkPropertyMetadata(new SolidColorBrush(Colors.White), new PropertyChangedCallback(Control_BackgroundColorPropertyChanged)));
+            DependencyProperty.Register("Background", typeof(Brush), typeof(HexaEditor),
+                new FrameworkPropertyMetadata(Brushes.White, new PropertyChangedCallback(Control_BackgroundColorPropertyChanged)));
 
         private static void Control_BackgroundColorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             HexaEditor ctrl = d as HexaEditor;
 
             if (e.NewValue != e.OldValue)
-                ctrl.BaseGrid.Background = (SolidColorBrush)e.NewValue;
+                ctrl.BaseGrid.Background = (Brush)e.NewValue;
         }
 
         private static void Control_ColorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

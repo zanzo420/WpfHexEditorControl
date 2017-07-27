@@ -257,9 +257,9 @@ namespace WPFHexaEditor.Control
                 SecondHexChar.Foreground = Brushes.White;
 
                 if (HexByteFirstSelected)
-                    Background = _parent.SelectionFirstColor; //(SolidColorBrush)TryFindResource("FirstColor");
+                    Background = _parent.SelectionFirstColor; 
                 else
-                    Background = _parent.SelectionSecondColor;//(SolidColorBrush)TryFindResource("SecondColor");
+                    Background = _parent.SelectionSecondColor;
             }
             else if (IsHighLight)
             {
@@ -267,7 +267,7 @@ namespace WPFHexaEditor.Control
                 FirstHexChar.Foreground = Brushes.Black;
                 SecondHexChar.Foreground = Brushes.Black;
 
-                Background = _parent.HighLightColor; //(SolidColorBrush)TryFindResource("HighLightColor");
+                Background = _parent.HighLightColor;
             }
             else if (Action != ByteAction.Nothing)
             {
@@ -275,14 +275,14 @@ namespace WPFHexaEditor.Control
                 {
                     case ByteAction.Modified:
                         FontWeight = (FontWeight)TryFindResource("BoldFontWeight");
-                        Background = _parent.ByteModifiedColor; //(SolidColorBrush)TryFindResource("ByteModifiedColor");
+                        Background = _parent.ByteModifiedColor;
                         FirstHexChar.Foreground = Brushes.Black;
                         SecondHexChar.Foreground = Brushes.Black;
                         break;
 
                     case ByteAction.Deleted:
                         FontWeight = (FontWeight)TryFindResource("BoldFontWeight");
-                        Background = _parent.ByteDeletedColor; //(SolidColorBrush)TryFindResource("ByteDeletedColor");
+                        Background = _parent.ByteDeletedColor;
                         FirstHexChar.Foreground = Brushes.Black;
                         SecondHexChar.Foreground = Brushes.Black;
                         break;

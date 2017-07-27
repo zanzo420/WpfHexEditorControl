@@ -97,7 +97,7 @@ namespace WPFHexaEditor.Control
             StatusBarGrid.DataContext = this;
         }
 
-        #region Colors property/methods
+        #region Colors/fonts property and methods
         public SolidColorBrush SelectionFirstColor
         {
             get { return (SolidColorBrush)GetValue(SelectionFirstColorProperty); }
@@ -163,7 +163,27 @@ namespace WPFHexaEditor.Control
         public static readonly DependencyProperty HighLightColorProperty =
             DependencyProperty.Register("HighLightColor", typeof(SolidColorBrush), typeof(HexaEditor),
                 new FrameworkPropertyMetadata(new SolidColorBrush(Colors.Gold), new PropertyChangedCallback(Control_ColorPropertyChanged)));
-        
+
+
+
+        public new SolidColorBrush Background
+        {
+            get { return (SolidColorBrush)GetValue( BackgroundProperty); }
+            set { SetValue( BackgroundProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for  Background.  This enables animation, styling, binding, etc...
+        public new static readonly DependencyProperty  BackgroundProperty =
+            DependencyProperty.Register("Background", typeof(SolidColorBrush), typeof(HexaEditor),
+                new FrameworkPropertyMetadata(new SolidColorBrush(Colors.White), new PropertyChangedCallback(Control_BackgroundColorPropertyChanged)));
+
+        private static void Control_BackgroundColorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            HexaEditor ctrl = d as HexaEditor;
+
+            if (e.NewValue != e.OldValue)
+                ctrl.BaseGrid.Background = (SolidColorBrush)e.NewValue;
+        }
 
         private static void Control_ColorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -192,7 +212,7 @@ namespace WPFHexaEditor.Control
             }
         }
 
-        #endregion Colors property
+        #endregion Colors/fonts property and methods
 
         #region Miscellaneous property/methods
 

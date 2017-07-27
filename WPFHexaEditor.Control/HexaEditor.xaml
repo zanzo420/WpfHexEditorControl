@@ -126,7 +126,7 @@
         </ContextMenu>
     </UserControl.ContextMenu>
 
-    <Grid SizeChanged="Grid_SizeChanged"
+    <Grid x:Name="BaseGrid" SizeChanged="Grid_SizeChanged"
           Background="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />

@@ -97,6 +97,84 @@ namespace WPFHexaEditor.Control
             StatusBarGrid.DataContext = this;
         }
 
+        #region Colors property
+        public SolidColorBrush SelectionFirstColor
+        {
+            get { return (SolidColorBrush)GetValue(SelectionFirstColorProperty); }
+            set { SetValue(SelectionFirstColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for SelectionFirstColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty SelectionFirstColorProperty =
+            DependencyProperty.Register("SelectionFirstColor", typeof(SolidColorBrush), typeof(HexaEditor), 
+                new FrameworkPropertyMetadata(new SolidColorBrush(Colors.RoyalBlue), new PropertyChangedCallback(Control_ColorPropertyChanged)));
+
+        public SolidColorBrush SelectionSecondColor
+        {
+            get { return (SolidColorBrush)GetValue(SelectionSecondColorProperty); }
+            set { SetValue(SelectionSecondColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for SelectionFirstColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty SelectionSecondColorProperty =
+            DependencyProperty.Register("SelectionSecondColor", typeof(SolidColorBrush), typeof(HexaEditor),
+                new FrameworkPropertyMetadata(new SolidColorBrush(Colors.LightSteelBlue), new PropertyChangedCallback(Control_ColorPropertyChanged)));
+
+        public SolidColorBrush ByteModifiedColor
+        {
+            get { return (SolidColorBrush)GetValue(ByteModifiedColorProperty); }
+            set { SetValue(ByteModifiedColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ByteModifiedColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ByteModifiedColorProperty =
+            DependencyProperty.Register("ByteModifiedColor", typeof(SolidColorBrush), typeof(HexaEditor),
+                new FrameworkPropertyMetadata(new SolidColorBrush(Colors.DarkGray), new PropertyChangedCallback(Control_ColorPropertyChanged)));
+        
+        public SolidColorBrush MouseOverColor
+        {
+            get { return (SolidColorBrush )GetValue(MouseOverColorProperty); }
+            set { SetValue(MouseOverColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for MouseOverColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty MouseOverColorProperty =
+            DependencyProperty.Register("MouseOverColor", typeof(SolidColorBrush ), typeof(HexaEditor),
+                new FrameworkPropertyMetadata(new SolidColorBrush(Colors.LightSkyBlue), new PropertyChangedCallback(Control_ColorPropertyChanged)));
+        
+        public SolidColorBrush ByteDeletedColor
+        {
+            get { return (SolidColorBrush)GetValue(ByteDeletedColorProperty); }
+            set { SetValue(ByteDeletedColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ByteDeletedColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ByteDeletedColorProperty =
+            DependencyProperty.Register("ByteDeletedColor", typeof(SolidColorBrush), typeof(HexaEditor),
+                new FrameworkPropertyMetadata(new SolidColorBrush(Colors.Red), new PropertyChangedCallback(Control_ColorPropertyChanged)));
+        
+        public SolidColorBrush HighLightColor
+        {
+            get { return (SolidColorBrush)GetValue(HighLightColorProperty); }
+            set { SetValue(HighLightColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for HighLightColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty HighLightColorProperty =
+            DependencyProperty.Register("HighLightColor", typeof(SolidColorBrush), typeof(HexaEditor),
+                new FrameworkPropertyMetadata(new SolidColorBrush(Colors.Gold), new PropertyChangedCallback(Control_ColorPropertyChanged)));
+        
+
+        private static void Control_ColorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            HexaEditor ctrl = d as HexaEditor;
+
+            if (e.NewValue != e.OldValue)
+                ctrl.RefreshView();
+        }
+
+        #endregion Colors property
+
         #region Miscellaneous property/methods
 
         public double ScrollLargeChange
@@ -1909,7 +1987,7 @@ namespace WPFHexaEditor.Control
                             if (_provider.Position >= _provider.Length)
                                 break;
 
-                            StringByteControl sbCtrl = new StringByteControl();
+                            StringByteControl sbCtrl = new StringByteControl(this);
 
                             sbCtrl.BytePositionInFile = _provider.Position;
                             sbCtrl.StringByteModified += Control_ByteModified;
@@ -2208,7 +2286,7 @@ namespace WPFHexaEditor.Control
                             if (_provider.Position >= _provider.Length)
                                 break;
 
-                            HexByteControl byteControl = new HexByteControl();
+                            HexByteControl byteControl = new HexByteControl(this);
 
                             byteControl.BytePositionInFile = _provider.Position;
                             byteControl.ReadOnlyMode = ReadOnlyMode;

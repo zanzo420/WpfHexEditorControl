@@ -21,6 +21,7 @@ namespace WPFHexaEditor.Control
     {
         //private bool _isByteModified = false;
         private bool _readOnlyMode;
+        private HexaEditor _parent;
 
         private TBLStream _TBLCharacterTable = null;
 
@@ -63,11 +64,12 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Default constructor
         /// </summary>
-        public StringByteControl()
+        public StringByteControl(HexaEditor parent)
         {
             InitializeComponent();
 
             DataContext = this;
+            _parent = parent;
         }
 
         #region DependencyProperty
@@ -487,9 +489,9 @@ namespace WPFHexaEditor.Control
                 StringByteLabel.Foreground = Brushes.White;
 
                 if (StringByteFirstSelected)
-                    Background = (SolidColorBrush)TryFindResource("FirstColor");
+                    Background = _parent.SelectionFirstColor; //(SolidColorBrush)TryFindResource("FirstColor");
                 else
-                    Background = (SolidColorBrush)TryFindResource("SecondColor");
+                    Background = _parent.SelectionSecondColor; //(SolidColorBrush)TryFindResource("SecondColor");
 
                 return;
             }
@@ -498,7 +500,7 @@ namespace WPFHexaEditor.Control
                 FontWeight = (FontWeight)TryFindResource("NormalFontWeight");
                 StringByteLabel.Foreground = Brushes.Black;
 
-                Background = (SolidColorBrush)TryFindResource("HighLightColor");
+                Background = _parent.HighLightColor; //(SolidColorBrush)TryFindResource("HighLightColor");
 
                 return;
             }
@@ -508,13 +510,13 @@ namespace WPFHexaEditor.Control
                 {
                     case ByteAction.Modified:
                         FontWeight = (FontWeight)TryFindResource("BoldFontWeight");
-                        Background = (SolidColorBrush)TryFindResource("ByteModifiedColor");
+                        Background = _parent.ByteModifiedColor; //(SolidColorBrush)TryFindResource("ByteModifiedColor");
                         StringByteLabel.Foreground = Brushes.Black;
                         break;
 
                     case ByteAction.Deleted:
                         FontWeight = (FontWeight)TryFindResource("BoldFontWeight");
-                        Background = (SolidColorBrush)TryFindResource("ByteDeletedColor");
+                        Background = _parent.ByteDeletedColor; //(SolidColorBrush)TryFindResource("ByteDeletedColor");
                         StringByteLabel.Foreground = Brushes.Black;
                         break;
                 }
@@ -719,7 +721,7 @@ namespace WPFHexaEditor.Control
                     Action != ByteAction.Deleted &&
                     Action != ByteAction.Added &&
                     !IsSelected && !IsHighLight)
-                    Background = (SolidColorBrush)TryFindResource("MouseOverColor");
+                    Background = _parent.MouseOverColor; //(SolidColorBrush)TryFindResource("MouseOverColor");
 
             if (e.LeftButton == MouseButtonState.Pressed)
                 MouseSelection?.Invoke(this, e);

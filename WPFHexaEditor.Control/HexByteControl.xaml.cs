@@ -20,6 +20,7 @@ namespace WPFHexaEditor.Control
     {
         private bool _readOnlyMode = false;
         private KeyDownLabel _keyDownLabel = KeyDownLabel.FirstChar;
+        private HexaEditor _parent;
 
         public event EventHandler ByteModified;
 
@@ -60,11 +61,12 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Default contructor
         /// </summary>
-        public HexByteControl()
+        public HexByteControl(HexaEditor parent)
         {
             InitializeComponent();
 
             DataContext = this;
+            _parent = parent;
         }
 
         #region DependencyProperty
@@ -255,9 +257,9 @@ namespace WPFHexaEditor.Control
                 SecondHexChar.Foreground = Brushes.White;
 
                 if (HexByteFirstSelected)
-                    Background = (SolidColorBrush)TryFindResource("FirstColor");
+                    Background = _parent.SelectionFirstColor; //(SolidColorBrush)TryFindResource("FirstColor");
                 else
-                    Background = (SolidColorBrush)TryFindResource("SecondColor");
+                    Background = _parent.SelectionSecondColor;//(SolidColorBrush)TryFindResource("SecondColor");
             }
             else if (IsHighLight)
             {
@@ -265,7 +267,7 @@ namespace WPFHexaEditor.Control
                 FirstHexChar.Foreground = Brushes.Black;
                 SecondHexChar.Foreground = Brushes.Black;
 
-                Background = (SolidColorBrush)TryFindResource("HighLightColor");
+                Background = _parent.HighLightColor; //(SolidColorBrush)TryFindResource("HighLightColor");
             }
             else if (Action != ByteAction.Nothing)
             {
@@ -273,14 +275,14 @@ namespace WPFHexaEditor.Control
                 {
                     case ByteAction.Modified:
                         FontWeight = (FontWeight)TryFindResource("BoldFontWeight");
-                        Background = (SolidColorBrush)TryFindResource("ByteModifiedColor");
+                        Background = _parent.ByteModifiedColor; //(SolidColorBrush)TryFindResource("ByteModifiedColor");
                         FirstHexChar.Foreground = Brushes.Black;
                         SecondHexChar.Foreground = Brushes.Black;
                         break;
 
                     case ByteAction.Deleted:
                         FontWeight = (FontWeight)TryFindResource("BoldFontWeight");
-                        Background = (SolidColorBrush)TryFindResource("ByteDeletedColor");
+                        Background = _parent.ByteDeletedColor; //(SolidColorBrush)TryFindResource("ByteDeletedColor");
                         FirstHexChar.Foreground = Brushes.Black;
                         SecondHexChar.Foreground = Brushes.Black;
                         break;
@@ -465,7 +467,7 @@ namespace WPFHexaEditor.Control
                     Action != ByteAction.Deleted &&
                     Action != ByteAction.Added &&
                     !IsSelected && !IsHighLight)
-                    Background = (SolidColorBrush)TryFindResource("MouseOverColor");
+                    Background = _parent.MouseOverColor; //(SolidColorBrush)TryFindResource("MouseOverColor");
 
             if (e.LeftButton == MouseButtonState.Pressed)
                 MouseSelection?.Invoke(this, e);

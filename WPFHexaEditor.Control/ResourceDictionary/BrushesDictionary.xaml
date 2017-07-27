@@ -8,12 +8,12 @@
 
     <!--THIS DICTIONARY IS USED FOR PUT CUSTOM BRUSH-->
 
-    <SolidColorBrush x:Key="FirstColor" Color="#CC0014FF" />
-    <SolidColorBrush x:Key="SecondColor" Color="#CC0078FF" />
-    <SolidColorBrush x:Key="ByteModifiedColor" Color="#CC68717C" />
-    <SolidColorBrush x:Key="MouseOverColor" Color="#B20081FF" />
-    <SolidColorBrush x:Key="ByteDeletedColor" Color="#B2FF0000" />
-    <SolidColorBrush x:Key="HighLightColor" Color="#B2FFFF00" />
+    <!--<SolidColorBrush x:Key="FirstColor" Color="#CC0014FF" />-->
+    <!--<SolidColorBrush x:Key="SecondColor" Color="#CC0078FF" />-->
+    <!--<SolidColorBrush x:Key="ByteModifiedColor" Color="#CC68717C" />-->
+    <!--<SolidColorBrush x:Key="MouseOverColor" Color="#B20081FF" />-->
+    <!--<SolidColorBrush x:Key="ByteDeletedColor" Color="#B2FF0000" />-->
+    <!--<SolidColorBrush x:Key="HighLightColor" Color="#B2FFFF00" />-->
 
     <SolidColorBrush x:Key="BookMarkColor" Color="#B20000FF" />
     <SolidColorBrush x:Key="SearchBookMarkColor" Color="#FFFF8B00" />

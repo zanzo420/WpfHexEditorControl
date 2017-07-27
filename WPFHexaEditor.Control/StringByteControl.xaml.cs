@@ -481,7 +481,7 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Update Background
         /// </summary>
-        private void UpdateBackGround()
+        internal void UpdateBackGround()
         {
             if (IsSelected)
             {

@@ -97,7 +97,7 @@ namespace WPFHexaEditor.Control
             StatusBarGrid.DataContext = this;
         }
 
-        #region Colors property
+        #region Colors property/methods
         public SolidColorBrush SelectionFirstColor
         {
             get { return (SolidColorBrush)GetValue(SelectionFirstColorProperty); }
@@ -170,7 +170,26 @@ namespace WPFHexaEditor.Control
             HexaEditor ctrl = d as HexaEditor;
 
             if (e.NewValue != e.OldValue)
-                ctrl.RefreshView();
+                ctrl.UpdateBackGround();
+        }
+
+        /// <summary>
+        /// Call UpdateBackGround methods for all byte control
+        /// </summary>
+        private void UpdateBackGround()
+        {
+            int stackIndex = 0;
+
+            foreach (TextBlock infolabel in LinesInfoStackPanel.Children)
+            {
+                foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
+                    byteControl.UpdateBackGround();
+
+                foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
+                    byteControl.UpdateBackGround();
+
+                stackIndex++;
+            }
         }
 
         #endregion Colors property

@@ -8,6 +8,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using WPFHexaEditor.Core;
 using WPFHexaEditor.Core.Bytes;
 using WPFHexaEditorExample.Properties;
@@ -274,6 +275,16 @@ namespace WPFHexaEditorExample
             CTableTBLDefaultASCIIButton.IsChecked = true;
 
             Application.Current.MainWindow.Cursor = null;
+        }
+
+        /// <summary>
+        /// TEMPS 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            HexEdit.SelectionFirstColor = new SolidColorBrush(Colors.DarkBlue);
         }
     }
 }

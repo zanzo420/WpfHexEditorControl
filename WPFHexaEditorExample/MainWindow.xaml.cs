@@ -276,5 +276,10 @@ namespace WPFHexaEditorExample
 
             Application.Current.MainWindow.Cursor = null;
         }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            HexEdit.Foreground = Brushes.Red;
+        }
     }
 }

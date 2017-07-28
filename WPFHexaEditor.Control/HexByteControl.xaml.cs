@@ -264,8 +264,8 @@ namespace WPFHexaEditor.Control
             else if (IsHighLight)
             {
                 FontWeight = (FontWeight)TryFindResource("NormalFontWeight");
-                FirstHexChar.Foreground = Brushes.Black;
-                SecondHexChar.Foreground = Brushes.Black;
+                FirstHexChar.Foreground = _parent.Foreground;
+                SecondHexChar.Foreground = _parent.Foreground;
 
                 Background = _parent.HighLightColor;
             }
@@ -276,15 +276,15 @@ namespace WPFHexaEditor.Control
                     case ByteAction.Modified:
                         FontWeight = (FontWeight)TryFindResource("BoldFontWeight");
                         Background = _parent.ByteModifiedColor;
-                        FirstHexChar.Foreground = Brushes.Black;
-                        SecondHexChar.Foreground = Brushes.Black;
+                        FirstHexChar.Foreground = _parent.Foreground;
+                        SecondHexChar.Foreground = _parent.Foreground;
                         break;
 
                     case ByteAction.Deleted:
                         FontWeight = (FontWeight)TryFindResource("BoldFontWeight");
                         Background = _parent.ByteDeletedColor;
-                        FirstHexChar.Foreground = Brushes.Black;
-                        SecondHexChar.Foreground = Brushes.Black;
+                        FirstHexChar.Foreground = _parent.Foreground;
+                        SecondHexChar.Foreground = _parent.Foreground;
                         break;
                 }
             }
@@ -292,8 +292,8 @@ namespace WPFHexaEditor.Control
             {
                 FontWeight = (FontWeight)TryFindResource("NormalFontWeight");
                 Background = Brushes.Transparent;
-                FirstHexChar.Foreground = Brushes.Black;
-                SecondHexChar.Foreground = Brushes.Black;
+                FirstHexChar.Foreground = _parent.Foreground;
+                SecondHexChar.Foreground = _parent.Foreground;
             }
         }
 

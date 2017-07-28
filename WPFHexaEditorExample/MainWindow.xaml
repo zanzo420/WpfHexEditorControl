@@ -89,6 +89,7 @@
                               IsCheckable="True"
                               IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=ScrollVisibility, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                 </MenuItem>
+                <MenuItem Header="TEST" Click="MenuItem_Click"/>
             </Menu>
 
             <Control:HexaEditor x:Name="HexEdit" Width="Auto" Height="Auto" Margin="10,20,10,10" IsAllowContextMenu="True"/>

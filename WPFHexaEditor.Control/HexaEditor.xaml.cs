@@ -170,6 +170,18 @@ namespace WPFHexaEditor.Control
             set { SetValue( BackgroundProperty, value); }
         }
 
+        public new Brush Foreground
+        {
+            get { return (Brush)GetValue(ForegroundProperty); }
+            set { SetValue(ForegroundProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Foreground.  This enables animation, styling, binding, etc...
+        public new static readonly DependencyProperty ForegroundProperty =
+            DependencyProperty.Register("Foreground", typeof(Brush), typeof(HexaEditor),
+                new FrameworkPropertyMetadata(Brushes.Black, new PropertyChangedCallback(Control_ColorPropertyChanged)));
+
+
         // Using a DependencyProperty as the backing store for  Background.  This enables animation, styling, binding, etc...
         public new static readonly DependencyProperty  BackgroundProperty =
             DependencyProperty.Register("Background", typeof(Brush), typeof(HexaEditor),
@@ -2054,13 +2066,6 @@ namespace WPFHexaEditor.Control
                             sbCtrl.ByteNext = (byte)_provider.ReadByte();
                             _provider.Position--;
 
-                            //TBL coloring
-                            sbCtrl.TBL_DTEColor = TBL_DTEColor;
-                            sbCtrl.TBL_MTEColor = TBL_MTEColor;
-                            sbCtrl.TBL_EndBlockColor = TBL_EndBlockColor;
-                            sbCtrl.TBL_EndLineColor = TBL_EndLineColor;
-                            sbCtrl.TBL_DefaultColor = TBL_DefaultColor;
-
                             sbCtrl.InternalChange = false;
 
                             dataLineStack.Children.Add(sbCtrl);
@@ -2103,13 +2108,6 @@ namespace WPFHexaEditor.Control
                                     sbCtrl.ByteNext = (byte)_provider.ReadByte();
                                     _provider.Position--;
                                 }
-
-                                //TBL coloring
-                                sbCtrl.TBL_DTEColor = TBL_DTEColor;
-                                sbCtrl.TBL_MTEColor = TBL_MTEColor;
-                                sbCtrl.TBL_EndBlockColor = TBL_EndBlockColor;
-                                sbCtrl.TBL_EndLineColor = TBL_EndLineColor;
-                                sbCtrl.TBL_DefaultColor = TBL_DefaultColor;
 
                                 sbCtrl.InternalChange = false;
                             }

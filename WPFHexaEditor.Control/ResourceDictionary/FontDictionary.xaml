@@ -7,5 +7,5 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <FontWeight x:Key="BoldFontWeight">Bold</FontWeight>
-    <FontWeight x:Key="NormalFontWeight">Normal</FontWeight>
+    <!--<FontWeight x:Key="NormalFontWeight">Normal</FontWeight>-->
 </ResourceDictionary>

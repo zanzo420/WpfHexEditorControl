@@ -113,7 +113,7 @@ namespace WPFHexaEditor.Control
             HexByteControl ctrl = d as HexByteControl;
 
             if (e.NewValue != e.OldValue)
-                ctrl.UpdateBackGround();
+                ctrl.UpdateVisual();
         }
 
         /// <summary>
@@ -216,7 +216,7 @@ namespace WPFHexaEditor.Control
             if (e.NewValue != e.OldValue)
             {
                 ctrl._keyDownLabel = KeyDownLabel.FirstChar;
-                ctrl.UpdateBackGround();
+                ctrl.UpdateVisual();
             }
         }
 
@@ -241,20 +241,20 @@ namespace WPFHexaEditor.Control
             if (e.NewValue != e.OldValue)
             {
                 ctrl._keyDownLabel = KeyDownLabel.FirstChar;
-                ctrl.UpdateBackGround();
+                ctrl.UpdateVisual();
             }
         }
 
         /// <summary>
-        /// Update Background
+        /// Update Background,foreground and font property
         /// </summary>
-        internal void UpdateBackGround()
+        internal void UpdateVisual()
         {
             if (IsSelected)
             {
-                FontWeight = (FontWeight)TryFindResource("NormalFontWeight");
-                FirstHexChar.Foreground = Brushes.White;
-                SecondHexChar.Foreground = Brushes.White;
+                FontWeight = _parent.FontWeight;
+                FirstHexChar.Foreground = _parent.ForegroundContrast;
+                SecondHexChar.Foreground = _parent.ForegroundContrast;
 
                 if (HexByteFirstSelected)
                     Background = _parent.SelectionFirstColor; 
@@ -263,7 +263,7 @@ namespace WPFHexaEditor.Control
             }
             else if (IsHighLight)
             {
-                FontWeight = (FontWeight)TryFindResource("NormalFontWeight");
+                FontWeight = _parent.FontWeight;
                 FirstHexChar.Foreground = _parent.Foreground;
                 SecondHexChar.Foreground = _parent.Foreground;
 
@@ -290,7 +290,7 @@ namespace WPFHexaEditor.Control
             }
             else
             {
-                FontWeight = (FontWeight)TryFindResource("NormalFontWeight");
+                FontWeight = _parent.FontWeight;
                 Background = Brushes.Transparent;
                 FirstHexChar.Foreground = _parent.Foreground;
                 SecondHexChar.Foreground = _parent.Foreground;

@@ -123,7 +123,7 @@ namespace WPFHexaEditor.Control
                 ctrl.UpdateLabelFromByte();
                 ctrl.UpdateHexString();
 
-                ctrl.UpdateBackGround();
+                ctrl.UpdateVisual();
             }
         }
 
@@ -146,13 +146,8 @@ namespace WPFHexaEditor.Control
 
             if (e.NewValue != e.OldValue)
             {
-                //if (ctrl.Action != ByteAction.Nothing && ctrl.InternalChange == false)
-                //    ctrl.StringByteModified?.Invoke(ctrl, new EventArgs());
-
                 ctrl.UpdateLabelFromByte();
-                //ctrl.UpdateHexString();
-
-                ctrl.UpdateBackGround();
+                ctrl.UpdateVisual();
             }
         }
 
@@ -174,7 +169,7 @@ namespace WPFHexaEditor.Control
             StringByteControl ctrl = d as StringByteControl;
 
             if (e.NewValue != e.OldValue)
-                ctrl.UpdateBackGround();
+                ctrl.UpdateVisual();
         }
 
         /// <summary>
@@ -209,7 +204,7 @@ namespace WPFHexaEditor.Control
             StringByteControl ctrl = d as StringByteControl;
 
             if (e.NewValue != e.OldValue)
-                ctrl.UpdateBackGround();
+                ctrl.UpdateVisual();
         }
 
         /// <summary>
@@ -255,7 +250,7 @@ namespace WPFHexaEditor.Control
             StringByteControl ctrl = d as StringByteControl;
 
             if (e.NewValue != e.OldValue)
-                ctrl.UpdateBackGround();
+                ctrl.UpdateVisual();
         }
 
         #endregion DependencyProperty
@@ -397,14 +392,14 @@ namespace WPFHexaEditor.Control
         }
 
         /// <summary>
-        /// Update Background
+        /// Update Background,foreground and font property
         /// </summary>
-        internal void UpdateBackGround()
+        internal void UpdateVisual()
         {
             if (IsSelected)
             {
-                FontWeight = (FontWeight)TryFindResource("NormalFontWeight");
-                StringByteLabel.Foreground = Brushes.White;
+                FontWeight = _parent.FontWeight;
+                StringByteLabel.Foreground = _parent.ForegroundContrast;
 
                 if (StringByteFirstSelected)
                     Background = _parent.SelectionFirstColor;
@@ -415,7 +410,7 @@ namespace WPFHexaEditor.Control
             }
             else if (IsHighLight)
             {
-                FontWeight = (FontWeight)TryFindResource("NormalFontWeight");
+                FontWeight = _parent.FontWeight;
                 StringByteLabel.Foreground = _parent.Foreground;
 
                 Background = _parent.HighLightColor;
@@ -443,7 +438,7 @@ namespace WPFHexaEditor.Control
             }
             else //TBL COLORING
             {
-                FontWeight = (FontWeight)TryFindResource("NormalFontWeight");
+                FontWeight = _parent.FontWeight;
                 Background = Brushes.Transparent;
                 StringByteLabel.Foreground = _parent.Foreground;
 

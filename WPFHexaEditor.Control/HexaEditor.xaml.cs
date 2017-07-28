@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -96,6 +97,7 @@ namespace WPFHexaEditor.Control
 
             StatusBarGrid.DataContext = this;
         }
+        
 
         #region Colors/fonts property and methods
         public Brush SelectionFirstColor
@@ -180,8 +182,18 @@ namespace WPFHexaEditor.Control
         public new static readonly DependencyProperty ForegroundProperty =
             DependencyProperty.Register("Foreground", typeof(Brush), typeof(HexaEditor),
                 new FrameworkPropertyMetadata(Brushes.Black, new PropertyChangedCallback(Control_ColorPropertyChanged)));
+        
+        public Brush ForegroundContrast
+        {
+            get { return (Brush)GetValue(ForegroundContrastProperty); }
+            set { SetValue(ForegroundContrastProperty, value); }
+        }
 
-
+        // Using a DependencyProperty as the backing store for ForegroundContrastColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ForegroundContrastProperty =
+            DependencyProperty.Register("ForegroundContrast", typeof(Brush), typeof(HexaEditor),
+                new FrameworkPropertyMetadata(Brushes.White, new PropertyChangedCallback(Control_ColorPropertyChanged)));
+        
         // Using a DependencyProperty as the backing store for  Background.  This enables animation, styling, binding, etc...
         public new static readonly DependencyProperty  BackgroundProperty =
             DependencyProperty.Register("Background", typeof(Brush), typeof(HexaEditor),
@@ -213,10 +225,10 @@ namespace WPFHexaEditor.Control
             foreach (TextBlock infolabel in LinesInfoStackPanel.Children)
             {
                 foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
-                    byteControl.UpdateBackGround();
+                    byteControl.UpdateVisual();
 
                 foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
-                    byteControl.UpdateBackGround();
+                    byteControl.UpdateVisual();
 
                 stackIndex++;
             }

@@ -276,22 +276,5 @@ namespace WPFHexaEditorExample
 
             Application.Current.MainWindow.Cursor = null;
         }
-
-        /// <summary>
-        /// TEMPS JUST FOR TESTING COLOLING PROPERTY
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            HexEdit.SelectionFirstColor = new SolidColorBrush(Colors.DarkBlue);
-            HexEdit.SelectionSecondColor = new SolidColorBrush(Colors.LightBlue);
-            HexEdit.MouseOverColor = new SolidColorBrush(Colors.Red);
-            HexEdit.HighLightColor = new SolidColorBrush(Colors.YellowGreen);
-            HexEdit.ByteDeletedColor = new SolidColorBrush(Colors.Tomato);
-            HexEdit.ByteModifiedColor= new SolidColorBrush(Colors.Turquoise);
-            HexEdit.Background = new SolidColorBrush(Colors.YellowGreen);
-
-        }
     }
 }

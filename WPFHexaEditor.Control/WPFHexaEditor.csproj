@@ -62,9 +62,6 @@
     <Compile Include="Core\Converters\ValueEcartConverter.cs" />
     <Compile Include="Core\Converters\ValueToForegroundColorConverter.cs" />
     <Compile Include="Core\Helper\DispatcherHelper.cs" />
-    <Compile Include="Core\Localization\LocManager.cs" />
-    <Compile Include="Core\Localization\LocResourceExtension.cs" />
-    <Compile Include="Core\Localization\LocStringExtension.cs" />
     <Compile Include="Core\MethodExtention\ButtonExtention.cs" />
     <Compile Include="Core\MethodExtention\CheckBoxExtention.cs" />
     <Compile Include="Core\MethodExtention\DateTimeExtention.cs" />

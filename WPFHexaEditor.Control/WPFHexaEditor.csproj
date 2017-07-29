@@ -56,15 +56,15 @@
     <Compile Include="Core\CharacterTable\TBLStream.cs" />
     <Compile Include="Core\Converters\BoolInverterConverter.cs" />
     <Compile Include="Core\Helper\DispatcherHelper.cs" />
-    <Page Include="ResourceDictionary\FontDictionary.xaml">
+    <Page Include="Resources\Dictionary\FontDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ResourceDictionary\MiscelanousDictionary.xaml">
+    <Page Include="Resources\Dictionary\MiscelanousDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ResourceDictionary\ToolTipDictionary.xaml">
+    <Page Include="Resources\Dictionary\ToolTipDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -98,7 +98,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ResourceDictionary\BrushesDictionary.xaml">
+    <Page Include="Resources\Dictionary\BrushesDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

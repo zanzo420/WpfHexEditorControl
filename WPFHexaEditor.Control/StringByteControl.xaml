@@ -21,9 +21,9 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="./ResourceDictionary/BrushesDictionary.xaml" />
-                <ResourceDictionary Source="./ResourceDictionary/ToolTipDictionary.xaml" />
-                <ResourceDictionary Source="./ResourceDictionary/FontDictionary.xaml" />
+                <ResourceDictionary Source="./Resources/Dictionary/BrushesDictionary.xaml" />
+                <ResourceDictionary Source="./Resources/Dictionary/ToolTipDictionary.xaml" />
+                <ResourceDictionary Source="./Resources/Dictionary/FontDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>

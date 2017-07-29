@@ -55,29 +55,7 @@
     <Compile Include="Core\CharacterTable\Enum.cs" />
     <Compile Include="Core\CharacterTable\TBLStream.cs" />
     <Compile Include="Core\Converters\BoolInverterConverter.cs" />
-    <Compile Include="Core\Converters\CurrencyConverter.cs" />
-    <Compile Include="Core\Converters\DecimalToDoubleRoundConverter.cs" />
-    <Compile Include="Core\Converters\DoubleRoundConverter.cs" />
-    <Compile Include="Core\Converters\RectConverter.cs" />
-    <Compile Include="Core\Converters\ValueEcartConverter.cs" />
-    <Compile Include="Core\Converters\ValueToForegroundColorConverter.cs" />
     <Compile Include="Core\Helper\DispatcherHelper.cs" />
-    <Compile Include="Core\MethodExtention\ButtonExtention.cs" />
-    <Compile Include="Core\MethodExtention\CheckBoxExtention.cs" />
-    <Compile Include="Core\MethodExtention\DateTimeExtention.cs" />
-    <Compile Include="Core\MethodExtention\DecimalExtension.cs" />
-    <Compile Include="Core\MethodExtention\DirectoryInfoExtention.cs" />
-    <Compile Include="Core\MethodExtention\DoubleExtension.cs" />
-    <Compile Include="Core\MethodExtention\FileInfoExtention.cs" />
-    <Compile Include="Core\MethodExtention\KeyEventExtension.cs" />
-    <Compile Include="Core\MethodExtention\StringExtension.cs" />
-    <Compile Include="Core\MethodExtention\UserControlExtension.cs" />
-    <Compile Include="TBLEditor.xaml.cs">
-      <DependentUpon>TBLEditor.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="TBLEntryControl.xaml.cs">
-      <DependentUpon>TBLEntryControl.xaml</DependentUpon>
-    </Compile>
     <Page Include="ResourceDictionary\FontDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -121,14 +99,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ResourceDictionary\BrushesDictionary.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="TBLEditor.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="TBLEntryControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

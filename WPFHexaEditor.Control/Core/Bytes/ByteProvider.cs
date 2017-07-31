@@ -316,6 +316,17 @@ namespace WPFHexaEditor.Core.Bytes
             return null;
         }
 
+        /// <summary>
+        /// Read bytes
+        /// </summary>
+        public int Read(byte[] destination, int offset, int count)
+        {
+            if (IsOpen)
+                if (_stream.CanRead)
+                    return _stream.Read(destination, offset, count);
+            return -1;
+        }
+
         #region SubmitChanges to file/stream
 
         /// <summary>
@@ -513,8 +524,8 @@ namespace WPFHexaEditor.Core.Bytes
                 && byteModified.IsValid
                 && (byteModified.Action == action || action == ByteAction.All))
             {
-                        return byteModified;
-                }
+                return byteModified;
+            }
             return null;
         }
 
@@ -576,10 +587,10 @@ namespace WPFHexaEditor.Core.Bytes
         public IDictionary<long, ByteModified> GetModifiedBytes(ByteAction action)
         {
             if (action == ByteAction.All)
-                {
+            {
                 return _byteModifiedDictionary;
-                }
-                else
+            }
+            else
             {
                 return _byteModifiedDictionary.Where(b => b.Value.Action == action).ToDictionary(k => k.Key, v => v.Value);
             }
@@ -686,7 +697,7 @@ namespace WPFHexaEditor.Core.Bytes
             string sBuffer = "";
 
             DataObject da = new DataObject();
-            
+
             switch (copypastemode)
             {
                 case CopyPasteMode.TBLString:
@@ -750,7 +761,7 @@ namespace WPFHexaEditor.Core.Bytes
             else
                 lenght = selectionStart - selectionStop + 1;
 
-            switch (language )
+            switch (language)
             {
                 case CodeLanguage.C:
                 case CodeLanguage.CSharp:
@@ -763,11 +774,11 @@ namespace WPFHexaEditor.Core.Bytes
                 case CodeLanguage.FSharp:
                     sb.Append($"// {FileName} ({DateTime.Now.ToString()}), \r\n// StartPosition: 0x{ByteConverters.LongToHex(selectionStart)}, StopPosition: 0x{ByteConverters.LongToHex(selectionStop)}, Lenght: 0x{ByteConverters.LongToHex(lenght)}");
                     break;
-            }                
+            }
 
             sb.AppendLine();
             sb.AppendLine();
-            
+
             switch (language)
             {
                 case CodeLanguage.CSharp:
@@ -821,12 +832,12 @@ namespace WPFHexaEditor.Core.Bytes
                     sb.Append("\t");
                     break;
             }
-            
+
             foreach (byte b in buffer)
             {
                 i++;
                 if (language == CodeLanguage.Java) sb.Append("(byte)");
-                
+
                 if (language == CodeLanguage.VBNET)
                     sb.Append($"&H{ByteConverters.ByteToHex(b)}, ");
                 else
@@ -852,7 +863,7 @@ namespace WPFHexaEditor.Core.Bytes
 
             da.SetText(sb.ToString(), TextDataFormat.Text);
         }
-        
+
         /// <summary>
         /// Copy selection of byte to a stream
         /// </summary>

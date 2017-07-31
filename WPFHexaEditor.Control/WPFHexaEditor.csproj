@@ -58,6 +58,9 @@
     <Compile Include="Core\CharacterTable\TBLStream.cs" />
     <Compile Include="Core\Converters\BoolInverterConverter.cs" />
     <Compile Include="Core\Helper\DispatcherHelper.cs" />
+    <Compile Include="StringByteControl.xaml.cs">
+      <DependentUpon>StringByteControl.xaml</DependentUpon>
+    </Compile>
     <Page Include="Resources\Dictionary\FontDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -67,10 +70,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\Dictionary\ToolTipDictionary.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="StringByteControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -89,9 +88,6 @@
     <Compile Include="Core\Enumeration.cs" />
     <Compile Include="Core\KeyValidator.cs" />
     <Compile Include="Core\MethodExtention\TrackExtention.cs" />
-    <Compile Include="StringByteControl.xaml.cs">
-      <DependentUpon>StringByteControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="HexaEditor.xaml.cs">
       <DependentUpon>HexaEditor.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -103,6 +99,10 @@
     <Page Include="Resources\Dictionary\BrushesDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="StringByteControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -133,21 +133,7 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Icon\AddPT.ico" />
-    <Resource Include="Resources\Icon\DTE.ico" />
     <Resource Include="Resources\Icon\0x.ico" />
-    <Resource Include="Resources\Icon\hexa.ico" />
-    <Resource Include="Resources\Icon\MTE.ico" />
-    <Resource Include="Resources\Icon\PTConvert.ico" />
-    <Resource Include="Resources\Icon\PT.ico" />
-    <Resource Include="Resources\Icon\tbl.ico" />
-    <Resource Include="Resources\Icon\tbu.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Icon\ASC.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Icon\SPE.ico" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Icon\Undo-Icon.ico" />

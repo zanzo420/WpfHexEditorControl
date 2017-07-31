@@ -97,7 +97,60 @@ namespace WPFHexaEditor.Control
 
             StatusBarGrid.DataContext = this;
         }
+
+        #region Build-in CTRL key property
+        public bool AllowBuildinCTRLC
+        {
+            get { return (bool)GetValue(AllowBuildinCTRLCProperty); }
+            set { SetValue(AllowBuildinCTRLCProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for AllowBuildinCTRLC.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty AllowBuildinCTRLCProperty =
+            DependencyProperty.Register("AllowBuildinCTRLC", typeof(bool), typeof(HexaEditor),
+                new FrameworkPropertyMetadata(true, new PropertyChangedCallback(Control_AllowBuildinCTRLPropertyChanged)));
+
+        public bool AllowBuildinCTRLV
+        {
+            get { return (bool)GetValue(AllowBuildinCTRLVProperty); }
+            set { SetValue(AllowBuildinCTRLVProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for AllowBuildinCTRLV.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty AllowBuildinCTRLVProperty =
+            DependencyProperty.Register("AllowBuildinCTRLV", typeof(bool), typeof(HexaEditor),
+                new FrameworkPropertyMetadata(true, new PropertyChangedCallback(Control_AllowBuildinCTRLPropertyChanged)));
+
+        public bool AllowBuildinCTRLA
+        {
+            get { return (bool)GetValue(AllowBuildinCTRLAProperty); }
+            set { SetValue(AllowBuildinCTRLAProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for AllowBuildinCTRLA.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty AllowBuildinCTRLAProperty =
+            DependencyProperty.Register("AllowBuildinCTRLA", typeof(bool), typeof(HexaEditor),
+                new FrameworkPropertyMetadata(true, new PropertyChangedCallback(Control_AllowBuildinCTRLPropertyChanged)));
+
+        public bool AllowBuildinCTRLZ
+        {
+            get { return (bool)GetValue(AllowBuildinCTRLZProperty); }
+            set { SetValue(AllowBuildinCTRLZProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for AllowBuildinCTRLZ.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty AllowBuildinCTRLZProperty =
+            DependencyProperty.Register("AllowBuildinCTRLZ", typeof(bool), typeof(HexaEditor),
+                new FrameworkPropertyMetadata(true, new PropertyChangedCallback(Control_AllowBuildinCTRLPropertyChanged)));
         
+        private static void Control_AllowBuildinCTRLPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            HexaEditor ctrl = d as HexaEditor;
+
+            if (e.NewValue != e.OldValue)
+                ctrl.RefreshView();            
+        }
+        #endregion Build-in CTRL key property
 
         #region Colors/fonts property and methods
         public Brush SelectionFirstColor
@@ -166,6 +219,28 @@ namespace WPFHexaEditor.Control
             DependencyProperty.Register("HighLightColor", typeof(Brush), typeof(HexaEditor),
                 new FrameworkPropertyMetadata(Brushes.Gold, new PropertyChangedCallback(Control_ColorPropertyChanged)));
         
+        public Brush ForegroundOffSetHeaderColor
+        {
+            get { return (Brush)GetValue(ForegroundOffSetHeaderColorProperty); }
+            set { SetValue(ForegroundOffSetHeaderColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ForegroundOffSetHeaderColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ForegroundOffSetHeaderColorProperty =
+            DependencyProperty.Register("ForegroundOffSetHeaderColor", typeof(Brush), typeof(HexaEditor),
+                new FrameworkPropertyMetadata(Brushes.Gray, new PropertyChangedCallback(Control_ForegroundOffSetHeaderColorPropertyChanged)));
+
+        private static void Control_ForegroundOffSetHeaderColorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            HexaEditor ctrl = d as HexaEditor;
+
+            if (e.NewValue != e.OldValue)
+            {
+                ctrl.UpdateHexHeader();
+                ctrl.UpdateLinesInfo();
+            }
+        }
+
         public new Brush Background
         {
             get { return (Brush)GetValue( BackgroundProperty); }
@@ -2064,10 +2139,11 @@ namespace WPFHexaEditor.Control
                             sbCtrl.MoveRight += Control_MoveRight;
                             sbCtrl.ByteDeleted += Control_ByteDeleted;
                             sbCtrl.EscapeKey += Control_EscapeKey;
-                            sbCtrl.CTRLZKey += Control_CTRLZKey;
-                            sbCtrl.CTRLCKey += Control_CTRLCKey;
-                            sbCtrl.CTRLVKey += Control_CTRLVKey;
-                            sbCtrl.CTRLAKey += Control_CTRLAKey;
+                                                        
+                            if (AllowBuildinCTRLZ) sbCtrl.CTRLZKey += Control_CTRLZKey;
+                            if (AllowBuildinCTRLC) sbCtrl.CTRLCKey += Control_CTRLCKey;
+                            if (AllowBuildinCTRLV) sbCtrl.CTRLVKey += Control_CTRLVKey;
+                            if (AllowBuildinCTRLA) sbCtrl.CTRLAKey += Control_CTRLAKey;
 
 
                             sbCtrl.InternalChange = true;
@@ -2351,10 +2427,11 @@ namespace WPFHexaEditor.Control
                             byteControl.MovePageDown += Control_MovePageDown;
                             byteControl.ByteDeleted += Control_ByteDeleted;
                             byteControl.EscapeKey += Control_EscapeKey;
-                            byteControl.CTRLZKey += Control_CTRLZKey;
-                            byteControl.CTRLCKey += Control_CTRLCKey;
-                            byteControl.CTRLVKey += Control_CTRLVKey;
-                            byteControl.CTRLAKey += Control_CTRLAKey;
+
+                            if (AllowBuildinCTRLZ) byteControl.CTRLZKey += Control_CTRLZKey;
+                            if (AllowBuildinCTRLC) byteControl.CTRLCKey += Control_CTRLCKey;
+                            if (AllowBuildinCTRLV) byteControl.CTRLVKey += Control_CTRLVKey;
+                            if (AllowBuildinCTRLA) byteControl.CTRLAKey += Control_CTRLAKey;
 
                             //Tooltip update
                             if (position > _provider.Length)
@@ -2437,7 +2514,7 @@ namespace WPFHexaEditor.Control
                     TextBlock LineInfoLabel = new TextBlock();
                     LineInfoLabel.Height = _lineInfoHeight;
                     LineInfoLabel.Padding = new Thickness(0, 0, 10, 0);
-                    LineInfoLabel.Foreground = Brushes.Gray;
+                    LineInfoLabel.Foreground = ForegroundOffSetHeaderColor;
                     LineInfoLabel.Width = 25;
                     LineInfoLabel.TextAlignment = TextAlignment.Center;
                     LineInfoLabel.Text = ByteConverters.ByteToHex((byte)i);
@@ -2454,7 +2531,7 @@ namespace WPFHexaEditor.Control
         public void UpdateLinesInfo()
         {
             LinesInfoStackPanel.Children.Clear();
-            
+
             if (ByteProvider.CheckIsOpen(_provider))
             {
                 for (int i = 0; i < GetMaxVisibleLine(); i++)
@@ -2471,27 +2548,27 @@ namespace WPFHexaEditor.Control
                         TextBlock LineInfoLabel = new TextBlock();
                         LineInfoLabel.Height = _lineInfoHeight;
                         LineInfoLabel.Padding = new Thickness(0, 0, 10, 0);
-                        LineInfoLabel.Foreground = Brushes.Gray;
+                        LineInfoLabel.Foreground = ForegroundOffSetHeaderColor;
                         LineInfoLabel.MouseDown += LineInfoLabel_MouseDown;
                         LineInfoLabel.MouseMove += LineInfoLabel_MouseMove;
                         LineInfoLabel.Text = info;
                         LineInfoLabel.ToolTip = $"Byte : {firstLineByte.ToString()}";
 
                         LinesInfoStackPanel.Children.Add(LineInfoLabel);
-                    }else
+                    }
+                    else
                     {
                         //ON WORKING: FOR PREVENT BUG AT END OF FILE...
                         //Create control
                         TextBlock LineInfoLabel = new TextBlock();
                         LineInfoLabel.Foreground = LineInfoLabel.Background;
-                        LineInfoLabel.Text = "0x" + ByteConverters.LongToHex(_provider.Length +1);                        
+                        LineInfoLabel.Text = "0x" + ByteConverters.LongToHex(_provider.Length + 1);
 
                         LinesInfoStackPanel.Children.Add(LineInfoLabel);
                     }
                 }
             }
         }
-
         #endregion Update/Refresh view methods/event
 
         #region First/Last visible byte methods

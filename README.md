@@ -8,10 +8,10 @@ Sample with Thingy character table on SNES Final Fantasy II US
 ![example](WPFHexEditorControlSample7-TBL.png?raw=true)
 
 
-## NUGET  Last version : 2017-02-26
+## NUGET  Last version : 2017-08-01  (v0.9.5)
 https://www.nuget.org/packages/WPFHexaEditor/
 
-## Features
+## Somes features
 - Modify bytes
 - Delete bytes
 - Save changes
@@ -29,18 +29,6 @@ https://www.nuget.org/packages/WPFHexaEditor/
 - Scollbar marker for selection start and byte finded
 - Set Bookmark
 - ...
-
-## Release Notes (version of NUGET package)
-New in version 0.9.0.1
-- Implementation of TBL file format. (CHARACTER TABLE FOR ROM REVERSE ENGINEERING)
-- Added key fonction like ESC to unselect/unlight
-- Code optimization and many bug fixed
-
-New in version 0.7.0
-- Add FindSelection
-- HighLight for Find
-- Somes bugs fix and minor add...
-
 
 ## How to use
 Add a reference to `WPFHexaEditor.Control.dll` from your project, then add the following namespace to your XAML:

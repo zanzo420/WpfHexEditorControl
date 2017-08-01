@@ -5,7 +5,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -34,6 +33,7 @@ namespace WPFHexaEditor.Control
         private long _rightClickBytePosition = -1;
         private TBLStream _TBLCharacterTable = null;
 
+        #region Events
         /// <summary>
         /// Occurs when selection start are changed.
         /// </summary>
@@ -83,6 +83,7 @@ namespace WPFHexaEditor.Control
         /// Occurs when data are saved to stream/file.
         /// </summary>
         public event EventHandler ChangesSubmited;
+        #endregion Events
 
         public HexaEditor()
         {
@@ -531,7 +532,7 @@ namespace WPFHexaEditor.Control
 
             if (e.NewValue != e.OldValue)
             {
-                ctrl.RefreshView(false);
+                ctrl.RefreshView(true);
 
                 //TODO: ADD VISIBILITY CONVERTER FOR BINDING READONLY PROPERTY
                 if (ctrl.ReadOnlyMode)
@@ -1989,10 +1990,7 @@ namespace WPFHexaEditor.Control
 
         private void Grid_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            //TODO: PREVENT CHANGE ONLY FOR NEW LINE HEIGHT
-
             if (e.HeightChanged) RefreshView(true);
-
         }
 
         private void VerticalScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)

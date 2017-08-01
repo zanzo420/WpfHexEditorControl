@@ -16,9 +16,6 @@ using WPFHexaEditor.Core.CharacterTable;
 
 namespace WPFHexaEditor.Control
 {
-    /// <summary>
-    /// Interaction logic for StringByteControl.xaml
-    /// </summary>
     internal partial class StringByteControl : TextBlock
     {
         //private bool _isByteModified = false;
@@ -69,7 +66,7 @@ namespace WPFHexaEditor.Control
         /// <param name="url"></param>
         private void LoadDict(string url)
         {
-            var ttLocaltor = new System.Uri(url, System.UriKind.Relative);
+            var ttLocaltor = new Uri(url, UriKind.Relative);
             var ttRes = new ResourceDictionary();
             ttRes.Source = ttLocaltor;
             this.Resources.MergedDictionaries.Add(ttRes);
@@ -627,26 +624,26 @@ namespace WPFHexaEditor.Control
                 {
                     if (Keyboard.Modifiers != ModifierKeys.Shift && e.Key != Key.RightShift && e.Key != Key.LeftShift)
                     {
-                        Text = KeyValidator.GetCharFromKey(e.Key).ToString(); //ByteConverters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key));
+                        Text = KeyValidator.GetCharFromKey(e.Key).ToString();
                         isok = true;
                     }
                     else if (Keyboard.Modifiers == ModifierKeys.Shift && e.Key != Key.RightShift && e.Key != Key.LeftShift)
                     {
                         isok = true;
-                        Text = KeyValidator.GetCharFromKey(e.Key).ToString().ToLower(); //ByteConverters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key)).ToString().ToLower();
+                        Text = KeyValidator.GetCharFromKey(e.Key).ToString().ToLower(); 
                     }
                 }
                 else
                 {
                     if (Keyboard.Modifiers != ModifierKeys.Shift && e.Key != Key.RightShift && e.Key != Key.LeftShift)
                     {
-                        Text = KeyValidator.GetCharFromKey(e.Key).ToString().ToLower(); //ByteConverters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key)).ToString().ToLower();
+                        Text = KeyValidator.GetCharFromKey(e.Key).ToString().ToLower(); 
                         isok = true;
                     }
                     else if (Keyboard.Modifiers == ModifierKeys.Shift && e.Key != Key.RightShift && e.Key != Key.LeftShift)
                     {
                         isok = true;
-                        Text = KeyValidator.GetCharFromKey(e.Key).ToString(); //ByteConverters.ByteToChar((byte)KeyInterop.VirtualKeyFromKey(e.Key));
+                        Text = KeyValidator.GetCharFromKey(e.Key).ToString();
                     }
                 }
 
@@ -669,7 +666,7 @@ namespace WPFHexaEditor.Control
                     Action != ByteAction.Deleted &&
                     Action != ByteAction.Added &&
                     !IsSelected && !IsHighLight)
-                    Background = _parent.MouseOverColor; //(SolidColorBrush)TryFindResource("MouseOverColor");
+                    Background = _parent.MouseOverColor; 
 
             if (e.LeftButton == MouseButtonState.Pressed)
                 MouseSelection?.Invoke(this, e);

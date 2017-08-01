@@ -58,6 +58,7 @@
     <Compile Include="Core\CharacterTable\TBLStream.cs" />
     <Compile Include="Core\Converters\BoolInverterConverter.cs" />
     <Compile Include="Core\Helper\DispatcherHelper.cs" />
+    <Compile Include="HexByteControl.cs" />
     <Compile Include="StringByteControl.cs" />
     <Page Include="Resources\Dictionary\FontDictionary.xaml">
       <SubType>Designer</SubType>
@@ -90,19 +91,16 @@
       <DependentUpon>HexaEditor.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="HexByteControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Resources\Dictionary\BrushesDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HexByteControl.xaml.cs">
-      <DependentUpon>HexByteControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

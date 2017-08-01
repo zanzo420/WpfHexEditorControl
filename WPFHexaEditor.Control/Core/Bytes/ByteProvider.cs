@@ -201,6 +201,7 @@ namespace WPFHexaEditor.Core.Bytes
                 IsOnLongProcess = false;
                 LongProcessProgress = 0;
 
+                ClearUndoChange();
                 _streamType = ByteProviderStreamType.Nothing;
 
                 Closed?.Invoke(this, new EventArgs());
@@ -546,8 +547,13 @@ namespace WPFHexaEditor.Core.Bytes
                 BytePositionInFile = bytePositionInFile,
                 Action = ByteAction.Modified
             };
-            _byteModifiedDictionary.Add(bytePositionInFile, byteModified);
-            UndoStack.Push(byteModified);
+
+            try
+            {
+                _byteModifiedDictionary.Add(bytePositionInFile, byteModified);
+                UndoStack.Push(byteModified);
+            }
+            catch { }
         }
 
         /// <summary>

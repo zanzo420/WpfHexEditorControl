@@ -2374,58 +2374,49 @@ namespace WPFHexaEditor.Control
         /// </summary>
         private void UpdateSelection()
         {
-            int stackIndex = 0;
-            foreach (TextBlock infolabel in LinesInfoStackPanel.Children)
+            if (SelectionStart <= SelectionStop)
             {
-                if (SelectionStart <= SelectionStop)
+                TraverseStringControls(control =>
                 {
-                    //Stringbyte panel
-                    if (StringDataStackPanel.Children.Count > 0)
-                        foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
-                            if (byteControl.BytePositionInFile >= SelectionStart &&
-                                byteControl.BytePositionInFile <= SelectionStop &&
-                                byteControl.BytePositionInFile > -1)
-                                byteControl.IsSelected = byteControl.Action == ByteAction.Deleted ? false : true;
-                            else
-                                byteControl.IsSelected = false;
+                    if (control.BytePositionInFile >= SelectionStart &&
+                        control.BytePositionInFile <= SelectionStop &&
+                        control.BytePositionInFile > -1)
+                        control.IsSelected = control.Action == ByteAction.Deleted ? false : true;
+                    else
+                        control.IsSelected = false;
+                });
 
-                    //HexByte panel
-                    if (HexDataStackPanel.Children.Count > 0)
-                        foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
-                            if (byteControl.BytePositionInFile >= SelectionStart &&
-                                byteControl.BytePositionInFile <= SelectionStop &&
-                                byteControl.BytePositionInFile > -1)
-                                byteControl.IsSelected = byteControl.Action == ByteAction.Deleted ? false : true;
-                            else
-                                byteControl.IsSelected = false;
-                }
-                else
+                TraverseDataControls(control =>
                 {
-                    //Stringbyte panel
-                    if (StringDataStackPanel.Children.Count > 0)
-                        foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
-                            if (byteControl.BytePositionInFile >= SelectionStop &&
-                                byteControl.BytePositionInFile <= SelectionStart &&
-                                byteControl.BytePositionInFile > -1)
-                                byteControl.IsSelected = byteControl.Action == ByteAction.Deleted ? false : true;
-                            else
-                                byteControl.IsSelected = false;
+                    if (control.BytePositionInFile >= SelectionStart &&
+                        control.BytePositionInFile <= SelectionStop &&
+                        control.BytePositionInFile > -1)
+                        control.IsSelected = control.Action == ByteAction.Deleted ? false : true;
+                    else
+                        control.IsSelected = false;
+                });
+            }
+            else
+            {
+                TraverseStringControls(control =>
+                {
+                    if (control.BytePositionInFile >= SelectionStop &&
+                        control.BytePositionInFile <= SelectionStart &&
+                        control.BytePositionInFile > -1)
+                        control.IsSelected = control.Action == ByteAction.Deleted ? false : true;
+                    else
+                        control.IsSelected = false;
+                });
 
-                    //HexByte panel
-                    if (HexDataStackPanel.Children.Count > 0)
-                        foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
-                            if (byteControl.BytePositionInFile >= SelectionStop &&
-                                byteControl.BytePositionInFile <= SelectionStart &&
-                                byteControl.BytePositionInFile > -1)
-                                byteControl.IsSelected = byteControl.Action == ByteAction.Deleted ? false : true;
-                            else
-                                byteControl.IsSelected = false;
-                }
-                stackIndex++;
-
-                //Prevent index out off range exception when resize at EOF
-                if (stackIndex == HexDataStackPanel.Children.Count && VerticalScrollBar.Value == VerticalScrollBar.Maximum)
-                    stackIndex--;
+                TraverseDataControls(control =>
+                {
+                    if (control.BytePositionInFile >= SelectionStop &&
+                        control.BytePositionInFile <= SelectionStart &&
+                        control.BytePositionInFile > -1)
+                        control.IsSelected = control.Action == ByteAction.Deleted ? false : true;
+                    else
+                        control.IsSelected = false;
+                });
             }
         }
 
@@ -2434,76 +2425,42 @@ namespace WPFHexaEditor.Control
         /// </summary>
         private void UpdateHighLightByte()
         {
-            int stackIndex = 0;
             bool find = false;
 
             if (_markedPositionList.Count > 0)
             {
-                //var ByteList = from hlb in _markedPositionList
-                //         where hlb >= GetFirstVisibleBytePosition() + BytePerLine && hlb <= GetLastVisibleBytePosition() + BytePerLine
-                //         select hlb;
-
-                foreach (TextBlock infolabel in LinesInfoStackPanel.Children)
+                TraverseDataControls(Control =>
                 {
-                    //Stringbyte panel
-                    foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
-                    {
-                        find = false;
+                    find = false;
 
-                        foreach (long position in _markedPositionList)
-                            if (position == byteControl.BytePositionInFile)
-                            {
-                                find = true;
-                                break;
-                            }
+                    foreach (long position in _markedPositionList)
+                        if (position == Control.BytePositionInFile)
+                        {
+                            find = true;
+                            break;
+                        }
 
-                        byteControl.IsHighLight = find;
-                    }
+                    Control.IsHighLight = find;
+                });
 
-                    //HexByte panel
-                    foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
-                    {
-                        find = false;
+                TraverseStringControls(Control =>
+                {
+                    find = false;
 
-                        foreach (long position in _markedPositionList)
-                            if (position == byteControl.BytePositionInFile)
-                            {
-                                find = true;
-                                break;
-                            }
+                    foreach (long position in _markedPositionList)
+                        if (position == Control.BytePositionInFile)
+                        {
+                            find = true;
+                            break;
+                        }
 
-                        byteControl.IsHighLight = find;
-                    }
-
-                    stackIndex++;
-
-                    //Prevent index out off range exception when resize at EOF
-                    if (stackIndex == HexDataStackPanel.Children.Count && VerticalScrollBar.Value == VerticalScrollBar.Maximum)
-                        stackIndex--;
-                }
+                    Control.IsHighLight = find;
+                });
             }
             else //Un highlight all
             {
-                stackIndex = 0;
-
-                foreach (TextBlock infolabel in LinesInfoStackPanel.Children)
-                {
-                    //Stringbyte panel
-                    if (StringDataStackPanel.Children.Count > 0)
-                        foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
-                            byteControl.IsHighLight = false;
-
-                    //HexByte panel
-                    if (HexDataStackPanel.Children.Count > 0)
-                        foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
-                            byteControl.IsHighLight = false;
-
-                    stackIndex++;
-
-                    //Prevent index out off range exception when resize at EOF
-                    if (stackIndex == HexDataStackPanel.Children.Count && VerticalScrollBar.Value == VerticalScrollBar.Maximum)
-                        stackIndex--;
-                }
+                TraverseStringControls(Control => { Control.IsHighLight = false; });
+                TraverseDataControls(Control => { Control.IsHighLight = false; });
             }
         }
         

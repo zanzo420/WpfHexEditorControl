@@ -2481,39 +2481,41 @@ namespace WPFHexaEditor.Control
         {
             LinesInfoStackPanel.Children.Clear();
 
+            long fds = GetMaxVisibleLine();
+
+            //If the lines are less than "visible lines" create them;
+            var linesCount = LinesInfoStackPanel.Children.Count;
+
+            if (linesCount < fds)
+            {
+                for (int i = 0; i < fds - linesCount; i++)
+                {
+                    var LineInfoLabel = new TextBlock();
+                    LineInfoLabel.Height = _lineInfoHeight;
+                    LineInfoLabel.Padding = new Thickness(0, 0, 10, 0);
+                    LineInfoLabel.Foreground = ForegroundOffSetHeaderColor;
+                    LineInfoLabel.MouseDown += LineInfoLabel_MouseDown;
+                    LineInfoLabel.MouseMove += LineInfoLabel_MouseMove;
+                    LineInfoLabel.HorizontalAlignment = HorizontalAlignment.Left;
+                    LineInfoLabel.VerticalAlignment = VerticalAlignment.Center;
+                    LineInfoLabel.TextAlignment = TextAlignment.Left;
+                    LinesInfoStackPanel.Children.Add(LineInfoLabel);
+                }
+
+            }
+
             if (ByteProvider.CheckIsOpen(_provider))
             {
-                for (int i = 0; i < GetMaxVisibleLine(); i++)
+                for (int i = 0; i < fds; i++)
                 {
-                    long fds = GetMaxVisibleLine();
-                    //LineInfo
-
                     long firstLineByte = ((long)VerticalScrollBar.Value + i) * BytePerLine;
-                    string info = "0x" + ByteConverters.LongToHex(firstLineByte);
+                    var LineInfoLabel = (TextBlock)LinesInfoStackPanel.Children[i];
 
                     if (firstLineByte < _provider.Length)
                     {
                         //Create control
-                        TextBlock LineInfoLabel = new TextBlock();
-                        LineInfoLabel.Height = _lineInfoHeight;
-                        LineInfoLabel.Padding = new Thickness(0, 0, 10, 0);
-                        LineInfoLabel.Foreground = ForegroundOffSetHeaderColor;
-                        LineInfoLabel.MouseDown += LineInfoLabel_MouseDown;
-                        LineInfoLabel.MouseMove += LineInfoLabel_MouseMove;
-                        LineInfoLabel.Text = info;
+                        LineInfoLabel.Text = "0x" + ByteConverters.LongToHex(firstLineByte).ToUpper();
                         LineInfoLabel.ToolTip = $"Byte : {firstLineByte.ToString()}";
-
-                        LinesInfoStackPanel.Children.Add(LineInfoLabel);
-                    }
-                    else
-                    {
-                        //ON WORKING: FOR PREVENT BUG AT END OF FILE...
-                        //Create control
-                        TextBlock LineInfoLabel = new TextBlock();
-                        LineInfoLabel.Foreground = LineInfoLabel.Background;
-                        LineInfoLabel.Text = "0x" + ByteConverters.LongToHex(_provider.Length + 1);
-
-                        LinesInfoStackPanel.Children.Add(LineInfoLabel);
                     }
                 }
             }

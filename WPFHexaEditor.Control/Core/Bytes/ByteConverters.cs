@@ -1,5 +1,5 @@
 ﻿//////////////////////////////////////////////
-// Apache 2.0  - 2016-2017
+// MIT License  - 2016-2017
 // Author : Derek Tremblay (derektremblay666@gmail.com)
 //////////////////////////////////////////////
 
@@ -62,26 +62,20 @@ namespace WPFHexaEditor.Core.Bytes
             return sb.ToString();
         }
 
+
         /// <summary>
-        /// Converts the byte to a hex string. For example: "10" = "0A";
+        /// Convert a byte to char[2].
         /// </summary>
-        public static string ByteToHex(byte b)
-        {
-            string sB = b.ToString(ConstantReadOnly.HexStringFormat, CultureInfo.InvariantCulture);
-
-            if (sB.Length == 1)
-                sB = "0" + sB;
-
-            return sB;
-        }
-
-        private static readonly char[] hexbyteArray = new char[2];
+        /// <param name="b"></param>
+        /// <returns></returns>
         public static char[] ByteToHexCharArray(byte b)
         {
+            var hexbyteArray = new char[2];
             hexbyteArray[0] = ByteToHexChar(b >> 4);
             hexbyteArray[1] = ByteToHexChar(b - ((b >> 4) << 4));
             return hexbyteArray;
         }
+        //Convert a byte to Hex char,i.e,10 = 'A'
         public static char ByteToHexChar(int b)
         {
             if (b < 10)
@@ -106,6 +100,30 @@ namespace WPFHexaEditor.Core.Bytes
                     return 's';
             }
         }
+
+
+        /// <summary>
+        /// Converts the byte to a hex string. For example: "10" = "0A";
+        /// </summary>
+        public static string ByteToHex(byte b)
+        {
+            string sB = b.ToString(ConstantReadOnly.HexStringFormat, CultureInfo.InvariantCulture);
+
+            if (sB.Length == 1)
+                sB = "0" + sB;
+
+            return sB;
+        }
+
+        /// <summary>
+        /// Converts the byte to a hex string. For example: "10" = "0A";
+        /// </summary>
+        public static string ByteToHex2(byte b)
+        {
+            var chArr = ByteToHexCharArray(b);
+            return new string(chArr);
+        }
+
         /// <summary>
         /// Convert byte to ASCII string
         /// </summary>

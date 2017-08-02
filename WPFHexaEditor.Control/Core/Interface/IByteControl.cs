@@ -18,7 +18,7 @@ namespace WPFHexaEditor.Core.Interface
         byte? Byte { get; set; }
         bool IsFocus { get; set; }
         string HexString { get; }
-        bool IsHighLight { get; }
-        bool IsSelected { get; }
+        bool IsHighLight { get; set; }
+        bool IsSelected { get; set; }
     }
 }

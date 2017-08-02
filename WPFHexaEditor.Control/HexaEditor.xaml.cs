@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using WPFHexaEditor.Core;
 using WPFHexaEditor.Core.Bytes;
 using WPFHexaEditor.Core.CharacterTable;
+using WPFHexaEditor.Core.Interface;
 using WPFHexaEditor.Core.MethodExtention;
 
 namespace WPFHexaEditor.Control
@@ -2339,6 +2340,32 @@ namespace WPFHexaEditor.Control
         }
 
         /// <summary>
+        /// To reduce code.traverse hex and string controls.
+        /// </summary>
+        /// <param name="act"></param>
+        private void TraverseStringAndDataControls(Action<IByteControl> act)
+        {
+            foreach (StackPanel stringDataStack in StringDataStackPanel.Children)
+            {
+                //Stringbyte panel
+                foreach (StringByteControl sbControl in stringDataStack.Children)
+                {
+                    act(sbControl);
+                }
+            }
+
+            foreach (StackPanel hexDataStack in HexDataStackPanel.Children)
+            {
+                //HexByte panel
+                foreach (HexByteControl byteControl in hexDataStack.Children)
+                {
+                    act(byteControl);
+                }
+            }
+        }
+
+
+        /// <summary>
         /// Update byte are modified
         /// </summary>
         private void UpdateByteModified()
@@ -2374,76 +2401,34 @@ namespace WPFHexaEditor.Control
         /// </summary>
         private void UpdateSelection()
         {
-            if (SelectionStart <= SelectionStop)
-            {
-                TraverseStringControls(control =>
-                {
-                    if (control.BytePositionInFile >= SelectionStart &&
-                        control.BytePositionInFile <= SelectionStop &&
-                        control.BytePositionInFile > -1)
-                        control.IsSelected = control.Action == ByteAction.Deleted ? false : true;
-                    else
-                        control.IsSelected = false;
-                });
+            long minSelect = SelectionStart <= SelectionStop ? SelectionStart : SelectionStop;
+            long maxSelect = SelectionStart <= SelectionStop ? SelectionStop : SelectionStart;
 
-                TraverseDataControls(control =>
-                {
-                    if (control.BytePositionInFile >= SelectionStart &&
-                        control.BytePositionInFile <= SelectionStop &&
-                        control.BytePositionInFile > -1)
-                        control.IsSelected = control.Action == ByteAction.Deleted ? false : true;
-                    else
-                        control.IsSelected = false;
-                });
-            }
-            else
+            TraverseStringAndDataControls(ctrl =>
             {
-                TraverseStringControls(control =>
+                if (ctrl.BytePositionInFile >= minSelect &&
+                        ctrl.BytePositionInFile <= maxSelect &&
+                        ctrl.BytePositionInFile != -1)
                 {
-                    if (control.BytePositionInFile >= SelectionStop &&
-                        control.BytePositionInFile <= SelectionStart &&
-                        control.BytePositionInFile > -1)
-                        control.IsSelected = control.Action == ByteAction.Deleted ? false : true;
-                    else
-                        control.IsSelected = false;
-                });
-
-                TraverseDataControls(control =>
+                    ctrl.IsSelected = ctrl.Action == ByteAction.Deleted ? false : true;
+                }
+                else
                 {
-                    if (control.BytePositionInFile >= SelectionStop &&
-                        control.BytePositionInFile <= SelectionStart &&
-                        control.BytePositionInFile > -1)
-                        control.IsSelected = control.Action == ByteAction.Deleted ? false : true;
-                    else
-                        control.IsSelected = false;
-                });
-            }
+                    ctrl.IsSelected = false;
+                }
+            });
         }
 
         /// <summary>
         /// Update bytes as marked on findall()
         /// </summary>
-        private void UpdateHighLightByte()
+        private void UpdateHighLightByte() 
         {
             bool find = false;
 
             if (_markedPositionList.Count > 0)
             {
-                TraverseDataControls(Control =>
-                {
-                    find = false;
-
-                    foreach (long position in _markedPositionList)
-                        if (position == Control.BytePositionInFile)
-                        {
-                            find = true;
-                            break;
-                        }
-
-                    Control.IsHighLight = find;
-                });
-
-                TraverseStringControls(Control =>
+                TraverseStringAndDataControls(Control =>
                 {
                     find = false;
 
@@ -2459,8 +2444,7 @@ namespace WPFHexaEditor.Control
             }
             else //Un highlight all
             {
-                TraverseStringControls(Control => { Control.IsHighLight = false; });
-                TraverseDataControls(Control => { Control.IsHighLight = false; });
+                TraverseStringAndDataControls(Control => { Control.IsHighLight = false; });
             }
         }
         
@@ -2560,7 +2544,6 @@ namespace WPFHexaEditor.Control
             else
                 return -1;
         }
-
 
         /// <summary>
         /// Return True if SelectionStart are visible in control

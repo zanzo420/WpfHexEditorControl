@@ -122,14 +122,14 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Used for selection coloring
         /// </summary>
-        public bool HexByteFirstSelected
+        public bool FirstSelected
         {
-            get { return (bool)GetValue(HexByteFirstSelectedProperty); }
-            set { SetValue(HexByteFirstSelectedProperty, value); }
+            get { return (bool)GetValue(FirstSelectedProperty); }
+            set { SetValue(FirstSelectedProperty, value); }
         }
 
-        public static readonly DependencyProperty HexByteFirstSelectedProperty =
-            DependencyProperty.Register("HexByteFirstSelected", typeof(bool), typeof(HexByteControl), new PropertyMetadata(true));
+        public static readonly DependencyProperty FirstSelectedProperty =
+            DependencyProperty.Register("FirstSelected", typeof(bool), typeof(HexByteControl), new PropertyMetadata(true));
 
         /// <summary>
         /// Byte used for this instance
@@ -156,7 +156,6 @@ namespace WPFHexaEditor.Control
                 }
 
                 ctrl.UpdateLabelFromByte();
-                ctrl.UpdateHexString();
             }
         }
 
@@ -192,13 +191,11 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public string HexString
         {
-            get { return (string)GetValue(HexStringProperty); }
-            internal set { SetValue(HexStringProperty, value); }
+            get
+            {
+                return FirstHexChar.Text + SecondHexChar.Text;
+            }
         }
-
-        public static readonly DependencyProperty HexStringProperty =
-            DependencyProperty.Register("HexString", typeof(string), typeof(HexByteControl),
-                new FrameworkPropertyMetadata(string.Empty));
 
         /// <summary>
         /// Get or Set if control as selected
@@ -288,7 +285,7 @@ namespace WPFHexaEditor.Control
                 FirstHexChar.Foreground = _parent.ForegroundContrast;
                 SecondHexChar.Foreground = _parent.ForegroundContrast;
 
-                if (HexByteFirstSelected)
+                if (FirstSelected)
                     Background = _parent.SelectionFirstColor;
                 else
                     Background = _parent.SelectionSecondColor;
@@ -483,11 +480,6 @@ namespace WPFHexaEditor.Control
                             break;
                     }
                 }
-        }
-
-        private void UpdateHexString()
-        {
-            HexString = ((string)FirstHexChar.Text + (string)SecondHexChar.Text); //.ToString();
         }
 
         private void UserControl_MouseEnter(object sender, MouseEventArgs e)

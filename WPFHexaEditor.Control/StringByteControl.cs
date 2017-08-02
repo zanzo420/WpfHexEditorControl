@@ -121,14 +121,14 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Used for selection coloring
         /// </summary>
-        public bool StringByteFirstSelected
+        public bool FirstSelected
         {
-            get { return (bool)GetValue(StringByteFirstSelectedProperty); }
-            set { SetValue(StringByteFirstSelectedProperty, value); }
+            get { return (bool)GetValue(FirstSelectedProperty); }
+            set { SetValue(FirstSelectedProperty, value); }
         }
 
-        public static readonly DependencyProperty StringByteFirstSelectedProperty =
-            DependencyProperty.Register("StringByteFirstSelected", typeof(bool), typeof(StringByteControl), new PropertyMetadata(true));
+        public static readonly DependencyProperty FirstSelectedProperty =
+            DependencyProperty.Register("FirstSelected", typeof(bool), typeof(StringByteControl), new PropertyMetadata(true));
 
         /// <summary>
         /// Byte used for this instance
@@ -460,7 +460,7 @@ namespace WPFHexaEditor.Control
                 FontWeight = _parent.FontWeight;
                 Foreground = _parent.ForegroundContrast;
 
-                if (StringByteFirstSelected)
+                if (FirstSelected)
                     Background = _parent.SelectionFirstColor;
                 else
                     Background = _parent.SelectionSecondColor;

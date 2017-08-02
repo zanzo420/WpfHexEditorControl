@@ -297,18 +297,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         private void UpdateBackGround()
         {
-            int stackIndex = 0;
-
-            foreach (TextBlock infolabel in LinesInfoStackPanel.Children)
-            {
-                foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
-                    byteControl.UpdateVisual();
-
-                foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
-                    byteControl.UpdateVisual();
-
-                stackIndex++;
-            }
+            TraverseDataControls(ctrl => { ctrl.UpdateVisual(); });
+            TraverseStringControls(ctrl => { ctrl.UpdateVisual(); });
         }
 
         #endregion Colors/fonts property and methods
@@ -2062,12 +2052,12 @@ namespace WPFHexaEditor.Control
             switch (coloring)
             {
                 case FirstColor.HexByteData:
-                    TraverseDataControls(control => { control.HexByteFirstSelected = true; });
-                    TraverseStringControls(control => { control.StringByteFirstSelected = false; });
+                    TraverseDataControls(control => { control.FirstSelected = true; });
+                    TraverseStringControls(control => { control.FirstSelected = false; });
                     break;
                 case FirstColor.StringByteData:
-                    TraverseDataControls(control => { control.HexByteFirstSelected = false; });
-                    TraverseStringControls(control => { control.StringByteFirstSelected = true; });
+                    TraverseDataControls(control => { control.FirstSelected = false; });
+                    TraverseStringControls(control => { control.FirstSelected = true; });
                     break;
             }
         }
@@ -2216,70 +2206,62 @@ namespace WPFHexaEditor.Control
                 var count = HexDataStackPanel.Children.Count;
 
                 #region
-                for (int stackIndex = 0; stackIndex < count; stackIndex++)
+                TraverseDataControls(byteControl =>
                 {
-                    foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
+                    byteControl.Action = ByteAction.Nothing;
+                    byteControl.ReadOnlyMode = ReadOnlyMode;
+
+                    byteControl.InternalChange = true;
+
+                    if (index < readSize && priLevel == curLevel)
                     {
-                        byteControl.Action = ByteAction.Nothing;
-                        byteControl.ReadOnlyMode = ReadOnlyMode;
-
-                        byteControl.InternalChange = true;
-
-                        if (index < readSize && priLevel == curLevel)
-                        {
-                            byteControl.Byte = buffer[index];
-                            byteControl.BytePositionInFile = startPosition + index;
-                        }
-                        else
-                        {
-                            byteControl.Byte = null;
-                            byteControl.BytePositionInFile = -1;
-                        }
-                        byteControl.InternalChange = false;
-                        index++;
+                        byteControl.Byte = buffer[index];
+                        byteControl.BytePositionInFile = startPosition + index;
                     }
-
-                }
+                    else
+                    {
+                        byteControl.Byte = null;
+                        byteControl.BytePositionInFile = -1;
+                    }
+                    byteControl.InternalChange = false;
+                    index++;
+                });
                 #endregion
 
                 index = 0;
-
                 #region
-                for (int stackIndex = 0; stackIndex < count; stackIndex++)
+                TraverseStringControls(sbCtrl =>
                 {
-                    foreach (StringByteControl sbCtrl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
+                    sbCtrl.Action = ByteAction.Nothing;
+                    sbCtrl.ReadOnlyMode = ReadOnlyMode;
+
+                    sbCtrl.InternalChange = true;
+                    sbCtrl.TBLCharacterTable = _TBLCharacterTable;
+                    sbCtrl.TypeOfCharacterTable = TypeOfCharacterTable;
+
+                    if (index < readSize)
                     {
-                        sbCtrl.Action = ByteAction.Nothing;
-                        sbCtrl.ReadOnlyMode = ReadOnlyMode;
-
-                        sbCtrl.InternalChange = true;
-                        sbCtrl.TBLCharacterTable = _TBLCharacterTable;
-                        sbCtrl.TypeOfCharacterTable = TypeOfCharacterTable;
-
-                        if (index < readSize)
+                        //sbCtrl.Byte = (byte)_provider.ReadByte();
+                        sbCtrl.Byte = buffer[index];
+                        sbCtrl.BytePositionInFile = startPosition + index;
+                        if (index < readSize - 1)
                         {
-                            //sbCtrl.Byte = (byte)_provider.ReadByte();
-                            sbCtrl.Byte = buffer[index];
-                            sbCtrl.BytePositionInFile = startPosition + index;
-                            if (index < readSize - 1)
-                            {
-                                sbCtrl.ByteNext = buffer[index + 1];
-                            }
-                            else
-                            {
-                                sbCtrl.ByteNext = null;
-                            }
+                            sbCtrl.ByteNext = buffer[index + 1];
                         }
                         else
                         {
-                            sbCtrl.Byte = null;
                             sbCtrl.ByteNext = null;
-                            sbCtrl.BytePositionInFile = -1;
                         }
-                        sbCtrl.InternalChange = false;
-                        index++;
                     }
-                }
+                    else
+                    {
+                        sbCtrl.Byte = null;
+                        sbCtrl.ByteNext = null;
+                        sbCtrl.BytePositionInFile = -1;
+                    }
+                    sbCtrl.InternalChange = false;
+                    index++;
+                });
                 #endregion
 
             }

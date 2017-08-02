@@ -15,14 +15,14 @@
             <StackPanel Orientation="Horizontal">
                 <Label Content="Value" FontWeight="Bold" Width="120" />
                 <Label Content="Byte" FontWeight="Bold" />
-                <Label Content="{Binding Byte, UpdateSourceTrigger=PropertyChanged}" Width="50" />
+                <Label Content="{Binding Byte, UpdateSourceTrigger=PropertyChanged}" Width="70" />
                 <Label Content="Hex" FontWeight="Bold" />
                 <Label Content="{Binding HexString, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Label Content="Position" FontWeight="Bold" Width="120" />
                 <Label Content="Long" FontWeight="Bold" />
-                <Label Content="{Binding BytePositionInFile, UpdateSourceTrigger=PropertyChanged}" Width="50" />
+                <Label Content="{Binding BytePositionInFile, UpdateSourceTrigger=PropertyChanged}" Width="70" />
                 <Label Content="Hex" FontWeight="Bold" />
                 <Label Content="{Binding BytePositionInFile, Converter={StaticResource LongHexConverter}, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>

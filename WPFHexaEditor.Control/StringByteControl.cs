@@ -1,5 +1,5 @@
 ﻿//////////////////////////////////////////////
-// MIT License  - 2016-2017
+// Apache 2.0  - 2016-2017
 // Author : Derek Tremblay (derektremblay666@gmail.com)
 // Contributor: Janus Tida
 //////////////////////////////////////////////
@@ -13,10 +13,11 @@ using System.Windows.Media;
 using WPFHexaEditor.Core;
 using WPFHexaEditor.Core.Bytes;
 using WPFHexaEditor.Core.CharacterTable;
+using WPFHexaEditor.Core.Interface;
 
 namespace WPFHexaEditor.Control
 {
-    internal partial class StringByteControl : TextBlock
+    internal partial class StringByteControl : TextBlock, IByteControl
     {
         //private bool _isByteModified = false;
         private bool _readOnlyMode;
@@ -80,7 +81,6 @@ namespace WPFHexaEditor.Control
         {
             LoadDict("/WPFHexaEditor;component/Resources/Dictionary/ToolTipDictionary.xaml");
             LoadDict("/WPFHexaEditor;component/Resources/Dictionary/BrushesDictionary.xaml");
-            LoadDict("/WPFHexaEditor;component/Resources/Dictionary/FontDictionary.xaml");
 
             Width = 12;
             Height = 22;
@@ -179,6 +179,28 @@ namespace WPFHexaEditor.Control
             if (e.NewValue != e.OldValue)
             {
                 ctrl.UpdateLabelFromByte();
+                ctrl.UpdateVisual();
+            }
+        }
+
+        /// <summary>
+        /// The Focused Property;
+        /// </summary>
+        public bool IsFocus
+        {
+            get { return (bool)GetValue(IsFocusProperty); }
+            set { SetValue(IsFocusProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsFocusProperty =
+            DependencyProperty.Register("IsFocus", typeof(bool), typeof(StringByteControl),
+                new FrameworkPropertyMetadata(false, IsFocus_PropertyChanged));
+
+        private static void IsFocus_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var ctrl = d as StringByteControl;
+            if (e.NewValue != e.OldValue)
+            {
                 ctrl.UpdateVisual();
             }
         }
@@ -428,7 +450,12 @@ namespace WPFHexaEditor.Control
         /// </summary>
         internal void UpdateVisual()
         {
-            if (IsSelected)
+            if (IsFocus)
+            {
+                Foreground = Brushes.White;
+                Background = Brushes.Black;
+            }
+            else if(IsSelected)
             {
                 FontWeight = _parent.FontWeight;
                 Foreground = _parent.ForegroundContrast;
@@ -454,13 +481,13 @@ namespace WPFHexaEditor.Control
                 switch (Action)
                 {
                     case ByteAction.Modified:
-                        FontWeight = (FontWeight)TryFindResource("BoldFontWeight");
+                        FontWeight = FontWeights.Bold; 
                         Background = _parent.ByteModifiedColor; 
                         Foreground = _parent.Foreground;
                         break;
 
                     case ByteAction.Deleted:
-                        FontWeight = (FontWeight)TryFindResource("BoldFontWeight");
+                        FontWeight = FontWeights.Bold;
                         Background = _parent.ByteDeletedColor;
                         Foreground = _parent.Foreground;
                         break;
@@ -665,7 +692,7 @@ namespace WPFHexaEditor.Control
                 if (Action != ByteAction.Modified &&
                     Action != ByteAction.Deleted &&
                     Action != ByteAction.Added &&
-                    !IsSelected && !IsHighLight)
+                    !IsSelected && !IsHighLight && !IsFocus)
                     Background = _parent.MouseOverColor; 
 
             if (e.LeftButton == MouseButtonState.Pressed)
@@ -678,7 +705,7 @@ namespace WPFHexaEditor.Control
                 if (Action != ByteAction.Modified &&
                     Action != ByteAction.Deleted &&
                     Action != ByteAction.Added &&
-                    !IsSelected && !IsHighLight)
+                    !IsSelected && !IsHighLight && !IsFocus)
                     Background = Brushes.Transparent;
         }
 

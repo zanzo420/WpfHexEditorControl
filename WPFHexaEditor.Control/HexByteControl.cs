@@ -1,26 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿//////////////////////////////////////////////
+// Apache 2.0  - 2016-2017
+// Author : Derek Tremblay (derektremblay666@gmail.com)
+// Contributor: Janus Tida
+//////////////////////////////////////////////
+
+using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using WPFHexaEditor.Core;
 using WPFHexaEditor.Core.Bytes;
+using WPFHexaEditor.Core.Interface;
 
 namespace WPFHexaEditor.Control
 {
 
     [TemplatePart(Name = FirstHexCharName, Type = typeof(TextBlock))]
     [TemplatePart(Name = SecondHexCharName, Type = typeof(TextBlock))]
-    public partial class HexByteControl : System.Windows.Controls.Control
+    public partial class HexByteControl : System.Windows.Controls.Control, IByteControl
     {
         public const string FirstHexCharName = "FirstHexChar";
         public const string SecondHexCharName = "SecondHexChar";
@@ -308,14 +306,14 @@ namespace WPFHexaEditor.Control
                 switch (Action)
                 {
                     case ByteAction.Modified:
-                        FontWeight = (FontWeight)TryFindResource("BoldFontWeight");
+                        FontWeight = FontWeights.Bold;
                         Background = _parent.ByteModifiedColor;
                         FirstHexChar.Foreground = _parent.Foreground;
                         SecondHexChar.Foreground = _parent.Foreground;
                         break;
 
                     case ByteAction.Deleted:
-                        FontWeight = (FontWeight)TryFindResource("BoldFontWeight");
+                        FontWeight = FontWeights.Bold;
                         Background = _parent.ByteDeletedColor;
                         FirstHexChar.Foreground = _parent.Foreground;
                         SecondHexChar.Foreground = _parent.Foreground;

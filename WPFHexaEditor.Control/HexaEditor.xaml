@@ -1,5 +1,5 @@
 ﻿ <!--
-      MIT License  - 2016-2017
+      Apache 2.0  - 2016-2017
       Author : Derek Tremblay (derektremblay666@gmail.com)
  -->
 
@@ -20,7 +20,6 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="./Resources/Dictionary/BrushesDictionary.xaml" />
                 <ResourceDictionary Source="./Resources/Dictionary/ToolTipDictionary.xaml" />
-                <ResourceDictionary Source="./Resources/Dictionary/FontDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>        
     </UserControl.Resources>

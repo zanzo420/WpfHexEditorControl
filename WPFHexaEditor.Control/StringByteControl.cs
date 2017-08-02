@@ -147,16 +147,17 @@ namespace WPFHexaEditor.Control
         {
             StringByteControl ctrl = d as StringByteControl;
 
-            if (e.NewValue != e.OldValue)
-            {
-                if (ctrl.Action != ByteAction.Nothing && ctrl.InternalChange == false)
-                    ctrl.StringByteModified?.Invoke(ctrl, new EventArgs());
+            if (e.NewValue != null)
+                if (e.NewValue != e.OldValue)
+                {
+                    if (ctrl.Action != ByteAction.Nothing && ctrl.InternalChange == false)
+                        ctrl.StringByteModified?.Invoke(ctrl, new EventArgs());
 
-                ctrl.UpdateLabelFromByte();
-                ctrl.UpdateHexString();
+                    ctrl.UpdateLabelFromByte();
+                    ctrl.UpdateHexString();
 
-                ctrl.UpdateVisual();
-            }
+                    ctrl.UpdateVisual();
+                }
         }
 
         /// <summary>

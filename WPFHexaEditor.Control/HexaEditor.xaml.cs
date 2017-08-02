@@ -1791,7 +1791,6 @@ namespace WPFHexaEditor.Control
             }
 
             UnHighLightAll();
-            //ClearAllChange();
             ClearAllScrollMarker();
             UnSelectAll();
             RefreshView();

@@ -2058,36 +2058,15 @@ namespace WPFHexaEditor.Control
         /// </summary>
         private void UpdateSelectionColorMode(FirstColor coloring)
         {
-            int stackIndex = 0;
-
             switch (coloring)
             {
                 case FirstColor.HexByteData:
-                    stackIndex = 0;
-                    foreach (TextBlock infolabel in LinesInfoStackPanel.Children)
-                    {
-                        foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
-                            byteControl.HexByteFirstSelected = true;
-
-                        foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
-                            byteControl.StringByteFirstSelected = false;
-
-                        stackIndex++;
-                    }
+                    TraverseDataControls(control => { control.HexByteFirstSelected = true; });
+                    TraverseStringControls(control => { control.StringByteFirstSelected = false; });
                     break;
-
                 case FirstColor.StringByteData:
-                    stackIndex = 0;
-                    foreach (TextBlock infolabel in LinesInfoStackPanel.Children)
-                    {
-                        foreach (HexByteControl byteControl in ((StackPanel)HexDataStackPanel.Children[stackIndex]).Children)
-                            byteControl.HexByteFirstSelected = false;
-
-                        foreach (StringByteControl byteControl in ((StackPanel)StringDataStackPanel.Children[stackIndex]).Children)
-                            byteControl.StringByteFirstSelected = true;
-
-                        stackIndex++;
-                    }
+                    TraverseDataControls(control => { control.HexByteFirstSelected = false; });
+                    TraverseStringControls(control => { control.StringByteFirstSelected = true; });
                     break;
             }
         }
@@ -2306,24 +2285,32 @@ namespace WPFHexaEditor.Control
             else
             {
                 buffer = null;
-                TraverseDataControls(control => {
+                TraverseDataControls(control =>
+                {
                     control.BytePositionInFile = -1;
                     control.Byte = null;
                     control.IsHighLight = false;
                     control.IsFocus = false;
                     control.IsSelected = false;
+                    control.ToolTip = null;
                 });
-                TraverseStringControls(control => {
+
+                TraverseStringControls(control =>
+                {
                     control.BytePositionInFile = -1;
                     control.Byte = null;
                     control.ByteNext = null;
                     control.IsHighLight = false;
                     control.IsSelected = false;
+                    control.ToolTip = null;
                 });
             }
 
         }
 
+        /// <summary>
+        /// Used to make action on all hexbytecontrol
+        /// </summary>
         private void TraverseDataControls(Action<HexByteControl> act)
         {
             foreach (StackPanel hexDataStack in HexDataStackPanel.Children)
@@ -2335,6 +2322,10 @@ namespace WPFHexaEditor.Control
                 }
             }
         }
+
+        /// <summary>
+        /// Used to make action on all stringbytecontrol
+        /// </summary>
         private void TraverseStringControls(Action<StringByteControl> act)
         {
             foreach (StackPanel stringDataStack in StringDataStackPanel.Children)

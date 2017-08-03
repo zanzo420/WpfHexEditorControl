@@ -99,7 +99,7 @@ namespace WPFHexaEditor.Control
             //Refresh view
             RefreshView(true);
 
-            StatusBarGrid.DataContext = this;
+            DataContext = this;
         }
 
         #region Build-in CTRL key property
@@ -526,12 +526,6 @@ namespace WPFHexaEditor.Control
             if (e.NewValue != e.OldValue)
             {
                 ctrl.RefreshView(true);
-
-                //TODO: ADD VISIBILITY CONVERTER FOR BINDING READONLY PROPERTY
-                if (ctrl.ReadOnlyMode)
-                    ctrl.ReadOnlyLabel.Visibility = Visibility.Visible;
-                else
-                    ctrl.ReadOnlyLabel.Visibility = Visibility.Collapsed;
             }
         }
 

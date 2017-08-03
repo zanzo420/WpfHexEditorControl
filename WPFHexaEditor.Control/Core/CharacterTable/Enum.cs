@@ -24,6 +24,7 @@ namespace WPFHexaEditor.Core.CharacterTable
     public enum DefaultCharacterTableType
     {
         ASCII
+        //EBCDIC
         //ADD OTHERTYPE...
     }
 }

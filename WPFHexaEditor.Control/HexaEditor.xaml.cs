@@ -2810,13 +2810,19 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public IEnumerable<BookMark> BookMarks
         {
-            get { return (IEnumerable<BookMark>)GetValue(BookMarksProperty); }
-            internal set { SetValue(BookMarksProperty, value); }
-        }
+            get
+            {
+                List<BookMark> bmList = new List<BookMark>();
+                foreach (Rectangle rc in MarkerGrid.Children)
+                {
+                    BookMark bm = rc.Tag as BookMark;
 
-        public static readonly DependencyProperty BookMarksProperty =
-            DependencyProperty.Register("BookMarks", typeof(IEnumerable<BookMark>), typeof(HexaEditor),
-                new FrameworkPropertyMetadata(new List<BookMark>()));
+                    if (bm != null)
+                        if (bm.Marker == ScrollMarker.Bookmark)
+                            yield return bm;
+                }
+            }
+        }
 
         /// <summary>
         /// Set bookmark at specified position
@@ -2944,28 +2950,8 @@ namespace WPFHexaEditor.Control
             //Add to grid
             if (ByteProvider.CheckIsOpen(_provider))
                 MarkerGrid.Children.Add(rect);
-
-            //Update bookmarks properties
-            UpdateBookMarkProperties();
         }
-
-        /// <summary>
-        /// Update the bookmark properties are currently set
-        /// </summary>
-        private void UpdateBookMarkProperties()
-        {
-            List<BookMark> bmList = new List<BookMark>();
-            foreach (Rectangle rc in MarkerGrid.Children)
-            {
-                BookMark bm = rc.Tag as BookMark;
-
-                if (bm != null)
-                    if (bm.Marker == ScrollMarker.Bookmark)
-                        bmList.Add(bm);
-            }
-            BookMarks = bmList;
-        }
-
+        
         private void Rect_MouseDown(object sender, MouseButtonEventArgs e)
         {
             Rectangle rect = sender as Rectangle;

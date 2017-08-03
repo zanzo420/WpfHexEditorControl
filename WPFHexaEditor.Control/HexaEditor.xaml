@@ -9,11 +9,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:WPFHexaEditor.Control"
-             MouseWheel="UserControl_MouseWheel"
+             MouseWheel="UserControl_MouseWheel" 
              mc:Ignorable="d"
              BorderBrush="#FF443E3E"
              BorderThickness="1"
-             Height="350" Width="800">
+             d:DesignHeight="350"
+             d:DesignWidth="800">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -172,7 +173,7 @@
               Background="WhiteSmoke"
               Grid.Row="2"
               Grid.ColumnSpan="5"
-              Height="30"
+              Height="84"
               Visibility="Visible"
               VerticalAlignment="Top">
 
@@ -236,17 +237,19 @@
                    Fill="#FFF4F4F5"
                    Opacity="0"
                    Grid.Row="2"
-                   MouseMove="BottomRectangle_MouseMove"
+                   MouseEnter="BottomRectangle_MouseEnter"
+                   MouseLeave="BottomRectangle_MouseLeave"
                    Margin="0,0,0,-28"
                    Grid.ColumnSpan="4"
                    Grid.RowSpan="2"
-                   Height="42"
+                   Height="96"
                    VerticalAlignment="Bottom" />
 
         <Rectangle x:Name="TopRectangle"
                    Fill="#FFF4F4F5"
                    Opacity="0"
-                   MouseMove="TopRectangle_MouseMove"
+                   MouseEnter="TopRectangle_MouseEnter"
+                   MouseLeave="TopRectangle_MouseLeave"
                    Margin="0,-30,0,0"
                    Grid.ColumnSpan="4"
                    Height="50"

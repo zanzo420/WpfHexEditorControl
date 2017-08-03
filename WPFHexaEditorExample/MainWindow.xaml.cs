@@ -12,7 +12,6 @@ using System.Windows.Media;
 using WPFHexaEditor.Core;
 using WPFHexaEditor.Core.Bytes;
 using WPFHexaEditorExample.Properties;
-using System.Linq;
 
 namespace WPFHexaEditorExample
 {
@@ -260,6 +259,8 @@ namespace WPFHexaEditorExample
 
                     Application.Current.MainWindow.Cursor = null;
                 }
+                //else
+                //    MessageBox.Show("File not found!", Settings.Default.ApplicationName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -278,7 +279,7 @@ namespace WPFHexaEditorExample
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(HexEdit.BookMarks.Count().ToString());
+            HexEdit.Foreground = Brushes.Red;
         }
     }
 }

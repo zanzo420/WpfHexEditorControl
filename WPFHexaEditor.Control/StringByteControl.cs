@@ -80,7 +80,6 @@ namespace WPFHexaEditor.Control
         public StringByteControl(HexaEditor parent)
         {
             LoadDict("/WPFHexaEditor;component/Resources/Dictionary/ToolTipDictionary.xaml");
-            LoadDict("/WPFHexaEditor;component/Resources/Dictionary/BrushesDictionary.xaml");
 
             Width = 12;
             Height = 22;

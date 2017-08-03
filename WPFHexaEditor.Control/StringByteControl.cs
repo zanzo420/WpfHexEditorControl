@@ -148,6 +148,7 @@ namespace WPFHexaEditor.Control
             StringByteControl ctrl = d as StringByteControl;
 
             if (e.NewValue != null)
+            {
                 if (e.NewValue != e.OldValue)
                 {
                     if (ctrl.Action != ByteAction.Nothing && ctrl.InternalChange == false)
@@ -158,6 +159,9 @@ namespace WPFHexaEditor.Control
 
                     ctrl.UpdateVisual();
                 }
+            }
+            else
+                ctrl.UpdateLabelFromByte();
         }
 
         /// <summary>

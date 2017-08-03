@@ -513,6 +513,9 @@ namespace WPFHexaEditor.Core.Bytes
         {
             if (_byteModifiedDictionary != null)
                 _byteModifiedDictionary.Clear();
+
+            if (_undoStack != null)
+                _undoStack.Clear();
         }
 
         /// <summary>

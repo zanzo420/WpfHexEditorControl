@@ -1136,10 +1136,10 @@ namespace WPFHexaEditor.Control
         private void UserControl_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             if (e.Delta > 0) //UP
-                VerticalScrollBar.Value--;
+                VerticalScrollBar.Value -= e.Delta / 120 * 4; //--;
 
             if (e.Delta < 0) //Down
-                VerticalScrollBar.Value++;
+                VerticalScrollBar.Value += e.Delta / 120 * -4;//++;
         }
 
         private void Control_MoveRight(object sender, EventArgs e)
@@ -1777,17 +1777,12 @@ namespace WPFHexaEditor.Control
         public void Close()
         {
             if (ByteProvider.CheckIsOpen(_provider))
-            {
-                _provider.Close();
-
-                try
-                {
-                    FileName = string.Empty;
-                }
-                catch { }
-
+            {                
+                FileName = string.Empty;
                 ReadOnlyMode = false;
                 VerticalScrollBar.Value = 0;
+
+                _provider.Close();
             }
 
             UnHighLightAll();
@@ -1814,6 +1809,12 @@ namespace WPFHexaEditor.Control
         /// <param name="filename"></param>
         private void OpenFile(string filename)
         {
+            if (FileName == "")
+            {
+                Close();
+                return;
+            }
+
             if (File.Exists(filename))
             {
                 Close();
@@ -2271,6 +2272,7 @@ namespace WPFHexaEditor.Control
                 {
                     control.BytePositionInFile = -1;
                     control.Byte = null;
+                    control.Action = ByteAction.Nothing;
                     control.IsHighLight = false;
                     control.IsFocus = false;
                     control.IsSelected = false;
@@ -2281,6 +2283,7 @@ namespace WPFHexaEditor.Control
                 {
                     control.BytePositionInFile = -1;
                     control.Byte = null;
+                    control.Action = ByteAction.Nothing;
                     control.ByteNext = null;
                     control.IsHighLight = false;
                     control.IsSelected = false;
@@ -2295,14 +2298,10 @@ namespace WPFHexaEditor.Control
         /// </summary>
         private void TraverseDataControls(Action<HexByteControl> act)
         {
+            //HexByte panel
             foreach (StackPanel hexDataStack in HexDataStackPanel.Children)
-            {
-                //HexByte panel
-                foreach (HexByteControl byteControl in hexDataStack.Children)
-                {
+                foreach (HexByteControl byteControl in hexDataStack.Children)                
                     act(byteControl);
-                }
-            }
         }
 
         /// <summary>
@@ -2310,14 +2309,10 @@ namespace WPFHexaEditor.Control
         /// </summary>
         private void TraverseStringControls(Action<StringByteControl> act)
         {
+            //Stringbyte panel
             foreach (StackPanel stringDataStack in StringDataStackPanel.Children)
-            {
-                //Stringbyte panel
-                foreach (StringByteControl sbControl in stringDataStack.Children)
-                {
+                foreach (StringByteControl sbControl in stringDataStack.Children)                
                     act(sbControl);
-                }
-            }
         }
 
         /// <summary>

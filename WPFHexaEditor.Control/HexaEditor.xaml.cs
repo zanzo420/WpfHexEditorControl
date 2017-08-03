@@ -1934,6 +1934,7 @@ namespace WPFHexaEditor.Control
             if (e.NewValue != e.OldValue)
             {
                 ctrl.UpdateVerticalScroll();
+                ctrl.BuildDataLines((int)ctrl.GetMaxVisibleLine(), true);
                 ctrl.RefreshView(true);
                 ctrl.UpdateHexHeader();
             }
@@ -2030,10 +2031,16 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Build the stringbytecontrols and hexabytecontrols;
         /// </summary>
-        /// <param name="e"></param>
-        private void BuildDataLines(int e)
+        /// <param name="maxline">Number of line to build</param>
+        private void BuildDataLines(int maxline, bool rebuild = false)
         {
-            for (int lineIndex = StringDataStackPanel.Children.Count; lineIndex < e; lineIndex++)
+            if (rebuild)
+            {
+                StringDataStackPanel.Children.Clear();
+                HexDataStackPanel.Children.Clear();
+            }
+
+            for (int lineIndex = StringDataStackPanel.Children.Count; lineIndex < maxline; lineIndex++)
             {
                 #region
                 StackPanel dataLineStack = new StackPanel();

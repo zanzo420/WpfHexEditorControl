@@ -2732,7 +2732,6 @@ namespace WPFHexaEditor.Control
         #endregion Find methods
 
         #region Statusbar
-
         /// <summary>
         /// Update statusbar for somes property dont support dependency property
         /// </summary>
@@ -2741,13 +2740,16 @@ namespace WPFHexaEditor.Control
             if (StatusBarVisibility == Visibility.Visible)
                 if (ByteProvider.CheckIsOpen(_provider))
                 {
+                    #region Show lenght
                     bool MB = false;
                     long deletedBytesCount = _provider.GetModifiedBytes(ByteAction.Deleted).Count();
+                    long addedBytesCount = _provider.GetModifiedBytes(ByteAction.Added).Count();
 
                     FileLengthLabel.Content = _provider.Length - deletedBytesCount;
-
+                                        
                     //is mega bytes ?
-                    double lenght = (_provider.Length - deletedBytesCount) / 1024;
+                    double lenght = (_provider.Length - deletedBytesCount + addedBytesCount) / 1024;
+
                     if (lenght > 1024)
                     {
                         lenght = lenght / 1024;
@@ -2755,6 +2757,7 @@ namespace WPFHexaEditor.Control
                     }
 
                     FileLengthKBLabel.Content = Math.Round(lenght, 2) + (MB == true ? " MB" : " KB");
+                    #endregion
                 }
                 else
                 {

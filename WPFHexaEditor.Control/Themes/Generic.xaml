@@ -8,7 +8,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:HexByteControl}">
-                    <Canvas Background="{TemplateBinding Background}" >
+                    <Grid Background="{TemplateBinding Background}" >
                         
                         <TextBlock x:Name="FirstHexChar" 
                                    Padding="0"
@@ -24,7 +24,7 @@
                                    Margin="9,0,0,0" 
                                    Focusable="True"
                                    />
-                    </Canvas>
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

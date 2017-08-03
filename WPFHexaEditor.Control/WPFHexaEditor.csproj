@@ -56,7 +56,6 @@
     <Compile Include="Core\CharacterTable\DTE.cs" />
     <Compile Include="Core\CharacterTable\Enum.cs" />
     <Compile Include="Core\CharacterTable\TBLStream.cs" />
-    <Compile Include="Core\Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Core\Converters\BoolInverterConverter.cs" />
     <Compile Include="Core\Helper\DispatcherHelper.cs" />
     <Compile Include="Core\Interface\IByteControl.cs" />

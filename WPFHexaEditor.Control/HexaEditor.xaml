@@ -20,7 +20,6 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="./Resources/Dictionary/BrushesDictionary.xaml" />
                 <ResourceDictionary Source="./Resources/Dictionary/ToolTipDictionary.xaml" />
-                <ResourceDictionary Source="./Resources/Dictionary/MiscelanousDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>        
     </UserControl.Resources>
@@ -269,17 +268,8 @@
               Margin="0,17" />
 
         <!--TODO: ADD VISIBILITY CONVERTER-->
-        <Label x:Name="ReadOnlyLabel" 
-               Content="ReadOnly" 
-               FontWeight="Bold"                
-               Visibility="{Binding ReadOnlyMode, Converter={StaticResource BoolToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-               Margin="0,1,40,1"
-               HorizontalAlignment="Right" 
-               Width="64" 
-               Grid.Row="2"                
-               Grid.RowSpan="2" 
-               Grid.ColumnSpan="2" 
-               Grid.Column="2"               
-               />
+        <Label x:Name="ReadOnlyLabel" Content="ReadOnly" FontWeight="Bold" Grid.ColumnSpan="2" Grid.Column="2"
+               Visibility="Collapsed"
+               Margin="0,1,40,1" Grid.Row="2" HorizontalAlignment="Right" Width="64" Grid.RowSpan="2" />
     </Grid>
 </UserControl>

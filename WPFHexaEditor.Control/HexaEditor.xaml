@@ -1,4 +1,4 @@
-﻿ <!--
+﻿<!--
       Apache 2.0  - 2016-2017
       Author : Derek Tremblay (derektremblay666@gmail.com)
  -->
@@ -22,7 +22,7 @@
                 <ResourceDictionary Source="./Resources/Dictionary/BrushesDictionary.xaml" />
                 <ResourceDictionary Source="./Resources/Dictionary/ToolTipDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>        
+        </ResourceDictionary>
     </UserControl.Resources>
 
     <UserControl.ContextMenu>
@@ -173,7 +173,7 @@
               Background="WhiteSmoke"
               Grid.Row="2"
               Grid.ColumnSpan="5"
-              Height="84"
+              Height="30"
               Visibility="Visible"
               VerticalAlignment="Top">
 
@@ -191,7 +191,7 @@
                             <Label Content="{Binding SelectionLine, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource LongHexConverter}}"/>
                         </StackPanel>
                     </Label.ToolTip>
-                </Label>                
+                </Label>
                 <Label Content="Position" Padding="5,5,0,5" FontWeight="Bold" />
                 <Label Content="{Binding SelectionStart, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource LongHexConverter}}" Width="80">
                     <Label.ToolTip>
@@ -239,10 +239,10 @@
                    Grid.Row="2"
                    MouseEnter="BottomRectangle_MouseEnter"
                    MouseLeave="BottomRectangle_MouseLeave"
-                   Margin="0,0,0,-28"
+                   Margin="0,0,0,-23"
                    Grid.ColumnSpan="4"
                    Grid.RowSpan="2"
-                   Height="96"
+                   Height="50"
                    VerticalAlignment="Bottom" />
 
         <Rectangle x:Name="TopRectangle"
@@ -250,9 +250,9 @@
                    Opacity="0"
                    MouseEnter="TopRectangle_MouseEnter"
                    MouseLeave="TopRectangle_MouseLeave"
-                   Margin="0,-30,0,0"
+                   Margin="0,-22,0,0"
                    Grid.ColumnSpan="4"
-                   Height="50"
+                   Height="52"
                    VerticalAlignment="Top" />
 
         <Button x:Name="CancelLongProcessButton"

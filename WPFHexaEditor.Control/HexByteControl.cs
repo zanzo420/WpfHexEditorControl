@@ -15,7 +15,7 @@ using WPFHexaEditor.Core.Interface;
 
 namespace WPFHexaEditor.Control
 {
-
+    
     [TemplatePart(Name = FirstHexCharName, Type = typeof(TextBlock))]
     [TemplatePart(Name = SecondHexCharName, Type = typeof(TextBlock))]
     public partial class HexByteControl : System.Windows.Controls.Control, IByteControl
@@ -335,10 +335,10 @@ namespace WPFHexaEditor.Control
         {
             if (Byte != null)
             {
-                string hexabyte = ByteConverters.ByteToHex(Byte.Value);
+                var chArr = ByteConverters.ByteToHexCharArray(Byte.Value);
 
-                FirstHexChar.Text = hexabyte.Substring(0, 1);
-                SecondHexChar.Text = hexabyte.Substring(1, 1);
+                FirstHexChar.Text = chArr[0].ToString();
+                SecondHexChar.Text = chArr[1].ToString();
             }
             else
             {

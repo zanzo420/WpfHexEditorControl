@@ -1709,7 +1709,7 @@ namespace WPFHexaEditor.Control
         {
             HexaEditor ctrl = d as HexaEditor;
 
-            ctrl.Close();
+            //ctrl.Close();
             ctrl.OpenFile((string)e.NewValue);
         }
 

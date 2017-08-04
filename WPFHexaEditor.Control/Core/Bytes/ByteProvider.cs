@@ -329,10 +329,25 @@ namespace WPFHexaEditor.Core.Bytes
         }
 
         #region SubmitChanges to file/stream
+        /// <summary>
+        /// Submit change in a new file (Save as...)
+        /// </summary>
+        /// <param name="newFilename"></param>
+        string _newfilename = "";
+        //public void SubmitChanges(string newFilename)
+        //{
+        //    if (File.Exists(newFilename))
+        //    {
+        //        _newfilename = newFilename;
+        //        SubmitChanges();
+        //        FileName = _newfilename;
+        //    }
+        //    else
+        //        throw new FileNotFoundException("File not found", newFilename);
+        //}
 
         /// <summary>
         /// Submit change to files/stream
-        /// TODO : NEED OPTIMISATION FOR LARGE FILE... IT'S AS BEGINING :) USE TEMPS FILE ?
         /// </summary>
         public void SubmitChanges()
         {
@@ -352,7 +367,8 @@ namespace WPFHexaEditor.Core.Bytes
 
                 //Fast change only nothing byte deleted or added
                 if (GetModifiedBytes(ByteAction.Deleted).Count() == 0 &&
-                    GetModifiedBytes(ByteAction.Added).Count() == 0)
+                    GetModifiedBytes(ByteAction.Added).Count() == 0 && 
+                    !File.Exists(_newfilename))
                 {
                     //Launch event at process strated
                     IsOnLongProcess = true;

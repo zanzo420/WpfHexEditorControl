@@ -327,6 +327,11 @@ namespace WPFHexaEditor.Control
             }
         }
 
+        /// <summary>
+        /// Control the mouse wheel speed
+        /// </summary>
+        public MouseWheelSpeed MouseWheelSpeed { get; set; } = MouseWheelSpeed.Normal;
+
         #endregion Miscellaneous property/methods
 
         #region Characters tables property/methods
@@ -1079,10 +1084,10 @@ namespace WPFHexaEditor.Control
         private void UserControl_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             if (e.Delta > 0) //UP
-                VerticalScrollBar.Value -= e.Delta / 120 * 4; //--;
+                VerticalScrollBar.Value -= e.Delta / 120 * (int)MouseWheelSpeed;  
 
             if (e.Delta < 0) //Down
-                VerticalScrollBar.Value += e.Delta / 120 * -4;//++;
+                VerticalScrollBar.Value += e.Delta / 120 * -(int)MouseWheelSpeed;
         }
 
         private void Control_MoveRight(object sender, EventArgs e)

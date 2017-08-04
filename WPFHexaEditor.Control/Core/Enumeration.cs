@@ -113,4 +113,16 @@ namespace WPFHexaEditor.Core
         ASCII,
         TBLFile
     }
+
+    /// <summary>
+    /// Used for control the speed of mouse wheel
+    /// </summary>
+    public enum MouseWheelSpeed : int
+    {
+        VerySlow = 1,
+        Slow = 3,
+        Normal = 5,
+        Fast = 7,
+        VeryFast = 9
+    }
 }

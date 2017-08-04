@@ -18,7 +18,7 @@ namespace WPFHexaEditor.Core.CharacterTable
     ///
     /// Derek Tremblay 2003-2017
     /// </summary>
-    public class TBLStream
+    public sealed class TBLStream
     {
         /// <summary>Chemin vers le fichier (path)</summary>
         private string _FileName;

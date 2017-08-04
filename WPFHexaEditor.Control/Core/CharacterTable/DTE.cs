@@ -12,7 +12,7 @@ namespace WPFHexaEditor.Core.CharacterTable
     ///
     /// Derek Tremblay 2003-2017
     /// </summary>
-    public class DTE
+    public sealed class DTE
     {
         /// <summary>Nom du DTE</summary>
         private string _Entry;

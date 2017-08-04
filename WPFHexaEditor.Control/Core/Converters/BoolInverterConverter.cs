@@ -12,7 +12,7 @@ namespace WPFHexaEditor.Core.Converters
     /// <summary>
     /// Permet d'inverser des bool
     /// </summary>
-    public class BoolInverterConverter : IValueConverter
+    public sealed class BoolInverterConverter : IValueConverter
     {
   
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

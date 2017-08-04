@@ -14,7 +14,7 @@ namespace WPFHexaEditor.Core.Converters
     /// The built-in converter in WPF restricts us to always use Collapsed when the bound 
     /// value is false.
     /// </summary>
-    public class BooleanToVisibilityConverter : IValueConverter
+    public sealed class BooleanToVisibilityConverter : IValueConverter
     {
         public bool Inverted { get; set; }
 

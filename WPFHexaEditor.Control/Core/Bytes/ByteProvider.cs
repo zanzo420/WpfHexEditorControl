@@ -17,7 +17,7 @@ namespace WPFHexaEditor.Core.Bytes
     /// <summary>
     /// Used for interaction with file
     /// </summary>
-    public class ByteProvider
+    public sealed class ByteProvider
     {
         //Global variable
         private IDictionary<long, ByteModified> _byteModifiedDictionary = new Dictionary<long, ByteModified>();

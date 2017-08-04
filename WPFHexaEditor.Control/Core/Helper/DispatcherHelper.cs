@@ -11,7 +11,7 @@ namespace WPFHexaEditor.Core.Helper
     /// <summary>
     /// WPF UI Dispatcher
     /// </summary>
-    public class DispatcherHelper
+    public sealed class DispatcherHelper
     {
         private static DispatcherOperationCallback exitFrameCallback = new DispatcherOperationCallback(ExitFrame);
         

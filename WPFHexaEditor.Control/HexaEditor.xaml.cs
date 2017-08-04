@@ -2177,6 +2177,9 @@ namespace WPFHexaEditor.Control
                     byteControl.Action = ByteAction.Nothing;
                     byteControl.ReadOnlyMode = ReadOnlyMode;
 
+                    if (byteControl.ToolTip == null)
+                        byteControl.ToolTip = TryFindResource("ByteToolTip");
+
                     byteControl.InternalChange = true;
 
                     if (index < readSize && priLevel == curLevel)
@@ -2201,13 +2204,15 @@ namespace WPFHexaEditor.Control
                     sbCtrl.Action = ByteAction.Nothing;
                     sbCtrl.ReadOnlyMode = ReadOnlyMode;
 
+                    if (sbCtrl.ToolTip == null)
+                        sbCtrl.ToolTip = TryFindResource("ByteToolTip");
+
                     sbCtrl.InternalChange = true;
                     sbCtrl.TBLCharacterTable = _TBLCharacterTable;
                     sbCtrl.TypeOfCharacterTable = TypeOfCharacterTable;
 
                     if (index < readSize)
-                    {
-                        //sbCtrl.Byte = (byte)_provider.ReadByte();
+                    {                        
                         sbCtrl.Byte = buffer[index];
                         sbCtrl.BytePositionInFile = startPosition + index;
                         if (index < readSize - 1)

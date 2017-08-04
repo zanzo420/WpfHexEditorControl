@@ -5,7 +5,7 @@
 
 namespace WPFHexaEditor.Core.Bytes
 {
-    public class ByteModified
+    public sealed class ByteModified
     {
         /// <summary>
         /// Byte mofidied

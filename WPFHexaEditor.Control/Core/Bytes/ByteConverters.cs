@@ -13,7 +13,7 @@ namespace WPFHexaEditor.Core.Bytes
     /// <summary>
     /// ByteCharConverter for convert data
     /// </summary>
-    public class ByteConverters
+    public sealed class ByteConverters
     {
         /// <summary>
         /// Convert long to hex value

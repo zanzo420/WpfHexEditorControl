@@ -893,10 +893,16 @@ namespace WPFHexaEditor.Control
                         if (Mouse.LeftButton == MouseButtonState.Pressed)
                         {
                             VerticalScrollBar.Value += distance();
+
+                            //Selection stop
+                            if (MouseOnBottom)
+                                SelectionStop = GetLastVisibleBytePosition();
+                            else if (MouseOnTop)
+                                SelectionStop = GetFirstVisibleBytePosition();
                         }
                     });
 
-                    Thread.Sleep(100);
+                    Thread.Sleep(200);
                 }
             });
         }
@@ -945,19 +951,17 @@ namespace WPFHexaEditor.Control
             MouseOnTop = false;
         }
 
-        private void BottomRectangle_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed)
-                VerticalScrollBar.Value += 5;
-        }
+        //private void BottomRectangle_MouseMove(object sender, MouseEventArgs e)
+        //{
+        //    if (e.LeftButton == MouseButtonState.Pressed)
+        //        VerticalScrollBar.Value += 5;
+        //}
 
-        private void TopRectangle_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed)
-                VerticalScrollBar.Value -= 5;
-        }
-
-
+        //private void TopRectangle_MouseMove(object sender, MouseEventArgs e)
+        //{
+        //    if (e.LeftButton == MouseButtonState.Pressed)
+        //        VerticalScrollBar.Value -= 5;
+        //}
 
         /// <summary>
         /// Un highlight all byte as highlighted with find all methods

@@ -89,10 +89,9 @@
                               IsCheckable="True"
                               IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=ScrollVisibility, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                 </MenuItem>
-                <MenuItem Header="TEST" Click="MenuItem_Click"/>
             </Menu>
 
-            <Control:HexaEditor x:Name="HexEdit" Width="Auto" Height="Auto" Margin="0" IsAllowContextMenu="True"/>
+            <Control:HexaEditor x:Name="HexEdit" Width="Auto" Height="Auto" Margin="2" IsAllowContextMenu="True"/>
         </DockPanel>
     </Grid>
 </Window>

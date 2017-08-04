@@ -36,6 +36,12 @@ namespace WPFHexaEditor.Control
         private long _rightClickBytePosition = -1;
         private TBLStream _TBLCharacterTable = null;
 
+        //Used with VerticalMoveByTime methods/events to move the scrollbar
+        private bool _mouseOnBottom = false;
+        private long _bottomEnterTimes = 0;
+        private bool _mouseOnTop = false;
+        private long _topEnterTimes = 0;
+
         #region Events
         /// <summary>
         /// Occurs when selection start are changed.
@@ -876,93 +882,6 @@ namespace WPFHexaEditor.Control
             UpdateSelection();
         }
 
-
-        /// <summary>
-        /// Vertical Move Method By Time,
-        /// </summary>
-        /// <param name="readToMove">whether the veticalbar value should be changed</param>
-        /// <param name="distance">the value that vertical value move down(negative for up)</param>
-        private void VerticalMoveByTime(Func<bool> readToMove, Func<double> distance)
-        {
-            ThreadPool.QueueUserWorkItem(cb =>
-            {
-                while (readToMove())
-                {
-                    this.Dispatcher.Invoke(() =>
-                    {
-                        if (Mouse.LeftButton == MouseButtonState.Pressed)
-                        {
-                            VerticalScrollBar.Value += distance();
-
-                            //Selection stop
-                            if (MouseOnBottom)
-                                SelectionStop = GetLastVisibleBytePosition();
-                            else if (MouseOnTop)
-                                SelectionStop = GetFirstVisibleBytePosition();
-                        }
-                    });
-
-                    Thread.Sleep(200);
-                }
-            });
-        }
-
-        private bool MouseOnBottom = false;
-        private long bottomEnterTimes = 0;
-        private void BottomRectangle_MouseEnter(object sender, MouseEventArgs e)
-        {
-            MouseOnBottom = true;
-            var curTime = ++bottomEnterTimes;
-
-            VerticalMoveByTime(
-                () => MouseOnBottom && curTime == bottomEnterTimes,
-                () =>
-                {
-                    var mousePos = Mouse.GetPosition(BottomRectangle);
-                    return 5 * mousePos.Y * mousePos.Y;
-                }
-            );
-        }
-
-        private void BottomRectangle_MouseLeave(object sender, MouseEventArgs e)
-        {
-            MouseOnBottom = false;
-        }
-
-        private bool MouseOnTop = false;
-        private long topEnterTimes = 0;
-        private void TopRectangle_MouseEnter(object sender, MouseEventArgs e)
-        {
-            var curTime = ++topEnterTimes;
-            MouseOnTop = true;
-
-            VerticalMoveByTime(
-                () => MouseOnTop && curTime == topEnterTimes,
-                () =>
-                {
-                    var mousePos = Mouse.GetPosition(BottomRectangle);
-                    return -5 * Math.Pow((TopRectangle.ActualHeight - mousePos.Y), 2);
-                }
-            );
-        }
-
-        private void TopRectangle_MouseLeave(object sender, MouseEventArgs e)
-        {
-            MouseOnTop = false;
-        }
-
-        //private void BottomRectangle_MouseMove(object sender, MouseEventArgs e)
-        //{
-        //    if (e.LeftButton == MouseButtonState.Pressed)
-        //        VerticalScrollBar.Value += 5;
-        //}
-
-        //private void TopRectangle_MouseMove(object sender, MouseEventArgs e)
-        //{
-        //    if (e.LeftButton == MouseButtonState.Pressed)
-        //        VerticalScrollBar.Value -= 5;
-        //}
-
         /// <summary>
         /// Un highlight all byte as highlighted with find all methods
         /// </summary>
@@ -1697,7 +1616,7 @@ namespace WPFHexaEditor.Control
 
         #endregion Undo / Redo
 
-        #region Open, Close, Save... Methods/Property
+        #region Open, Close, Save, byte provider ...
 
         private void Provider_ChangesSubmited(object sender, EventArgs e)
         {
@@ -1933,9 +1852,51 @@ namespace WPFHexaEditor.Control
             }
         }
 
-        #endregion Open, Close, Save... Methods/Property
+        #endregion Open, Close, Save, byte provider ...
 
-        #region Update/Refresh view methods/event
+        #region Traverse byte control methods
+
+        /// <summary>
+        /// Used to make action on all hexbytecontrol
+        /// </summary>
+        private void TraverseDataControls(Action<HexByteControl> act)
+        {
+            //HexByte panel
+            foreach (StackPanel hexDataStack in HexDataStackPanel.Children)
+                foreach (HexByteControl byteControl in hexDataStack.Children)
+                    act(byteControl);
+        }
+
+        /// <summary>
+        /// Used to make action on all stringbytecontrol
+        /// </summary>
+        private void TraverseStringControls(Action<StringByteControl> act)
+        {
+            //Stringbyte panel
+            foreach (StackPanel stringDataStack in StringDataStackPanel.Children)
+                foreach (StringByteControl sbControl in stringDataStack.Children)
+                    act(sbControl);
+        }
+
+        /// <summary>
+        /// To reduce code.traverse hex and string controls.
+        /// </summary>
+        /// <param name="act"></param>
+        private void TraverseStringAndDataControls(Action<IByteControl> act)
+        {
+            //Stringbyte panel
+            foreach (StackPanel stringDataStack in StringDataStackPanel.Children)
+                foreach (StringByteControl sbControl in stringDataStack.Children)
+                    act(sbControl);
+
+            //HexByte panel
+            foreach (StackPanel hexDataStack in HexDataStackPanel.Children)
+                foreach (HexByteControl byteControl in hexDataStack.Children)
+                    act(byteControl);
+        }
+        #endregion Traverse byte control methods
+
+        #region Update/Refresh view
 
         /// <summary>
         /// Get or set the number of byte are show in control
@@ -2299,45 +2260,6 @@ namespace WPFHexaEditor.Control
         }
 
         /// <summary>
-        /// Used to make action on all hexbytecontrol
-        /// </summary>
-        private void TraverseDataControls(Action<HexByteControl> act)
-        {
-            //HexByte panel
-            foreach (StackPanel hexDataStack in HexDataStackPanel.Children)
-                foreach (HexByteControl byteControl in hexDataStack.Children)
-                    act(byteControl);
-        }
-
-        /// <summary>
-        /// Used to make action on all stringbytecontrol
-        /// </summary>
-        private void TraverseStringControls(Action<StringByteControl> act)
-        {
-            //Stringbyte panel
-            foreach (StackPanel stringDataStack in StringDataStackPanel.Children)
-                foreach (StringByteControl sbControl in stringDataStack.Children)
-                    act(sbControl);
-        }
-
-        /// <summary>
-        /// To reduce code.traverse hex and string controls.
-        /// </summary>
-        /// <param name="act"></param>
-        private void TraverseStringAndDataControls(Action<IByteControl> act)
-        {
-            //Stringbyte panel
-            foreach (StackPanel stringDataStack in StringDataStackPanel.Children)
-                foreach (StringByteControl sbControl in stringDataStack.Children)
-                    act(sbControl);
-
-            //HexByte panel
-            foreach (StackPanel hexDataStack in HexDataStackPanel.Children)
-                foreach (HexByteControl byteControl in hexDataStack.Children)
-                    act(byteControl);
-        }
-
-        /// <summary>
         /// Update byte are modified
         /// </summary>
         private void UpdateByteModified()
@@ -2481,7 +2403,7 @@ namespace WPFHexaEditor.Control
                 }
             }
         }
-        #endregion Update/Refresh view methods/event
+        #endregion Update/Refresh view
 
         #region First/Last visible byte methods
 
@@ -3175,7 +3097,77 @@ namespace WPFHexaEditor.Control
 
         #endregion Context menu
 
+        #region Bottom and top rectangle
 
+        /// <summary>
+        /// Vertical Move Method By Time,
+        /// </summary>
+        /// <param name="readToMove">whether the veticalbar value should be changed</param>
+        /// <param name="distance">the value that vertical value move down(negative for up)</param>
+        private void VerticalMoveByTime(Func<bool> readToMove, Func<double> distance)
+        {
+            ThreadPool.QueueUserWorkItem(cb =>
+            {
+                while (readToMove())
+                {
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        if (Mouse.LeftButton == MouseButtonState.Pressed)
+                        {
+                            VerticalScrollBar.Value += distance();
+
+                            //Selection stop
+                            if (_mouseOnBottom)
+                                SelectionStop = GetLastVisibleBytePosition();
+                            else if (_mouseOnTop)
+                                SelectionStop = GetFirstVisibleBytePosition();
+                        }
+                    });
+
+                    Thread.Sleep(200);
+                }
+            });
+        }
+
+        private void BottomRectangle_MouseEnter(object sender, MouseEventArgs e)
+        {
+            _mouseOnBottom = true;
+            var curTime = ++_bottomEnterTimes;
+
+            VerticalMoveByTime(
+                () => _mouseOnBottom && curTime == _bottomEnterTimes,
+                () =>
+                {
+                    var mousePos = Mouse.GetPosition(BottomRectangle);
+                    return 5 * mousePos.Y * mousePos.Y;
+                }
+            );
+        }
+
+        private void BottomRectangle_MouseLeave(object sender, MouseEventArgs e)
+        {
+            _mouseOnBottom = false;
+        }
+
+        private void TopRectangle_MouseEnter(object sender, MouseEventArgs e)
+        {
+            var curTime = ++_topEnterTimes;
+            _mouseOnTop = true;
+
+            VerticalMoveByTime(
+                () => _mouseOnTop && curTime == _topEnterTimes,
+                () =>
+                {
+                    var mousePos = Mouse.GetPosition(BottomRectangle);
+                    return -5 * Math.Pow((TopRectangle.ActualHeight - mousePos.Y), 2);
+                }
+            );
+        }
+
+        private void TopRectangle_MouseLeave(object sender, MouseEventArgs e)
+        {
+            _mouseOnTop = false;
+        }
+        #endregion Bottom and Top rectangle
     }
-
 }

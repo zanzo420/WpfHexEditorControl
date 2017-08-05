@@ -670,6 +670,20 @@ namespace WPFHexaEditor.Core.Bytes
         }
 
         /// <summary>
+        /// Get the byte at selection start.
+        /// </summary>
+        /// <param name="copyChange">if true take bytemodified in operation</param>
+        public byte? GetByte(long position, bool copyChange = true)
+        {
+            if (!CanCopy(position, position)) return null;
+
+            //Variables
+            byte[] buffer = GetCopyData(position, position, copyChange);
+
+            return buffer[0];
+        }
+
+        /// <summary>
         /// Copies the current selection in the hex box to the Clipboard.
         /// </summary>
         /// <param name="copyChange">Set tu true if you want onclude change in your copy. Set to false to copy directly from source</param>

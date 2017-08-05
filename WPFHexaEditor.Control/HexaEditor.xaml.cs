@@ -309,6 +309,34 @@ namespace WPFHexaEditor.Control
             TraverseStringControls(ctrl => { ctrl.UpdateVisual(); });
         }
 
+        /// <summary>
+        /// TEST
+        /// </summary>
+        private void TEST_UpdateBackGroundSelectionStart()
+        {
+            //if (SelectionStart > -1)
+            //{
+            //    byte? test = _provider.GetByte(SelectionStart);
+
+            //    if (test != null)
+            //    {
+            //        TraverseStringControls(ctrl =>
+            //        {
+            //            if (ctrl.Byte == test)
+            //                ctrl.UpdateVisual(true);
+            //        });
+
+            //        //TraverseDataControls(ctrl =>
+            //        //{
+            //        //    if (ctrl.Byte == test)
+            //        //        ctrl.Background = Brushes.LightSlateGray;
+            //        //    else
+            //        //        ctrl.Background = Brushes.Transparent;
+            //        //});
+            //    }
+            //}
+        }
+
         #endregion Colors/fonts property and methods
 
         #region Miscellaneous property/methods
@@ -934,10 +962,14 @@ namespace WPFHexaEditor.Control
                 ctrl.UpdateSelection();
                 ctrl.UpdateSelectionLine();
                 ctrl.SetScrollMarker(0, ScrollMarker.SelectionStart);
-
+                
                 ctrl.SelectionStartChanged?.Invoke(ctrl, new EventArgs());
 
                 ctrl.SelectionLenghtChanged?.Invoke(ctrl, new EventArgs());
+
+
+                //TEST
+                ctrl.TEST_UpdateBackGroundSelectionStart();
             }
         }
 
@@ -1176,14 +1208,26 @@ namespace WPFHexaEditor.Control
                 SetFocusStringDataPanel(SelectionStart);
         }
 
+
         private void Control_MovePrevious(object sender, EventArgs e)
         {
-            var ctrl = sender as IByteControl;
-            if (ctrl != null)
-            {
-                ctrl.IsSelected = false;
-                SetFocusStringDataPanel(ctrl.BytePositionInFile - 1);
+            HexByteControl hexByteCtrl = sender as HexByteControl;
+            StringByteControl sbCtrl = sender as StringByteControl;
 
+            if (sbCtrl != null)
+            {
+                sbCtrl.IsSelected = false;
+                SetFocusStringDataPanel(sbCtrl.BytePositionInFile - 1);
+            }
+
+            if (hexByteCtrl != null)
+            {
+                hexByteCtrl.IsSelected = false;
+                SetFocusHexDataPanel(hexByteCtrl.BytePositionInFile - 1);
+            }
+
+            if (hexByteCtrl != null || sbCtrl != null)
+            {
                 SelectionStart--;
                 SelectionStop--;
                 UpdateByteModified();
@@ -1192,19 +1236,29 @@ namespace WPFHexaEditor.Control
 
         private void Control_MoveNext(object sender, EventArgs e)
         {
-            var ctrl = sender as IByteControl;
+            HexByteControl hexByteCtrl = sender as HexByteControl;
+            StringByteControl sbCtrl = sender as StringByteControl;
 
-            if (ctrl != null)
+            if (sbCtrl != null)
             {
-                ctrl.IsSelected = false;
-                SetFocusStringDataPanel(ctrl.BytePositionInFile + 1);
+                sbCtrl.IsSelected = false;
+                SetFocusStringDataPanel(sbCtrl.BytePositionInFile + 1);
+            }
 
+            if (hexByteCtrl != null)
+            {
+                hexByteCtrl.IsSelected = false;
+                SetFocusHexDataPanel(hexByteCtrl.BytePositionInFile + 1);
+            }
+
+            if (hexByteCtrl != null || sbCtrl != null)
+            {
                 SelectionStart++;
                 SelectionStop++;
                 UpdateByteModified();
             }
-
         }
+
 
         #endregion Selection Property/Methods/Event
 
@@ -2012,6 +2066,10 @@ namespace WPFHexaEditor.Control
             UpdateSelection();
             UpdateHighLightByte();
             UpdateStatusBar();
+
+            //TEST
+            if (SelectionStart > -1)
+                TEST_UpdateBackGroundSelectionStart();
 
             CheckProviderIsOnProgress();
 

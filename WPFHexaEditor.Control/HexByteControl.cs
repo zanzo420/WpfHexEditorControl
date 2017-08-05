@@ -329,7 +329,18 @@ namespace WPFHexaEditor.Control
                 FirstHexChar.Foreground = _parent.Foreground;
                 SecondHexChar.Foreground = _parent.Foreground;
             }
+
+            UpdateAutoHighLiteSelectionByteVisual();
         }
+
+        private void UpdateAutoHighLiteSelectionByteVisual()
+        {
+            //Auto highlite selectionbyte
+            if (_parent.AllowAutoHightLighSelectionByte && _parent.SelectionByte != null)
+                if (Byte == _parent.SelectionByte && !IsSelected)
+                    Background = _parent.AutoHighLiteSelectionByteBrush;
+        }
+
 
         private void UpdateLabelFromByte()
         {
@@ -496,6 +507,8 @@ namespace WPFHexaEditor.Control
                     !IsSelected && !IsHighLight && !IsFocus)
                     Background = _parent.MouseOverColor;
 
+            UpdateAutoHighLiteSelectionByteVisual();
+
             if (e.LeftButton == MouseButtonState.Pressed)
                 MouseSelection?.Invoke(this, e);
         }
@@ -508,6 +521,8 @@ namespace WPFHexaEditor.Control
                     Action != ByteAction.Added &&
                     !IsSelected && !IsHighLight && !IsFocus)
                     Background = Brushes.Transparent;
+
+            UpdateAutoHighLiteSelectionByteVisual();
         }
 
     }

@@ -677,8 +677,13 @@ namespace WPFHexaEditor.Core.Bytes
         {
             if (!CanCopy(position, position)) return null;
 
+            byte[] buffer;
+
             //Variables
-            byte[] buffer = GetCopyData(position, position, copyChange);
+            if (position > -1)
+                buffer = GetCopyData(position, position, copyChange);
+            else
+                return null;
 
             return buffer[0];
         }

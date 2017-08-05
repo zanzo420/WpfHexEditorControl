@@ -297,44 +297,16 @@ namespace WPFHexaEditor.Control
             HexaEditor ctrl = d as HexaEditor;
 
             if (e.NewValue != e.OldValue)
-                ctrl.UpdateBackGround();
+                ctrl.UpdateVisual();
         }
 
         /// <summary>
-        /// Call UpdateBackGround methods for all byte control
+        /// Call Updatevisual methods for all byte control
         /// </summary>
-        private void UpdateBackGround()
+        private void UpdateVisual()
         {
             TraverseDataControls(ctrl => { ctrl.UpdateVisual(); });
             TraverseStringControls(ctrl => { ctrl.UpdateVisual(); });
-        }
-
-        /// <summary>
-        /// TEST
-        /// </summary>
-        private void TEST_UpdateBackGroundSelectionStart()
-        {
-            //if (SelectionStart > -1)
-            //{
-            //    byte? test = _provider.GetByte(SelectionStart);
-
-            //    if (test != null)
-            //    {
-            //        TraverseStringControls(ctrl =>
-            //        {
-            //            if (ctrl.Byte == test)
-            //                ctrl.UpdateVisual(true);
-            //        });
-
-            //        //TraverseDataControls(ctrl =>
-            //        //{
-            //        //    if (ctrl.Byte == test)
-            //        //        ctrl.Background = Brushes.LightSlateGray;
-            //        //    else
-            //        //        ctrl.Background = Brushes.Transparent;
-            //        //});
-            //    }
-            //}
         }
 
         #endregion Colors/fonts property and methods
@@ -865,7 +837,6 @@ namespace WPFHexaEditor.Control
             IByteControl ctrl = sender as IByteControl;
 
             if (ctrl != null)
-            {
                 if (Keyboard.Modifiers == ModifierKeys.Shift)
                 {
                     SelectionStop = ctrl.BytePositionInFile;
@@ -876,16 +847,13 @@ namespace WPFHexaEditor.Control
                     SelectionStop = ctrl.BytePositionInFile;
                 }
 
-            }
-            if (ctrl is StringByteControl)
-            {
-                UpdateSelectionColorMode(FirstColor.StringByteData);
-            }
-            else
-            {
+            
+            if (ctrl is StringByteControl)            
+                UpdateSelectionColorMode(FirstColor.StringByteData);            
+            else            
                 UpdateSelectionColorMode(FirstColor.HexByteData);
-            }
 
+            UpdateVisual();
         }
 
         private void Control_MouseSelection(object sender, EventArgs e)
@@ -959,17 +927,18 @@ namespace WPFHexaEditor.Control
 
             if (e.NewValue != e.OldValue)
             {
+                if (ByteProvider.CheckIsOpen(ctrl._provider))
+                    ctrl.SelectionByte = ctrl._provider.GetByte(ctrl.SelectionStart);
+                else
+                    ctrl.SelectionByte = null;
+
                 ctrl.UpdateSelection();
                 ctrl.UpdateSelectionLine();
+                ctrl.UpdateVisual();
                 ctrl.SetScrollMarker(0, ScrollMarker.SelectionStart);
-                
+                                
                 ctrl.SelectionStartChanged?.Invoke(ctrl, new EventArgs());
-
                 ctrl.SelectionLenghtChanged?.Invoke(ctrl, new EventArgs());
-
-
-                //TEST
-                ctrl.TEST_UpdateBackGroundSelectionStart();
             }
         }
 
@@ -2066,10 +2035,7 @@ namespace WPFHexaEditor.Control
             UpdateSelection();
             UpdateHighLightByte();
             UpdateStatusBar();
-
-            //TEST
-            if (SelectionStart > -1)
-                TEST_UpdateBackGroundSelectionStart();
+            UpdateVisual();
 
             CheckProviderIsOnProgress();
 
@@ -3049,19 +3015,19 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Allow or not the context menu to appear on right-click
         /// </summary>
-        public bool IsAllowContextMenu
+        public bool AllowContextMenu
         {
-            get { return (bool)GetValue(isAllowContextMenuProperty); }
-            set { SetValue(isAllowContextMenuProperty, value); }
+            get { return (bool)GetValue(AllowContextMenuProperty); }
+            set { SetValue(AllowContextMenuProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for isAllowContextMenu.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty isAllowContextMenuProperty =
-            DependencyProperty.Register("isAllowContextMenu", typeof(bool), typeof(HexaEditor), new PropertyMetadata(true));
+        public static readonly DependencyProperty AllowContextMenuProperty =
+            DependencyProperty.Register("AllowContextMenu", typeof(bool), typeof(HexaEditor), new PropertyMetadata(true));
 
         private void Control_RightClick(object sender, EventArgs e)
         {
-            if (IsAllowContextMenu)
+            if (AllowContextMenu)
             {
                 //position
                 var ctrl = sender as IByteControl;
@@ -3250,5 +3216,47 @@ namespace WPFHexaEditor.Control
             _mouseOnTop = false;
         }
         #endregion Bottom and Top rectangle
+
+        #region Highlight selected byte        
+        public byte? SelectionByte
+        {
+            get { return (byte?)GetValue(SelectionByteProperty); }
+            internal set { SetValue(SelectionByteProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for SelectionByte.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty SelectionByteProperty =
+            DependencyProperty.Register("SelectionByte", typeof(byte?), typeof(HexaEditor), new PropertyMetadata(null));
+                
+        public bool AllowAutoHightLighSelectionByte
+        {
+            get { return (bool)GetValue(AllowAutoHighLightSelectionByteProperty); }
+            set { SetValue(AllowAutoHighLightSelectionByteProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for isAllowAutoHightLightSelectionByte.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty AllowAutoHighLightSelectionByteProperty =
+            DependencyProperty.Register("AllowAutoHighLightSelectionByte", typeof(bool), typeof(HexaEditor), 
+                new PropertyMetadata(true));
+        
+        public Brush AutoHighLiteSelectionByteBrush
+        {
+            get { return (Brush)GetValue(AutoHighLiteSelectionByteBrushProperty); }
+            set { SetValue(AutoHighLiteSelectionByteBrushProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for AutoHighLiteSelectionByteBrush.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty AutoHighLiteSelectionByteBrushProperty =
+            DependencyProperty.Register("AutoHighLiteSelectionByteBrush", typeof(Brush), typeof(HexaEditor),
+                new FrameworkPropertyMetadata(Brushes.LightBlue,
+                    new PropertyChangedCallback(AutoHighLiteSelectionByteBrush_Changed)));
+
+        private static void AutoHighLiteSelectionByteBrush_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            HexaEditor ctrl = d as HexaEditor;
+
+            ctrl.UpdateVisual();
+        }
+        #endregion Highlight selected byte
     }
 }

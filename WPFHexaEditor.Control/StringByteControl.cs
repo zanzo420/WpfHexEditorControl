@@ -459,7 +459,7 @@ namespace WPFHexaEditor.Control
                 Foreground = Brushes.White;
                 Background = Brushes.Black;
             }
-            else if(IsSelected)
+            else if (IsSelected)
             {
                 FontWeight = _parent.FontWeight;
                 Foreground = _parent.ForegroundContrast;
@@ -485,8 +485,8 @@ namespace WPFHexaEditor.Control
                 switch (Action)
                 {
                     case ByteAction.Modified:
-                        FontWeight = FontWeights.Bold; 
-                        Background = _parent.ByteModifiedColor; 
+                        FontWeight = FontWeights.Bold;
+                        Background = _parent.ByteModifiedColor;
                         Foreground = _parent.Foreground;
                         break;
 
@@ -529,6 +529,16 @@ namespace WPFHexaEditor.Control
                             break;
                     }
             }
+
+            UpdateAutoHighLiteSelectionByteVisual();
+        }
+
+        private void UpdateAutoHighLiteSelectionByteVisual()
+        {
+            //Auto highlite selectionbyte
+            if (_parent.AllowAutoHightLighSelectionByte && _parent.SelectionByte != null)
+                if (Byte == _parent.SelectionByte && !IsSelected)
+                    Background = _parent.AutoHighLiteSelectionByteBrush;
         }
 
         public bool ReadOnlyMode
@@ -697,7 +707,9 @@ namespace WPFHexaEditor.Control
                     Action != ByteAction.Deleted &&
                     Action != ByteAction.Added &&
                     !IsSelected && !IsHighLight && !IsFocus)
-                    Background = _parent.MouseOverColor; 
+                    Background = _parent.MouseOverColor;
+
+            UpdateAutoHighLiteSelectionByteVisual();
 
             if (e.LeftButton == MouseButtonState.Pressed)
                 MouseSelection?.Invoke(this, e);
@@ -711,6 +723,8 @@ namespace WPFHexaEditor.Control
                     Action != ByteAction.Added &&
                     !IsSelected && !IsHighLight && !IsFocus)
                     Background = Brushes.Transparent;
+
+            UpdateAutoHighLiteSelectionByteVisual();
         }
 
         private void StringByteLabel_MouseDown(object sender, MouseButtonEventArgs e)

@@ -284,5 +284,6 @@ namespace WPFHexaEditorExample
                 HexEdit.SubmitChanges(fileDialog.FileName, true);
             }
         }
+
     }
 }

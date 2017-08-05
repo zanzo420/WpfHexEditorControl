@@ -31,30 +31,20 @@ namespace WPFHexaEditor.Core.Bytes
         private double _longProcessProgress = 0;
         private bool _isOnLongProcess = false;
         private ByteProviderStreamType _streamType = ByteProviderStreamType.Nothing;
+        string _newfilename = "";
 
         //Event
         public event EventHandler DataCopiedToClipboard;
-
         public event EventHandler ReadOnlyChanged;
-
         public event EventHandler Closed;
-
         public event EventHandler StreamOpened;
-
         public event EventHandler PositionChanged;
-
         public event EventHandler Undone;
-
         public event EventHandler DataCopiedToStream;
-
         public event EventHandler ChangesSubmited;
-
         public event EventHandler LongProcessProgressChanged;
-
         public event EventHandler LongProcessProgressStarted;
-
         public event EventHandler LongProcessProgressCompleted;
-
         public event EventHandler DataPastedNotInserted;
 
         /// <summary>
@@ -80,6 +70,32 @@ namespace WPFHexaEditor.Core.Bytes
         }
 
         /// <summary>
+        /// Get the type of stream are opened in byteprovider.
+        /// </summary>
+        public ByteProviderStreamType StreamType
+        {
+            get
+            {
+                return _streamType;
+            }
+        }
+
+        /// <summary>
+        /// Get the lenght of file. Return -1 if file is close.
+        /// </summary>
+        public long Length
+        {
+            get
+            {
+                if (IsOpen)
+                    return _stream.Length;
+
+                return -1;
+            }
+        }
+
+        #region Open/close stream property/methods
+        /// <summary>
         /// Set or Get the file with the control will show hex
         /// </summary>
         public string FileName
@@ -97,16 +113,6 @@ namespace WPFHexaEditor.Core.Bytes
             }
         }
 
-        /// <summary>
-        /// Get the type of stream are opened in byteprovider.
-        /// </summary>
-        public ByteProviderStreamType StreamType
-        {
-            get
-            {
-                return _streamType;
-            }
-        }
 
         /// <summary>
         /// Get or set a MemoryStream for use with byteProvider
@@ -197,6 +203,7 @@ namespace WPFHexaEditor.Core.Bytes
             {
                 _stream.Close();
                 _stream = null;
+                _newfilename = "";
                 ReadOnlyMode = false;
                 IsOnLongProcess = false;
                 LongProcessProgress = 0;
@@ -207,21 +214,9 @@ namespace WPFHexaEditor.Core.Bytes
                 Closed?.Invoke(this, new EventArgs());
             }
         }
-
-        /// <summary>
-        /// Get the lenght of file. Return -1 if file is close.
-        /// </summary>
-        public long Length
-        {
-            get
-            {
-                if (IsOpen)
-                    return _stream.Length;
-
-                return -1;
-            }
-        }
-
+        #endregion Open/close stream property/methods
+        
+        #region Stream position
         /// <summary>
         /// Check if position as at EOF.
         /// </summary>
@@ -255,7 +250,9 @@ namespace WPFHexaEditor.Core.Bytes
                 }
             }
         }
+        #endregion Stream position
 
+        #region isOpen property/methods
         /// <summary>
         /// Get if file is open
         /// </summary>
@@ -281,6 +278,9 @@ namespace WPFHexaEditor.Core.Bytes
 
             return false;
         }
+        #endregion isOpen property/methods
+
+        #region Read byte
 
         /// <summary>
         /// Readbyte at position if file CanRead. Return -1 is file is closed of EOF.
@@ -327,23 +327,42 @@ namespace WPFHexaEditor.Core.Bytes
                     return _stream.Read(destination, offset, count);
             return -1;
         }
+        #endregion read byte
 
         #region SubmitChanges to file/stream
-        /// <summary>
-        /// Submit change in a new file (Save as...)
-        /// </summary>
-        /// <param name="newFilename"></param>
-        string _newfilename = "";
-        //public void SubmitChanges(string newFilename)
+        ///// <summary>
+        ///// Submit change in a new file (Save as...)
+        ///// TODO: ADD VALIDATION
+        ///// </summary>
+        ///// <param name="newFilename"></param>        
+        //public bool SubmitChanges(string newFilename, bool overwrite = false)
         //{
-        //    if (File.Exists(newFilename))
+        //    _newfilename = "";
+        //    bool go = false;
+
+        //    if (File.Exists(newFilename) && overwrite)
+        //    {
+        //        go = true;
+        //    }
+        //    else if (File.Exists(newFilename) && !overwrite)
+        //    {
+        //        return false;
+        //    }
+        //    else if (!File.Exists(newFilename))
+        //    {
+        //        go = true;
+        //    }
+        //    else return false;
+            
+        //    //Save as
+        //    if (go)
         //    {
         //        _newfilename = newFilename;
+        //        File.Create(_newfilename);
         //        SubmitChanges();
-        //        FileName = _newfilename;
+        //        return true;
         //    }
-        //    else
-        //        throw new FileNotFoundException("File not found", newFilename);
+        //    else return false;
         //}
 
         /// <summary>
@@ -448,12 +467,10 @@ namespace WPFHexaEditor.Core.Bytes
                             case ByteAction.Added:
                                 //TODO : IMPLEMENTING ADD BYTE
                                 break;
-
                             case ByteAction.Deleted:
                                 //NOTHING TODO we dont want to add deleted byte
                                 Position++;
                                 break;
-
                             case ByteAction.Modified:
                                 Position++;
                                 NewStream.WriteByte(nextByteModified.Value.Byte.Value);

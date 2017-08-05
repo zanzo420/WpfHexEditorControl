@@ -91,7 +91,7 @@
                 </MenuItem>
             </Menu>
 
-            <Control:HexaEditor x:Name="HexEdit" Width="Auto" Height="Auto" Margin="2" IsAllowContextMenu="True" MouseWheelSpeed="VeryFast"/>
+            <Control:HexaEditor x:Name="HexEdit" Width="Auto" Height="Auto" Margin="2" IsAllowContextMenu="True" MouseWheelSpeed="Normal"/>
         </DockPanel>
     </Grid>
 </Window>

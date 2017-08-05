@@ -274,5 +274,15 @@ namespace WPFHexaEditorExample
 
             Application.Current.MainWindow.Cursor = null;
         }
+
+        private void SaveAsMenu_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog fileDialog = new SaveFileDialog();
+
+            if (fileDialog.ShowDialog() != null)
+            {
+                HexEdit.SubmitChanges(fileDialog.FileName, true);
+            }
+        }
     }
 }

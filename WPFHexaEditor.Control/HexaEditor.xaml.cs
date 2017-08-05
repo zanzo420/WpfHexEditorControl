@@ -1625,8 +1625,10 @@ namespace WPFHexaEditor.Control
 
         private void Provider_ChangesSubmited(object sender, EventArgs e)
         {
+            ByteProvider bp = sender as ByteProvider;
+
             //Refresh filename
-            var filename = FileName;
+            var filename = bp.FileName;
             Close();
             FileName = filename;
 
@@ -1723,6 +1725,17 @@ namespace WPFHexaEditor.Control
             if (ByteProvider.CheckIsOpen(_provider))
                 if (!_provider.ReadOnlyMode)
                     _provider.SubmitChanges();
+        }
+
+        /// <summary>
+        /// Save as to another file
+        /// TODO: Add save as another stream...
+        /// </summary>
+        public void SubmitChanges(string newfilename, bool overwrite = false)
+        {
+            if (ByteProvider.CheckIsOpen(_provider))
+                if (!_provider.ReadOnlyMode)
+                    _provider.SubmitChanges(newfilename, overwrite);
         }
 
         /// <summary>

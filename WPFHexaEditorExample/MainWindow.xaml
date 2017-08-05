@@ -21,7 +21,7 @@
                 <MenuItem Header="File" Height="26" RenderTransformOrigin="0.656,0.769">
                     <MenuItem x:Name="OpenMenu" Header="Open..." Click="OpenMenu_Click" />
                     <MenuItem x:Name="SaveMenu" Header="Save" Click="SaveMenu_Click" />
-                    <MenuItem Header="Save as..." IsEnabled="False" />
+                    <MenuItem Header="Save as..." IsEnabled="True" Click="SaveAsMenu_Click"/>
                     <MenuItem x:Name="CloseFileMenu" Header="Close file" Click="CloseFileMenu_Click" />
                     <Separator />
                     <MenuItem x:Name="ExitMenu" Header="Exit" Click="ExitMenu_Click" />

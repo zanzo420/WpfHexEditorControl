@@ -330,40 +330,40 @@ namespace WPFHexaEditor.Core.Bytes
         #endregion read byte
 
         #region SubmitChanges to file/stream
-        ///// <summary>
-        ///// Submit change in a new file (Save as...)
-        ///// TODO: ADD VALIDATION
-        ///// </summary>
-        ///// <param name="newFilename"></param>        
-        //public bool SubmitChanges(string newFilename, bool overwrite = false)
-        //{
-        //    _newfilename = "";
-        //    bool go = false;
+        /// <summary>
+        /// Submit change in a new file (Save as...)
+        /// TODO: ADD VALIDATION
+        /// </summary>
+        /// <param name="newFilename"></param>        
+        public bool SubmitChanges(string newFilename, bool overwrite = false)
+        {
+            _newfilename = "";
+            bool go = false;
 
-        //    if (File.Exists(newFilename) && overwrite)
-        //    {
-        //        go = true;
-        //    }
-        //    else if (File.Exists(newFilename) && !overwrite)
-        //    {
-        //        return false;
-        //    }
-        //    else if (!File.Exists(newFilename))
-        //    {
-        //        go = true;
-        //    }
-        //    else return false;
-            
-        //    //Save as
-        //    if (go)
-        //    {
-        //        _newfilename = newFilename;
-        //        File.Create(_newfilename);
-        //        SubmitChanges();
-        //        return true;
-        //    }
-        //    else return false;
-        //}
+            if (File.Exists(newFilename) && overwrite)
+            {
+                go = true;
+            }
+            else if (File.Exists(newFilename) && !overwrite)
+            {
+                return false;
+            }
+            else if (!File.Exists(newFilename))
+            {
+                go = true;
+            }
+            else return false;
+
+            //Save as
+            if (go)
+            {
+                _newfilename = newFilename;
+                File.Create(_newfilename).Close();
+                SubmitChanges();
+                return true;
+            }
+            else return false;
+        }
 
         /// <summary>
         /// Submit change to files/stream
@@ -494,6 +494,15 @@ namespace WPFHexaEditor.Core.Bytes
                         }
                     }
 
+                    //Set stream to new file (save as)
+                    bool refreshByteProvider = false;
+                    if (File.Exists(_newfilename))
+                    {
+                        _stream = File.Open(_newfilename, FileMode.Open, FileAccess.ReadWrite, FileShare.Read);
+                        _stream.SetLength(NewStream.Length);
+                        refreshByteProvider = true;
+                    }
+
                     //Write new data to current stream
                     Position = 0;
                     NewStream.Position = 0;
@@ -523,10 +532,13 @@ namespace WPFHexaEditor.Core.Bytes
                     NewStream.Close();
                     buffer = null;
 
+                    if (refreshByteProvider)
+                        FileName = _newfilename;
+
                     //Launch event at process completed
                     IsOnLongProcess = false;
                     LongProcessProgressCompleted?.Invoke(this, new EventArgs());
-                }
+                }                
 
                 //Launch event
                 ChangesSubmited?.Invoke(this, new EventArgs());

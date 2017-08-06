@@ -14,7 +14,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using WPFHexaEditor.Control.Core.MethodExtention;
 using WPFHexaEditor.Core;
 using WPFHexaEditor.Core.Bytes;
 using WPFHexaEditor.Core.CharacterTable;
@@ -650,7 +649,6 @@ namespace WPFHexaEditor.Control
             SelectionStop = SelectionStart + BytePerLine - 1;
         }
 
-
         private void Control_ByteDeleted(object sender, EventArgs e)
         {
             DeleteSelection();
@@ -660,6 +658,8 @@ namespace WPFHexaEditor.Control
         {
             UnSelectAll();
             UnHighLightAll();
+
+            this.Focus();
         }
 
         private void Control_CTRLZKey(object sender, EventArgs e)
@@ -936,7 +936,7 @@ namespace WPFHexaEditor.Control
                 ctrl.UpdateSelectionLine();
                 ctrl.UpdateVisual();
                 ctrl.SetScrollMarker(0, ScrollMarker.SelectionStart);
-                                
+
                 ctrl.SelectionStartChanged?.Invoke(ctrl, new EventArgs());
                 ctrl.SelectionLenghtChanged?.Invoke(ctrl, new EventArgs());
             }
@@ -1535,6 +1535,9 @@ namespace WPFHexaEditor.Control
                     ctrl.VerticalScrollBar.Visibility = Visibility.Collapsed;
                     break;
             }
+
+
+
         }
 
         /// <summary>
@@ -3258,5 +3261,36 @@ namespace WPFHexaEditor.Control
             ctrl.UpdateVisual();
         }
         #endregion Highlight selected byte
+
+        #region Get selected control methods
+        /// <summary>
+        /// Give the selected hexa control
+        /// </summary>
+        private HexByteControl GetSelectedHexCtrl()
+        {
+            //HexByte panel
+            foreach (StackPanel hexDataStack in HexDataStackPanel.Children)
+                foreach (HexByteControl byteControl in hexDataStack.Children)
+                    if (byteControl.IsSelected && byteControl.BytePositionInFile == SelectionStart)
+                        return byteControl;
+
+            return null;
+        }
+
+        /// <summary>
+        /// Give the selected string control
+        /// </summary>
+        /// <returns></returns>
+        private StringByteControl GetSelectedStringCtrl()
+        {
+            //string panel
+            foreach (StackPanel stringDataStack in StringDataStackPanel.Children)
+                foreach (StringByteControl byteControl in stringDataStack.Children)
+                    if (byteControl.IsSelected && byteControl.BytePositionInFile == SelectionStart)
+                        return byteControl;
+
+            return null;
+        }
+        #endregion Get selected control methods
     }
 }

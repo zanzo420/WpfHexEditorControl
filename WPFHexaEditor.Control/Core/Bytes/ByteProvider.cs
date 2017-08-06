@@ -46,6 +46,7 @@ namespace WPFHexaEditor.Core.Bytes
         public event EventHandler LongProcessProgressStarted;
         public event EventHandler LongProcessProgressCompleted;
         public event EventHandler DataPastedNotInserted;
+        public event EventHandler FillWithByteCompleted;
 
         /// <summary>
         /// Default constructor
@@ -995,6 +996,36 @@ namespace WPFHexaEditor.Core.Bytes
             PasteNotInsert(Position, pasteString);
         }
 
+        /// <summary>
+        /// Fill with byte at position
+        /// </summary>
+        /// <param name="startPosition">The position to start fill</param>
+        /// <param name="length">The length to fill</param>
+        /// <param name="b">the byte to fill</param>
+        public void FillWithByte(long startPosition, long length, byte b)
+        {
+            Position = startPosition;
+
+            if (Position > -1)
+            {
+                for (int i = 0; i < length; i++)
+                {
+                    if (!EOF)
+                    {
+                        //if (GetByte(Position) != b)
+                        //    AddByteModified(b, Position, length);
+
+                        AddByteModified(b, Position, length);
+                        Position++;
+                    }
+                    else
+                        break;
+                }
+
+                FillWithByteCompleted?.Invoke(this, new EventArgs());
+            }
+        }
+
         #endregion Copy/Paste/Cut Methods
 
         #region Undo / Redo
@@ -1244,7 +1275,6 @@ namespace WPFHexaEditor.Core.Bytes
                 LongProcessProgressChanged?.Invoke(value, new EventArgs());
             }
         }
-
         #endregion Long process progress
 
 

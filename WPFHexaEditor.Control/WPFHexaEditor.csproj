@@ -61,8 +61,20 @@
     <Compile Include="Core\Helper\DispatcherHelper.cs" />
     <Compile Include="Core\Interface\IByteControl.cs" />
     <Compile Include="Core\MethodExtention\VisualHelper.cs" />
+    <Compile Include="Dialog\FillWithByteWindow.xaml.cs">
+      <DependentUpon>FillWithByteWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="HexByteControl.cs" />
+    <Compile Include="Properties\Resources.fr-CA.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.fr-CA.resx</DependentUpon>
+    </Compile>
     <Compile Include="StringByteControl.cs" />
+    <Page Include="Dialog\FillWithByteWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resources\Dictionary\MiscelanousDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -117,6 +129,11 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.fr-CA.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.fr-CA.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -124,7 +141,7 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Icon\0x.ico" />
+    <Resource Include="Resources\Icon\0x-Icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Icon\Undo-Icon.ico" />

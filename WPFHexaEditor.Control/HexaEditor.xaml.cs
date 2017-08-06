@@ -19,6 +19,7 @@ using WPFHexaEditor.Core.Bytes;
 using WPFHexaEditor.Core.CharacterTable;
 using WPFHexaEditor.Core.Interface;
 using WPFHexaEditor.Core.MethodExtention;
+using WPFHexaEditor.Control.Dialog;
 
 namespace WPFHexaEditor.Control
 {
@@ -1244,6 +1245,30 @@ namespace WPFHexaEditor.Control
                 {
                     _provider.PasteNotInsert(SelectionStart, Clipboard.GetText());
                     SetScrollMarker(SelectionStart, ScrollMarker.ByteModified, "Paste from clipboard");
+                    RefreshView();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Fill the selection with a Byte at selection start
+        /// </summary>
+        public void FillWithByte(byte b)
+        {
+            FillWithByte(SelectionStart, SelectionLength, b);
+        }
+
+        /// <summary>
+        /// Fill with a Byte at start position
+        /// </summary>
+        public void FillWithByte(long startPosition, long length, byte b)
+        {
+            if (ByteProvider.CheckIsOpen(_provider))
+            {
+                if (startPosition > -1)
+                {
+                    _provider.FillWithByte(startPosition, length, b);
+                    SetScrollMarker(SelectionStart, ScrollMarker.ByteModified, "Fill selection with byte");
                     RefreshView();
                 }
             }
@@ -3051,6 +3076,7 @@ namespace WPFHexaEditor.Control
                 CopyHexaCMenu.IsEnabled = false;
                 UndoCMenu.IsEnabled = false;
                 DeleteCMenu.IsEnabled = false;
+                FillByteCMenu.IsEnabled = false;
 
                 if (SelectionLength > 0)
                 {
@@ -3059,6 +3085,7 @@ namespace WPFHexaEditor.Control
                     FindAllCMenu.IsEnabled = true;
                     CopyHexaCMenu.IsEnabled = true;
                     DeleteCMenu.IsEnabled = true;
+                    FillByteCMenu.IsEnabled = true;
                 }
 
                 if (UndoCount > 0)
@@ -3143,6 +3170,16 @@ namespace WPFHexaEditor.Control
         private void SelectAllCMenu_Click(object sender, RoutedEventArgs e)
         {
             SelectAll();
+        }
+
+        private void FillByteCMenu_Click(object sender, RoutedEventArgs e)
+        {
+            FillWithByteWindow window = new FillWithByteWindow();
+            window.Owner = Application.Current.MainWindow;
+
+            if (window.ShowDialog() == true)            
+                if (window.Value.HasValue)
+                    FillWithByte(window.Value.Value);                        
         }
 
         #endregion Context menu
@@ -3292,5 +3329,6 @@ namespace WPFHexaEditor.Control
             return null;
         }
         #endregion Get selected control methods
+
     }
 }

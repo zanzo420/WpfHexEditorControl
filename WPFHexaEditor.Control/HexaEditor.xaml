@@ -100,6 +100,13 @@
                     <Image Source="/WPFHexaEditor;component/Resources/Icon/Paste-Icon.ico"/>
                 </MenuItem.Icon>
             </MenuItem>
+            <MenuItem x:Name="FillByteCMenu" 
+                      Header="Fill selection with Byte..." 
+                      Click="FillByteCMenu_Click">
+                <MenuItem.Icon>
+                    <Image Source="/WPFHexaEditor;component/Resources/Icon/0x-Icon.ico"/>
+                </MenuItem.Icon>
+            </MenuItem>
             <Separator />
             <MenuItem x:Name="DeleteCMenu" 
                       Header="Delete" 

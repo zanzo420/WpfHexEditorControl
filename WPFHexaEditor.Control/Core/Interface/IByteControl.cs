@@ -3,7 +3,6 @@
 // Author : Janus Tida
 //////////////////////////////////////////////
 
-using WPFHexaEditor.Core;
 
 namespace WPFHexaEditor.Core.Interface
 {

@@ -12,4 +12,5 @@
     <!--VALUE CONVERTER-->
     <conv:LongToHexStringConverter x:Key="LongHexConverter" />
     <conv:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    <conv:HexToLongStringConverter x:Key="HexToLongConverter"/>
 </ResourceDictionary>

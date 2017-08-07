@@ -38,13 +38,17 @@ namespace WPFHexaEditor.Control
 
         public HexByteControl(HexaEditor parent)
         {
+            //Default properties
             DataContext = this;
+            Focusable = true;
+
+            //Event
             KeyDown += UserControl_KeyDown;
             MouseDown += HexChar_MouseDown;
             MouseEnter += UserControl_MouseEnter;
             MouseLeave += UserControl_MouseLeave;
-            Focusable = true;
 
+            //Parent hexeditor
             _parent = parent;
         }
 

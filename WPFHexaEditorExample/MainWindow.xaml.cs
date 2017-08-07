@@ -8,7 +8,6 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 using WPFHexaEditor.Core;
 using WPFHexaEditor.Core.Bytes;
 using WPFHexaEditorExample.Properties;

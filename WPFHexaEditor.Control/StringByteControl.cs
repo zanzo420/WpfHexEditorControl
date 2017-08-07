@@ -26,46 +26,29 @@ namespace WPFHexaEditor.Control
         private TBLStream _TBLCharacterTable = null;
 
         public event EventHandler Click;
-
         public event EventHandler RightClick;
-
         public event EventHandler MouseSelection;
-
         public event EventHandler StringByteModified;
-
         public event EventHandler MoveNext;
-
         public event EventHandler MovePrevious;
-
         public event EventHandler MoveRight;
-
         public event EventHandler MoveLeft;
-
         public event EventHandler MoveUp;
-
         public event EventHandler MoveDown;
-
         public event EventHandler MovePageDown;
-
         public event EventHandler MovePageUp;
-
         public event EventHandler ByteDeleted;
-
         public event EventHandler EscapeKey;
-
         public event EventHandler CTRLZKey;
-
         public event EventHandler CTRLVKey;
-
         public event EventHandler CTRLCKey;
-
         public event EventHandler CTRLAKey;
 
         /// <summary>
         /// Load ressources dictionnary
         /// </summary>
         /// <param name="url"></param>
-        private void LoadDict(string url)
+        private void LoadDictionary(string url)
         {
             var ttLocaltor = new Uri(url, UriKind.Relative);
             var ttRes = new ResourceDictionary();
@@ -79,27 +62,30 @@ namespace WPFHexaEditor.Control
         /// <param name="parent"></param>
         public StringByteControl(HexaEditor parent)
         {
-            LoadDict("/WPFHexaEditor;component/Resources/Dictionary/ToolTipDictionary.xaml");
+            LoadDictionary("/WPFHexaEditor;component/Resources/Dictionary/ToolTipDictionary.xaml");
 
+            //Default properties
             Width = 12;
             Height = 22;
-
             Focusable = true;
             DataContext = this;
             Padding = new Thickness(0);
             TextAlignment = TextAlignment.Center;
+            
+            //Binding
             var txtBinding = new Binding();
             txtBinding.Source = this.FindResource("ByteToolTip");
             txtBinding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
             txtBinding.Mode = BindingMode.OneWay;
             this.SetBinding(TextBlock.ToolTipProperty, txtBinding);
 
-
+            //Event
             MouseEnter += UserControl_MouseEnter;
             MouseLeave += UserControl_MouseLeave;
             KeyDown += UserControl_KeyDown;
             MouseDown += StringByteLabel_MouseDown;
 
+            //Parent hexeditor
             _parent = parent;
         }
 

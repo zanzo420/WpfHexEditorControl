@@ -58,6 +58,7 @@
     <Compile Include="Core\CharacterTable\TBLStream.cs" />
     <Compile Include="Core\Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Core\Converters\BoolInverterConverter.cs" />
+    <Compile Include="Core\Converters\HexToLongStringConverter.cs" />
     <Compile Include="Core\Helper\DispatcherHelper.cs" />
     <Compile Include="Core\Interface\IByteControl.cs" />
     <Compile Include="Core\MethodExtention\VisualHelper.cs" />

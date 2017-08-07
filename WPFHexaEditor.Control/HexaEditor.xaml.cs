@@ -301,9 +301,9 @@ namespace WPFHexaEditor.Control
         }
 
         /// <summary>
-        /// Call Updatevisual methods for all byte control
+        /// Call Updatevisual methods for all IByteControl
         /// </summary>
-        private void UpdateVisual()
+        public void UpdateVisual()
         {
             TraverseDataControls(ctrl => { ctrl.UpdateVisual(); });
             TraverseStringControls(ctrl => { ctrl.UpdateVisual(); });
@@ -2804,6 +2804,17 @@ namespace WPFHexaEditor.Control
         #endregion Statusbar
 
         #region Bookmark and other scrollmarker
+        private IEnumerable<BookMark> GetScrollMarkers(ScrollMarker sm)
+        {
+                foreach (Rectangle rc in MarkerGrid.Children)
+                {
+                    BookMark bm = rc.Tag as BookMark;
+
+                    if (bm != null)
+                        if (bm.Marker == sm)
+                            yield return bm;
+                }
+        }
 
         /// <summary>
         /// Get all bookmark are currently set
@@ -2812,7 +2823,6 @@ namespace WPFHexaEditor.Control
         {
             get
             {
-                List<BookMark> bmList = new List<BookMark>();
                 foreach (Rectangle rc in MarkerGrid.Children)
                 {
                     BookMark bm = rc.Tag as BookMark;
@@ -2855,6 +2865,9 @@ namespace WPFHexaEditor.Control
         /// </summary>
         private void SetScrollMarker(long position, ScrollMarker marker, string description = "")
         {
+            //if (GetScrollMarkers(marker).Count() > 100)
+            //    return;
+
             Rectangle rect = new Rectangle();
             double topPosition = 0;
             double rightPosition = 0;

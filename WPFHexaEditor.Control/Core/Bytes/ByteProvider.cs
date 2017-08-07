@@ -686,7 +686,10 @@ namespace WPFHexaEditor.Core.Bytes
             else
                 return null;
 
-            return buffer[0];
+            if (buffer.Count() > 0)
+                return buffer[0];
+            else
+                return null;
         }
 
         /// <summary>

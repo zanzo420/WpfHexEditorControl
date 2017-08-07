@@ -468,8 +468,6 @@ namespace WPFHexaEditor.Control
                     Background = _parent.SelectionFirstColor;
                 else
                     Background = _parent.SelectionSecondColor;
-
-                return;
             }
             else if (IsHighLight)
             {
@@ -477,8 +475,6 @@ namespace WPFHexaEditor.Control
                 Foreground = _parent.Foreground;
 
                 Background = _parent.HighLightColor;
-
-                return;
             }
             else if (Action != ByteAction.Nothing)
             {
@@ -496,8 +492,6 @@ namespace WPFHexaEditor.Control
                         Foreground = _parent.Foreground;
                         break;
                 }
-
-                return;
             }
             else //TBL COLORING
             {
@@ -511,19 +505,15 @@ namespace WPFHexaEditor.Control
                         case DTEType.DualTitleEncoding:
                             Foreground = _parent.TBL_DTEColor;
                             break;
-
                         case DTEType.MultipleTitleEncoding:
                             Foreground = _parent.TBL_MTEColor;
                             break;
-
                         case DTEType.EndLine:
                             Foreground = _parent.TBL_EndLineColor;
                             break;
-
                         case DTEType.EndBlock:
                             Foreground = _parent.TBL_EndBlockColor;
                             break;
-
                         default:
                             Foreground = _parent.TBL_DefaultColor;
                             break;

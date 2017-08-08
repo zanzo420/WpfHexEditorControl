@@ -67,8 +67,8 @@ namespace WPFHexaEditor.Control
 
             long newValue = (long)baseValue;
 
-            if (newValue > ctrl.MaximumValue)
-                newValue = ctrl.MaximumValue;
+            if (newValue > ctrl.MaximumValue) newValue = ctrl.MaximumValue;
+            if (newValue < 0) newValue = 0;
 
             return newValue;
         }
@@ -79,7 +79,12 @@ namespace WPFHexaEditor.Control
 
             if (e.NewValue != e.OldValue)
             {
-                ctrl.HexTextBox.Text = ByteConverters.LongToHex((long)e.NewValue).TrimStart('0').ToUpper();
+                string val = ByteConverters.LongToHex((long)e.NewValue);
+                if (val == "00000000")
+                    val = "0";
+                else if (val.Length >= 3) val = val.TrimStart('0');
+
+                ctrl.HexTextBox.Text = val.ToUpper();
                 ctrl.ToolTip = e.NewValue;
             }
         }
@@ -98,8 +103,11 @@ namespace WPFHexaEditor.Control
 
         private void HexTextBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Up) AddOne();
-            else if (e.Key == Key.Down) SubstractOne();
+            if (e.Key == Key.Up)
+                AddOne();
+
+            if (e.Key == Key.Down)
+                SubstractOne();
         }
 
         /// <summary>
@@ -107,8 +115,7 @@ namespace WPFHexaEditor.Control
         /// </summary>
         private void SubstractOne()
         {
-            if (LongValue > 0)
-                LongValue--;
+            LongValue--;
         }
 
         /// <summary>

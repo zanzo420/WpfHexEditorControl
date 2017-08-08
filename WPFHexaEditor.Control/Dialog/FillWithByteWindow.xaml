@@ -42,6 +42,6 @@
             Height="23" 
             Margin="97,19,50,0" 
             VerticalAlignment="Top" 
-            Width="Auto"/>
+            Width="Auto" MaximumValue="255"/>
     </Grid>
 </Window>

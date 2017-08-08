@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using WPFHexaEditor.Core;
 using WPFHexaEditor.Core.Bytes;
 
@@ -28,7 +17,9 @@ namespace WPFHexaEditor.Control
         }
 
 
-
+        /// <summary>
+        /// Set maximum value
+        /// </summary>
         public long MaximumValue
         {
             get { return (long)GetValue(MaximumValueProperty); }
@@ -67,11 +58,14 @@ namespace WPFHexaEditor.Control
 
         private static object LongValue_CoerceValue(DependencyObject d, object baseValue)
         {
-            //long coerceVal = (long)baseValue;
+            HexBox ctrl = d as HexBox;
 
-            //if ((long)baseValue > )
+            long newValue = (long)baseValue;
 
-            return (long)baseValue;
+            if (newValue > ctrl.MaximumValue)
+                newValue = ctrl.MaximumValue;
+
+            return newValue;
         }
 
         private static void LongValue_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)

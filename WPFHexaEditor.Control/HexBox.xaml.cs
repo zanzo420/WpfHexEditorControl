@@ -1,4 +1,9 @@
-﻿using System.Windows;
+﻿//////////////////////////////////////////////
+// Apache 2.0  - 2017
+// Author : Derek Tremblay (derektremblay666@gmail.com)
+//////////////////////////////////////////////
+
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using WPFHexaEditor.Core;

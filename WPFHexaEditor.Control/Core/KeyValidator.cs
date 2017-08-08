@@ -65,6 +65,11 @@ namespace WPFHexaEditor.Core
             }
         }
 
+        internal static bool IsArrowKey(Key key)
+        {
+            return key == Key.Up || key == Key.Down || key == Key.Left || key == Key.Right;
+        }
+
         public static bool IsBackspaceKey(Key key)
         {
             return key == Key.Back;

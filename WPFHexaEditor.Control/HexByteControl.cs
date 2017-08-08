@@ -18,7 +18,7 @@ namespace WPFHexaEditor.Control
     
     [TemplatePart(Name = FirstHexCharName, Type = typeof(TextBlock))]
     [TemplatePart(Name = SecondHexCharName, Type = typeof(TextBlock))]
-    public partial class HexByteControl : System.Windows.Controls.Control, IByteControl
+    internal partial class HexByteControl : System.Windows.Controls.Control, IByteControl
     {
         public const string FirstHexCharName = "FirstHexChar";
         public const string SecondHexCharName = "SecondHexChar";

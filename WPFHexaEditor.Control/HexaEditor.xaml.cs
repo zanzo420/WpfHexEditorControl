@@ -3190,9 +3190,9 @@ namespace WPFHexaEditor.Control
             FillWithByteWindow window = new FillWithByteWindow();
             window.Owner = Application.Current.MainWindow;
 
-            if (window.ShowDialog() == true)            
-                if (window.Value.HasValue)
-                    FillWithByte(window.Value.Value);                        
+            if (window.ShowDialog() == true)
+                if (window.HexTextBox.LongValue <= 255)
+                    FillWithByte((byte)window.HexTextBox.LongValue);                        
         }
 
         #endregion Context menu

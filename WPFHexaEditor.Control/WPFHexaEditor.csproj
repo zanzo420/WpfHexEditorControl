@@ -65,6 +65,9 @@
     <Compile Include="Dialog\FillWithByteWindow.xaml.cs">
       <DependentUpon>FillWithByteWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="HexBox.xaml.cs">
+      <DependentUpon>HexBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="HexByteControl.cs" />
     <Compile Include="Properties\Resources.fr-CA.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -73,6 +76,10 @@
     </Compile>
     <Compile Include="StringByteControl.cs" />
     <Page Include="Dialog\FillWithByteWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="HexBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

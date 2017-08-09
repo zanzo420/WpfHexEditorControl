@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -47,6 +48,7 @@ namespace WPFHexaEditor.Core.Bytes
         public event EventHandler LongProcessProgressCompleted;
         public event EventHandler DataPastedNotInserted;
         public event EventHandler FillWithByteCompleted;
+        public event EventHandler ReplaceByteCompleted;
 
         /// <summary>
         /// Default constructor
@@ -651,6 +653,94 @@ namespace WPFHexaEditor.Core.Bytes
             }
         }
 
+        /// <summary>
+        /// Fill with byte at position
+        /// </summary>
+        /// <param name="startPosition">The position to start fill</param>
+        /// <param name="length">The length to fill</param>
+        /// <param name="b">the byte to fill</param>
+        public void FillWithByte(long startPosition, long length, byte b)
+        {
+            //Launch event at process strated
+            IsOnLongProcess = true;
+            LongProcessProgressStarted?.Invoke(this, new EventArgs());
+
+            Position = startPosition;
+
+            if (Position > -1)
+            {
+                for (int i = 0; i < length; i++)
+                {
+                    if (!EOF)
+                    {
+                        //Do not freeze UI...
+                        if (i % 2000 == 0)
+                            LongProcessProgress = (double)i / length;
+
+                        //Break long process if needed
+                        if (!IsOnLongProcess)
+                            break;
+
+                        Position = startPosition + i;
+                        if (GetByte(Position) != b)
+                            AddByteModified(b, Position - 1, 1);
+                    }
+                    else
+                        break;
+                }
+
+                FillWithByteCompleted?.Invoke(this, new EventArgs());
+            }
+
+            //Launch event at process completed
+            IsOnLongProcess = false;
+            LongProcessProgressCompleted?.Invoke(this, new EventArgs());
+        }
+
+        /// <summary>
+        /// Replace byte with another in selection
+        /// </summary>
+        /// <param name="startPosition">The position to start fill</param>
+        /// <param name="length">The length of the selection</param>
+        public void ReplaceByte(long startPosition, long length, byte original, byte replace)
+        {
+            //Launch event at process strated
+            IsOnLongProcess = true;
+            LongProcessProgressStarted?.Invoke(this, new EventArgs());
+
+            Position = startPosition;
+
+            if (Position > -1)
+            {
+                for (int i = 0; i < length; i++)
+                {
+                    if (!EOF)
+                    {
+                        //Do not freeze UI...
+                        if (i % 2000 == 0)
+                            LongProcessProgress = (double)i / length;
+
+                        //Break long process if needed
+                        if (!IsOnLongProcess)
+                            break;
+
+                        Position = startPosition + i;
+                        if (GetByte(Position) == original)
+                            AddByteModified(replace, Position - 1, 1);
+                    }
+                    else
+                        break;
+                }
+
+                ReplaceByteCompleted?.Invoke(this, new EventArgs());
+            }
+
+            //Launch event at process completed
+            IsOnLongProcess = false;
+            LongProcessProgressCompleted?.Invoke(this, new EventArgs());
+        }
+
+
         #endregion Bytes modifications methods
 
         #region Copy/Paste/Cut Methods
@@ -970,20 +1060,18 @@ namespace WPFHexaEditor.Core.Bytes
         {
             long lenght = pasteString.Length;
             Position = startPosition;
-
+            int i = 0;
             if (Position > -1)
             {
                 foreach (char chr in pasteString)
-                {
                     if (!EOF)
                     {
-                        AddByteModified(ByteConverters.CharToByte(chr), Position, lenght);
-
-                        Position++;
+                        Position = startPosition + i++;
+                        if (GetByte(Position) != ByteConverters.CharToByte(chr))
+                            AddByteModified(ByteConverters.CharToByte(chr), Position - 1, lenght);
                     }
                     else
-                        break;
-                }
+                        break;                
 
                 DataPastedNotInserted?.Invoke(this, new EventArgs());
             }
@@ -998,37 +1086,7 @@ namespace WPFHexaEditor.Core.Bytes
         {
             PasteNotInsert(Position, pasteString);
         }
-
-        /// <summary>
-        /// Fill with byte at position
-        /// </summary>
-        /// <param name="startPosition">The position to start fill</param>
-        /// <param name="length">The length to fill</param>
-        /// <param name="b">the byte to fill</param>
-        public void FillWithByte(long startPosition, long length, byte b)
-        {
-            Position = startPosition;
-
-            if (Position > -1)
-            {
-                for (int i = 0; i < length; i++)
-                {
-                    if (!EOF)
-                    {
-                        //if (GetByte(Position) != b)
-                        //    AddByteModified(b, Position, length);
-
-                        AddByteModified(b, Position, length);
-                        Position++;
-                    }
-                    else
-                        break;
-                }
-
-                FillWithByteCompleted?.Invoke(this, new EventArgs());
-            }
-        }
-
+        
         #endregion Copy/Paste/Cut Methods
 
         #region Undo / Redo

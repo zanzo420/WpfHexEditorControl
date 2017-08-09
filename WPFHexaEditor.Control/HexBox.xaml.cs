@@ -12,7 +12,7 @@ using WPFHexaEditor.Core.Bytes;
 namespace WPFHexaEditor.Control
 {
     /// <summary>
-    /// Logique d'interaction pour HexBox.xaml
+    /// Control for enter hex value and deal with.
     /// </summary>
     public partial class HexBox : UserControl
     {
@@ -21,6 +21,17 @@ namespace WPFHexaEditor.Control
             InitializeComponent();
         }
 
+        #region Properties
+        /// <summary>
+        /// Get hexadecimal value of LongValue
+        /// </summary>
+        public string HexValue
+        {
+            get
+            {
+                return ByteConverters.LongToHex(LongValue);
+            }
+        }
 
         /// <summary>
         /// Set maximum value
@@ -85,31 +96,13 @@ namespace WPFHexaEditor.Control
                 else if (val.Length >= 3) val = val.TrimStart('0');
 
                 ctrl.HexTextBox.Text = val.ToUpper();
+                ctrl.HexTextBox.CaretIndex = ctrl.HexTextBox.Text.Length;
                 ctrl.ToolTip = e.NewValue;
             }
         }
+        #endregion Properties       
 
-        private void HexTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            if (KeyValidator.IsHexKey(e.Key) ||
-                KeyValidator.IsBackspaceKey(e.Key) ||
-                KeyValidator.IsDeleteKey(e.Key) ||
-                KeyValidator.IsArrowKey(e.Key) ||
-                KeyValidator.IsEnterKey(e.Key))
-                e.Handled = false;
-            else
-                e.Handled = true;
-        }
-
-        private void HexTextBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Up)
-                AddOne();
-
-            if (e.Key == Key.Down)
-                SubstractOne();
-        }
-
+        #region Methods
         /// <summary>
         /// Substract one to the LongValue
         /// </summary>
@@ -150,6 +143,30 @@ namespace WPFHexaEditor.Control
                 LongValue = 0;
             }
         }
+        #endregion Methods
+
+        #region Controls events
+        private void HexTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (KeyValidator.IsHexKey(e.Key) ||
+                KeyValidator.IsBackspaceKey(e.Key) ||
+                KeyValidator.IsDeleteKey(e.Key) ||
+                KeyValidator.IsArrowKey(e.Key) ||
+                KeyValidator.IsTabKey(e.Key) ||
+                KeyValidator.IsEnterKey(e.Key))
+                e.Handled = false;
+            else
+                e.Handled = true;
+        }
+
+        private void HexTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Up)
+                AddOne();
+
+            if (e.Key == Key.Down)
+                SubstractOne();
+        }
 
         private void UpButton_Click(object sender, RoutedEventArgs e)
         {
@@ -175,5 +192,6 @@ namespace WPFHexaEditor.Control
         {
             Clipboard.SetText(LongValue.ToString());
         }
+        #endregion Controls events
     }
 }

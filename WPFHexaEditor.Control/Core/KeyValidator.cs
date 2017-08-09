@@ -65,7 +65,7 @@ namespace WPFHexaEditor.Core
             }
         }
 
-        internal static bool IsArrowKey(Key key)
+        public static bool IsArrowKey(Key key)
         {
             return key == Key.Up || key == Key.Down || key == Key.Left || key == Key.Right;
         }
@@ -155,6 +155,11 @@ namespace WPFHexaEditor.Core
         public static bool IsEnterKey(Key key)
         {
             return key == Key.Enter;
+        }
+
+        public static bool IsTabKey(Key key)
+        {
+            return key == Key.Tab;
         }
 
         public static bool IsCtrlCKey(Key key)

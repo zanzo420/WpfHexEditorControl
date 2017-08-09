@@ -92,6 +92,17 @@ namespace WPFHexaEditor.Control
         /// Occurs when data are saved to stream/file.
         /// </summary>
         public event EventHandler ChangesSubmited;
+
+        /// <summary>
+        /// Occurs when the replace byte by byte are completed
+        /// </summary>
+        public event EventHandler ReplaceByteCompleted;
+
+        /// <summary>
+        /// Occura when the fill with byte method are completed
+        /// </summary>
+        public event EventHandler FillWithByteCompleted;
+
         #endregion Events
 
         public HexaEditor()
@@ -1265,10 +1276,34 @@ namespace WPFHexaEditor.Control
         {
             if (ByteProvider.CheckIsOpen(_provider))
             {
-                if (startPosition > -1)
+                if (startPosition > -1 && length > 0)
                 {
                     _provider.FillWithByte(startPosition, length, b);
                     SetScrollMarker(SelectionStart, ScrollMarker.ByteModified, "Fill selection with byte");
+                    RefreshView();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Replace byte with another at selection position
+        /// </summary>
+        public void ReplaceByte(byte original, byte replace)
+        {
+            ReplaceByte(SelectionStart, SelectionLength, original, replace);
+        }
+
+        /// <summary>
+        /// Replace byte with another at start position
+        /// </summary>
+        public void ReplaceByte(long startPosition, long length, byte original, byte replace)
+        {
+            if (ByteProvider.CheckIsOpen(_provider))
+            {
+                if (startPosition > -1 && length > 0)
+                {
+                    _provider.ReplaceByte(startPosition, length, original, replace);
+                    SetScrollMarker(SelectionStart, ScrollMarker.ByteModified, "replace with byte");
                     RefreshView();
                 }
             }
@@ -1813,6 +1848,8 @@ namespace WPFHexaEditor.Control
                 _provider.LongProcessProgressChanged += Provider_LongProcessProgressChanged;
                 _provider.LongProcessProgressStarted += Provider_LongProcessProgressStarted;
                 _provider.LongProcessProgressCompleted += Provider_LongProcessProgressCompleted;
+                _provider.FillWithByteCompleted += Provider_FillWithByteCompleted;
+                _provider.ReplaceByteCompleted += Provider_ReplaceByteCompleted;
 
                 UpdateVerticalScroll();
                 UpdateHexHeader();
@@ -1849,10 +1886,13 @@ namespace WPFHexaEditor.Control
                 _provider = new ByteProvider(stream);
                 _provider.ReadOnlyChanged += Provider_ReadOnlyChanged;
                 _provider.DataCopiedToClipboard += Provider_DataCopied;
-                _provider.ChangesSubmited += ProviderStream_ChangesSubmited;
+                _provider.ChangesSubmited += Provider_ChangesSubmited;
+                _provider.Undone += Provider_Undone;
                 _provider.LongProcessProgressChanged += Provider_LongProcessProgressChanged;
                 _provider.LongProcessProgressStarted += Provider_LongProcessProgressStarted;
                 _provider.LongProcessProgressCompleted += Provider_LongProcessProgressCompleted;
+                _provider.FillWithByteCompleted += Provider_FillWithByteCompleted;
+                _provider.ReplaceByteCompleted += Provider_ReplaceByteCompleted;
 
                 UpdateVerticalScroll();
                 UpdateHexHeader();
@@ -1893,6 +1933,16 @@ namespace WPFHexaEditor.Control
             Application.Current.DoEvents();
 
             LongProcessProgressChanged?.Invoke(this, new EventArgs());
+        }
+        
+        private void Provider_ReplaceByteCompleted(object sender, EventArgs e)
+        {
+            ReplaceByteCompleted?.Invoke(this, new EventArgs());
+        }
+
+        private void Provider_FillWithByteCompleted(object sender, EventArgs e)
+        {
+            FillWithByteCompleted?.Invoke(this, new EventArgs());
         }
 
         private void CancelLongProcessButton_Click(object sender, RoutedEventArgs e)
@@ -3187,12 +3237,32 @@ namespace WPFHexaEditor.Control
 
         private void FillByteCMenu_Click(object sender, RoutedEventArgs e)
         {
-            FillWithByteWindow window = new FillWithByteWindow();
-            window.Owner = Application.Current.MainWindow;
+            GiveByteWindow window = new GiveByteWindow()
+            {
+                Title = "Enter value for fill selection",
+                Owner = Application.Current.MainWindow
+            };
 
             if (window.ShowDialog() == true)
                 if (window.HexTextBox.LongValue <= 255)
                     FillWithByte((byte)window.HexTextBox.LongValue);                        
+        }
+
+
+        private void ReplaceByteCMenu_Click(object sender, RoutedEventArgs e)
+        {
+            ReplaceByteWindow window = new ReplaceByteWindow()
+            {
+                Title = "Enter the byte to replace with another.",
+                Owner = Application.Current.MainWindow
+            };
+
+            if (window.ShowDialog() == true)
+                if (window.HexTextBox.LongValue <= 255 &&
+                    window.ReplaceHexTextBox.LongValue <= 255)
+                {
+                    ReplaceByte((byte)window.HexTextBox.LongValue, (byte)window.ReplaceHexTextBox.LongValue);
+                }
         }
 
         #endregion Context menu

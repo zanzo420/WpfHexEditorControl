@@ -92,7 +92,7 @@
                           Click="CopyTBLCMenu_Click"
                           IsEnabled="False"/>
             </MenuItem>
-            <Separator />
+            <Separator/>
             <MenuItem x:Name="PasteMenu"
                       Header="Paste without inserting" 
                       Click="PasteMenu_Click" >
@@ -100,9 +100,17 @@
                     <Image Source="/WPFHexaEditor;component/Resources/Icon/Paste-Icon.ico"/>
                 </MenuItem.Icon>
             </MenuItem>
+            <Separator/>
             <MenuItem x:Name="FillByteCMenu" 
-                      Header="Fill selection with Byte..." 
+                      Header="Fill selection with byte..." 
                       Click="FillByteCMenu_Click">
+                <MenuItem.Icon>
+                    <Image Source="/WPFHexaEditor;component/Resources/Icon/0x-Icon.ico"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem x:Name="ReplaceByteCMenu" 
+                      Header="Replace byte in selection with byte..." 
+                      Click="ReplaceByteCMenu_Click">
                 <MenuItem.Icon>
                     <Image Source="/WPFHexaEditor;component/Resources/Icon/0x-Icon.ico"/>
                 </MenuItem.Icon>

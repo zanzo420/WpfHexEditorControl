@@ -62,8 +62,9 @@
     <Compile Include="Core\Helper\DispatcherHelper.cs" />
     <Compile Include="Core\Interface\IByteControl.cs" />
     <Compile Include="Core\MethodExtention\VisualHelper.cs" />
-    <Compile Include="Dialog\FillWithByteWindow.xaml.cs">
-      <DependentUpon>FillWithByteWindow.xaml</DependentUpon>
+    <Compile Include="Dialog\GiveByteWindow.xaml.cs" />
+    <Compile Include="Dialog\ReplaceByteWindow.xaml.cs">
+      <DependentUpon>ReplaceByteWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="HexBox.xaml.cs">
       <DependentUpon>HexBox.xaml</DependentUpon>
@@ -75,7 +76,11 @@
       <DependentUpon>Resources.fr-CA.resx</DependentUpon>
     </Compile>
     <Compile Include="StringByteControl.cs" />
-    <Page Include="Dialog\FillWithByteWindow.xaml">
+    <Page Include="Dialog\ReplaceByteWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialog\GiveByteWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

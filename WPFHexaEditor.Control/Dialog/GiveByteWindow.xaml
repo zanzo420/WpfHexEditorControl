@@ -4,14 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPFHexaEditor.Control.Dialog"
-        xmlns:Control="clr-namespace:WPFHexaEditor.Control" x:Class="WPFHexaEditor.Control.Dialog.FillWithByteWindow"
+        xmlns:Control="clr-namespace:WPFHexaEditor.Control" x:Class="WPFHexaEditor.Control.Dialog.GiveByteWindow"
         mc:Ignorable="d"
         Background="WhiteSmoke"
-        Title="Enter value for fill selection"
         Height="121" Width="359"
         WindowStartupLocation="CenterOwner"
         WindowStyle="SingleBorderWindow" 
-        ResizeMode="NoResize" ShowInTaskbar="False">
+        Loaded="Window_Loaded"
+        ResizeMode="NoResize" 
+        ShowInTaskbar="False">
     <Grid>
         <Button Content="OK"
                 TabIndex="2" 
@@ -34,7 +35,7 @@
 
         <Label Content="Byte" 
                HorizontalAlignment="Left"
-               Margin="10,16,0,0" 
+               Margin="10,18,0,0" 
                VerticalAlignment="Top"/>
         
         <Control:HexBox

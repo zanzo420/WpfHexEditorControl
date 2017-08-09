@@ -62,7 +62,9 @@
     <Compile Include="Core\Helper\DispatcherHelper.cs" />
     <Compile Include="Core\Interface\IByteControl.cs" />
     <Compile Include="Core\MethodExtention\VisualHelper.cs" />
-    <Compile Include="Dialog\GiveByteWindow.xaml.cs" />
+    <Compile Include="Dialog\GiveByteWindow.xaml.cs">
+      <DependentUpon>GiveByteWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialog\ReplaceByteWindow.xaml.cs">
       <DependentUpon>ReplaceByteWindow.xaml</DependentUpon>
     </Compile>

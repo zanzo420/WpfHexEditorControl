@@ -18,7 +18,7 @@ namespace WPFHexaEditor.Core.CharacterTable
     ///
     /// Derek Tremblay 2003-2017
     /// </summary>
-    public sealed class TBLStream
+    public sealed class TBLStream: IDisposable
     {
         /// <summary>Chemin vers le fichier (path)</summary>
         private string _FileName;
@@ -595,6 +595,31 @@ namespace WPFHexaEditor.Core.CharacterTable
 
             tbl.AllowEdit = true;
             return tbl;
+        }
+
+        #endregion
+
+        #region IDisposable Support
+        private bool disposedValue = false; // Pour détecter les appels redondants
+
+        void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    _DTEList = null;
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        // Ce code est ajouté pour implémenter correctement le modèle supprimable.
+        public void Dispose()
+        {
+            // Ne modifiez pas ce code. Placez le code de nettoyage dans Dispose(bool disposing) ci-dessus.
+            Dispose(true);
         }
         #endregion
     }

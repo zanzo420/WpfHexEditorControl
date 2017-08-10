@@ -16,9 +16,9 @@ using WPFHexaEditor.Core.MethodExtention;
 namespace WPFHexaEditor.Core.Bytes
 {
     /// <summary>
-    /// Used for interaction with file
+    /// Used for interaction with file or stream
     /// </summary>
-    public sealed class ByteProvider
+    public sealed class ByteProvider: IDisposable
     {
         //Global variable
         private IDictionary<long, ByteModified> _byteModifiedDictionary = new Dictionary<long, ByteModified>();
@@ -1337,6 +1337,36 @@ namespace WPFHexaEditor.Core.Bytes
             }
         }
         #endregion Long process progress
+
+        #region IDisposable Support
+        private bool disposedValue = false; // Pour détecter les appels redondants
+
+        void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: supprimer l'état managé (objets managés).
+                    _stream = null;
+                }
+
+                // TODO: libérer les ressources non managées (objets non managés) et remplacer un finaliseur ci-dessous.
+                // TODO: définir les champs de grande taille avec la valeur Null.
+
+                disposedValue = true;
+            }
+        }
+
+
+        // Ce code est ajouté pour implémenter correctement le modèle supprimable.
+        public void Dispose()
+        {
+            // Ne modifiez pas ce code. Placez le code de nettoyage dans Dispose(bool disposing) ci-dessus.
+            Dispose(true);
+        }
+        #endregion IDisposable Support
+
 
 
     }

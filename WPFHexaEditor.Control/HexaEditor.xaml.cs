@@ -1914,6 +1914,9 @@ namespace WPFHexaEditor.Control
         {
             LongProgressProgressBar.Visibility = Visibility.Collapsed;
             CancelLongProcessButton.Visibility = Visibility.Collapsed;
+            
+            TraverseDataControls(ctrl => ctrl.IsEnabled = true);
+            TraverseStringControls(ctrl => ctrl.IsEnabled = true);
 
             LongProcessProgressCompleted?.Invoke(this, new EventArgs());
         }
@@ -1922,6 +1925,9 @@ namespace WPFHexaEditor.Control
         {
             LongProgressProgressBar.Visibility = Visibility.Visible;
             CancelLongProcessButton.Visibility = Visibility.Visible;
+
+            TraverseDataControls(ctrl => ctrl.IsEnabled = false);
+            TraverseStringControls(ctrl => ctrl.IsEnabled = false);
 
             LongProcessProgressStarted?.Invoke(this, new EventArgs());
         }
@@ -2461,7 +2467,7 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Update the position info panel at left of the control
         /// </summary>
-        public void UpdateHexHeader()
+        private void UpdateHexHeader()
         {
             HexHeaderStackPanel.Children.Clear();
 
@@ -2485,7 +2491,7 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Update the position info panel at left of the control
         /// </summary>
-        public void UpdateLinesInfo()
+        private void UpdateLinesInfo()
         {
             LinesInfoStackPanel.Children.Clear();
 

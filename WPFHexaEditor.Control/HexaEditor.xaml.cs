@@ -2203,8 +2203,9 @@ namespace WPFHexaEditor.Control
                     sbCtrl.BytePositionInFile = -1;
 
                     sbCtrl.InternalChange = false;
-
+                    
                     dataLineStack.Children.Add(sbCtrl);
+
                 }
                 StringDataStackPanel.Children.Add(dataLineStack);
                 #endregion

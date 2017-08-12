@@ -125,4 +125,15 @@ namespace WPFHexaEditor.Core
         Fast = 7,
         VeryFast = 9
     }
+
+    /// <summary>
+    /// Used with ByteHeaderAnalyser for give the file format
+    /// </summary>
+    internal enum FileFormat
+    {
+        EXE
+        //JPG
+        //PNG
+        //... add more 
+    }
 }

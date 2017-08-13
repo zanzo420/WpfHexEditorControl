@@ -107,7 +107,7 @@
                 <MenuItem x:Name="TestButton" Header="TEST" Click="TestButton_Click"/>
             </Menu>
 
-            <Control:HexaEditor x:Name="HexEdit" Width="Auto" Height="Auto" Margin="2"/>
+            <Control:HexaEditor x:Name="HexEdit" Width="Auto" Height="Auto" Margin="2" AllowByteCount="True"/>
         </DockPanel>
     </Grid>
 </Window>

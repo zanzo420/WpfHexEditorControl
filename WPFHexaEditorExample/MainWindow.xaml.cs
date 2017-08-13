@@ -286,7 +286,7 @@ namespace WPFHexaEditorExample
 
         private void TestButton_Click(object sender, RoutedEventArgs e)
         {
-            HexEdit.UpdateVisual();
+            //HexEdit.TEST_COMPUTE_BYTESUM();
         }
     }
 }

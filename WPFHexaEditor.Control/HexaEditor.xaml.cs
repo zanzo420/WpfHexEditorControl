@@ -35,6 +35,7 @@ namespace WPFHexaEditor.Control
         private List<long> _markedPositionList = new List<long>();
         private long _rightClickBytePosition = -1;
         private TBLStream _TBLCharacterTable = null;
+        private long[] _bytecount;
 
         //Used with VerticalMoveByTime methods/events to move the scrollbar
         private bool _mouseOnBottom = false;
@@ -947,6 +948,7 @@ namespace WPFHexaEditor.Control
                 ctrl.UpdateSelection();
                 ctrl.UpdateSelectionLine();
                 ctrl.UpdateVisual();
+                ctrl.UpdateStatusBar();
                 ctrl.SetScrollMarker(0, ScrollMarker.SelectionStart);
 
                 ctrl.SelectionStartChanged?.Invoke(ctrl, new EventArgs());
@@ -1867,6 +1869,9 @@ namespace WPFHexaEditor.Control
 
                 UpdateTBLBookMark();
                 UpdateSelectionColorMode(FirstColor.HexByteData);
+
+                //Update count of byte on file open
+                UpdateByteCount();
             }
             else
             {
@@ -1893,7 +1898,7 @@ namespace WPFHexaEditor.Control
                 _provider.LongProcessProgressCompleted += Provider_LongProcessProgressCompleted;
                 _provider.FillWithByteCompleted += Provider_FillWithByteCompleted;
                 _provider.ReplaceByteCompleted += Provider_ReplaceByteCompleted;
-
+                
                 UpdateVerticalScroll();
                 UpdateHexHeader();
 
@@ -1903,6 +1908,9 @@ namespace WPFHexaEditor.Control
 
                 UpdateTBLBookMark();
                 UpdateSelectionColorMode(FirstColor.HexByteData);
+
+                //Update count of byte
+                UpdateByteCount();
             }
             else
             {
@@ -2850,11 +2858,28 @@ namespace WPFHexaEditor.Control
 
                     FileLengthKBLabel.Content = Math.Round(lenght, 2) + (MB == true ? " MB" : " KB");
                     #endregion
+
+                    #region Byte count of selectionStart
+
+                    if (_bytecount != null && SelectionStart > -1)
+                    {
+                        ByteCountPanel.Visibility = Visibility.Visible;
+
+                        var val = _provider.GetByte(SelectionStart).Value;
+                        CountOfByteSumLabel.Content = _bytecount[val];
+                        CountOfByteLabel.Content = $"0x{ByteConverters.LongToHex(val)}";
+                    }
+                    else
+                    {
+                        ByteCountPanel.Visibility = Visibility.Collapsed;
+                    }
+                    #endregion
                 }
                 else
                 {
                     FileLengthLabel.Content = 0;
                     FileLengthKBLabel.Content = 0;
+                    CountOfByteLabel.Content = 0;
                 }
         }
 
@@ -3420,5 +3445,44 @@ namespace WPFHexaEditor.Control
         }
         #endregion Get selected control methods
 
+        #region ByteCount property
+
+        public bool AllowByteCount
+        {
+            get { return (bool)GetValue(AllowByteCountProperty); }
+            set { SetValue(AllowByteCountProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for AllowByteCount.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty AllowByteCountProperty =
+            DependencyProperty.Register("AllowByteCount", typeof(bool), typeof(HexaEditor), 
+                new FrameworkPropertyMetadata(true, new PropertyChangedCallback(AllowByteCount_PropertyChanged)));
+
+        private static void AllowByteCount_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            HexaEditor ctrl = d as HexaEditor;
+
+            if (ctrl != null)
+            {
+                if (e.NewValue != e.OldValue)
+                {
+                    //Update count of byte
+                    ctrl.UpdateByteCount();
+                }
+
+                ctrl.UpdateStatusBar();
+            }
+        }
+
+
+        private void UpdateByteCount()
+        {
+            _bytecount = null;
+
+            if (ByteProvider.CheckIsOpen(_provider))
+                if (AllowByteCount) _bytecount = _provider.GetByteCount();
+        }
+
+        #endregion ByteCount Property
     }
 }

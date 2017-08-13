@@ -229,6 +229,21 @@
                        Padding="0,5,5,5" />
                 <Label Content="Bytes)" 
                        Padding="0,5,5,5" />
+
+                <StackPanel x:Name="ByteCountPanel" 
+                            Orientation="Horizontal" 
+                            Visibility="Collapsed">
+                    <Label Content="Count of " 
+                           Padding="5,5,0,5" 
+                           FontWeight="Bold" />
+                    <Label x:Name="CountOfByteLabel" 
+                           ToolTip="Byte at position start"/>
+                    <Label Content=":" 
+                           Padding="0,5"/>
+                    <Label x:Name="CountOfByteSumLabel" 
+                           ToolTip="Count of Byte at position start"
+                           ContentStringFormat="N0" />
+                </StackPanel>
             </StackPanel>
             <Label x:Name="TBLLabel" 
                    Content="TBL" 

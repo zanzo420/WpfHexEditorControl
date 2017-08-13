@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows;
 
 using WPFHexaEditor.Core.MethodExtention;
@@ -1359,7 +1360,57 @@ namespace WPFHexaEditor.Core.Bytes
         }
         #endregion IDisposable Support
 
+        #region Computing byte methods...
 
+        /// <summary>
+        /// Get an array of long computing the total of each byte in the file. 
+        /// The position of the array makes it possible to obtain the sum of the desired byte
+        /// </summary>
+        /// <example>
+        /// //COUNT OF 0xff
+        /// var cnt = GetByteCount()[0xff]
+        /// </example>
+        /// <returns></returns>
+        public long[] GetByteCount()
+        {
+            if (IsOpen)
+            {
+                //Launch event at process strated
+                IsOnLongProcess = true;
+                LongProcessProgressStarted?.Invoke(this, new EventArgs());
+
+                Position = 0;
+                int bufferLenght = 1048576; //1mb
+                byte[] buffer;
+                long[] storedCnt = new long[256];
+
+                while (!EOF)
+                {
+                    buffer = new byte[bufferLenght];
+
+                    Read(buffer, 0, bufferLenght);
+
+                    foreach (byte b in buffer)
+                        storedCnt[b]++;
+
+                    Position += bufferLenght;
+
+                    //Do not freeze UI...
+                    if (Position % 2000 == 0)
+                        LongProcessProgress = (double)Position / Length;
+                }
+
+                //Launch event at process strated
+                IsOnLongProcess = false;
+                LongProcessProgressCompleted?.Invoke(this, new EventArgs());
+
+                return storedCnt;
+            }
+
+            return null;
+        }
+
+        #endregion
 
     }
 }

@@ -375,6 +375,10 @@ namespace WPFHexaEditor.Core.Bytes
         {
             if (CanWrite)
             {
+                //Launch event at process started
+                IsOnLongProcess = true;
+                LongProcessProgressStarted?.Invoke(this, new EventArgs());
+
                 //Set percent of progress to zero and create and iterator for help mesure progress
                 LongProcessProgress = 0;
                 int i = 0;
@@ -392,10 +396,6 @@ namespace WPFHexaEditor.Core.Bytes
                     GetModifiedBytes(ByteAction.Added).Count() == 0 && 
                     !File.Exists(_newfilename))
                 {
-                    //Launch event at process strated
-                    IsOnLongProcess = true;
-                    LongProcessProgressStarted?.Invoke(this, new EventArgs());
-
                     var bytemodifiedList = GetModifiedBytes(ByteAction.Modified);
                     double countChange = bytemodifiedList.Count();
                     i = 0;
@@ -414,17 +414,9 @@ namespace WPFHexaEditor.Core.Bytes
                             _stream.Position = bm.Key;
                             _stream.WriteByte(bm.Value.Byte.Value);
                         }
-
-                    //Launch event at process completed
-                    IsOnLongProcess = false;
-                    LongProcessProgressCompleted?.Invoke(this, new EventArgs());
                 }
                 else
                 {
-                    //Launch event at process strated
-                    IsOnLongProcess = true;
-                    LongProcessProgressStarted?.Invoke(this, new EventArgs());
-
                     byte[] buffer = new byte[ConstantReadOnly.COPY_BLOCK_SIZE];
                     long bufferlength = 0;
                     var SortedBM = GetModifiedBytes(ByteAction.All).OrderBy(b => b.Key);
@@ -537,11 +529,11 @@ namespace WPFHexaEditor.Core.Bytes
 
                     if (refreshByteProvider)
                         FileName = _newfilename;
-
-                    //Launch event at process completed
-                    IsOnLongProcess = false;
-                    LongProcessProgressCompleted?.Invoke(this, new EventArgs());
-                }                
+                }
+                
+                //Launch event at process completed
+                IsOnLongProcess = false;
+                LongProcessProgressCompleted?.Invoke(this, new EventArgs());
 
                 //Launch event
                 ChangesSubmited?.Invoke(this, new EventArgs());

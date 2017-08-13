@@ -3456,7 +3456,7 @@ namespace WPFHexaEditor.Control
         // Using a DependencyProperty as the backing store for AllowByteCount.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty AllowByteCountProperty =
             DependencyProperty.Register("AllowByteCount", typeof(bool), typeof(HexaEditor), 
-                new FrameworkPropertyMetadata(true, new PropertyChangedCallback(AllowByteCount_PropertyChanged)));
+                new FrameworkPropertyMetadata(false, new PropertyChangedCallback(AllowByteCount_PropertyChanged)));
 
         private static void AllowByteCount_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -3464,17 +3464,16 @@ namespace WPFHexaEditor.Control
 
             if (ctrl != null)
             {
-                if (e.NewValue != e.OldValue)
-                {
-                    //Update count of byte
-                    ctrl.UpdateByteCount();
-                }
+                if (e.NewValue != e.OldValue)                
+                    ctrl.UpdateByteCount();                
 
                 ctrl.UpdateStatusBar();
             }
         }
 
-
+        /// <summary>
+        /// Update the bytecount var.
+        /// </summary>
         private void UpdateByteCount()
         {
             _bytecount = null;

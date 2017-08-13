@@ -1,4 +1,4 @@
-# WPF Hexadecimal Editor UserControl
+# WPF HexEditor UserControl
 A fully customisable WPF user control for editing file or stream as hexadecimal. (SUPPORT THINGY CHARACTER TABLE (TBL))
 
 Sample with standard ASCII character table

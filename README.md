@@ -8,13 +8,15 @@ Sample with Thingy character table on SNES Final Fantasy II US
 ![example](WPFHexEditorControlSample7-TBL.png?raw=true)
 
 
-## NUGET  Last version : 2017-08-07  (v0.9.6.5)
+## NUGET  Last version : 2017-08-09  (v0.9.7)
 https://www.nuget.org/packages/WPFHexaEditor/
 
 ## Somes features
 - Include HexBox, an Hexadecimal TextBox with spinner
 - Modify and Delete bytes
 - Save changes
+- Fill selection (or another array) with byte.
+- Replace byte by another one.
 - Support Brush for customize background, selection, highlight and more 
 - Support of common key in window like CTRL+C, CTRL+V, CTRL+Z, CTRL+A, ESC...
 - Copy to clipboard as code like C#, VB.Net, C, Java, F# ... 

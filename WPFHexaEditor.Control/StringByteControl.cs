@@ -53,7 +53,7 @@ namespace WPFHexaEditor.Control
             var ttLocaltor = new Uri(url, UriKind.Relative);
             var ttRes = new ResourceDictionary();
             ttRes.Source = ttLocaltor;
-            this.Resources.MergedDictionaries.Add(ttRes);
+            Resources.MergedDictionaries.Add(ttRes);
         }
 
         /// <summary>
@@ -74,10 +74,10 @@ namespace WPFHexaEditor.Control
             
             //Binding
             var txtBinding = new Binding();
-            txtBinding.Source = this.FindResource("ByteToolTip");
+            txtBinding.Source = FindResource("ByteToolTip");
             txtBinding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
             txtBinding.Mode = BindingMode.OneWay;
-            this.SetBinding(TextBlock.ToolTipProperty, txtBinding);
+            SetBinding(TextBlock.ToolTipProperty, txtBinding);
 
             //Event
             MouseEnter += UserControl_MouseEnter;

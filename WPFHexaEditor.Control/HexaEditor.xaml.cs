@@ -23,19 +23,32 @@ using WPFHexaEditor.Control.Dialog;
 
 namespace WPFHexaEditor.Control
 {
-    /// <summary>
-    /// 2016 - Derek Tremblay (derektremblay666@gmail.com)
-    /// WPF Hexadecimal editor control
+    /// <summary> 
+    /// WPF HexEditor control
     /// </summary>
     public partial class HexaEditor : UserControl
     {
-        private const double _lineInfoHeight = 22;
+        //byte provider for work with file in stream currently loaded in control.
         private ByteProvider _provider = null;
+
+        //The laege change of scroll when clicked on bar
         private double _scrollLargeChange = 100;
+
+        //List of byte are high light  (TODO: remplace by dictonnary
         private List<long> _markedPositionList = new List<long>();
+
+        //Byte position in file of the right click;
         private long _rightClickBytePosition = -1;
+
+        //Custom character table loaded.
         private TBLStream _TBLCharacterTable = null;
+
+        //Hold the count of all byte in file. 
         private long[] _bytecount;
+        
+        //Save the buffer as a field,To save the time when Scolling.not building them every time when scolling;
+        private byte[] _viewBuffer;
+        private long _priLevel = 0;
 
         //Used with VerticalMoveByTime methods/events to move the scrollbar
         private bool _mouseOnBottom = false;
@@ -340,6 +353,29 @@ namespace WPFHexaEditor.Control
         }
 
         /// <summary>
+        /// Height of data line. 
+        /// </summary>
+        public double LineHeight
+        {
+            get { return (double)GetValue(LineHeightProperty); }
+            set { SetValue(LineHeightProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for LineHeight.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty LineHeightProperty =
+            DependencyProperty.Register("LineHeight", typeof(double), typeof(HexaEditor), 
+                new FrameworkPropertyMetadata(18D,
+                    new PropertyChangedCallback(LineHeight_PropertyChanged)));
+
+        private static void LineHeight_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            HexaEditor ctrl = d as HexaEditor;
+
+            if (ctrl != null)            
+                ctrl.RefreshView();            
+        }
+
+        /// <summary>
         /// Control the mouse wheel speed
         /// </summary>
         public MouseWheelSpeed MouseWheelSpeed { get; set; } = MouseWheelSpeed.Normal;
@@ -624,7 +660,7 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public long GetMaxVisibleLine()
         {
-            return (long)(StringDataStackPanel.ActualHeight / _lineInfoHeight); // + 1; //TEST
+            return (long)(StringDataStackPanel.ActualHeight / LineHeight); // + 1; //TEST
         }
 
         #endregion Lines methods
@@ -672,7 +708,7 @@ namespace WPFHexaEditor.Control
             UnSelectAll();
             UnHighLightAll();
 
-            this.Focus();
+            Focus();
         }
 
         private void Control_CTRLZKey(object sender, EventArgs e)
@@ -1395,7 +1431,6 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public void SetPosition(long position, long byteLenght)
         {
-            //TODO : selected hexbytecontrol
             SelectionStart = position;
             SelectionStop = position + byteLenght - 1;
 
@@ -1597,9 +1632,6 @@ namespace WPFHexaEditor.Control
                     ctrl.VerticalScrollBar.Visibility = Visibility.Collapsed;
                     break;
             }
-
-
-
         }
 
         /// <summary>
@@ -2122,7 +2154,7 @@ namespace WPFHexaEditor.Control
             if (RefreshData)
                 UpdateDataAndStringViewer(ControlResize);
 
-            //Update visual of byte
+            //Update visual of byte control
             UpdateByteModified();
             UpdateSelection();
             UpdateHighLightByte();
@@ -2156,11 +2188,6 @@ namespace WPFHexaEditor.Control
             }
         }
 
-        private long priLevel = 0;
-        /// <summary>
-        /// Save the buffer as a field,To save the time when Scolling.not building them every time when scolling;
-        /// </summary>
-        private byte[] buffer;
         /// <summary>
         /// Build the stringbytecontrols and hexabytecontrols;
         /// </summary>
@@ -2177,7 +2204,7 @@ namespace WPFHexaEditor.Control
             {
                 #region
                 StackPanel dataLineStack = new StackPanel();
-                dataLineStack.Height = _lineInfoHeight;
+                dataLineStack.Height = LineHeight;
                 dataLineStack.Orientation = Orientation.Horizontal;
 
                 for (int i = 0; i < BytePerLine; i++)
@@ -2220,7 +2247,7 @@ namespace WPFHexaEditor.Control
 
                 #region
                 StackPanel hexaDataLineStack = new StackPanel();
-                hexaDataLineStack.Height = _lineInfoHeight;
+                hexaDataLineStack.Height = LineHeight;
                 hexaDataLineStack.Orientation = Orientation.Horizontal;
 
                 for (int i = 0; i < BytePerLine; i++)
@@ -2267,25 +2294,25 @@ namespace WPFHexaEditor.Control
         /// </summary>
         private void UpdateDataAndStringViewer(bool ControlResize)
         {
-            var curLevel = ++priLevel;
+            var curLevel = ++_priLevel;
             if (ByteProvider.CheckIsOpen(_provider))
             {
                 if (ControlResize)
                 {
                     #region 
-                    if (buffer == null)
+                    if (_viewBuffer == null)
                     {
                         var fullSizeReadyToRead = GetMaxVisibleLine() * BytePerLine + 1;
-                        buffer = new byte[fullSizeReadyToRead];
+                        _viewBuffer = new byte[fullSizeReadyToRead];
                         BuildDataLines((int)GetMaxVisibleLine());
                     }
                     else
                     {
-                        if (buffer.Length < GetMaxVisibleLine() * BytePerLine + 1)
+                        if (_viewBuffer.Length < GetMaxVisibleLine() * BytePerLine + 1)
                         {
                             var fullSizeReadyToRead = GetMaxVisibleLine() * BytePerLine + 1;
                             BuildDataLines((int)GetMaxVisibleLine());
-                            buffer = new byte[fullSizeReadyToRead];
+                            _viewBuffer = new byte[fullSizeReadyToRead];
                         }
                     }
                     #endregion
@@ -2300,7 +2327,7 @@ namespace WPFHexaEditor.Control
                 var startPosition = ByteConverters.HexLiteralToLong(firstInfoLabel.Text);
                 var sizeReadyToRead = LinesInfoStackPanel.Children.Count * BytePerLine + 1;
                 _provider.Position = startPosition;
-                var readSize = _provider.Read(buffer, 0, sizeReadyToRead);
+                var readSize = _provider.Read(_viewBuffer, 0, sizeReadyToRead);
 
                 var index = 0;
 
@@ -2317,9 +2344,9 @@ namespace WPFHexaEditor.Control
 
                     byteControl.InternalChange = true;
 
-                    if (index < readSize && priLevel == curLevel)
+                    if (index < readSize && _priLevel == curLevel)
                     {
-                        byteControl.Byte = buffer[index];
+                        byteControl.Byte = _viewBuffer[index];
                         byteControl.BytePositionInFile = startPosition + index;
                     }
                     else
@@ -2348,11 +2375,11 @@ namespace WPFHexaEditor.Control
 
                     if (index < readSize)
                     {                        
-                        sbCtrl.Byte = buffer[index];
+                        sbCtrl.Byte = _viewBuffer[index];
                         sbCtrl.BytePositionInFile = startPosition + index;
                         if (index < readSize - 1)
                         {
-                            sbCtrl.ByteNext = buffer[index + 1];
+                            sbCtrl.ByteNext = _viewBuffer[index + 1];
                         }
                         else
                         {
@@ -2373,7 +2400,7 @@ namespace WPFHexaEditor.Control
             }
             else
             {
-                buffer = null;
+                _viewBuffer = null;
                 TraverseDataControls(control =>
                 {
                     control.BytePositionInFile = -1;
@@ -2485,7 +2512,7 @@ namespace WPFHexaEditor.Control
                 {
                     //Create control
                     TextBlock LineInfoLabel = new TextBlock();
-                    LineInfoLabel.Height = _lineInfoHeight;
+                    LineInfoLabel.Height = LineHeight;
                     LineInfoLabel.Padding = new Thickness(0, 0, 10, 0);
                     LineInfoLabel.Foreground = ForegroundOffSetHeaderColor;
                     LineInfoLabel.Width = 25;
@@ -2514,7 +2541,7 @@ namespace WPFHexaEditor.Control
                 for (int i = 0; i < fds - linesCount; i++)
                 {
                     var LineInfoLabel = new TextBlock();
-                    LineInfoLabel.Height = _lineInfoHeight;
+                    LineInfoLabel.Height = LineHeight;
                     LineInfoLabel.Padding = new Thickness(0, 0, 10, 0);
                     LineInfoLabel.Foreground = ForegroundOffSetHeaderColor;
                     LineInfoLabel.MouseDown += LineInfoLabel_MouseDown;
@@ -3066,7 +3093,13 @@ namespace WPFHexaEditor.Control
         {
             foreach (Rectangle rect in MarkerGrid.Children)
                 if (((BookMark)rect.Tag).Marker != ScrollMarker.SelectionStart)
-                    rect.Margin = new Thickness(0, (GetLineNumber(((BookMark)rect.Tag).BytePositionInFile) * VerticalScrollBar.Track.TickHeight(GetMaxLine())) - rect.ActualHeight, 0, 0);
+                    rect.Margin = new Thickness 
+                        (
+                            0, 
+                            (GetLineNumber(((BookMark)rect.Tag).BytePositionInFile) * VerticalScrollBar.Track.TickHeight(GetMaxLine())) - rect.ActualHeight,
+                            0,
+                            0
+                        );
         }
 
         /// <summary>
@@ -3312,7 +3345,7 @@ namespace WPFHexaEditor.Control
             {
                 while (readToMove())
                 {
-                    this.Dispatcher.Invoke(() =>
+                    Dispatcher.Invoke(() =>
                     {
                         if (Mouse.LeftButton == MouseButtonState.Pressed)
                         {
@@ -3326,7 +3359,7 @@ namespace WPFHexaEditor.Control
                         }
                     });
 
-                    Thread.Sleep(200);
+                    Thread.Sleep(250);
                 }
             });
         }
@@ -3336,8 +3369,10 @@ namespace WPFHexaEditor.Control
             _mouseOnBottom = true;
             var curTime = ++_bottomEnterTimes;
 
-            VerticalMoveByTime(
+            VerticalMoveByTime
+            (
                 () => _mouseOnBottom && curTime == _bottomEnterTimes,
+
                 () =>
                 {
                     var mousePos = Mouse.GetPosition(BottomRectangle);
@@ -3356,8 +3391,10 @@ namespace WPFHexaEditor.Control
             var curTime = ++_topEnterTimes;
             _mouseOnTop = true;
 
-            VerticalMoveByTime(
+            VerticalMoveByTime
+            (
                 () => _mouseOnTop && curTime == _topEnterTimes,
+            
                 () =>
                 {
                     var mousePos = Mouse.GetPosition(BottomRectangle);
@@ -3413,37 +3450,6 @@ namespace WPFHexaEditor.Control
             ctrl.UpdateVisual();
         }
         #endregion Highlight selected byte
-
-        #region Get selected control methods
-        /// <summary>
-        /// Give the selected hexa control
-        /// </summary>
-        private HexByteControl GetSelectedHexCtrl()
-        {
-            //HexByte panel
-            foreach (StackPanel hexDataStack in HexDataStackPanel.Children)
-                foreach (HexByteControl byteControl in hexDataStack.Children)
-                    if (byteControl.IsSelected && byteControl.BytePositionInFile == SelectionStart)
-                        return byteControl;
-
-            return null;
-        }
-
-        /// <summary>
-        /// Give the selected string control
-        /// </summary>
-        /// <returns></returns>
-        private StringByteControl GetSelectedStringCtrl()
-        {
-            //string panel
-            foreach (StackPanel stringDataStack in StringDataStackPanel.Children)
-                foreach (StringByteControl byteControl in stringDataStack.Children)
-                    if (byteControl.IsSelected && byteControl.BytePositionInFile == SelectionStart)
-                        return byteControl;
-
-            return null;
-        }
-        #endregion Get selected control methods
 
         #region ByteCount property
 

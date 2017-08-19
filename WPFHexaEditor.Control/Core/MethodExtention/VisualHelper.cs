@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
 
-namespace WPFHexaEditor.Control.Core.MethodExtention
+namespace WPFHexaEditor.Core.MethodExtention
 {
     public static class VisualHelper {
         public static M GetVisualParent<M>(this DependencyObject source) where M : DependencyObject {

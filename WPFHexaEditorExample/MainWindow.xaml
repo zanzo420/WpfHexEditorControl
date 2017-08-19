@@ -14,7 +14,7 @@
         mc:Ignorable="d"
         Closing="Window_Closing"
         Background="WhiteSmoke"
-        Title="WPF Hexa Editor control sample" Height="530" Width="900">
+        Title="WPF HexEditor sample" Height="530" Width="900" Icon="Resources/Icon/0x-Icon.ico">
     <Grid>
         <DockPanel>
             <Menu DockPanel.Dock="Top">
@@ -103,8 +103,6 @@
                               IsCheckable="True"
                               IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=ScrollVisibility, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                 </MenuItem>
-                
-                <MenuItem x:Name="TestButton" Header="TEST" Click="TestButton_Click"/>
             </Menu>
 
             <Control:HexaEditor x:Name="HexEdit" Width="Auto" Height="Auto" Margin="2" AllowByteCount="True"/>

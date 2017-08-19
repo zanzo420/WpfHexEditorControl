@@ -4,6 +4,7 @@
 //////////////////////////////////////////////
 
 using Microsoft.Win32;
+using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -282,11 +283,6 @@ namespace WPFHexaEditorExample
             {
                 HexEdit.SubmitChanges(fileDialog.FileName, true);
             }
-        }
-
-        private void TestButton_Click(object sender, RoutedEventArgs e)
-        {
-            //HexEdit.TEST_COMPUTE_BYTESUM();
         }
     }
 }

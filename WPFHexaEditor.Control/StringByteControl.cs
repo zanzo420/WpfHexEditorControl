@@ -28,7 +28,7 @@ namespace WPFHexaEditor.Control
         public event EventHandler Click;
         public event EventHandler RightClick;
         public event EventHandler MouseSelection;
-        public event EventHandler StringByteModified;
+        public event EventHandler ByteModified;
         public event EventHandler MoveNext;
         public event EventHandler MovePrevious;
         public event EventHandler MoveRight;
@@ -137,7 +137,7 @@ namespace WPFHexaEditor.Control
                 if (e.NewValue != e.OldValue)
                 {
                     if (ctrl.Action != ByteAction.Nothing && ctrl.InternalChange == false)
-                        ctrl.StringByteModified?.Invoke(ctrl, new EventArgs());
+                        ctrl.ByteModified?.Invoke(ctrl, new EventArgs());
 
                     ctrl.UpdateLabelFromByte();
                     ctrl.UpdateHexString();
@@ -438,7 +438,7 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Update Background,foreground and font property
         /// </summary>
-        internal void UpdateVisual()
+        public void UpdateVisual()
         {
             if (IsFocus)
             {

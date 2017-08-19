@@ -280,7 +280,7 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Update Background,foreground and font property
         /// </summary>
-        internal void UpdateVisual()
+        public void UpdateVisual()
         {
             if (IsFocus)
             {
@@ -528,6 +528,5 @@ namespace WPFHexaEditor.Control
 
             UpdateAutoHighLiteSelectionByteVisual();
         }
-
     }
 }

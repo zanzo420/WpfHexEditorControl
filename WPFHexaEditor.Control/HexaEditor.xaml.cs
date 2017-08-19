@@ -330,8 +330,7 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public void UpdateVisual()
         {
-            TraverseDataControls(ctrl => { ctrl.UpdateVisual(); });
-            TraverseStringControls(ctrl => { ctrl.UpdateVisual(); });
+             TraverseStringAndDataControls(ctrl => { ctrl.UpdateVisual(); });
         }
 
         #endregion Colors/fonts property and methods
@@ -2211,7 +2210,7 @@ namespace WPFHexaEditor.Control
                 {
                     StringByteControl sbCtrl = new StringByteControl(this);
 
-                    sbCtrl.StringByteModified += Control_ByteModified;
+                    sbCtrl.ByteModified += Control_ByteModified;
                     sbCtrl.ReadOnlyMode = ReadOnlyMode;
                     sbCtrl.MoveNext += Control_MoveNext;
                     sbCtrl.MovePrevious += Control_MovePrevious;
@@ -3371,7 +3370,7 @@ namespace WPFHexaEditor.Control
 
             VerticalMoveByTime
             (
-                () => _mouseOnBottom && curTime == _bottomEnterTimes,
+                () => _mouseOnBottom && curTime == _bottomEnterTimes && Mouse.LeftButton == MouseButtonState.Pressed,
 
                 () =>
                 {
@@ -3393,7 +3392,7 @@ namespace WPFHexaEditor.Control
 
             VerticalMoveByTime
             (
-                () => _mouseOnTop && curTime == _topEnterTimes,
+                () => _mouseOnTop && curTime == _topEnterTimes && Mouse.LeftButton == MouseButtonState.Pressed,
             
                 () =>
                 {

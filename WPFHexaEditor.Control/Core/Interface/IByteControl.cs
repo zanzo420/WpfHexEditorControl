@@ -4,6 +4,8 @@
 // Contributor  : Derek Tremblay
 //////////////////////////////////////////////
 
+using System;
+
 namespace WPFHexaEditor.Core.Interface
 {
     /// <summary>
@@ -12,6 +14,7 @@ namespace WPFHexaEditor.Core.Interface
     /// </summary>
     internal interface IByteControl
     {
+        //Properties
         long BytePositionInFile { get; set; }
         ByteAction Action { get; set; }
         byte? Byte { get; set; }
@@ -22,5 +25,28 @@ namespace WPFHexaEditor.Core.Interface
         bool FirstSelected { get; set; }
         bool ReadOnlyMode { get; set; }
         bool InternalChange { get; set; }
+
+        //Methods
+        void UpdateVisual();
+
+        //Events
+        event EventHandler ByteModified;
+        event EventHandler MouseSelection;
+        event EventHandler Click;
+        event EventHandler RightClick;
+        event EventHandler MoveNext;
+        event EventHandler MovePrevious;
+        event EventHandler MoveRight;
+        event EventHandler MoveLeft;
+        event EventHandler MoveUp;
+        event EventHandler MoveDown;
+        event EventHandler MovePageDown;
+        event EventHandler MovePageUp;
+        event EventHandler ByteDeleted;
+        event EventHandler EscapeKey;
+        event EventHandler CTRLZKey;
+        event EventHandler CTRLVKey;
+        event EventHandler CTRLCKey;
+        event EventHandler CTRLAKey;
     }
 }

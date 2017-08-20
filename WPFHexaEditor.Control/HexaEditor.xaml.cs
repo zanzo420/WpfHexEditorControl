@@ -28,6 +28,7 @@ namespace WPFHexaEditor.Control
     /// </summary>
     public partial class HexaEditor : UserControl
     {
+        #region Global class variables
         //byte provider for work with file in stream currently loaded in control.
         private ByteProvider _provider = null;
 
@@ -55,6 +56,7 @@ namespace WPFHexaEditor.Control
         private long _bottomEnterTimes = 0;
         private bool _mouseOnTop = false;
         private long _topEnterTimes = 0;
+        #endregion Global Class variables
 
         #region Events
         /// <summary>
@@ -119,6 +121,7 @@ namespace WPFHexaEditor.Control
 
         #endregion Events
 
+        #region Constructor
         public HexaEditor()
         {
             InitializeComponent();
@@ -132,6 +135,7 @@ namespace WPFHexaEditor.Control
 
             DataContext = this;
         }
+        #endregion Contructor
 
         #region Build-in CTRL key property
         public bool AllowBuildinCTRLC
@@ -2018,7 +2022,7 @@ namespace WPFHexaEditor.Control
 
         #endregion Open, Close, Save, byte provider ...
 
-        #region Traverse byte control methods
+        #region Traverse ByteControl methods
 
         /// <summary>
         /// Used to make action on all hexbytecontrol
@@ -2058,7 +2062,7 @@ namespace WPFHexaEditor.Control
                 foreach (HexByteControl byteControl in hexDataStack.Children)
                     act(byteControl);
         }
-        #endregion Traverse byte control methods
+        #endregion Traverse ByteControl methods
 
         #region Update/Refresh view
 
@@ -2177,12 +2181,12 @@ namespace WPFHexaEditor.Control
             switch (coloring)
             {
                 case FirstColor.HexByteData:
-                    TraverseDataControls(control => { control.FirstSelected = true; });
-                    TraverseStringControls(control => { control.FirstSelected = false; });
+                    TraverseDataControls(ctrl => { ctrl.FirstSelected = true; });
+                    TraverseStringControls(ctrl => { ctrl.FirstSelected = false; });
                     break;
                 case FirstColor.StringByteData:
-                    TraverseDataControls(control => { control.FirstSelected = false; });
-                    TraverseStringControls(control => { control.FirstSelected = true; });
+                    TraverseDataControls(ctrl => { ctrl.FirstSelected = false; });
+                    TraverseStringControls(ctrl => { ctrl.FirstSelected = true; });
                     break;
             }
         }
@@ -3366,11 +3370,12 @@ namespace WPFHexaEditor.Control
         private void BottomRectangle_MouseEnter(object sender, MouseEventArgs e)
         {
             _mouseOnBottom = true;
+            bool mousePressed = Mouse.LeftButton == MouseButtonState.Pressed;
             var curTime = ++_bottomEnterTimes;
 
             VerticalMoveByTime
             (
-                () => _mouseOnBottom && curTime == _bottomEnterTimes && Mouse.LeftButton == MouseButtonState.Pressed,
+                () => _mouseOnBottom && curTime == _bottomEnterTimes && mousePressed,
 
                 () =>
                 {
@@ -3388,11 +3393,12 @@ namespace WPFHexaEditor.Control
         private void TopRectangle_MouseEnter(object sender, MouseEventArgs e)
         {
             var curTime = ++_topEnterTimes;
+            bool mousePressed = Mouse.LeftButton == MouseButtonState.Pressed;
             _mouseOnTop = true;
 
             VerticalMoveByTime
             (
-                () => _mouseOnTop && curTime == _topEnterTimes && Mouse.LeftButton == MouseButtonState.Pressed,
+                () => _mouseOnTop && curTime == _topEnterTimes && mousePressed,
             
                 () =>
                 {

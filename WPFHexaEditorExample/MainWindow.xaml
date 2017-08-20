@@ -105,7 +105,7 @@
                 </MenuItem>
             </Menu>
 
-            <Control:HexaEditor x:Name="HexEdit" Width="Auto" Height="Auto" Margin="2" AllowByteCount="True"/>
+            <Control:HexaEditor x:Name="HexEdit" Width="Auto" Height="Auto" Margin="2" AllowByteCount="False"/>
         </DockPanel>
     </Grid>
 </Window>

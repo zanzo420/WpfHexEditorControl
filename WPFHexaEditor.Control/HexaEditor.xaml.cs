@@ -2197,42 +2197,30 @@ namespace WPFHexaEditor.Control
         /// <param name="maxline">Number of line to build</param>
         private void BuildDataLines(int maxline, bool rebuild = false)
         {
+            bool reAttachEvents = false;
+
             if (rebuild)
             {
+                reAttachEvents = true;
                 StringDataStackPanel.Children.Clear();
                 HexDataStackPanel.Children.Clear();
             }
 
             for (int lineIndex = StringDataStackPanel.Children.Count; lineIndex < maxline; lineIndex++)
             {
-                #region
+                #region Build StringByteControl
                 StackPanel dataLineStack = new StackPanel();
                 dataLineStack.Height = LineHeight;
                 dataLineStack.Orientation = Orientation.Horizontal;
+                StringByteControl sbCtrl;
 
                 for (int i = 0; i < BytePerLine; i++)
                 {
-                    StringByteControl sbCtrl = new StringByteControl(this);
-
-                    sbCtrl.ByteModified += Control_ByteModified;
-                    sbCtrl.ReadOnlyMode = ReadOnlyMode;
-                    sbCtrl.MoveNext += Control_MoveNext;
-                    sbCtrl.MovePrevious += Control_MovePrevious;
-                    sbCtrl.MouseSelection += Control_MouseSelection;
-                    sbCtrl.Click += Control_Click;
-                    sbCtrl.RightClick += Control_RightClick;
-                    sbCtrl.MoveUp += Control_MoveUp;
-                    sbCtrl.MoveDown += Control_MoveDown;
-                    sbCtrl.MoveLeft += Control_MoveLeft;
-                    sbCtrl.MoveRight += Control_MoveRight;
-                    sbCtrl.ByteDeleted += Control_ByteDeleted;
-                    sbCtrl.EscapeKey += Control_EscapeKey;
-                    sbCtrl.CTRLAKey += Control_CTRLAKey;
-                    sbCtrl.CTRLZKey += Control_CTRLZKey;
-                    sbCtrl.CTRLCKey += Control_CTRLCKey;
-                    sbCtrl.CTRLVKey += Control_CTRLVKey;
-
+                    sbCtrl = new StringByteControl(this);
+                    
                     sbCtrl.InternalChange = true;
+
+                    sbCtrl.ReadOnlyMode = ReadOnlyMode;
                     sbCtrl.TBLCharacterTable = _TBLCharacterTable;
                     sbCtrl.TypeOfCharacterTable = TypeOfCharacterTable;
 
@@ -2248,38 +2236,19 @@ namespace WPFHexaEditor.Control
                 StringDataStackPanel.Children.Add(dataLineStack);
                 #endregion
 
-                #region
+                #region Build HexByteControl
                 StackPanel hexaDataLineStack = new StackPanel();
                 hexaDataLineStack.Height = LineHeight;
                 hexaDataLineStack.Orientation = Orientation.Horizontal;
+                HexByteControl byteControl;
 
                 for (int i = 0; i < BytePerLine; i++)
                 {
-                    HexByteControl byteControl = new HexByteControl(this);
-
-                    byteControl.ReadOnlyMode = ReadOnlyMode;
-                    byteControl.MouseSelection += Control_MouseSelection;
-                    byteControl.Click += Control_Click;
-                    byteControl.RightClick += Control_RightClick;
-                    byteControl.MoveNext += Control_MoveNext;
-                    byteControl.MovePrevious += Control_MovePrevious;
-                    byteControl.ByteModified += Control_ByteModified;
-                    byteControl.MoveUp += Control_MoveUp;
-                    byteControl.MoveDown += Control_MoveDown;
-                    byteControl.MoveLeft += Control_MoveLeft;
-                    byteControl.MoveRight += Control_MoveRight;
-                    byteControl.MovePageUp += Control_MovePageUp;
-                    byteControl.MovePageDown += Control_MovePageDown;
-                    byteControl.ByteDeleted += Control_ByteDeleted;
-                    byteControl.EscapeKey += Control_EscapeKey;
-                    byteControl.CTRLAKey += Control_CTRLAKey;
-                    byteControl.CTRLZKey += Control_CTRLZKey;
-                    byteControl.CTRLCKey += Control_CTRLCKey;
-                    byteControl.CTRLVKey += Control_CTRLVKey;
-
-                    byteControl.ToolTip = TryFindResource("ByteToolTip");
+                    byteControl = new HexByteControl(this);
 
                     byteControl.InternalChange = true;
+                    byteControl.ReadOnlyMode = ReadOnlyMode;
+                    byteControl.ToolTip = TryFindResource("ByteToolTip");
                     byteControl.Byte = null;
                     byteControl.BytePositionInFile = -1;
                     byteControl.InternalChange = false;
@@ -2290,7 +2259,32 @@ namespace WPFHexaEditor.Control
 
                 HexDataStackPanel.Children.Add(hexaDataLineStack);
                 #endregion
+
+                reAttachEvents = true;
             }
+
+            #region Attach events to each IByteControl
+            if (reAttachEvents)
+                TraverseStringAndDataControls(ctrl =>
+                {
+                    ctrl.ByteModified += Control_ByteModified;
+                    ctrl.MoveNext += Control_MoveNext;
+                    ctrl.MovePrevious += Control_MovePrevious;
+                    ctrl.MouseSelection += Control_MouseSelection;
+                    ctrl.Click += Control_Click;
+                    ctrl.RightClick += Control_RightClick;
+                    ctrl.MoveUp += Control_MoveUp;
+                    ctrl.MoveDown += Control_MoveDown;
+                    ctrl.MoveLeft += Control_MoveLeft;
+                    ctrl.MoveRight += Control_MoveRight;
+                    ctrl.ByteDeleted += Control_ByteDeleted;
+                    ctrl.EscapeKey += Control_EscapeKey;
+                    ctrl.CTRLAKey += Control_CTRLAKey;
+                    ctrl.CTRLZKey += Control_CTRLZKey;
+                    ctrl.CTRLCKey += Control_CTRLCKey;
+                    ctrl.CTRLVKey += Control_CTRLVKey;
+                });
+            #endregion
         }
         /// <summary>
         /// Update the data and string stackpanels;
@@ -3360,9 +3354,11 @@ namespace WPFHexaEditor.Control
                             else if (_mouseOnTop)
                                 SelectionStop = GetFirstVisibleBytePosition();
                         }
-                    });
 
-                    Thread.Sleep(250);
+                        //Give the control to dispatcher for do events
+                        Application.Current.DoEvents();
+
+                    });
                 }
             });
         }
@@ -3370,12 +3366,11 @@ namespace WPFHexaEditor.Control
         private void BottomRectangle_MouseEnter(object sender, MouseEventArgs e)
         {
             _mouseOnBottom = true;
-            bool mousePressed = Mouse.LeftButton == MouseButtonState.Pressed;
             var curTime = ++_bottomEnterTimes;
 
             VerticalMoveByTime
             (
-                () => _mouseOnBottom && curTime == _bottomEnterTimes && mousePressed,
+                () => _mouseOnBottom && curTime == _bottomEnterTimes,
 
                 () =>
                 {
@@ -3393,12 +3388,11 @@ namespace WPFHexaEditor.Control
         private void TopRectangle_MouseEnter(object sender, MouseEventArgs e)
         {
             var curTime = ++_topEnterTimes;
-            bool mousePressed = Mouse.LeftButton == MouseButtonState.Pressed;
             _mouseOnTop = true;
 
             VerticalMoveByTime
             (
-                () => _mouseOnTop && curTime == _topEnterTimes && mousePressed,
+                () => _mouseOnTop && curTime == _topEnterTimes,
             
                 () =>
                 {

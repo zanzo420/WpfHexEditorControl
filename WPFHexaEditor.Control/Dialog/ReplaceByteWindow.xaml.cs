@@ -5,7 +5,7 @@ namespace WPFHexaEditor.Control.Dialog
     /// <summary>
     /// This Window is used to give tow hex value for deal with.
     /// </summary>
-    public partial class ReplaceByteWindow : Window
+    internal partial class ReplaceByteWindow : Window
     {
         public ReplaceByteWindow()
         {

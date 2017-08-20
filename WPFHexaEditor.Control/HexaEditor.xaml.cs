@@ -1148,7 +1148,6 @@ namespace WPFHexaEditor.Control
         {
             long test = SelectionStart + 1;
 
-            //TODO : Validation
             if (Keyboard.Modifiers == ModifierKeys.Shift)
             {
                 if (test <= _provider.Length)
@@ -1170,14 +1169,10 @@ namespace WPFHexaEditor.Control
                 }
             }
 
-            //Validation and refresh
-            //if (!GetSelectionStartIsVisible() && SelectionLenght == 1)
-            //    SetPosition(SelectionStart, 1);
-
             if (SelectionStart >= _provider.Length)
                 SelectionStart = _provider.Length;
 
-            if (SelectionStart > GetLastVisibleBytePosition())
+            if (SelectionStart >= GetLastVisibleBytePosition())
                 VerticalScrollBar.Value++;
 
             if (sender is HexByteControl)
@@ -1191,7 +1186,6 @@ namespace WPFHexaEditor.Control
         {
             long test = SelectionStart - 1;
 
-            //TODO : Validation
             if (Keyboard.Modifiers == ModifierKeys.Shift)
             {
                 if (test > -1)
@@ -1216,9 +1210,6 @@ namespace WPFHexaEditor.Control
             //Validation and refresh
             if (SelectionStart < 0)
                 SelectionStart = 0;
-
-            //if (!GetSelectionStartIsVisible() && SelectionLenght == 1)
-            //    SetPosition(SelectionStart, 1);
 
             if (SelectionStart < GetFirstVisibleBytePosition())
                 VerticalScrollBar.Value--;
@@ -1258,27 +1249,10 @@ namespace WPFHexaEditor.Control
 
         private void Control_MoveNext(object sender, EventArgs e)
         {
-            HexByteControl hexByteCtrl = sender as HexByteControl;
-            StringByteControl sbCtrl = sender as StringByteControl;
+            UpdateByteModified();
 
-            if (sbCtrl != null)
-            {
-                sbCtrl.IsSelected = false;
-                SetFocusStringDataPanel(sbCtrl.BytePositionInFile + 1);
-            }
-
-            if (hexByteCtrl != null)
-            {
-                hexByteCtrl.IsSelected = false;
-                SetFocusHexDataPanel(hexByteCtrl.BytePositionInFile + 1);
-            }
-
-            if (hexByteCtrl != null || sbCtrl != null)
-            {
-                SelectionStart++;
-                SelectionStop++;
-                UpdateByteModified();
-            }
+            //Call moveright event
+            Control_MoveRight(sender, new EventArgs());
         }
 
 
@@ -2277,6 +2251,8 @@ namespace WPFHexaEditor.Control
                     ctrl.MoveDown += Control_MoveDown;
                     ctrl.MoveLeft += Control_MoveLeft;
                     ctrl.MoveRight += Control_MoveRight;
+                    ctrl.MovePageDown += Control_MovePageDown;
+                    ctrl.MovePageUp += Control_MovePageUp;
                     ctrl.ByteDeleted += Control_ByteDeleted;
                     ctrl.EscapeKey += Control_EscapeKey;
                     ctrl.CTRLAKey += Control_CTRLAKey;
@@ -2626,7 +2602,7 @@ namespace WPFHexaEditor.Control
         private void SetFocusHexDataPanel(long bytePositionInFile)
         {
             if (ByteProvider.CheckIsOpen(_provider))
-            {
+            {                
                 if (bytePositionInFile >= _provider.Length)
                     return;
 
@@ -2643,7 +2619,10 @@ namespace WPFHexaEditor.Control
                 if (rtn) return;
 
                 if (VerticalScrollBar.Value < VerticalScrollBar.Maximum)
+                {
                     VerticalScrollBar.Value++;
+                    //TraverseDataControls(ctrl => { if (ctrl.BytePositionInFile == bytePositionInFile) ctrl.Focus(); });
+                }
 
                 if (!GetSelectionStartIsVisible() && SelectionLength == 1)
                     SetPosition(SelectionStart, 1);
@@ -2673,7 +2652,10 @@ namespace WPFHexaEditor.Control
                 if (rtn) return;
 
                 if (VerticalScrollBar.Value < VerticalScrollBar.Maximum)
+                {
                     VerticalScrollBar.Value++;
+                    //TraverseStringControls(ctrl => { if (ctrl.BytePositionInFile == bytePositionInFile) ctrl.Focus(); });
+                }
 
                 if (!GetSelectionStartIsVisible() && SelectionLength == 1)
                     SetPosition(SelectionStart, 1);

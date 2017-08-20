@@ -2155,7 +2155,7 @@ namespace WPFHexaEditor.Control
             UpdateLinesInfo();
 
             if (RefreshData)
-                UpdateDataAndStringViewer(ControlResize);
+                UpdateViewers(ControlResize);
 
             //Update visual of byte control
             UpdateByteModified();
@@ -2287,13 +2287,14 @@ namespace WPFHexaEditor.Control
             #endregion
         }
         /// <summary>
-        /// Update the data and string stackpanels;
+        /// Update the data and string stackpanels yo current view;
         /// </summary>
-        private void UpdateDataAndStringViewer(bool ControlResize)
+        private void UpdateViewers(bool ControlResize)
         {
             var curLevel = ++_priLevel;
             if (ByteProvider.CheckIsOpen(_provider))
             {
+                //Build lines
                 if (ControlResize)
                 {
                     #region 
@@ -2315,24 +2316,24 @@ namespace WPFHexaEditor.Control
                     #endregion
                 }
 
+                //Exit if control have no dataline
                 if (LinesInfoStackPanel.Children.Count == 0)
-                {
                     return;
-                }
 
+                //make var to update viewers
                 var firstInfoLabel = LinesInfoStackPanel.Children[0] as TextBlock;
                 var startPosition = ByteConverters.HexLiteralToLong(firstInfoLabel.Text);
                 var sizeReadyToRead = LinesInfoStackPanel.Children.Count * BytePerLine + 1;
-                _provider.Position = startPosition;
                 var readSize = _provider.Read(_viewBuffer, 0, sizeReadyToRead);
-
                 var index = 0;
-
                 var count = HexDataStackPanel.Children.Count;
 
-                #region
+                //set position to startposition
+                _provider.Position = startPosition;
+
                 TraverseDataControls(byteControl =>
                 {
+                    #region Update all HexByteControl
                     byteControl.Action = ByteAction.Nothing;
                     byteControl.ReadOnlyMode = ReadOnlyMode;
 
@@ -2353,13 +2354,13 @@ namespace WPFHexaEditor.Control
                     }
                     byteControl.InternalChange = false;
                     index++;
+                    #endregion
                 });
-                #endregion
 
                 index = 0;
-                #region
                 TraverseStringControls(sbCtrl =>
                 {
+                    #region Update all StringByteControl
                     sbCtrl.Action = ByteAction.Nothing;
                     sbCtrl.ReadOnlyMode = ReadOnlyMode;
 
@@ -2371,17 +2372,14 @@ namespace WPFHexaEditor.Control
                     sbCtrl.TypeOfCharacterTable = TypeOfCharacterTable;
 
                     if (index < readSize)
-                    {                        
+                    {
                         sbCtrl.Byte = _viewBuffer[index];
                         sbCtrl.BytePositionInFile = startPosition + index;
+
                         if (index < readSize - 1)
-                        {
                             sbCtrl.ByteNext = _viewBuffer[index + 1];
-                        }
                         else
-                        {
                             sbCtrl.ByteNext = null;
-                        }
                     }
                     else
                     {
@@ -2391,13 +2389,15 @@ namespace WPFHexaEditor.Control
                     }
                     sbCtrl.InternalChange = false;
                     index++;
+                    #endregion
                 });
-                #endregion
 
             }
             else
             {
                 _viewBuffer = null;
+
+                #region Clear all IByteControl
                 TraverseDataControls(control =>
                 {
                     control.BytePositionInFile = -1;
@@ -2406,7 +2406,7 @@ namespace WPFHexaEditor.Control
                     control.IsHighLight = false;
                     control.IsFocus = false;
                     control.IsSelected = false;
-                    control.ToolTip = null;
+
                 });
 
                 TraverseStringControls(control =>
@@ -2419,8 +2419,8 @@ namespace WPFHexaEditor.Control
                     control.IsSelected = false;
                     control.ToolTip = null;
                 });
+                #endregion
             }
-
         }
 
         /// <summary>
@@ -2433,21 +2433,20 @@ namespace WPFHexaEditor.Control
                 ByteModified byteModified;
                 var ModifiedBytesDictionary = _provider.GetModifiedBytes(ByteAction.All);
 
-                var stringStackPanels = StringDataStackPanel.Children.Cast<StackPanel>().SelectMany(s => s.Children.Cast<StringByteControl>());
-                var hexStackPanels = HexDataStackPanel.Children.Cast<StackPanel>().SelectMany(s => s.Children.Cast<HexByteControl>());
-                var stackPanels = stringStackPanels.Zip(hexStackPanels, (s, h) => new { HexByte = h, StringByte = s });
-
-                foreach (var byteControl in stackPanels)
-                    if (ModifiedBytesDictionary.TryGetValue(byteControl.HexByte.BytePositionInFile, out byteModified))
+                TraverseStringAndDataControls(ctrl => 
+                {
+                    if (ModifiedBytesDictionary.TryGetValue(ctrl.BytePositionInFile, out byteModified))
                     {
-                        byteControl.HexByte.InternalChange = byteControl.StringByte.InternalChange = true;
-                        byteControl.HexByte.Byte = byteControl.StringByte.Byte = byteModified.Byte;
+                        ctrl.InternalChange = true;
+                        ctrl.Byte = byteModified.Byte;
 
                         if (byteModified.Action == ByteAction.Modified || byteModified.Action == ByteAction.Deleted)
-                            byteControl.HexByte.Action = byteControl.StringByte.Action = byteModified.Action;
+                            ctrl.Action = byteModified.Action;
 
-                        byteControl.HexByte.InternalChange = byteControl.StringByte.InternalChange = false;
+                        ctrl.InternalChange = false;
                     }
+                });
+
             }
         }
 

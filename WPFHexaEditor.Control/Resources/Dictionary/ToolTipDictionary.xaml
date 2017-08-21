@@ -10,6 +10,7 @@
         <ResourceDictionary Source="./MiscelanousDictionary.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
+    <!--USED FOR TOOLTIP OF IBYTECONTROL-->
     <ToolTip x:Key="ByteToolTip">
         <StackPanel>
             <StackPanel Orientation="Horizontal">
@@ -17,7 +18,7 @@
                 <Label Content="Byte" FontWeight="Bold" />
                 <Label Content="{Binding Byte, UpdateSourceTrigger=PropertyChanged}" Width="70" />
                 <Label Content="Hex" FontWeight="Bold" />
-                <Label Content="{Binding HexString, UpdateSourceTrigger=PropertyChanged}" />
+                <Label Content="{Binding Byte, Converter={StaticResource LongHexConverter},  UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Label Content="Position" FontWeight="Bold" Width="120" />
@@ -34,6 +35,7 @@
         </StackPanel>
     </ToolTip>
 
+    <!--USED FOR TOOLTIP OF SCROLL MARKER-->
     <ToolTip x:Key="ScrollMarkerSearchToolTip">
         <StackPanel>
             <StackPanel Orientation="Horizontal">

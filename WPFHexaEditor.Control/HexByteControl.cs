@@ -185,17 +185,6 @@ namespace WPFHexaEditor.Control
         public bool ReadOnlyMode { get; set; } = false;
 
         /// <summary>
-        /// Get the hex string representation of this byte
-        /// </summary>
-        public string HexString
-        {
-            get
-            {
-                return "0x" + FirstHexChar.Text + SecondHexChar.Text;
-            }
-        }
-
-        /// <summary>
         /// Get or Set if control as selected
         /// </summary>
         public bool IsSelected

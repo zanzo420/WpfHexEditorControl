@@ -213,20 +213,6 @@ namespace WPFHexaEditor.Control
         }
 
         /// <summary>
-        /// Get the hex string representation of this byte
-        /// </summary>
-        public string HexString
-        {
-            get
-            {
-                if (Byte != null)
-                    return $"0x{ByteConverters.ByteToHex(Byte.Value)}";
-                else
-                    return string.Empty;
-            }
-        }
-
-        /// <summary>
         /// Get of Set if control as marked as highlighted
         /// </summary>
         public bool IsHighLight

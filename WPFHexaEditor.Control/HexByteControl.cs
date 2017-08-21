@@ -14,8 +14,7 @@ using WPFHexaEditor.Core.Bytes;
 using WPFHexaEditor.Core.Interface;
 
 namespace WPFHexaEditor.Control
-{
-    
+{    
     [TemplatePart(Name = FirstHexCharName, Type = typeof(TextBlock))]
     [TemplatePart(Name = SecondHexCharName, Type = typeof(TextBlock))]
     internal partial class HexByteControl : System.Windows.Controls.Control, IByteControl
@@ -52,7 +51,6 @@ namespace WPFHexaEditor.Control
             _parent = parent;
         }
 
-        private bool _readOnlyMode = false;
         private KeyDownLabel _keyDownLabel = KeyDownLabel.FirstChar;
         private HexaEditor _parent;
 
@@ -156,10 +154,8 @@ namespace WPFHexaEditor.Control
             {
                 if (e.NewValue != e.OldValue)
                 {
-                    if (ctrl.Action != ByteAction.Nothing && ctrl.InternalChange == false)
-                    {
-                        ctrl.ByteModified?.Invoke(ctrl, new EventArgs());
-                    }
+                    if (ctrl.Action != ByteAction.Nothing && ctrl.InternalChange == false)                    
+                        ctrl.ByteModified?.Invoke(ctrl, new EventArgs());                    
 
                     ctrl.UpdateLabelFromByte();
                 }
@@ -183,17 +179,10 @@ namespace WPFHexaEditor.Control
 
         #endregion
 
-        public bool ReadOnlyMode
-        {
-            get
-            {
-                return _readOnlyMode;
-            }
-            set
-            {
-                _readOnlyMode = value;
-            }
-        }
+        /// <summary>
+        /// Get or set if control as in read only mode
+        /// </summary>
+        public bool ReadOnlyMode { get; set; } = false;
 
         /// <summary>
         /// Get the hex string representation of this byte
@@ -202,7 +191,7 @@ namespace WPFHexaEditor.Control
         {
             get
             {
-                return FirstHexChar.Text + SecondHexChar.Text;
+                return "0x" + FirstHexChar.Text + SecondHexChar.Text;
             }
         }
 
@@ -370,10 +359,8 @@ namespace WPFHexaEditor.Control
                 Click?.Invoke(this, e);
             }
 
-            if (e.RightButton == MouseButtonState.Pressed)
-            {
-                RightClick?.Invoke(this, e);
-            }
+            if (e.RightButton == MouseButtonState.Pressed)            
+                RightClick?.Invoke(this, e);            
         }
 
         private void UserControl_KeyDown(object sender, KeyEventArgs e)

@@ -19,12 +19,11 @@ namespace WPFHexaEditor.Control
 {
     internal partial class StringByteControl : TextBlock, IByteControl
     {
-        //private bool _isByteModified = false;
-        private bool _readOnlyMode;
+        //Global variable
         private HexaEditor _parent;
-
         private TBLStream _TBLCharacterTable = null;
 
+        //event
         public event EventHandler Click;
         public event EventHandler RightClick;
         public event EventHandler MouseSelection;
@@ -140,8 +139,6 @@ namespace WPFHexaEditor.Control
                         ctrl.ByteModified?.Invoke(ctrl, new EventArgs());
 
                     ctrl.UpdateLabelFromByte();
-                    ctrl.UpdateHexString();
-
                     ctrl.UpdateVisual();
                 }
             }
@@ -189,10 +186,9 @@ namespace WPFHexaEditor.Control
         private static void IsFocus_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var ctrl = d as StringByteControl;
-            if (e.NewValue != e.OldValue)
-            {
-                ctrl.UpdateVisual();
-            }
+
+            if (e.NewValue != e.OldValue)            
+                ctrl.UpdateVisual();            
         }
 
         /// <summary>
@@ -217,17 +213,18 @@ namespace WPFHexaEditor.Control
         }
 
         /// <summary>
-        /// Get the hex string {00} representation of this byte
+        /// Get the hex string representation of this byte
         /// </summary>
         public string HexString
         {
-            get { return (string)GetValue(HexStringProperty); }
-            internal set { SetValue(HexStringProperty, value); }
+            get
+            {
+                if (Byte != null)
+                    return $"0x{ByteConverters.ByteToHex(Byte.Value)}";
+                else
+                    return string.Empty;
+            }
         }
-
-        public static readonly DependencyProperty HexStringProperty =
-            DependencyProperty.Register("HexString", typeof(string), typeof(StringByteControl),
-                new FrameworkPropertyMetadata(string.Empty));
 
         /// <summary>
         /// Get of Set if control as marked as highlighted
@@ -344,7 +341,6 @@ namespace WPFHexaEditor.Control
             StringByteControl ctrl = d as StringByteControl;
 
             ctrl.UpdateLabelFromByte();
-            ctrl.UpdateHexString();
         }
 
         public TBLStream TBLCharacterTable
@@ -400,19 +396,15 @@ namespace WPFHexaEditor.Control
                                 case DTEType.DualTitleEncoding:
                                     Width = 12 + content.Length * 2.2D;
                                     break;
-
                                 case DTEType.MultipleTitleEncoding:
                                     Width = 12 + content.Length * 4.2D + (FontSize / 2);
                                     break;
-
                                 case DTEType.EndLine:
                                     Width = 24;
                                     break;
-
                                 case DTEType.EndBlock:
                                     Width = 34;
                                     break;
-
                                 default:
                                     Width = 12;
                                     break;
@@ -425,14 +417,6 @@ namespace WPFHexaEditor.Control
             }
             else
                 Text = "";
-        }
-
-        private void UpdateHexString()
-        {
-            if (Byte != null)
-                HexString = $"0x{ByteConverters.ByteToHex(Byte.Value)}";
-            else
-                HexString = string.Empty;
         }
 
         /// <summary>
@@ -517,17 +501,10 @@ namespace WPFHexaEditor.Control
                     Background = _parent.AutoHighLiteSelectionByteBrush;
         }
 
-        public bool ReadOnlyMode
-        {
-            get
-            {
-                return _readOnlyMode;
-            }
-            set
-            {
-                _readOnlyMode = value;
-            }
-        }
+        /// <summary>
+        /// Get or set if control as in read only mode
+        /// </summary>
+        public bool ReadOnlyMode { get; set; } = false;
 
         private void UserControl_KeyDown(object sender, KeyEventArgs e)
         {
@@ -712,10 +689,8 @@ namespace WPFHexaEditor.Control
                 Click?.Invoke(this, e);
             }
 
-            if (e.RightButton == MouseButtonState.Pressed)
-            {
-                RightClick?.Invoke(this, e);
-            }
+            if (e.RightButton == MouseButtonState.Pressed)            
+                RightClick?.Invoke(this, e);            
         }
     }
 }

@@ -98,6 +98,20 @@ namespace WPFHexaEditor.Core.Bytes
             }
         }
 
+        /// <summary>
+        /// Return true if file or stream are empty or close.
+        /// </summary>
+        public bool IsEmpty
+        {
+            get
+            {
+                if (IsOpen)
+                    return Length == 0;
+                else
+                    return true;
+            }
+        }
+
         #region Open/close stream property/methods
         /// <summary>
         /// Set or Get the file with the control will show hex

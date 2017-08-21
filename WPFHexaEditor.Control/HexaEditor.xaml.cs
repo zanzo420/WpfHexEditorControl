@@ -1224,27 +1224,10 @@ namespace WPFHexaEditor.Control
 
         private void Control_MovePrevious(object sender, EventArgs e)
         {
-            HexByteControl hexByteCtrl = sender as HexByteControl;
-            StringByteControl sbCtrl = sender as StringByteControl;
+            UpdateByteModified();
 
-            if (sbCtrl != null)
-            {
-                sbCtrl.IsSelected = false;
-                SetFocusStringDataPanel(sbCtrl.BytePositionInFile - 1);
-            }
-
-            if (hexByteCtrl != null)
-            {
-                hexByteCtrl.IsSelected = false;
-                SetFocusHexDataPanel(hexByteCtrl.BytePositionInFile - 1);
-            }
-
-            if (hexByteCtrl != null || sbCtrl != null)
-            {
-                SelectionStart--;
-                SelectionStop--;
-                UpdateByteModified();
-            }
+            //Call move left event
+            Control_MoveLeft(sender, new EventArgs());
         }
 
         private void Control_MoveNext(object sender, EventArgs e)
@@ -1852,6 +1835,13 @@ namespace WPFHexaEditor.Control
                 Close();
 
                 _provider = new ByteProvider(filename);
+
+                if (_provider.IsEmpty)
+                {
+                    Close();
+                    return;
+                }
+
                 _provider.ReadOnlyChanged += Provider_ReadOnlyChanged;
                 _provider.DataCopiedToClipboard += Provider_DataCopied;
                 _provider.ChangesSubmited += Provider_ChangesSubmited;
@@ -1898,6 +1888,13 @@ namespace WPFHexaEditor.Control
                 Close();
 
                 _provider = new ByteProvider(stream);
+
+                if (_provider.IsEmpty)
+                {
+                    Close();
+                    return;
+                }
+
                 _provider.ReadOnlyChanged += Provider_ReadOnlyChanged;
                 _provider.DataCopiedToClipboard += Provider_DataCopied;
                 _provider.ChangesSubmited += Provider_ChangesSubmited;
@@ -2351,7 +2348,7 @@ namespace WPFHexaEditor.Control
                     {
                         sbCtrl.Byte = _viewBuffer[index];
                         sbCtrl.BytePositionInFile = startPosition + index;
-
+                        
                         if (index < readSize - 1)
                             sbCtrl.ByteNext = _viewBuffer[index + 1];
                         else

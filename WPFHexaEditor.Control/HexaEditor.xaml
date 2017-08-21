@@ -284,15 +284,27 @@
                    Height="30"
                    VerticalAlignment="Top" />
 
-        <Button x:Name="CancelLongProcessButton"
-                Content="X"
-                FontWeight="Bold"
-                ToolTip="Click to cancel long process."
-                Grid.Column="4"
-                Grid.Row="2"
-                VerticalContentAlignment="Center"
-                BorderThickness="0"
-                Click="CancelLongProcessButton_Click" />
+
+        <!--TODO: ADD TEXTBLOCK FOR DETAIL-->
+        <Border x:Name="CancelLongProcessButton"
+                Grid.Column="0" 
+                Grid.ColumnSpan="4"
+                Grid.Row="0" 
+                Grid.RowSpan="2"
+                Width="120"
+                CornerRadius="4"
+                BorderBrush="Gray"
+                BorderThickness="2"
+                Height="50">
+            <Button 
+                    Content="Cancel long process"
+                    FontWeight="Bold"
+                    BorderThickness="0"
+                    ToolTip="Click to cancel long process."
+                    VerticalContentAlignment="Center"                
+                    Opacity="0.9"
+                    Click="CancelLongProcessButton_Click" />
+        </Border>
 
         <Grid x:Name="MarkerGrid"
               Grid.Column="4"

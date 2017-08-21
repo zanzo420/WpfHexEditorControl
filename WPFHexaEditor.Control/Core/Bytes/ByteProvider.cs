@@ -47,6 +47,7 @@ namespace WPFHexaEditor.Core.Bytes
         public event EventHandler LongProcessProgressChanged;
         public event EventHandler LongProcessProgressStarted;
         public event EventHandler LongProcessProgressCompleted;
+        public event EventHandler LongProcessProgressCanceled;
         public event EventHandler DataPastedNotInserted;
         public event EventHandler FillWithByteCompleted;
         public event EventHandler ReplaceByteCompleted;
@@ -390,8 +391,10 @@ namespace WPFHexaEditor.Core.Bytes
         {
             if (CanWrite)
             {
+                bool cancel = false;
+
                 //Launch event at process started
-                IsOnLongProcess = true;
+                IsOnLongProcess = true;                
                 LongProcessProgressStarted?.Invoke(this, new EventArgs());
 
                 //Set percent of progress to zero and create and iterator for help mesure progress
@@ -424,7 +427,10 @@ namespace WPFHexaEditor.Core.Bytes
 
                             //Break process?
                             if (!IsOnLongProcess)
+                            {
+                                cancel = true;
                                 break;
+                            }
 
                             _stream.Position = bm.Key;
                             _stream.WriteByte(bm.Value.Byte.Value);
@@ -525,7 +531,10 @@ namespace WPFHexaEditor.Core.Bytes
 
                         //Break process?
                         if (!IsOnLongProcess)
+                        {
+                            cancel = true;
                             break;
+                        }
 
                         bufferlength = _stream.Length - Position;
 
@@ -545,10 +554,12 @@ namespace WPFHexaEditor.Core.Bytes
                     if (refreshByteProvider)
                         FileName = _newfilename;
                 }
-                
+
                 //Launch event at process completed
-                IsOnLongProcess = false;
-                LongProcessProgressCompleted?.Invoke(this, new EventArgs());
+                if (cancel)
+                    LongProcessProgressCanceled?.Invoke(this, new EventArgs());
+                else
+                    LongProcessProgressCompleted?.Invoke(this, new EventArgs());
 
                 //Launch event
                 ChangesSubmited?.Invoke(this, new EventArgs());
@@ -1257,6 +1268,7 @@ namespace WPFHexaEditor.Core.Bytes
             byte[] buffer = new byte[ConstantReadOnly.FIND_BLOCK_SIZE];
             IEnumerable<long> findindex;
             List<long> indexList = new List<long>();
+            bool cancel = false;
 
             //Launch event at process strated
             IsOnLongProcess = true;
@@ -1271,7 +1283,10 @@ namespace WPFHexaEditor.Core.Bytes
 
                 //Break long process if needed
                 if (!IsOnLongProcess)
+                {
+                    cancel = true;
                     break;
+                }
 
                 if ((byte)ReadByte() == bytesTofind[0])
                 {
@@ -1300,9 +1315,13 @@ namespace WPFHexaEditor.Core.Bytes
             foreach (long index in indexList)
                 yield return index;
 
-            //Launch event at process completed
             IsOnLongProcess = false;
-            LongProcessProgressCompleted?.Invoke(this, new EventArgs());
+
+            //Launch event at process completed
+            if (cancel)
+                LongProcessProgressCanceled?.Invoke(this, new EventArgs());
+            else
+                LongProcessProgressCompleted?.Invoke(this, new EventArgs());
         }
 
         #endregion Find methods
@@ -1374,14 +1393,14 @@ namespace WPFHexaEditor.Core.Bytes
         }
         #endregion IDisposable Support
 
-        #region Computing byte methods...
+        #region Computing count byte methods...
 
         /// <summary>
         /// Get an array of long computing the total of each byte in the file. 
         /// The position of the array makes it possible to obtain the sum of the desired byte
         /// </summary>
         /// <example>
-        /// //COUNT OF 0xff
+        /// COUNT OF 0xff
         /// var cnt = GetByteCount()[0xff]
         /// </example>
         /// <returns></returns>
@@ -1393,6 +1412,7 @@ namespace WPFHexaEditor.Core.Bytes
                 IsOnLongProcess = true;
                 LongProcessProgressStarted?.Invoke(this, new EventArgs());
 
+                bool cancel = false;
                 Position = 0;
                 int bufferLenght = 1048576; //1mb
                 byte[] buffer;
@@ -1412,11 +1432,25 @@ namespace WPFHexaEditor.Core.Bytes
                     //Do not freeze UI...
                     if (Position % 2000 == 0)
                         LongProcessProgress = (double)Position / Length;
+
+                    //Break long process if needed
+                    if (!IsOnLongProcess)
+                    {
+                        cancel = true;
+                        break;
+                    }
                 }
 
-                //Launch event at process strated
                 IsOnLongProcess = false;
-                LongProcessProgressCompleted?.Invoke(this, new EventArgs());
+
+                //Launch event at process completed
+                if (cancel)
+                {
+                    LongProcessProgressCanceled?.Invoke(this, new EventArgs());
+                    return null;
+                }
+                else
+                    LongProcessProgressCompleted?.Invoke(this, new EventArgs());
 
                 return storedCnt;
             }

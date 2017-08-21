@@ -75,7 +75,7 @@ namespace WPFHexaEditor.Core.Bytes
         }
 
         /// <summary>
-        /// Get if file is open
+        /// Get if bytemodified is valid
         /// </summary>
         public static bool CheckIsValid(ByteModified byteModified)
         {

@@ -1849,6 +1849,7 @@ namespace WPFHexaEditor.Control
                 _provider.LongProcessProgressChanged += Provider_LongProcessProgressChanged;
                 _provider.LongProcessProgressStarted += Provider_LongProcessProgressStarted;
                 _provider.LongProcessProgressCompleted += Provider_LongProcessProgressCompleted;
+                _provider.LongProcessProgressCanceled += Provider_LongProcessProgressCompleted; //TODO : implement cancel event
                 _provider.FillWithByteCompleted += Provider_FillWithByteCompleted;
                 _provider.ReplaceByteCompleted += Provider_ReplaceByteCompleted;
 
@@ -1902,6 +1903,7 @@ namespace WPFHexaEditor.Control
                 _provider.LongProcessProgressChanged += Provider_LongProcessProgressChanged;
                 _provider.LongProcessProgressStarted += Provider_LongProcessProgressStarted;
                 _provider.LongProcessProgressCompleted += Provider_LongProcessProgressCompleted;
+                _provider.LongProcessProgressCanceled += Provider_LongProcessProgressCompleted; //TODO : implement cancel event
                 _provider.FillWithByteCompleted += Provider_FillWithByteCompleted;
                 _provider.ReplaceByteCompleted += Provider_ReplaceByteCompleted;
                 

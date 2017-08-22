@@ -587,13 +587,13 @@ namespace WPFHexaEditor.Core.Bytes
         /// </summary>
         public ByteModified CheckIfIsByteModified(long bytePositionInFile, ByteAction action = ByteAction.Modified)
         {
-            ByteModified byteModified;
-            if (_byteModifiedDictionary.TryGetValue(bytePositionInFile, out byteModified)
+            if (_byteModifiedDictionary.TryGetValue(bytePositionInFile, out ByteModified byteModified)
                 && byteModified.IsValid
                 && (byteModified.Action == action || action == ByteAction.All))
             {
                 return byteModified;
             }
+
             return null;
         }
 

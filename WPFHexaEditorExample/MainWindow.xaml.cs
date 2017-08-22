@@ -65,7 +65,7 @@ namespace WPFHexaEditorExample
 
         private void CloseFileMenu_Click(object sender, RoutedEventArgs e)
         {
-            HexEdit.Close();
+            HexEdit.CloseProvider();
         }
 
         private void SetReadOnlyMenu_Click(object sender, RoutedEventArgs e)

@@ -75,6 +75,7 @@ namespace WPFHexaEditor.Core.Bytes
             hexbyteArray[1] = ByteToHexChar(b - ((b >> 4) << 4));
             return hexbyteArray;
         }
+
         //Convert a byte to Hex char,i.e,10 = 'A'
         public static char ByteToHexChar(int b)
         {
@@ -84,44 +85,22 @@ namespace WPFHexaEditor.Core.Bytes
             }
             switch (b)
             {
-                case 10:
-                    return 'A';
-                case 11:
-                    return 'B';
-                case 12:
-                    return 'C';
-                case 13:
-                    return 'D';
-                case 14:
-                    return 'E';
-                case 15:
-                    return 'F';
-                default:
-                    return 's';
+                case 10: return 'A';
+                case 11: return 'B';
+                case 12: return 'C';
+                case 13: return 'D';
+                case 14: return 'E';
+                case 15: return 'F';
+                default: return 's';
             }
         }
-
 
         /// <summary>
         /// Converts the byte to a hex string. For example: "10" = "0A";
         /// </summary>
         public static string ByteToHex(byte b)
         {
-            string sB = b.ToString(ConstantReadOnly.HexStringFormat, CultureInfo.InvariantCulture);
-
-            if (sB.Length == 1)
-                sB = "0" + sB;
-
-            return sB;
-        }
-
-        /// <summary>
-        /// Converts the byte to a hex string. For example: "10" = "0A";
-        /// </summary>
-        public static string ByteToHex2(byte b)
-        {
-            var chArr = ByteToHexCharArray(b);
-            return new string(chArr);
+            return new string(ByteToHexCharArray(b));
         }
 
         /// <summary>
@@ -153,6 +132,7 @@ namespace WPFHexaEditor.Core.Bytes
         {
             if (string.IsNullOrEmpty(hex))
                 return null;
+
             hex = hex.Trim();
             var hexArray = hex.Split(' ');
             var byteArray = new byte[hexArray.Length];
@@ -160,11 +140,11 @@ namespace WPFHexaEditor.Core.Bytes
             for (int i = 0; i < hexArray.Length; i++)
             {
                 var hexValue = hexArray[i];
+                var isByte = HexToByte(hexValue, out byte b);
 
-                byte b;
-                var isByte = HexToByte(hexValue, out b);
                 if (!isByte)
                     return null;
+
                 byteArray[i] = b;
             }
 
@@ -204,15 +184,10 @@ namespace WPFHexaEditor.Core.Bytes
 
         public static long DecimalLiteralToLong(string hex)
         {
-            long value = 0;
-            if (long.TryParse(hex, out value))
-            {
-                return value;
-            }
-            else
-            {
-                throw new ArgumentException("hex");
-            }
+            if (long.TryParse(hex, out long value))            
+                return value;            
+            else            
+                throw new ArgumentException("hex");            
         }
 
         /// <summary>
@@ -228,7 +203,9 @@ namespace WPFHexaEditor.Core.Bytes
                 position = HexLiteralToLong(hexastring);
                 return true;
             }
+#pragma warning disable CS0168 // the var 'e' as declared but never used
             catch (Exception e)
+#pragma warning restore CS0168 // the var 'e' as declared but never used
             {
                 return false;
             }

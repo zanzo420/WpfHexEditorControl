@@ -72,7 +72,7 @@ namespace WPFHexaEditor.Core.CharacterTable
             {
                 // verifie la limite de l'index
                 if (index < 0 || index > _DTEList.Count)
-                    throw new IndexOutOfRangeException("Cette item n'existe pas");
+                    return null;  //throw new IndexOutOfRangeException("Cette item n'existe pas");
                 else
                     return _DTEList[index];
             }

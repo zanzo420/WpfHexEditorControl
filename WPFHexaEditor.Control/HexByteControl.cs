@@ -277,7 +277,6 @@ namespace WPFHexaEditor.Control
                     case ByteAction.Modified:
                         Background = _parent.ByteModifiedColor;
                         break;
-
                     case ByteAction.Deleted:
                         Background = _parent.ByteDeletedColor;
                         break;

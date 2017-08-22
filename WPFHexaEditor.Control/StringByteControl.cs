@@ -49,9 +49,7 @@ namespace WPFHexaEditor.Control
         /// <param name="url"></param>
         private void LoadDictionary(string url)
         {
-            var ttLocaltor = new Uri(url, UriKind.Relative);
-            var ttRes = new ResourceDictionary();
-            ttRes.Source = ttLocaltor;
+            var ttRes = new ResourceDictionary() { Source = new Uri(url, UriKind.Relative) };
             Resources.MergedDictionaries.Add(ttRes);
         }
 
@@ -70,12 +68,15 @@ namespace WPFHexaEditor.Control
             DataContext = this;
             Padding = new Thickness(0);
             TextAlignment = TextAlignment.Center;
-            
+
             //Binding
-            var txtBinding = new Binding();
-            txtBinding.Source = FindResource("ByteToolTip");
-            txtBinding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
-            txtBinding.Mode = BindingMode.OneWay;
+            var txtBinding = new Binding()
+            {
+                Source = FindResource("ByteToolTip"),
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+                Mode = BindingMode.OneWay
+            };
+
             SetBinding(TextBlock.ToolTipProperty, txtBinding);
 
             //Event

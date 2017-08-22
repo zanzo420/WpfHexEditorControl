@@ -2129,7 +2129,7 @@ namespace WPFHexaEditor.Control
             UpdateLinesInfo();
 
             if (RefreshData)
-                UpdateViewers(ControlResize);
+                UpdateDataViewers(ControlResize);
 
             //Update visual of byte control
             UpdateByteModified();
@@ -2262,10 +2262,11 @@ namespace WPFHexaEditor.Control
                 });
             #endregion
         }
+
         /// <summary>
         /// Update the data and string stackpanels yo current view;
         /// </summary>
-        private void UpdateViewers(bool ControlResize)
+        private void UpdateDataViewers(bool ControlResize)
         {
             var curLevel = ++_priLevel;
             if (ByteProvider.CheckIsOpen(_provider))

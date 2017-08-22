@@ -14,32 +14,18 @@ using WPFHexaEditor.Core.Bytes;
 using WPFHexaEditor.Core.Interface;
 
 namespace WPFHexaEditor.Control
-{    
-    [TemplatePart(Name = FirstHexCharName, Type = typeof(TextBlock))]
-    [TemplatePart(Name = SecondHexCharName, Type = typeof(TextBlock))]
-    internal partial class HexByteControl : System.Windows.Controls.Control, IByteControl
+{
+    internal partial class HexByteControl : TextBlock, IByteControl
     {
-        public const string FirstHexCharName = "FirstHexChar";
-        public const string SecondHexCharName = "SecondHexChar";
-
-        internal TextBlock FirstHexChar;
-        internal TextBlock SecondHexChar;
-        static HexByteControl()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(HexByteControl), new FrameworkPropertyMetadata(typeof(HexByteControl)));
-        }
-        public override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-            FirstHexChar = GetTemplateChild(FirstHexCharName) as TextBlock;
-            SecondHexChar = GetTemplateChild(SecondHexCharName) as TextBlock;
-        }
 
         public HexByteControl(HexaEditor parent)
         {
             //Default properties
             DataContext = this;
             Focusable = true;
+            Width = 25;
+            TextAlignment = TextAlignment.Left;
+            Padding = new Thickness(2, 0, 0, 0);
 
             //Event
             KeyDown += UserControl_KeyDown;
@@ -262,15 +248,13 @@ namespace WPFHexaEditor.Control
         {
             if (IsFocus)
             {
-                FirstHexChar.Foreground = Brushes.White;
-                SecondHexChar.Foreground = Brushes.White;
+                Foreground = Brushes.White;
                 Background = Brushes.Black;
             }
             else if (IsSelected)
             {
                 FontWeight = _parent.FontWeight;
-                FirstHexChar.Foreground = _parent.ForegroundContrast;
-                SecondHexChar.Foreground = _parent.ForegroundContrast;
+                Foreground = _parent.ForegroundContrast;
 
                 if (FirstSelected)
                     Background = _parent.SelectionFirstColor;
@@ -280,27 +264,22 @@ namespace WPFHexaEditor.Control
             else if (IsHighLight)
             {
                 FontWeight = _parent.FontWeight;
-                FirstHexChar.Foreground = _parent.Foreground;
-                SecondHexChar.Foreground = _parent.Foreground;
-
+                Foreground = _parent.Foreground;
                 Background = _parent.HighLightColor;
             }
             else if (Action != ByteAction.Nothing)
             {
+                FontWeight = FontWeights.Bold;
+                Foreground = _parent.Foreground;
+
                 switch (Action)
                 {
                     case ByteAction.Modified:
-                        FontWeight = FontWeights.Bold;
                         Background = _parent.ByteModifiedColor;
-                        FirstHexChar.Foreground = _parent.Foreground;
-                        SecondHexChar.Foreground = _parent.Foreground;
                         break;
 
                     case ByteAction.Deleted:
-                        FontWeight = FontWeights.Bold;
                         Background = _parent.ByteDeletedColor;
-                        FirstHexChar.Foreground = _parent.Foreground;
-                        SecondHexChar.Foreground = _parent.Foreground;
                         break;
                 }
             }
@@ -308,8 +287,7 @@ namespace WPFHexaEditor.Control
             {
                 FontWeight = _parent.FontWeight;
                 Background = Brushes.Transparent;
-                FirstHexChar.Foreground = _parent.Foreground;
-                SecondHexChar.Foreground = _parent.Foreground;
+                Foreground = _parent.Foreground;
             }
 
             UpdateAutoHighLiteSelectionByteVisual();
@@ -329,15 +307,10 @@ namespace WPFHexaEditor.Control
             if (Byte != null)
             {
                 var chArr = ByteConverters.ByteToHexCharArray(Byte.Value);
-
-                FirstHexChar.Text = chArr[0].ToString();
-                SecondHexChar.Text = chArr[1].ToString();
+                Text = chArr[0].ToString() + chArr[1].ToString();
             }
-            else
-            {
-                FirstHexChar.Text = "";
-                SecondHexChar.Text = "";
-            }
+            else            
+                Text = string.Empty;            
         }
 
         private void HexChar_MouseDown(object sender, MouseButtonEventArgs e)
@@ -456,20 +429,22 @@ namespace WPFHexaEditor.Control
                     else
                         key = e.Key.ToString().ToLower();
 
+                    //Update byte
+                    char[] ByteValueCharArray = ByteConverters.ByteToHexCharArray(Byte.Value);
                     switch (_keyDownLabel)
                     {
                         case KeyDownLabel.FirstChar:
-                            FirstHexChar.Text = key;
+                            ByteValueCharArray[0] = key.ToCharArray()[0];
                             _keyDownLabel = KeyDownLabel.SecondChar;
                             Action = ByteAction.Modified;
-                            Byte = ByteConverters.HexToByte(FirstHexChar.Text.ToString() + SecondHexChar.Text.ToString())[0];
+                            Byte = ByteConverters.HexToByte(ByteValueCharArray[0].ToString() + ByteValueCharArray[1].ToString())[0];
                             break;
                         case KeyDownLabel.SecondChar:
-                            SecondHexChar.Text = key;
+                            ByteValueCharArray[1] = key.ToCharArray()[0];
                             _keyDownLabel = KeyDownLabel.NextPosition;
 
                             Action = ByteAction.Modified;
-                            Byte = ByteConverters.HexToByte(FirstHexChar.Text.ToString() + SecondHexChar.Text.ToString())[0];
+                            Byte = ByteConverters.HexToByte(ByteValueCharArray[0].ToString() + ByteValueCharArray[1].ToString())[0];
 
                             //Move focus event
                             MoveNext?.Invoke(this, new EventArgs());

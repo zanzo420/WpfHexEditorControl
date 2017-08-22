@@ -613,6 +613,7 @@ namespace WPFHexaEditor.Control
             {
                 _provider.AddByteModified(ctrl.Byte, ctrl.BytePositionInFile);
                 SetScrollMarker(ctrl.BytePositionInFile, ScrollMarker.ByteModified);
+                UpdateByteModified();
             }
             UpdateStatusBar();
         }
@@ -2269,7 +2270,6 @@ namespace WPFHexaEditor.Control
             var curLevel = ++_priLevel;
             if (ByteProvider.CheckIsOpen(_provider))
             {
-                //Build lines
                 if (ControlResize)
                 {
                     #region 
@@ -2291,24 +2291,24 @@ namespace WPFHexaEditor.Control
                     #endregion
                 }
 
-                //Exit if control have no dataline
                 if (LinesInfoStackPanel.Children.Count == 0)
+                {
                     return;
+                }
 
-                //make var to update viewers
                 var firstInfoLabel = LinesInfoStackPanel.Children[0] as TextBlock;
                 var startPosition = ByteConverters.HexLiteralToLong(firstInfoLabel.Text);
                 var sizeReadyToRead = LinesInfoStackPanel.Children.Count * BytePerLine + 1;
+                _provider.Position = startPosition;
                 var readSize = _provider.Read(_viewBuffer, 0, sizeReadyToRead);
+
                 var index = 0;
+
                 var count = HexDataStackPanel.Children.Count;
 
-                //set position to startposition
-                _provider.Position = startPosition;
-
+                #region
                 TraverseDataControls(byteControl =>
                 {
-                    #region Update all HexByteControl
                     byteControl.Action = ByteAction.Nothing;
                     byteControl.ReadOnlyMode = ReadOnlyMode;
 
@@ -2329,13 +2329,13 @@ namespace WPFHexaEditor.Control
                     }
                     byteControl.InternalChange = false;
                     index++;
-                    #endregion
                 });
+                #endregion
 
                 index = 0;
+                #region
                 TraverseStringControls(sbCtrl =>
                 {
-                    #region Update all StringByteControl
                     sbCtrl.Action = ByteAction.Nothing;
                     sbCtrl.ReadOnlyMode = ReadOnlyMode;
 
@@ -2350,11 +2350,14 @@ namespace WPFHexaEditor.Control
                     {
                         sbCtrl.Byte = _viewBuffer[index];
                         sbCtrl.BytePositionInFile = startPosition + index;
-                        
                         if (index < readSize - 1)
+                        {
                             sbCtrl.ByteNext = _viewBuffer[index + 1];
+                        }
                         else
+                        {
                             sbCtrl.ByteNext = null;
+                        }
                     }
                     else
                     {
@@ -2364,15 +2367,13 @@ namespace WPFHexaEditor.Control
                     }
                     sbCtrl.InternalChange = false;
                     index++;
-                    #endregion
                 });
+                #endregion
 
             }
             else
             {
                 _viewBuffer = null;
-
-                #region Clear all IByteControl
                 TraverseDataControls(control =>
                 {
                     control.BytePositionInFile = -1;
@@ -2381,7 +2382,7 @@ namespace WPFHexaEditor.Control
                     control.IsHighLight = false;
                     control.IsFocus = false;
                     control.IsSelected = false;
-
+                    control.ToolTip = null;
                 });
 
                 TraverseStringControls(control =>
@@ -2394,7 +2395,6 @@ namespace WPFHexaEditor.Control
                     control.IsSelected = false;
                     control.ToolTip = null;
                 });
-                #endregion
             }
         }
 
@@ -3354,8 +3354,8 @@ namespace WPFHexaEditor.Control
 
                 () =>
                 {
-                    var mousePos = Mouse.GetPosition(BottomRectangle);
-                    return 5 * mousePos.Y * mousePos.Y;
+                    var mousePos = Mouse.GetPosition(TopRectangle);
+                    return (int)MouseWheelSpeed; // * Math.Pow((BottomRectangle.ActualHeight - mousePos.Y), 2);
                 }
             );
         }
@@ -3377,7 +3377,7 @@ namespace WPFHexaEditor.Control
                 () =>
                 {
                     var mousePos = Mouse.GetPosition(BottomRectangle);
-                    return -5 * Math.Pow((TopRectangle.ActualHeight - mousePos.Y), 2);
+                    return -(int)MouseWheelSpeed; // * Math.Pow((TopRectangle.ActualHeight - mousePos.Y), 2);
                 }
             );
         }

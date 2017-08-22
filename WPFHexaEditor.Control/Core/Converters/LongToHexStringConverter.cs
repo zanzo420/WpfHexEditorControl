@@ -16,12 +16,23 @@ namespace WPFHexaEditor.Core.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var LongValue = Int64.Parse(value.ToString());
+            long LongValue;
+            string defaultRtn = "0x00000000";
 
-            if (LongValue > -1)
-                return "0x" + LongValue.ToString(ConstantReadOnly.HexLineInfoStringFormat, CultureInfo.InvariantCulture).ToUpper();
+            if (value != null)
+            {
+                if (Int64.TryParse(value.ToString(), out LongValue))
+                {
+                    if (LongValue > -1)
+                        return "0x" + LongValue.ToString(ConstantReadOnly.HexLineInfoStringFormat, CultureInfo.InvariantCulture).ToUpper();
+                    else
+                        return defaultRtn;
+                }
+                else
+                    return defaultRtn;
+            }
             else
-                return "0x00000000";
+                return defaultRtn;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

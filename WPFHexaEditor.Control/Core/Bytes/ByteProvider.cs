@@ -5,21 +5,19 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Windows;
-
 using WPFHexaEditor.Core.MethodExtention;
+using WPFHexaEditor.Core.Interface;
 
 namespace WPFHexaEditor.Core.Bytes
 {
     /// <summary>
     /// Used for interaction with file or stream
     /// </summary>
-    public sealed class ByteProvider: IDisposable
+    public sealed class ByteProvider : IDisposable, IByteProvider
     {
         //Global variable
         private IDictionary<long, ByteModified> _byteModifiedDictionary = new Dictionary<long, ByteModified>();

@@ -26,13 +26,13 @@ namespace WPFHexaEditor.Control
     /// <summary> 
     /// WPF HexEditor control
     /// </summary>
-    public partial class HexaEditor : UserControl
+    public partial class HexaEditor : UserControl, IDisposable
     {
         #region Global class variables
         //byte provider for work with file in stream currently loaded in control.
         private ByteProvider _provider = null;
 
-        //The laege change of scroll when clicked on bar
+        //The large change of scroll when clicked on bar
         private double _scrollLargeChange = 100;
 
         //List of byte are high light  (TODO: remplace by dictonnary
@@ -3353,11 +3353,7 @@ namespace WPFHexaEditor.Control
             (
                 () => _mouseOnBottom && curTime == _bottomEnterTimes,
 
-                () =>
-                {
-                    var mousePos = Mouse.GetPosition(TopRectangle);
-                    return (int)MouseWheelSpeed; // * Math.Pow((BottomRectangle.ActualHeight - mousePos.Y), 2);
-                }
+                () => { return (int)MouseWheelSpeed; }
             );
         }
 
@@ -3375,11 +3371,7 @@ namespace WPFHexaEditor.Control
             (
                 () => _mouseOnTop && curTime == _topEnterTimes,
             
-                () =>
-                {
-                    var mousePos = Mouse.GetPosition(BottomRectangle);
-                    return -(int)MouseWheelSpeed; // * Math.Pow((TopRectangle.ActualHeight - mousePos.Y), 2);
-                }
+                () => { return -(int)MouseWheelSpeed; }
             );
         }
 
@@ -3469,5 +3461,34 @@ namespace WPFHexaEditor.Control
         }
 
         #endregion ByteCount Property
+
+        #region IDisposable Support
+        private bool disposedValue = false; // for detect redondants call
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                //Dispose managed object
+                if (disposing)
+                {
+                    //if (ByteProvider.CheckIsOpen(_provider))
+                    //    _provider.Close();
+
+                    _provider = null;
+                    _TBLCharacterTable = null;
+                    _viewBuffer = null;
+                    _markedPositionList = null;
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+        #endregion
     }
 }

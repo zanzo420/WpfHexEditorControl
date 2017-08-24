@@ -242,6 +242,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public void UpdateVisual()
         {
+            FontFamily = _parent.FontFamily;
+
             if (IsFocus)
             {
                 Foreground = Brushes.White;

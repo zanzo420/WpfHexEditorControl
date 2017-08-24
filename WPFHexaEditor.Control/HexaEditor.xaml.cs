@@ -323,6 +323,25 @@ namespace WPFHexaEditor.Control
             if (d is HexaEditor ctrl)
                 if (e.NewValue != e.OldValue)
                     ctrl.UpdateVisual();
+        }        
+
+        public new FontFamily FontFamily
+        {
+            get { return (FontFamily)GetValue(FontFamilyProperty); }
+            set { SetValue(FontFamilyProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for FontFamily.  This enables animation, styling, binding, etc...
+        public new static readonly DependencyProperty FontFamilyProperty =
+            DependencyProperty.Register("FontFamily", typeof(FontFamily), typeof(HexaEditor),
+                new FrameworkPropertyMetadata(new FontFamily("Courier New"),
+                    new PropertyChangedCallback(FontFamily_Changed)));
+
+        private static void FontFamily_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is HexaEditor ctrl)
+                if (e.NewValue != e.OldValue)                
+                    ctrl.RefreshView(true);                
         }
 
         /// <summary>
@@ -2475,8 +2494,9 @@ namespace WPFHexaEditor.Control
                         Width = 25,
                         TextAlignment = TextAlignment.Center,
                         Text = ByteConverters.ByteToHex((byte)i),
-                        ToolTip = $"Column : {i.ToString()}"
-                    };
+                        ToolTip = $"Column : {i.ToString()}",
+                        FontFamily = FontFamily
+                };
 
                     HexHeaderStackPanel.Children.Add(LineInfoLabel);
                 }
@@ -2505,7 +2525,8 @@ namespace WPFHexaEditor.Control
                         Foreground = ForegroundOffSetHeaderColor,
                         HorizontalAlignment = HorizontalAlignment.Left,
                         VerticalAlignment = VerticalAlignment.Center,
-                        TextAlignment = TextAlignment.Left
+                        TextAlignment = TextAlignment.Left,
+                        FontFamily = FontFamily
                     };
 
                     //Events

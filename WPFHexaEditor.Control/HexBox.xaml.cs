@@ -49,11 +49,10 @@ namespace WPFHexaEditor.Control
 
         private static void MaximumValue_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            HexBox ctrl = d as HexBox;
-
-            if (e.NewValue != e.OldValue)            
-                if (ctrl.LongValue > (long)e.NewValue)
-                    ctrl.UpdateValueFrom((long)e.NewValue);            
+            if (d is HexBox ctrl)
+                if (e.NewValue != e.OldValue)
+                    if (ctrl.LongValue > (long)e.NewValue)
+                        ctrl.UpdateValueFrom((long)e.NewValue);
         }
 
         /// <summary>
@@ -86,19 +85,18 @@ namespace WPFHexaEditor.Control
 
         private static void LongValue_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            HexBox ctrl = d as HexBox;
+            if (d is HexBox ctrl)
+                if (e.NewValue != e.OldValue)
+                {
+                    string val = ByteConverters.LongToHex((long)e.NewValue);
+                    if (val == "00000000")
+                        val = "0";
+                    else if (val.Length >= 3) val = val.TrimStart('0');
 
-            if (e.NewValue != e.OldValue)
-            {
-                string val = ByteConverters.LongToHex((long)e.NewValue);
-                if (val == "00000000")
-                    val = "0";
-                else if (val.Length >= 3) val = val.TrimStart('0');
-
-                ctrl.HexTextBox.Text = val.ToUpper();
-                ctrl.HexTextBox.CaretIndex = ctrl.HexTextBox.Text.Length;
-                ctrl.ToolTip = e.NewValue;
-            }
+                    ctrl.HexTextBox.Text = val.ToUpper();
+                    ctrl.HexTextBox.CaretIndex = ctrl.HexTextBox.Text.Length;
+                    ctrl.ToolTip = e.NewValue;
+                }
         }
         #endregion Properties       
 

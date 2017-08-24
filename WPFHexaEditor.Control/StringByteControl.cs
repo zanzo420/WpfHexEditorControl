@@ -130,21 +130,20 @@ namespace WPFHexaEditor.Control
 
         private static void Byte_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            StringByteControl ctrl = d as StringByteControl;
-
-            if (e.NewValue != null)
-            {
-                if (e.NewValue != e.OldValue)
+            if (d is StringByteControl ctrl)
+                if (e.NewValue != null)
                 {
-                    if (ctrl.Action != ByteAction.Nothing && ctrl.InternalChange == false)
-                        ctrl.ByteModified?.Invoke(ctrl, new EventArgs());
+                    if (e.NewValue != e.OldValue)
+                    {
+                        if (ctrl.Action != ByteAction.Nothing && ctrl.InternalChange == false)
+                            ctrl.ByteModified?.Invoke(ctrl, new EventArgs());
 
-                    ctrl.UpdateLabelFromByte();
-                    ctrl.UpdateVisual();
+                        ctrl.UpdateLabelFromByte();
+                        ctrl.UpdateVisual();
+                    }
                 }
-            }
-            else
-                ctrl.UpdateLabelFromByte();
+                else
+                    ctrl.UpdateLabelFromByte();
         }
 
         /// <summary>
@@ -162,13 +161,12 @@ namespace WPFHexaEditor.Control
 
         private static void ByteNext_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            StringByteControl ctrl = d as StringByteControl;
-
-            if (e.NewValue != e.OldValue)
-            {
-                ctrl.UpdateLabelFromByte();
-                ctrl.UpdateVisual();
-            }
+            if (d is StringByteControl ctrl)
+                if (e.NewValue != e.OldValue)
+                {
+                    ctrl.UpdateLabelFromByte();
+                    ctrl.UpdateVisual();
+                }
         }
 
         /// <summary>
@@ -186,10 +184,9 @@ namespace WPFHexaEditor.Control
 
         private static void IsFocus_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var ctrl = d as StringByteControl;
-
-            if (e.NewValue != e.OldValue)            
-                ctrl.UpdateVisual();            
+            if (d is StringByteControl ctrl)
+                if (e.NewValue != e.OldValue)
+                    ctrl.UpdateVisual();        
         }
 
         /// <summary>
@@ -207,10 +204,9 @@ namespace WPFHexaEditor.Control
 
         private static void IsSelected_PropertyChangedCallBack(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            StringByteControl ctrl = d as StringByteControl;
-
-            if (e.NewValue != e.OldValue)
-                ctrl.UpdateVisual();
+            if (d is StringByteControl ctrl)
+                if (e.NewValue != e.OldValue)
+                    ctrl.UpdateVisual();
         }
 
         /// <summary>
@@ -229,10 +225,9 @@ namespace WPFHexaEditor.Control
 
         private static void IsHighLight_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            StringByteControl ctrl = d as StringByteControl;
-
-            if (e.NewValue != e.OldValue)
-                ctrl.UpdateVisual();
+            if (d is StringByteControl ctrl)
+                if (e.NewValue != e.OldValue)
+                    ctrl.UpdateVisual();
         }
 
         /// <summary>
@@ -275,10 +270,9 @@ namespace WPFHexaEditor.Control
 
         private static void Action_ValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            StringByteControl ctrl = d as StringByteControl;
-
-            if (e.NewValue != e.OldValue)
-                ctrl.UpdateVisual();
+            if (d is StringByteControl ctrl)
+                if (e.NewValue != e.OldValue)
+                    ctrl.UpdateVisual();
         }
 
         #endregion DependencyProperty
@@ -302,9 +296,8 @@ namespace WPFHexaEditor.Control
 
         private static void TBL_ShowMTE_PropetyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            StringByteControl ctrl = d as StringByteControl;
-
-            ctrl.UpdateLabelFromByte();
+            if (d is StringByteControl ctrl)
+                ctrl.UpdateLabelFromByte();
         }
 
         /// <summary>
@@ -325,9 +318,8 @@ namespace WPFHexaEditor.Control
 
         private static void TypeOfCharacterTable_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            StringByteControl ctrl = d as StringByteControl;
-
-            ctrl.UpdateLabelFromByte();
+            if (d is StringByteControl ctrl)
+                ctrl.UpdateLabelFromByte();
         }
 
         public TBLStream TBLCharacterTable

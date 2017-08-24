@@ -101,10 +101,9 @@ namespace WPFHexaEditor.Control
 
         private static void Action_ValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            HexByteControl ctrl = d as HexByteControl;
-
-            if (e.NewValue != e.OldValue)
-                ctrl.UpdateVisual();
+            if (d is HexByteControl ctrl)
+                if (e.NewValue != e.OldValue)
+                    ctrl.UpdateVisual();
         }
 
         /// <summary>
@@ -134,20 +133,19 @@ namespace WPFHexaEditor.Control
 
         private static void Byte_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            HexByteControl ctrl = d as HexByteControl;
-
-            if (e.NewValue != null)
-            {
-                if (e.NewValue != e.OldValue)
+            if (d is HexByteControl ctrl)
+                if (e.NewValue != null)
                 {
-                    if (ctrl.Action != ByteAction.Nothing && ctrl.InternalChange == false)                    
-                        ctrl.ByteModified?.Invoke(ctrl, new EventArgs());                    
+                    if (e.NewValue != e.OldValue)
+                    {
+                        if (ctrl.Action != ByteAction.Nothing && ctrl.InternalChange == false)
+                            ctrl.ByteModified?.Invoke(ctrl, new EventArgs());
 
-                    ctrl.UpdateLabelFromByte();
+                        ctrl.UpdateLabelFromByte();
+                    }
                 }
-            }
-            else
-                ctrl.UpdateLabelFromByte();
+                else
+                    ctrl.UpdateLabelFromByte();
         }
 
         /// <summary>
@@ -187,13 +185,12 @@ namespace WPFHexaEditor.Control
 
         private static void IsSelected_PropertyChange(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            HexByteControl ctrl = d as HexByteControl;
-
-            if (e.NewValue != e.OldValue)
-            {
-                ctrl._keyDownLabel = KeyDownLabel.FirstChar;
-                ctrl.UpdateVisual();
-            }
+            if (d is HexByteControl ctrl)
+                if (e.NewValue != e.OldValue)
+                {
+                    ctrl._keyDownLabel = KeyDownLabel.FirstChar;
+                    ctrl.UpdateVisual();
+                }
         }
 
         /// <summary>
@@ -212,13 +209,12 @@ namespace WPFHexaEditor.Control
 
         private static void IsHighLight_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            HexByteControl ctrl = d as HexByteControl;
-
-            if (e.NewValue != e.OldValue)
-            {
-                ctrl._keyDownLabel = KeyDownLabel.FirstChar;
-                ctrl.UpdateVisual();
-            }
+            if (d is HexByteControl ctrl)
+                if (e.NewValue != e.OldValue)
+                {
+                    ctrl._keyDownLabel = KeyDownLabel.FirstChar;
+                    ctrl.UpdateVisual();
+                }
         }
 
         public bool IsFocus
@@ -233,12 +229,12 @@ namespace WPFHexaEditor.Control
 
         private static void IsFocus_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            HexByteControl ctrl = d as HexByteControl;
-            if (e.NewValue != e.OldValue)
-            {
-                ctrl._keyDownLabel = KeyDownLabel.FirstChar;
-                ctrl.UpdateVisual();
-            }
+            if (d is HexByteControl ctrl)
+                if (e.NewValue != e.OldValue)
+                {
+                    ctrl._keyDownLabel = KeyDownLabel.FirstChar;
+                    ctrl.UpdateVisual();
+                }
         }
 
         /// <summary>

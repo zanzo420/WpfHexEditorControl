@@ -46,7 +46,7 @@ namespace WPFHexaEditor.Control
 
         //Hold the count of all byte in file. 
         private long[] _bytecount;
-        
+
         //Save the buffer as a field,To save the time when Scolling.not building them every time when scolling;
         private byte[] _viewBuffer;
         private long _priLevel = 0;
@@ -330,7 +330,7 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public void UpdateVisual()
         {
-             TraverseStringAndDataControls(ctrl => { ctrl.UpdateVisual(); });
+            TraverseStringAndDataControls(ctrl => { ctrl.UpdateVisual(); });
         }
 
         #endregion Colors/fonts property and methods
@@ -362,14 +362,14 @@ namespace WPFHexaEditor.Control
 
         // Using a DependencyProperty as the backing store for LineHeight.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty LineHeightProperty =
-            DependencyProperty.Register("LineHeight", typeof(double), typeof(HexaEditor), 
+            DependencyProperty.Register("LineHeight", typeof(double), typeof(HexaEditor),
                 new FrameworkPropertyMetadata(18D,
                     new PropertyChangedCallback(LineHeight_PropertyChanged)));
 
         private static void LineHeight_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexaEditor ctrl)            
-                ctrl.RefreshView();            
+            if (d is HexaEditor ctrl)
+                ctrl.RefreshView();
         }
 
         /// <summary>
@@ -578,7 +578,7 @@ namespace WPFHexaEditor.Control
         {
             if (d is HexaEditor ctrl)
                 if (e.NewValue != e.OldValue)
-                    ctrl.RefreshView(true);            
+                    ctrl.RefreshView(true);
         }
 
         private void Provider_ReadOnlyChanged(object sender, EventArgs e)
@@ -595,7 +595,7 @@ namespace WPFHexaEditor.Control
         #region Add modify delete bytes methods/event
 
         private void Control_ByteModified(object sender, EventArgs e)
-        {            
+        {
             if (sender is IByteControl ctrl)
             {
                 _provider.AddByteModified(ctrl.Byte, ctrl.BytePositionInFile);
@@ -676,7 +676,7 @@ namespace WPFHexaEditor.Control
         {
             if (sender is TextBlock line)
                 if (e.LeftButton == MouseButtonState.Pressed)
-                    SelectionStop = ByteConverters.HexLiteralToLong(line.Text) + BytePerLine - 1;            
+                    SelectionStop = ByteConverters.HexLiteralToLong(line.Text) + BytePerLine - 1;
         }
 
         private void LineInfoLabel_MouseDown(object sender, MouseButtonEventArgs e)
@@ -873,8 +873,8 @@ namespace WPFHexaEditor.Control
         {
             if (sender is IByteControl ctrl)
             {
-                if (Keyboard.Modifiers == ModifierKeys.Shift)                
-                    SelectionStop = ctrl.BytePositionInFile;                
+                if (Keyboard.Modifiers == ModifierKeys.Shift)
+                    SelectionStop = ctrl.BytePositionInFile;
                 else
                 {
                     SelectionStart = ctrl.BytePositionInFile;
@@ -905,7 +905,7 @@ namespace WPFHexaEditor.Control
                     SelectionStop = bCtrl.BytePositionInFile;
                 else
                     SelectionStop = GetLastVisibleBytePosition();
-                
+
                 if (focusedControl is HexByteControl)
                     UpdateSelectionColorMode(FirstColor.HexByteData);
                 else
@@ -1120,7 +1120,7 @@ namespace WPFHexaEditor.Control
         private void UserControl_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             if (e.Delta > 0) //UP
-                VerticalScrollBar.Value -= e.Delta / 120 * (int)MouseWheelSpeed;  
+                VerticalScrollBar.Value -= e.Delta / 120 * (int)MouseWheelSpeed;
 
             if (e.Delta < 0) //Down
                 VerticalScrollBar.Value += e.Delta / 120 * -(int)MouseWheelSpeed;
@@ -1230,13 +1230,13 @@ namespace WPFHexaEditor.Control
         /// </summary>
         private void PasteWithoutInsert()
         {
-            if (ByteProvider.CheckIsOpen(_provider))            
+            if (ByteProvider.CheckIsOpen(_provider))
                 if (SelectionStart > -1)
                 {
                     _provider.PasteNotInsert(SelectionStart, Clipboard.GetText());
                     SetScrollMarker(SelectionStart, ScrollMarker.ByteModified, "Paste from clipboard");
                     RefreshView();
-                }            
+                }
         }
 
         /// <summary>
@@ -1252,13 +1252,13 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public void FillWithByte(long startPosition, long length, byte b)
         {
-            if (ByteProvider.CheckIsOpen(_provider))            
+            if (ByteProvider.CheckIsOpen(_provider))
                 if (startPosition > -1 && length > 0)
                 {
                     _provider.FillWithByte(startPosition, length, b);
                     SetScrollMarker(SelectionStart, ScrollMarker.ByteModified, "Fill selection with byte");
                     RefreshView();
-                }            
+                }
         }
 
         /// <summary>
@@ -1274,13 +1274,13 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public void ReplaceByte(long startPosition, long length, byte original, byte replace)
         {
-            if (ByteProvider.CheckIsOpen(_provider))            
+            if (ByteProvider.CheckIsOpen(_provider))
                 if (startPosition > -1 && length > 0)
                 {
                     _provider.ReplaceByte(startPosition, length, original, replace);
                     SetScrollMarker(SelectionStart, ScrollMarker.ByteModified, "replace with byte");
                     RefreshView();
-                }            
+                }
         }
 
         /// <summary>
@@ -1647,7 +1647,7 @@ namespace WPFHexaEditor.Control
         /// <param name="sender">List of long representing position in file are undone</param>
         /// <param name="e"></param>
         private void Provider_Undone(object sender, EventArgs e)
-        {            
+        {
             if (sender is List<long> bytePosition)
                 foreach (long position in bytePosition)
                     ClearScrollMarker(position);
@@ -1686,7 +1686,7 @@ namespace WPFHexaEditor.Control
         #region Open, Close, Save, byte provider ...
 
         private void Provider_ChangesSubmited(object sender, EventArgs e)
-        { 
+        {
             if (sender is ByteProvider bp)
             {
                 //Refresh filename
@@ -1888,7 +1888,7 @@ namespace WPFHexaEditor.Control
                 _provider.LongProcessProgressCanceled += Provider_LongProcessProgressCompleted; //TODO : implement cancel event
                 _provider.FillWithByteCompleted += Provider_FillWithByteCompleted;
                 _provider.ReplaceByteCompleted += Provider_ReplaceByteCompleted;
-                
+
                 UpdateVerticalScroll();
                 UpdateHexHeader();
 
@@ -1912,7 +1912,7 @@ namespace WPFHexaEditor.Control
         {
             LongProgressProgressBar.Visibility = Visibility.Collapsed;
             CancelLongProcessButton.Visibility = Visibility.Collapsed;
-            
+
             TraverseDataControls(ctrl => ctrl.IsEnabled = true);
             TraverseStringControls(ctrl => ctrl.IsEnabled = true);
 
@@ -1938,7 +1938,7 @@ namespace WPFHexaEditor.Control
 
             LongProcessProgressChanged?.Invoke(this, new EventArgs());
         }
-        
+
         private void Provider_ReplaceByteCompleted(object sender, EventArgs e)
         {
             ReplaceByteCompleted?.Invoke(this, new EventArgs());
@@ -2166,7 +2166,7 @@ namespace WPFHexaEditor.Control
                 {
                     Height = LineHeight,
                     Orientation = Orientation.Horizontal
-                };                
+                };
 
                 StringByteControl sbCtrl;
 
@@ -2393,7 +2393,7 @@ namespace WPFHexaEditor.Control
             {
                 var ModifiedBytesDictionary = _provider.GetModifiedBytes(ByteAction.All);
 
-                TraverseStringAndDataControls(ctrl => 
+                TraverseStringAndDataControls(ctrl =>
                 {
                     if (ModifiedBytesDictionary.TryGetValue(ctrl.BytePositionInFile, out ByteModified byteModified))
                     {
@@ -2593,7 +2593,7 @@ namespace WPFHexaEditor.Control
         private void SetFocusHexDataPanel(long bytePositionInFile)
         {
             if (ByteProvider.CheckIsOpen(_provider))
-            {                
+            {
                 if (bytePositionInFile >= _provider.Length)
                     return;
 
@@ -2857,7 +2857,7 @@ namespace WPFHexaEditor.Control
 
                     #region Byte count of selectionStart
 
-                    if (_bytecount != null && SelectionStart > -1)
+                    if (AllowByteCount == true && _bytecount != null && SelectionStart > -1)
                     {
                         ByteCountPanel.Visibility = Visibility.Visible;
 
@@ -2882,12 +2882,15 @@ namespace WPFHexaEditor.Control
         #endregion Statusbar
 
         #region Bookmark and other scrollmarker
+        /// <summary>
+        /// Get scrollmarkers 
+        /// </summary>        
         private IEnumerable<BookMark> GetScrollMarkers(ScrollMarker sm)
         {
             foreach (Rectangle rc in MarkerGrid.Children)
                 if (rc.Tag is BookMark bm)
                     if (bm.Marker == sm)
-                        yield return bm;                
+                        yield return bm;
         }
 
         /// <summary>
@@ -2900,7 +2903,7 @@ namespace WPFHexaEditor.Control
                 foreach (Rectangle rc in MarkerGrid.Children)
                     if (rc.Tag is BookMark bm)
                         if (bm.Marker == ScrollMarker.Bookmark)
-                            yield return bm;                
+                            yield return bm;
             }
         }
 
@@ -3062,7 +3065,7 @@ namespace WPFHexaEditor.Control
                                 (GetLineNumber(bm.BytePositionInFile) * VerticalScrollBar.Track.TickHeight(GetMaxLine())) - rect.ActualHeight,
                                 0,
                                 0
-                            );                
+                            );
         }
 
         /// <summary>
@@ -3134,15 +3137,7 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Allow or not the context menu to appear on right-click
         /// </summary>
-        public bool AllowContextMenu
-        {
-            get { return (bool)GetValue(AllowContextMenuProperty); }
-            set { SetValue(AllowContextMenuProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for isAllowContextMenu.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty AllowContextMenuProperty =
-            DependencyProperty.Register("AllowContextMenu", typeof(bool), typeof(HexaEditor), new PropertyMetadata(true));
+        public bool AllowContextMenu { get; set; } = true;
 
         private void Control_RightClick(object sender, EventArgs e)
         {
@@ -3271,7 +3266,7 @@ namespace WPFHexaEditor.Control
 
             if (window.ShowDialog() == true)
                 if (window.HexTextBox.LongValue <= 255)
-                    FillWithByte((byte)window.HexTextBox.LongValue);                        
+                    FillWithByte((byte)window.HexTextBox.LongValue);
         }
 
 
@@ -3353,7 +3348,7 @@ namespace WPFHexaEditor.Control
             VerticalMoveByTime
             (
                 () => _mouseOnTop && curTime == _topEnterTimes,
-            
+
                 () => { return -(int)MouseWheelSpeed; }
             );
         }
@@ -3365,27 +3360,19 @@ namespace WPFHexaEditor.Control
         #endregion Bottom and Top rectangle
 
         #region Highlight selected byte        
-        public byte? SelectionByte
-        {
-            get { return (byte?)GetValue(SelectionByteProperty); }
-            internal set { SetValue(SelectionByteProperty, value); }
-        }
+        /// <summary>
+        /// Byte at selection start
+        /// </summary>
+        internal byte? SelectionByte { get; set; } = null;
 
-        // Using a DependencyProperty as the backing store for SelectionByte.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty SelectionByteProperty =
-            DependencyProperty.Register("SelectionByte", typeof(byte?), typeof(HexaEditor), new PropertyMetadata(null));
-                
-        public bool AllowAutoHightLighSelectionByte
-        {
-            get { return (bool)GetValue(AllowAutoHighLightSelectionByteProperty); }
-            set { SetValue(AllowAutoHighLightSelectionByteProperty, value); }
-        }
+        /// <summary>
+        /// Set to true for highlight the same byte are selected in view.
+        /// </summary>
+        public bool AllowAutoHightLighSelectionByte { get; set; } = true;
 
-        // Using a DependencyProperty as the backing store for isAllowAutoHightLightSelectionByte.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty AllowAutoHighLightSelectionByteProperty =
-            DependencyProperty.Register("AllowAutoHighLightSelectionByte", typeof(bool), typeof(HexaEditor), 
-                new PropertyMetadata(true));
-        
+        /// <summary>
+        /// Brush used to color the selectionbyte
+        /// </summary>
         public Brush AutoHighLiteSelectionByteBrush
         {
             get { return (Brush)GetValue(AutoHighLiteSelectionByteBrushProperty); }
@@ -3399,7 +3386,7 @@ namespace WPFHexaEditor.Control
                     new PropertyChangedCallback(AutoHighLiteSelectionByteBrush_Changed)));
 
         private static void AutoHighLiteSelectionByteBrush_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {            
+        {
             if (d is HexaEditor ctrl)
                 ctrl.UpdateVisual();
         }
@@ -3415,15 +3402,15 @@ namespace WPFHexaEditor.Control
 
         // Using a DependencyProperty as the backing store for AllowByteCount.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty AllowByteCountProperty =
-            DependencyProperty.Register("AllowByteCount", typeof(bool), typeof(HexaEditor), 
+            DependencyProperty.Register("AllowByteCount", typeof(bool), typeof(HexaEditor),
                 new FrameworkPropertyMetadata(false, new PropertyChangedCallback(AllowByteCount_PropertyChanged)));
 
         private static void AllowByteCount_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {            
+        {
             if (d is HexaEditor ctrl)
             {
-                if (e.NewValue != e.OldValue)                
-                    ctrl.UpdateByteCount();                
+                if (e.NewValue != e.OldValue)
+                    ctrl.UpdateByteCount();
 
                 ctrl.UpdateStatusBar();
             }

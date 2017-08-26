@@ -11,6 +11,7 @@ using System.Text;
 using System.Windows;
 using WPFHexaEditor.Core.MethodExtention;
 using WPFHexaEditor.Core.Interface;
+using WPFHexaEditor.Core.CharacterTable;
 
 namespace WPFHexaEditor.Core.Bytes
 {
@@ -75,13 +76,7 @@ namespace WPFHexaEditor.Core.Bytes
         /// <summary>
         /// Get the type of stream are opened in byteprovider.
         /// </summary>
-        public ByteProviderStreamType StreamType
-        {
-            get
-            {
-                return _streamType;
-            }
-        }
+        public ByteProviderStreamType StreamType => _streamType;
 
         /// <summary>
         /// Get the lenght of file. Return -1 if file is close.
@@ -237,13 +232,7 @@ namespace WPFHexaEditor.Core.Bytes
         /// <summary>
         /// Check if position as at EOF.
         /// </summary>
-        public bool EOF
-        {
-            get
-            {
-                return (_stream.Position == _stream.Length) || (_stream.Position > _stream.Length);
-            }
-        }
+        public bool EOF => (_stream.Position == _stream.Length) || (_stream.Position > _stream.Length);
 
         /// <summary>
         /// Get or Set position in file. Return -1 when file is closed
@@ -871,7 +860,7 @@ namespace WPFHexaEditor.Core.Bytes
         /// Copy selection of byte to clipboard
         /// </summary>
         /// <param name="copyChange">Set tu true if you want onclude change in your copy. Set to false to copy directly from source</param>
-        public void CopyToClipboard(CopyPasteMode copypastemode, long selectionStart, long selectionStop, bool copyChange = true)
+        public void CopyToClipboard(CopyPasteMode copypastemode, long selectionStart, long selectionStop, bool copyChange = true, TBLStream tbl = null)
         {
             if (!CanCopy(selectionStart, selectionStop)) return;
 
@@ -883,21 +872,25 @@ namespace WPFHexaEditor.Core.Bytes
 
             switch (copypastemode)
             {
+                case CopyPasteMode.Byte:
+                    throw new NotImplementedException();                    
                 case CopyPasteMode.TBLString:
-                    throw new NotImplementedException();
+                    if (tbl != null)
+                    {
+                        sBuffer = tbl.ToTBLString(buffer);
+                        da.SetText(sBuffer, TextDataFormat.Text);
+                    }
+                    else
+                        return;
+                    break;
                 case CopyPasteMode.ASCIIString:
                     sBuffer = ByteConverters.BytesToString(buffer);
                     da.SetText(sBuffer, TextDataFormat.Text);
                     break;
-
                 case CopyPasteMode.HexaString:
                     sBuffer = ByteConverters.ByteToHex(buffer);
                     da.SetText(sBuffer, TextDataFormat.Text);
                     break;
-
-                case CopyPasteMode.Byte:
-                    throw new NotImplementedException();
-
                 case CopyPasteMode.CSharpCode:
                     CopyToClipboard_Language(selectionStart, selectionStop, copyChange, da, CodeLanguage.CSharp);
                     break;
@@ -923,7 +916,7 @@ namespace WPFHexaEditor.Core.Bytes
 
             DataCopiedToClipboard?.Invoke(this, new EventArgs());
         }
-
+        
         /// <summary>
         /// Copy selection to clipboard in code block
         /// </summary>

@@ -152,8 +152,7 @@ namespace WPFHexaEditorExample
 
         private void GOPosition_Click(object sender, RoutedEventArgs e)
         {
-            long position = 0;
-            if (long.TryParse(PositionText.Text, out position))
+            if (long.TryParse(PositionText.Text, out long position))
                 HexEdit.SetPosition(position, 1);
             else
                 MessageBox.Show("Enter long value.");
@@ -185,8 +184,7 @@ namespace WPFHexaEditorExample
 
         private void PositionText_TextChanged(object sender, TextChangedEventArgs e)
         {
-            long position = 0;
-            if (long.TryParse(PositionText.Text, out position))
+            if (long.TryParse(PositionText.Text, out long position))
                 GoPositionButton.IsEnabled = true;
             else
                 GoPositionButton.IsEnabled = false;

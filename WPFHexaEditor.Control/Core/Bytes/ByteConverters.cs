@@ -61,8 +61,7 @@ namespace WPFHexaEditor.Core.Bytes
 
             return sb.ToString();
         }
-
-
+                
         /// <summary>
         /// Convert a byte to char[2].
         /// </summary>
@@ -203,9 +202,7 @@ namespace WPFHexaEditor.Core.Bytes
                 position = HexLiteralToLong(hexastring);
                 return true;
             }
-#pragma warning disable CS0168 // the var 'e' as declared but never used
-            catch (Exception e)
-#pragma warning restore CS0168 // the var 'e' as declared but never used
+            catch 
             {
                 return false;
             }

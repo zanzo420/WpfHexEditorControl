@@ -3,10 +3,33 @@
 // Author : Derek Tremblay (derektremblay666@gmail.com)
 //////////////////////////////////////////////
 
+using System;
+using System.Collections.Generic;
+using WPFHexaEditor.Core.Interface;
+
 namespace WPFHexaEditor.Core.Bytes
 {
-    public sealed class ByteModified
+    public class ByteModified : IByteModified, IEquatable<ByteModified>
     {
+        #region Constructor
+        /// <summary>
+        /// Default contructor
+        /// </summary>
+        public ByteModified() { }
+
+        /// <summary>
+        /// complete contructor
+        /// </summary>
+        public ByteModified(byte? @byte, ByteAction action, long bytePositionInFile, long undoLenght)
+        {
+            Byte = @byte;
+            Action = action;
+            BytePositionInFile = bytePositionInFile;
+            UndoLenght = undoLenght;
+        }
+        #endregion constructor
+
+        #region properties
         /// <summary>
         /// Byte mofidied
         /// </summary>
@@ -27,19 +50,20 @@ namespace WPFHexaEditor.Core.Bytes
         /// </summary>
         public long UndoLenght { get; set; } = 1;
 
+        #endregion properties
+
+        #region Methods
         /// <summary>
         /// Check if the object is valid and data can be used for action
         /// </summary>
-        public bool IsValid
-        {
-            get
-            {
-                if (BytePositionInFile > -1 && Action != ByteAction.Nothing && Byte != null)
-                    return true;
-                else
-                    return false;
-            }
-        }
+        public bool IsValid => (BytePositionInFile > -1 && Action != ByteAction.Nothing && Byte != null) ? true: false;
+
+        /// <summary>
+        /// String representation of byte
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString() => $"ByteModified - Action:{Action} Position:{BytePositionInFile} Byte:{Byte}";
+
 
         /// <summary>
         /// Clear object
@@ -57,21 +81,19 @@ namespace WPFHexaEditor.Core.Bytes
         /// <returns></returns>
         public ByteModified GetCopy()
         {
-            ByteModified newByteModified = new ByteModified();
-            object copied = null;
+            ByteModified copied = null;
 
-            newByteModified.Action = Action;
-            newByteModified.Byte = Byte; //.Value;
-            newByteModified.BytePositionInFile = BytePositionInFile;
+            ByteModified newByteModified = new ByteModified()
+            {
+                Action = Action,
+                Byte = Byte,
+                UndoLenght = UndoLenght,
+                BytePositionInFile = BytePositionInFile
+            };
 
             copied = newByteModified;
 
-            return (ByteModified)copied;
-        }
-
-        public override string ToString()
-        {
-            return $"ByteModified - Action:{Action} Position:{BytePositionInFile} Byte:{Byte}";
+            return copied;
         }
 
         /// <summary>
@@ -85,5 +107,40 @@ namespace WPFHexaEditor.Core.Bytes
 
             return false;
         }
+        #endregion Methods
+
+        #region IEquatable implementation
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as ByteModified);
+        }
+
+        public bool Equals(ByteModified other)
+        {
+            return other != null &&
+                   EqualityComparer<byte?>.Default.Equals(Byte, other.Byte) &&
+                   Action == other.Action &&
+                   BytePositionInFile == other.BytePositionInFile;
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = 576086707;
+            hashCode = hashCode * -1521134295 + EqualityComparer<byte?>.Default.GetHashCode(Byte);
+            hashCode = hashCode * -1521134295 + Action.GetHashCode();
+            hashCode = hashCode * -1521134295 + BytePositionInFile.GetHashCode();
+            return hashCode;
+        }
+
+        public static bool operator ==(ByteModified modified1, ByteModified modified2)
+        {
+            return EqualityComparer<ByteModified>.Default.Equals(modified1, modified2);
+        }
+
+        public static bool operator !=(ByteModified modified1, ByteModified modified2)
+        {
+            return !(modified1 == modified2);
+        }
+        #endregion IEquatable implementation
     }
 }

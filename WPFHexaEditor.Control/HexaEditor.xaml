@@ -88,9 +88,8 @@
                           Header="Visual Basic.Net" 
                           Click="CopyVBNetCMenu_Click" />
                 <MenuItem x:Name="CopyTBLCMenu" 
-                          Header="TBL (string from TBL loaded)"
-                          Click="CopyTBLCMenu_Click"
-                          IsEnabled="False"/>
+                          Header="TBL string (from TBL file loaded)"
+                          Click="CopyTBLCMenu_Click"/>
             </MenuItem>
             <Separator/>
             <MenuItem x:Name="PasteMenu"
@@ -109,7 +108,7 @@
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem x:Name="ReplaceByteCMenu" 
-                      Header="Replace byte in selection with byte..." 
+                      Header="Replace byte in selection..." 
                       Click="ReplaceByteCMenu_Click">
                 <MenuItem.Icon>
                     <Image Source="/WPFHexaEditor;component/Resources/Icon/0x-Icon.ico"/>

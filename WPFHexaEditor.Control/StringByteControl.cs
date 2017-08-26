@@ -360,12 +360,12 @@ namespace WPFHexaEditor.Control
                             if (TBL_ShowMTE)
                                 if (ByteNext.HasValue)
                                 {
-                                    string MTE = (ByteConverters.ByteToHex(Byte.Value) + ByteConverters.ByteToHex(ByteNext.Value)).ToUpper();
-                                    content = _TBLCharacterTable.FindTBLMatch(MTE, true);
+                                    string MTE = (ByteConverters.ByteToHex(Byte.Value) + ByteConverters.ByteToHex(ByteNext.Value));
+                                    content = _TBLCharacterTable.FindMatch(MTE, true);
                                 }
 
                             if (content == "#")
-                                content = _TBLCharacterTable.FindTBLMatch(ByteConverters.ByteToHex(Byte.Value).ToUpper().ToUpper(), true);
+                                content = _TBLCharacterTable.FindMatch(ByteConverters.ByteToHex(Byte.Value), true);
 
                             Text = content;
 

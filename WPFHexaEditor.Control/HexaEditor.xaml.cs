@@ -1334,18 +1334,18 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public void CopyToClipboard(CopyPasteMode copypastemode)
         {
-            CopyToClipboard(copypastemode, SelectionStart, SelectionStop, true);
+            CopyToClipboard(copypastemode, SelectionStart, SelectionStop, true, _TBLCharacterTable);
         }
 
         /// <summary>
         /// Copy to clipboard
         /// </summary>
-        public void CopyToClipboard(CopyPasteMode copypastemode, long selectionStart, long selectionStop, bool copyChange)
+        public void CopyToClipboard(CopyPasteMode copypastemode, long selectionStart, long selectionStop, bool copyChange, TBLStream tbl)
         {
             if (!CanCopy()) return;
 
             if (ByteProvider.CheckIsOpen(_provider))
-                _provider.CopyToClipboard(copypastemode, SelectionStart, SelectionStop, copyChange);
+                _provider.CopyToClipboard(copypastemode, SelectionStart, SelectionStop, copyChange, tbl);
         }
 
         /// <summary>
@@ -3182,6 +3182,7 @@ namespace WPFHexaEditor.Control
                 UndoCMenu.IsEnabled = false;
                 DeleteCMenu.IsEnabled = false;
                 FillByteCMenu.IsEnabled = false;
+                CopyTBLCMenu.IsEnabled = false;
 
                 if (SelectionLength > 0)
                 {
@@ -3191,6 +3192,9 @@ namespace WPFHexaEditor.Control
                     CopyHexaCMenu.IsEnabled = true;
                     DeleteCMenu.IsEnabled = true;
                     FillByteCMenu.IsEnabled = true;
+
+                    if (_TBLCharacterTable != null)
+                        CopyTBLCMenu.IsEnabled = true;
                 }
 
                 if (UndoCount > 0)

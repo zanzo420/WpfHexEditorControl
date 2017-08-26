@@ -93,7 +93,7 @@ namespace WPFHexaEditor.Core.CharacterTable
         /// <param name="hex">Valeur hexa a rechercher dans la TBL</param>
         /// <param name="showSpecialValue">Afficher les valeurs de fin de block et de ligne</param>
         /// <returns></returns>
-        public string FindTBLMatch(string hex, bool showSpecialValue)
+        public string FindMatch(string hex, bool showSpecialValue)
         {
             string rtn = "#";
             foreach (DTE dte in _DTEList)
@@ -150,7 +150,7 @@ namespace WPFHexaEditor.Core.CharacterTable
         /// <param name="hex">Valeur hexa a rechercher dans la TBL</param>
         /// <param name="showSpecialValue">Afficher les valeurs de fin de block et de ligne</param>
         /// <returns></returns>
-        public string FindTBLMatch(string hex)
+        public string FindMatch(string hex)
         {
             string rtn = "#";
             foreach (DTE dte in _DTEList)
@@ -169,7 +169,7 @@ namespace WPFHexaEditor.Core.CharacterTable
         /// <param name="hex">Valeur hexa a rechercher dans la TBL</param>
         /// <param name="showSpecialValue">Afficher les valeurs de fin de block et de ligne</param>
         /// <returns></returns>
-        public string FindTBLMatch(string hex, bool showSpecialValue, bool NotShowDTE)
+        public string FindMatch(string hex, bool showSpecialValue, bool NotShowDTE)
         {
             string rtn = "#";
             foreach (DTE dte in _DTEList)
@@ -209,6 +209,44 @@ namespace WPFHexaEditor.Core.CharacterTable
             }
 
             return rtn;
+        }
+
+        /// <summary>
+        /// Convert data to TBL string. 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="tbl"></param>
+        /// <returns>
+        /// Return string converted to TBL string representation.
+        /// Return null on error
+        /// </returns>
+        public string ToTBLString(byte[] data)
+        {
+            if (data != null)
+            {
+                StringBuilder sb = new StringBuilder();
+                string MTE;
+
+                for (int i = 0; i < data.Length; i++)
+                {
+                    if (i < data.Length - 1)
+                    {
+                        MTE = FindMatch((ByteConverters.ByteToHex(data[i]) + ByteConverters.ByteToHex(data[i + 1])), true);
+
+                        if (MTE != "#")
+                        {
+                            sb.Append(MTE);
+                            continue;
+                        }
+                    }
+
+                    sb.Append(FindMatch(ByteConverters.ByteToHex(data[i]), true));
+                }
+
+                return sb.ToString();
+            }
+
+            return null;
         }
 
         /// <summary>

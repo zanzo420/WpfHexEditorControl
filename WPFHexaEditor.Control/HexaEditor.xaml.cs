@@ -323,7 +323,7 @@ namespace WPFHexaEditor.Control
             if (d is HexaEditor ctrl)
                 if (e.NewValue != e.OldValue)
                     ctrl.UpdateVisual();
-        }        
+        }
 
         public new FontFamily FontFamily
         {
@@ -340,8 +340,8 @@ namespace WPFHexaEditor.Control
         private static void FontFamily_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is HexaEditor ctrl)
-                if (e.NewValue != e.OldValue)                
-                    ctrl.RefreshView(true);                
+                if (e.NewValue != e.OldValue)
+                    ctrl.RefreshView(true);
         }
 
         /// <summary>
@@ -671,7 +671,11 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public long GetMaxVisibleLine()
         {
-            return (long)(StringDataStackPanel.ActualHeight / LineHeight); // + 1; //TEST
+            var actualheight = (ActualHeight - HexHeaderStackPanel.ActualHeight - StatusBarGrid.ActualHeight);
+
+            if (actualheight < 0) actualheight = 0;
+
+            return (long)(actualheight / LineHeight) + 1;
         }
 
         #endregion Lines methods
@@ -985,6 +989,8 @@ namespace WPFHexaEditor.Control
                     else
                         ctrl.SelectionByte = null;
 
+                    Debug.Print($"SelectionStart : {e.NewValue}");
+
                     ctrl.UpdateSelection();
                     ctrl.UpdateSelectionLine();
                     ctrl.UpdateVisual();
@@ -1173,7 +1179,7 @@ namespace WPFHexaEditor.Control
             if (SelectionStart >= _provider.Length)
                 SelectionStart = _provider.Length;
 
-            if (SelectionStart >= GetLastVisibleBytePosition())
+            if (SelectionStart > GetLastVisibleBytePosition())
                 VerticalScrollBar.Value++;
 
             if (sender is HexByte)
@@ -2496,7 +2502,7 @@ namespace WPFHexaEditor.Control
                         Text = ByteConverters.ByteToHex((byte)i),
                         ToolTip = $"Column : {i.ToString()}",
                         FontFamily = FontFamily
-                };
+                    };
 
                     HexHeaderStackPanel.Children.Add(LineInfoLabel);
                 }
@@ -2596,14 +2602,8 @@ namespace WPFHexaEditor.Control
         /// Get last visible byte position in control
         /// </summary>
         /// <returns>Return -1 of no file open.</returns>
-        private long GetLastVisibleBytePosition()
-        {
-            long lastBytePosition = GetFirstVisibleBytePosition();
+        private long GetLastVisibleBytePosition() => GetFirstVisibleBytePosition() + (GetMaxVisibleLine() - 1) * BytePerLine - 1;
 
-            TraverseDataControls(ctrl => { lastBytePosition++; });
-
-            return lastBytePosition;
-        }
         #endregion First/Last visible byte methods
 
         #region Focus Methods

@@ -2215,6 +2215,27 @@ namespace WPFHexaEditor.Control
             if (reAttachEvents)
                 TraverseStringAndDataControls(ctrl =>
                 {
+                    //Detach events
+                    ctrl.ByteModified -= Control_ByteModified;
+                    ctrl.MoveNext -= Control_MoveNext;
+                    ctrl.MovePrevious -= Control_MovePrevious;
+                    ctrl.MouseSelection -= Control_MouseSelection;
+                    ctrl.Click -= Control_Click;
+                    ctrl.RightClick -= Control_RightClick;
+                    ctrl.MoveUp -= Control_MoveUp;
+                    ctrl.MoveDown -= Control_MoveDown;
+                    ctrl.MoveLeft -= Control_MoveLeft;
+                    ctrl.MoveRight -= Control_MoveRight;
+                    ctrl.MovePageDown -= Control_MovePageDown;
+                    ctrl.MovePageUp -= Control_MovePageUp;
+                    ctrl.ByteDeleted -= Control_ByteDeleted;
+                    ctrl.EscapeKey -= Control_EscapeKey;
+                    ctrl.CTRLAKey -= Control_CTRLAKey;
+                    ctrl.CTRLZKey -= Control_CTRLZKey;
+                    ctrl.CTRLCKey -= Control_CTRLCKey;
+                    ctrl.CTRLVKey -= Control_CTRLVKey;
+
+                    //Attach events
                     ctrl.ByteModified += Control_ByteModified;
                     ctrl.MoveNext += Control_MoveNext;
                     ctrl.MovePrevious += Control_MovePrevious;
@@ -2266,11 +2287,9 @@ namespace WPFHexaEditor.Control
                     #endregion
                 }
 
-                if (LinesInfoStackPanel.Children.Count == 0)
-                {
+                if (LinesInfoStackPanel.Children.Count == 0)                
                     return;
-                }
-
+                
                 var firstInfoLabel = LinesInfoStackPanel.Children[0] as TextBlock;
                 var startPosition = ByteConverters.HexLiteralToLong(firstInfoLabel.Text);
                 var sizeReadyToRead = LinesInfoStackPanel.Children.Count * BytePerLine + 1;

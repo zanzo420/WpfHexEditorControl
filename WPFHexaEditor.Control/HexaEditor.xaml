@@ -88,7 +88,7 @@
                           Header="Visual Basic.Net" 
                           Click="CopyVBNetCMenu_Click" />
                 <MenuItem x:Name="CopyTBLCMenu" 
-                          Header="TBL string (from TBL file loaded)"
+                          Header="TBL string (character file loaded)"
                           Click="CopyTBLCMenu_Click"/>
             </MenuItem>
             <Separator/>
@@ -217,7 +217,7 @@
                         </StackPanel>
                     </Label.ToolTip>
                 </Label>
-                <Label Content="File lenght" 
+                <Label Content="Lenght" 
                        Padding="5,5,0,5" 
                        FontWeight="Bold" />
                 <Label x:Name="FileLengthKBLabel" 

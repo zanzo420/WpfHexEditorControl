@@ -15,10 +15,10 @@ using WPFHexaEditor.Core.Interface;
 
 namespace WPFHexaEditor.Control
 {
-    internal partial class HexByteControl : TextBlock, IByteControl
+    internal partial class HexByte : TextBlock, IByteControl
     {
 
-        public HexByteControl(HexaEditor parent)
+        public HexByte(HexaEditor parent)
         {
             //Default properties
             DataContext = this;
@@ -72,7 +72,7 @@ namespace WPFHexaEditor.Control
         }
 
         public static readonly DependencyProperty BytePositionInFileProperty =
-            DependencyProperty.Register("BytePositionInFile", typeof(long), typeof(HexByteControl), new PropertyMetadata(-1L));
+            DependencyProperty.Register("BytePositionInFile", typeof(long), typeof(HexByte), new PropertyMetadata(-1L));
 
         /// <summary>
         /// Action with this byte
@@ -84,7 +84,7 @@ namespace WPFHexaEditor.Control
         }
 
         public static readonly DependencyProperty ActionProperty =
-            DependencyProperty.Register("Action", typeof(ByteAction), typeof(HexByteControl),
+            DependencyProperty.Register("Action", typeof(ByteAction), typeof(HexByte),
                 new FrameworkPropertyMetadata(ByteAction.Nothing,
                     new PropertyChangedCallback(Action_ValueChanged),
                     new CoerceValueCallback(Action_CoerceValue)));
@@ -101,7 +101,7 @@ namespace WPFHexaEditor.Control
 
         private static void Action_ValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexByteControl ctrl)
+            if (d is HexByte ctrl)
                 if (e.NewValue != e.OldValue)
                     ctrl.UpdateVisual();
         }
@@ -116,7 +116,7 @@ namespace WPFHexaEditor.Control
         }
 
         public static readonly DependencyProperty FirstSelectedProperty =
-            DependencyProperty.Register("FirstSelected", typeof(bool), typeof(HexByteControl), new PropertyMetadata(true));
+            DependencyProperty.Register("FirstSelected", typeof(bool), typeof(HexByte), new PropertyMetadata(true));
 
         /// <summary>
         /// Byte used for this instance
@@ -128,12 +128,12 @@ namespace WPFHexaEditor.Control
         }
 
         public static readonly DependencyProperty ByteProperty =
-            DependencyProperty.Register("Byte", typeof(byte?), typeof(HexByteControl),
+            DependencyProperty.Register("Byte", typeof(byte?), typeof(HexByte),
                 new FrameworkPropertyMetadata(null, new PropertyChangedCallback(Byte_PropertyChanged)));
 
         private static void Byte_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexByteControl ctrl)
+            if (d is HexByte ctrl)
                 if (e.NewValue != null)
                 {
                     if (e.NewValue != e.OldValue)
@@ -159,7 +159,7 @@ namespace WPFHexaEditor.Control
 
         // Using a DependencyProperty as the backing store for InternalChange.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty InternalChangeProperty =
-            DependencyProperty.Register("InternalChange", typeof(bool), typeof(HexByteControl), new PropertyMetadata(false));
+            DependencyProperty.Register("InternalChange", typeof(bool), typeof(HexByte), new PropertyMetadata(false));
 
         #endregion
 
@@ -178,14 +178,14 @@ namespace WPFHexaEditor.Control
         }
 
         public static readonly DependencyProperty IsSelectedProperty =
-            DependencyProperty.Register("IsSelected", typeof(bool), typeof(HexByteControl),
+            DependencyProperty.Register("IsSelected", typeof(bool), typeof(HexByte),
                 new FrameworkPropertyMetadata(false,
                     new PropertyChangedCallback(IsSelected_PropertyChange)));
 
 
         private static void IsSelected_PropertyChange(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexByteControl ctrl)
+            if (d is HexByte ctrl)
                 if (e.NewValue != e.OldValue)
                 {
                     ctrl._keyDownLabel = KeyDownLabel.FirstChar;
@@ -203,13 +203,13 @@ namespace WPFHexaEditor.Control
         }
 
         public static readonly DependencyProperty IsHighLightProperty =
-            DependencyProperty.Register("IsHighLight", typeof(bool), typeof(HexByteControl),
+            DependencyProperty.Register("IsHighLight", typeof(bool), typeof(HexByte),
                 new FrameworkPropertyMetadata(false,
                     new PropertyChangedCallback(IsHighLight_PropertyChanged)));
 
         private static void IsHighLight_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexByteControl ctrl)
+            if (d is HexByte ctrl)
                 if (e.NewValue != e.OldValue)
                 {
                     ctrl._keyDownLabel = KeyDownLabel.FirstChar;
@@ -224,12 +224,12 @@ namespace WPFHexaEditor.Control
         }
 
         public static readonly DependencyProperty IsFocusProperty =
-            DependencyProperty.Register("IsFocus", typeof(bool), typeof(HexByteControl),
+            DependencyProperty.Register("IsFocus", typeof(bool), typeof(HexByte),
                 new FrameworkPropertyMetadata(false, IsFocus_PropertyChanged));
 
         private static void IsFocus_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexByteControl ctrl)
+            if (d is HexByte ctrl)
                 if (e.NewValue != e.OldValue)
                 {
                     ctrl._keyDownLabel = KeyDownLabel.FirstChar;
@@ -304,7 +304,7 @@ namespace WPFHexaEditor.Control
             if (Byte != null)
             {
                 var chArr = ByteConverters.ByteToHexCharArray(Byte.Value);
-                Text = chArr[0].ToString() + chArr[1].ToString();
+                Text = new string(chArr);
             }
             else            
                 Text = string.Empty;            

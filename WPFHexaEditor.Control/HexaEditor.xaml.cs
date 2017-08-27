@@ -769,7 +769,7 @@ namespace WPFHexaEditor.Control
             if (SelectionStart < GetFirstVisibleBytePosition())
                 VerticalScrollBar.Value--;
 
-            if (sender is HexByteControl || sender is StringByteControl)
+            if (sender is HexByte || sender is StringByte)
             {
                 VerticalScrollBar.Value -= GetMaxVisibleLine() - 1;
                 SetFocusHexDataPanel(SelectionStart);
@@ -806,7 +806,7 @@ namespace WPFHexaEditor.Control
             if (SelectionStart > GetLastVisibleBytePosition())
                 VerticalScrollBar.Value++;
 
-            if (sender is HexByteControl || sender is StringByteControl)
+            if (sender is HexByte || sender is StringByte)
             {
                 VerticalScrollBar.Value += GetMaxVisibleLine() - 1;
                 SetFocusHexDataPanel(SelectionStart);
@@ -846,10 +846,10 @@ namespace WPFHexaEditor.Control
             if (SelectionStart > GetLastVisibleBytePosition())
                 VerticalScrollBar.Value++;
 
-            if (sender is HexByteControl)
+            if (sender is HexByte)
                 SetFocusHexDataPanel(SelectionStart);
 
-            if (sender is StringByteControl)
+            if (sender is StringByte)
                 SetFocusStringDataPanel(SelectionStart);
         }
 
@@ -882,7 +882,7 @@ namespace WPFHexaEditor.Control
             if (SelectionStart < GetFirstVisibleBytePosition())
                 VerticalScrollBar.Value--;
 
-            if (sender is HexByteControl)
+            if (sender is HexByte)
                 SetFocusHexDataPanel(SelectionStart);
             else
                 SetFocusStringDataPanel(SelectionStart);
@@ -900,7 +900,7 @@ namespace WPFHexaEditor.Control
                     SelectionStop = ctrl.BytePositionInFile;
                 }
 
-                if (ctrl is StringByteControl)
+                if (ctrl is StringByte)
                     UpdateSelectionColorMode(FirstColor.StringByteData);
                 else
                     UpdateSelectionColorMode(FirstColor.HexByteData);
@@ -925,7 +925,7 @@ namespace WPFHexaEditor.Control
                 else
                     SelectionStop = GetLastVisibleBytePosition();
 
-                if (focusedControl is HexByteControl)
+                if (focusedControl is HexByte)
                     UpdateSelectionColorMode(FirstColor.HexByteData);
                 else
                     UpdateSelectionColorMode(FirstColor.StringByteData);
@@ -1176,10 +1176,10 @@ namespace WPFHexaEditor.Control
             if (SelectionStart >= GetLastVisibleBytePosition())
                 VerticalScrollBar.Value++;
 
-            if (sender is HexByteControl)
+            if (sender is HexByte)
                 SetFocusHexDataPanel(SelectionStart);
 
-            if (sender is StringByteControl)
+            if (sender is StringByte)
                 SetFocusStringDataPanel(SelectionStart);
         }
 
@@ -1215,10 +1215,10 @@ namespace WPFHexaEditor.Control
             if (SelectionStart < GetFirstVisibleBytePosition())
                 VerticalScrollBar.Value--;
 
-            if (sender is HexByteControl)
+            if (sender is HexByte)
                 SetFocusHexDataPanel(SelectionStart);
 
-            if (sender is StringByteControl)
+            if (sender is StringByte)
                 SetFocusStringDataPanel(SelectionStart);
         }
 
@@ -2001,22 +2001,22 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Used to make action on all hexbytecontrol
         /// </summary>
-        private void TraverseDataControls(Action<HexByteControl> act)
+        private void TraverseDataControls(Action<HexByte> act)
         {
             //HexByte panel
             foreach (StackPanel hexDataStack in HexDataStackPanel.Children)
-                foreach (HexByteControl byteControl in hexDataStack.Children)
+                foreach (HexByte byteControl in hexDataStack.Children)
                     act(byteControl);
         }
 
         /// <summary>
         /// Used to make action on all stringbytecontrol
         /// </summary>
-        private void TraverseStringControls(Action<StringByteControl> act)
+        private void TraverseStringControls(Action<StringByte> act)
         {
             //Stringbyte panel
             foreach (StackPanel stringDataStack in StringDataStackPanel.Children)
-                foreach (StringByteControl sbControl in stringDataStack.Children)
+                foreach (StringByte sbControl in stringDataStack.Children)
                     act(sbControl);
         }
 
@@ -2028,12 +2028,12 @@ namespace WPFHexaEditor.Control
         {
             //Stringbyte panel
             foreach (StackPanel stringDataStack in StringDataStackPanel.Children)
-                foreach (StringByteControl sbControl in stringDataStack.Children)
+                foreach (StringByte sbControl in stringDataStack.Children)
                     act(sbControl);
 
             //HexByte panel
             foreach (StackPanel hexDataStack in HexDataStackPanel.Children)
-                foreach (HexByteControl byteControl in hexDataStack.Children)
+                foreach (HexByte byteControl in hexDataStack.Children)
                     act(byteControl);
         }
         #endregion Traverse ByteControl methods
@@ -2187,11 +2187,11 @@ namespace WPFHexaEditor.Control
                     Orientation = Orientation.Horizontal
                 };
 
-                StringByteControl sbCtrl;
+                StringByte sbCtrl;
 
                 for (int i = 0; i < BytePerLine; i++)
                 {
-                    sbCtrl = new StringByteControl(this)
+                    sbCtrl = new StringByte(this)
                     {
                         InternalChange = true,
                         ReadOnlyMode = ReadOnlyMode,
@@ -2217,11 +2217,11 @@ namespace WPFHexaEditor.Control
                     Orientation = Orientation.Horizontal
                 };
 
-                HexByteControl byteControl;
+                HexByte byteControl;
 
                 for (int i = 0; i < BytePerLine; i++)
                 {
-                    byteControl = new HexByteControl(this)
+                    byteControl = new HexByte(this)
                     {
                         InternalChange = true,
                         ReadOnlyMode = ReadOnlyMode,

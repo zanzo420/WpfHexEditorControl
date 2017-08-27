@@ -152,7 +152,7 @@ namespace WPFHexaEditor.Core.Bytes
 
         public static bool HexToByte(string hex, out byte b)
         {
-            return byte.TryParse(hex, System.Globalization.NumberStyles.HexNumber, CultureInfo.InvariantCulture, out b);
+            return byte.TryParse(hex, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out b);
         }
 
         public static long HexLiteralToLong(string hex)

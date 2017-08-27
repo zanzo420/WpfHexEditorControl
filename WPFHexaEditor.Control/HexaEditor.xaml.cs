@@ -127,10 +127,11 @@ namespace WPFHexaEditor.Control
             InitializeComponent();
 
             //Load default build-in TBL
-            TypeOfCharacterTable = CharacterTableType.TBLFile;
-            LoadDefaultTBL(DefaultCharacterTableType.ASCII);
+            //TypeOfCharacterTable = CharacterTableType.TBLFile;
+            //LoadDefaultTBL(DefaultCharacterTableType.ASCII);
 
             //Refresh view
+            UpdateVerticalScroll();
             RefreshView(true);
 
             DataContext = this;
@@ -1244,8 +1245,6 @@ namespace WPFHexaEditor.Control
             //Call moveright event
             Control_MoveRight(sender, new EventArgs());
         }
-
-
         #endregion Selection Property/Methods/Event
 
         #region Copy/Paste/Cut Methods
@@ -1567,41 +1566,7 @@ namespace WPFHexaEditor.Control
                 }
             }
         }
-
-        /// <summary>
-        /// Set or Get value for change visibility of vertical scroll bar
-        /// </summary>
-        public Visibility VerticalScrollBarVisibility
-        {
-            get { return (Visibility)GetValue(VerticalScrollBarVisibilityProperty); }
-            set { SetValue(VerticalScrollBarVisibilityProperty, value); }
-        }
-
-        public static readonly DependencyProperty VerticalScrollBarVisibilityProperty =
-            DependencyProperty.Register("VerticalScrollBarVisibility", typeof(Visibility), typeof(HexaEditor),
-                new FrameworkPropertyMetadata(Visibility.Visible,
-                    new PropertyChangedCallback(VerticalScrollBarVisibility_ValueChanged),
-                    new CoerceValueCallback(Visibility_CoerceValue)));
-
-        private static void VerticalScrollBarVisibility_ValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is HexaEditor ctrl)
-            {
-                Visibility value = (Visibility)e.NewValue;
-
-                switch (value)
-                {
-                    case Visibility.Visible:
-                        ctrl.VerticalScrollBar.Visibility = Visibility.Visible;
-                        break;
-
-                    case Visibility.Collapsed:
-                        ctrl.VerticalScrollBar.Visibility = Visibility.Collapsed;
-                        break;
-                }
-            }
-        }
-
+                
         /// <summary>
         /// Set or Get value for change visibility of status bar
         /// </summary>
@@ -1801,11 +1766,11 @@ namespace WPFHexaEditor.Control
             UnSelectAll();
             RefreshView();
             UpdateHexHeader();
+            UpdateVerticalScroll();
         }
 
         /// <summary>
-        /// Save to the current stream
-        /// TODO: Add save as another stream...
+        /// Save to the current stream/file
         /// </summary>
         public void SubmitChanges()
         {
@@ -1816,7 +1781,6 @@ namespace WPFHexaEditor.Control
 
         /// <summary>
         /// Save as to another file
-        /// TODO: Add save as another stream...
         /// </summary>
         public void SubmitChanges(string newfilename, bool overwrite = false)
         {

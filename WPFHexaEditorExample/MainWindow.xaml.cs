@@ -90,16 +90,6 @@ namespace WPFHexaEditorExample
 
                     Settings.Default.HeaderVisibility = HexEdit.HeaderVisibility == Visibility.Visible;
                     break;
-
-                case SettingEnum.ScrollVisibility:
-                    if (!Settings.Default.ScrollVisibility)
-                        HexEdit.VerticalScrollBarVisibility = Visibility.Collapsed;
-                    else
-                        HexEdit.VerticalScrollBarVisibility = Visibility.Visible;
-
-                    Settings.Default.ScrollVisibility = HexEdit.VerticalScrollBarVisibility == Visibility.Visible;
-                    break;
-
                 case SettingEnum.ReadOnly:
                     HexEdit.ReadOnlyMode = Settings.Default.ReadOnly;
 

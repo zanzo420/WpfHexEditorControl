@@ -2108,7 +2108,7 @@ namespace WPFHexaEditor.Control
                 VerticalScrollBar.Visibility = Visibility.Visible;
                 VerticalScrollBar.SmallChange = 1;
                 VerticalScrollBar.LargeChange = ScrollLargeChange;
-                VerticalScrollBar.Maximum = GetMaxLine() - GetMaxVisibleLine() + 1;
+                VerticalScrollBar.Maximum = GetMaxLine() - 1;
             }
         }
 

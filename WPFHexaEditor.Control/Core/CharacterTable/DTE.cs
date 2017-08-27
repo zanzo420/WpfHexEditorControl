@@ -1,18 +1,17 @@
 //////////////////////////////////////////////
-// Apache 2.0  - 2016-2017
+// Apache 2.0  - 2003-2017
 // Author : Derek Tremblay (derektremblay666@gmail.com)
 //////////////////////////////////////////////
 
 using System;
+using System.Collections.Generic;
 
 namespace WPFHexaEditor.Core.CharacterTable
 {
     /// <summary>
     /// Objet représentant un DTE.
-    ///
-    /// Derek Tremblay 2003-2017
     /// </summary>
-    public sealed class DTE
+    public sealed class DTE : IEquatable<DTE>
     {
         /// <summary>Nom du DTE</summary>
         private string _Entry;
@@ -169,7 +168,40 @@ namespace WPFHexaEditor.Core.CharacterTable
 
             return DTEType.Invalid;
         }
-
         #endregion Methodes Static
+
+        #region IEquatable implementation
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as DTE);
+        }
+
+        public bool Equals(DTE other)
+        {
+            return other != null &&
+                   Entry == other.Entry &&
+                   Value == other.Value &&
+                   Type == other.Type;
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = -852816310;
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Entry);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Value);
+            hashCode = hashCode * -1521134295 + Type.GetHashCode();
+            return hashCode;
+        }
+
+        public static bool operator ==(DTE dTE1, DTE dTE2)
+        {
+            return EqualityComparer<DTE>.Default.Equals(dTE1, dTE2);
+        }
+
+        public static bool operator !=(DTE dTE1, DTE dTE2)
+        {
+            return !(dTE1 == dTE2);
+        }
+        #endregion IEquatable implementation
     }
 }

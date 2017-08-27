@@ -20,7 +20,7 @@ namespace WPFHexaEditor.Core.Interface
         bool EOF { get; }
         string FileName { get; set; }
         bool IsEmpty { get; }
-        bool IsOnLongProcess { get; set; }
+        bool IsOnLongProcess { get; }
         bool IsOpen { get; }
         bool IsUndoEnabled { get; set; }
         long Length { get; }

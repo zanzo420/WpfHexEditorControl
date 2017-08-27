@@ -22,16 +22,10 @@ namespace WPFHexaEditor.Core.Bytes
     {
         //Global variable
         private IDictionary<long, ByteModified> _byteModifiedDictionary = new Dictionary<long, ByteModified>();
-        private Stack<ByteModified> _undoStack = new Stack<ByteModified>();
-        //private Stack<ByteModified> _redoStack = new Stack<ByteModified>();
-
         private string _fileName = string.Empty;
         private Stream _stream = null;
         private bool _readOnlyMode = false;
-        private bool _isUndoEnabled = true;
         private double _longProcessProgress = 0;
-        private bool _isOnLongProcess = false;
-        private ByteProviderStreamType _streamType = ByteProviderStreamType.Nothing;
         string _newfilename = "";
 
         //Event
@@ -59,24 +53,18 @@ namespace WPFHexaEditor.Core.Bytes
         /// <summary>
         /// Construct new ByteProvider with filename and try to open file
         /// </summary>
-        public ByteProvider(string filename)
-        {
-            FileName = filename;
-        }
+        public ByteProvider(string filename) => FileName = filename;
 
         /// <summary>
         /// Constuct new ByteProvider with stream
         /// </summary>
         /// <param name="stream"></param>
-        public ByteProvider(MemoryStream stream)
-        {
-            Stream = stream;
-        }
+        public ByteProvider(MemoryStream stream) => Stream = stream;
 
         /// <summary>
         /// Get the type of stream are opened in byteprovider.
         /// </summary>
-        public ByteProviderStreamType StreamType => _streamType;
+        public ByteProviderStreamType StreamType { get; internal set; } = ByteProviderStreamType.Nothing;
 
         /// <summary>
         /// Get the lenght of file. Return -1 if file is close.
@@ -141,7 +129,7 @@ namespace WPFHexaEditor.Core.Bytes
                 Close();
                 _readOnlyMode = readonlymode;
 
-                _streamType = ByteProviderStreamType.MemoryStream;
+                StreamType = ByteProviderStreamType.MemoryStream;
 
                 _stream = value;
 
@@ -177,7 +165,7 @@ namespace WPFHexaEditor.Core.Bytes
                 if (readOnlyMode)
                     ReadOnlyMode = true;
 
-                _streamType = ByteProviderStreamType.File;
+                StreamType = ByteProviderStreamType.File;
 
                 StreamOpened?.Invoke(this, new EventArgs());
             }
@@ -221,7 +209,7 @@ namespace WPFHexaEditor.Core.Bytes
                 LongProcessProgress = 0;
 
                 ClearUndoChange();
-                _streamType = ByteProviderStreamType.Nothing;
+                StreamType = ByteProviderStreamType.Nothing;
 
                 Closed?.Invoke(this, new EventArgs());
             }
@@ -567,8 +555,8 @@ namespace WPFHexaEditor.Core.Bytes
             if (_byteModifiedDictionary != null)
                 _byteModifiedDictionary.Clear();
 
-            if (_undoStack != null)
-                _undoStack.Clear();
+            if (UndoStack != null)
+                UndoStack.Clear();
         }
 
         /// <summary>
@@ -648,14 +636,10 @@ namespace WPFHexaEditor.Core.Bytes
         /// <returns></returns>
         public IDictionary<long, ByteModified> GetModifiedBytes(ByteAction action)
         {
-            if (action == ByteAction.All)
-            {
-                return _byteModifiedDictionary;
-            }
-            else
-            {
-                return _byteModifiedDictionary.Where(b => b.Value.Action == action).ToDictionary(k => k.Key, v => v.Value);
-            }
+            if (action == ByteAction.All)            
+                return _byteModifiedDictionary;            
+            else            
+                return _byteModifiedDictionary.Where(b => b.Value.Action == action).ToDictionary(k => k.Key, v => v.Value);            
         }
 
         /// <summary>
@@ -834,17 +818,11 @@ namespace WPFHexaEditor.Core.Bytes
                     {
                         switch (byteModified.Action)
                         {
-                            case ByteAction.Added:
-                                //TODO : IMPLEMENTING ADD BYTE
-                                break;
-
-                            case ByteAction.Deleted:
-                                //NOTHING TODO we dont want to add deleted byte
-                                break;
-
+                            case ByteAction.Added: //TODO : IMPLEMENTING ADD BYTE                               
+                            case ByteAction.Deleted://NOTHING TODO we dont want to add deleted byte                               
+                                break; 
                             case ByteAction.Modified:
-                                if (byteModified.IsValid)
-                                    bufferList.Add(byteModified.Byte.Value);
+                                if (byteModified.IsValid) bufferList.Add(byteModified.Byte.Value);
                                 break;
                         }
                     }
@@ -1091,11 +1069,8 @@ namespace WPFHexaEditor.Core.Bytes
         /// </summary>
         /// <param name="pasteString">The string to paste</param>
         /// <param name="startPosition">The position to start pasting</param>
-        public void PasteNotInsert(string pasteString)
-        {
-            PasteNotInsert(Position, pasteString);
-        }
-        
+        public void PasteNotInsert(string pasteString) => PasteNotInsert(Position, pasteString);
+
         #endregion Copy/Paste/Cut Methods
 
         #region Undo / Redo
@@ -1133,31 +1108,17 @@ namespace WPFHexaEditor.Core.Bytes
         /// <summary>
         /// Gets the undo count.
         /// </summary>
-        public int UndoCount
-        {
-            get
-            {
-                return UndoStack.Count;
-            }
-        }
+        public int UndoCount => UndoStack.Count;
 
         /// <summary>
         /// Gets or sets the undo stack.
         /// </summary>
-        public Stack<ByteModified> UndoStack
-        {
-            get { return _undoStack; }
-            set { _undoStack = value; }
-        }
+        public Stack<ByteModified> UndoStack { get; set; } = new Stack<ByteModified>();
 
         /// <summary>
         /// Get or set for indicate if control CanUndo
         /// </summary>
-        public bool IsUndoEnabled
-        {
-            get { return _isUndoEnabled; }
-            set { _isUndoEnabled = value; }
-        }
+        public bool IsUndoEnabled { get; set; } = true;
 
         /// <summary>
         /// Check if the control can undone to a previous value
@@ -1322,18 +1283,7 @@ namespace WPFHexaEditor.Core.Bytes
         /// <summary>
         /// Get if byteprovider is on a long process. Set to false to cancel all process.
         /// </summary>
-        public bool IsOnLongProcess
-        {
-            get
-            {
-                return _isOnLongProcess;
-            }
-
-            set
-            {
-                _isOnLongProcess = value;
-            }
-        }
+        public bool IsOnLongProcess { get; internal set; }
 
         /// <summary>
         /// Get the long progress percent of job.

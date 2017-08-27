@@ -1,5 +1,5 @@
 //////////////////////////////////////////////
-// Apache 2.0  - 2016-2017
+// Apache 2.0  - 2013-2017
 // Author : Derek Tremblay (derektremblay666@gmail.com)
 //////////////////////////////////////////////
 
@@ -15,8 +15,6 @@ namespace WPFHexaEditor.Core.CharacterTable
 {
     /// <summary>
     /// Cet objet représente un fichier Thingy TBL (entrée + valeur)
-    ///
-    /// Derek Tremblay 2003-2017
     /// </summary>
     public sealed class TBLStream: IDisposable
     {
@@ -403,50 +401,34 @@ namespace WPFHexaEditor.Core.CharacterTable
         /// Ajouter un element a la collection
         /// </summary>
         /// <param name="dte">objet DTE a ajouter fans la collection</param>
-        public void Add(DTE dte)
-        {
-            _DTEList.Add(dte);
-        }
+        public void Add(DTE dte) => _DTEList.Add(dte);
 
         /// <summary>
         /// Effacer un element de la collection a partir d'un objet DTE
         /// </summary>
         /// <param name="dte"></param>
-        public void Remove(DTE dte)
-        {
-            _DTEList.Remove(dte);
-        }
+        public void Remove(DTE dte) => _DTEList.Remove(dte);
 
         /// <summary>
         /// Effacer un element de la collection avec son index dans la collection
         /// </summary>
         /// <param name="index">Index de l'element a effacer</param>
-        public void Remove(int index)
-        {
-            _DTEList.RemoveAt(index);
-        }
+        public void Remove(int index) => _DTEList.RemoveAt(index);
 
         /// <summary>
         /// Recherche un élément dans la TBL
         /// </summary>
         /// <param name="dte">Objet DTE a rechercher dans la TBL</param>
         /// <returns>Retourne la position ou ce trouve cette élément dans le tableau</returns>
-        public int Find(DTE dte)
-        {
-            return _DTEList.BinarySearch(dte);
-        }
-
+        public int Find(DTE dte) => _DTEList.BinarySearch(dte);
+        
         /// <summary>
         /// Recherche un élément dans la TBL
         /// </summary>
         /// <param name="Entry">Entrée sous forme hexadécimal (XX)</param>
         /// <param name="Value">Valeur de l'entré</param>
         /// <returns>Retourne la position ou ce trouve cette élément dans le tableau</returns>
-        public int Find(string Entry, string Value)
-        {
-            DTE dte = new DTE(Entry, Value);
-            return _DTEList.BinarySearch(dte);
-        }
+        public int Find(string Entry, string Value) => _DTEList.BinarySearch(new DTE(Entry, Value));
 
         /// <summary>
         /// Recherche un élément dans la TBL
@@ -455,11 +437,7 @@ namespace WPFHexaEditor.Core.CharacterTable
         /// <param name="Value">Valeur de l'entré</param>
         /// <param name="Type">Type de DTE</param>
         /// <returns>Retourne la position ou ce trouve cette élément dans le tableau</returns>
-        public int Find(string Entry, string Value, DTEType Type)
-        {
-            DTE dte = new DTE(Entry, Value, Type);
-            return _DTEList.BinarySearch(dte);
-        }
+        public int Find(string Entry, string Value, DTEType Type) => _DTEList.BinarySearch(new DTE(Entry, Value, Type));
 
         #endregion Méthodes
 
@@ -487,13 +465,7 @@ namespace WPFHexaEditor.Core.CharacterTable
         /// <summary>
         /// Total d'élement dans l'objet TBL
         /// </summary>
-        public int Length
-        {
-            get
-            {
-                return _DTEList.Count;
-            }
-        }
+        public int Length => _DTEList.Count;
 
         /// <summary>
         /// Avoir acess au Bookmark
@@ -504,79 +476,37 @@ namespace WPFHexaEditor.Core.CharacterTable
         /// <summary>
         /// Obtenir le total d'entré DTE dans la Table
         /// </summary>
-        public int TotalDTE
-        {
-            get
-            {
-                return _DTEList.Count(l => l.Type == DTEType.DualTitleEncoding);
-            }
-        }
+        public int TotalDTE => _DTEList.Count(l => l.Type == DTEType.DualTitleEncoding);
 
         /// <summary>
         /// Obtenir le total d'entré MTE dans la Table
         /// </summary>
-        public int TotalMTE
-        {
-            get
-            {
-                return _DTEList.Count(l => l.Type == DTEType.MultipleTitleEncoding);
-            }
-        }
+        public int TotalMTE => _DTEList.Count(l => l.Type == DTEType.MultipleTitleEncoding);
 
         /// <summary>
         /// Obtenir le total d'entré ASCII dans la Table
         /// </summary>
-        public int TotalASCII
-        {
-            get
-            {
-                return _DTEList.Count(l => l.Type == DTEType.ASCII);
-            }
-        }
+        public int TotalASCII => _DTEList.Count(l => l.Type == DTEType.ASCII);
 
         /// <summary>
         /// Obtenir le total d'entré Invalide dans la Table
         /// </summary>
-        public int TotalInvalid
-        {
-            get
-            {
-                return _DTEList.Count(l => l.Type == DTEType.Invalid);
-            }
-        }
+        public int TotalInvalid => _DTEList.Count(l => l.Type == DTEType.Invalid);
 
         /// <summary>
         /// Obtenir le total d'entré Japonais dans la Table
         /// </summary>
-        public int TotalJaponais
-        {
-            get
-            {
-                return _DTEList.Count(l => l.Type == DTEType.Japonais);
-            }
-        }
+        public int TotalJaponais => _DTEList.Count(l => l.Type == DTEType.Japonais);
 
         /// <summary>
         /// Obtenir le total d'entré Fin de ligne dans la Table
         /// </summary>
-        public int TotalEndLine
-        {
-            get
-            {
-                return _DTEList.Count(l => l.Type == DTEType.EndLine);
-            }
-        }
+        public int TotalEndLine => _DTEList.Count(l => l.Type == DTEType.EndLine);
 
         /// <summary>
         /// Obtenir le total d'entré Fin de Block dans la Table
         /// </summary>
-        public int TotalEndBlock
-        {
-            get
-            {
-                return _DTEList.Count(l => l.Type == DTEType.EndBlock);
-            }
-        }
+        public int TotalEndBlock => _DTEList.Count(l => l.Type == DTEType.EndBlock);
 
         /// <summary>
         /// Renvoi le caractere de fin de block

@@ -67,7 +67,6 @@
     <Compile Include="Core\Converters\HexToLongStringConverter.cs" />
     <Compile Include="Core\Interface\IByteControl.cs" />
     <Compile Include="Core\Interface\IHeaderStruct.cs" />
-    <Compile Include="Core\MethodExtention\VisualHelper.cs" />
     <Compile Include="Core\Native\NativeMethods.cs" />
     <Compile Include="Dialog\GiveByteWindow.xaml.cs">
       <DependentUpon>GiveByteWindow.xaml</DependentUpon>

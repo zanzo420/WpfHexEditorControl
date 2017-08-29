@@ -63,14 +63,8 @@ namespace WPFHexaEditor.Core.CharacterTable
         /// </summary>
         public string Entry
         {
-            set
-            {
-                _Entry = value.ToUpper();
-            }
-            get
-            {
-                return _Entry;
-            }
+            set => _Entry = value.ToUpper();
+            get => _Entry;
         }
 
         /// <summary>
@@ -171,18 +165,12 @@ namespace WPFHexaEditor.Core.CharacterTable
         #endregion Methodes Static
 
         #region IEquatable implementation
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as DTE);
-        }
+        public override bool Equals(object obj) => Equals(obj as DTE);
 
-        public bool Equals(DTE other)
-        {
-            return other != null &&
-                   Entry == other.Entry &&
-                   Value == other.Value &&
-                   Type == other.Type;
-        }
+        public bool Equals(DTE other) => other != null &&
+                                         Entry == other.Entry &&
+                                         Value == other.Value &&
+                                         Type == other.Type;
 
         public override int GetHashCode()
         {
@@ -193,15 +181,9 @@ namespace WPFHexaEditor.Core.CharacterTable
             return hashCode;
         }
 
-        public static bool operator ==(DTE dTE1, DTE dTE2)
-        {
-            return EqualityComparer<DTE>.Default.Equals(dTE1, dTE2);
-        }
+        public static bool operator ==(DTE dTE1, DTE dTE2) => EqualityComparer<DTE>.Default.Equals(dTE1, dTE2);
 
-        public static bool operator !=(DTE dTE1, DTE dTE2)
-        {
-            return !(dTE1 == dTE2);
-        }
+        public static bool operator !=(DTE dTE1, DTE dTE2) => !(dTE1 == dTE2);
         #endregion IEquatable implementation
     }
 }

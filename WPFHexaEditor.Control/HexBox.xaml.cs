@@ -16,30 +16,21 @@ namespace WPFHexaEditor.Control
     /// </summary>
     public partial class HexBox : UserControl
     {
-        public HexBox()
-        {
-            InitializeComponent();
-        }
+        public HexBox() => InitializeComponent();
 
         #region Properties
         /// <summary>
         /// Get hexadecimal value of LongValue
         /// </summary>
-        public string HexValue
-        {
-            get
-            {
-                return ByteConverters.LongToHex(LongValue);
-            }
-        }
+        public string HexValue => ByteConverters.LongToHex(LongValue);
 
         /// <summary>
         /// Set maximum value
         /// </summary>
         public long MaximumValue
         {
-            get { return (long)GetValue(MaximumValueProperty); }
-            set { SetValue(MaximumValueProperty, value); }
+            get => (long)GetValue(MaximumValueProperty);
+            set => SetValue(MaximumValueProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for MaximumValue.  This enables animation, styling, binding, etc...
@@ -60,8 +51,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public long LongValue
         {
-            get { return (long)GetValue(LongValueProperty); }
-            set { SetValue(LongValueProperty, value); }
+            get => (long)GetValue(LongValueProperty);
+            set => SetValue(LongValueProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for LongValue.  This enables animation, styling, binding, etc...
@@ -104,27 +95,18 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Substract one to the LongValue
         /// </summary>
-        private void SubstractOne()
-        {
-            LongValue--;
-        }
+        private void SubstractOne() => LongValue--;
 
         /// <summary>
         /// Add one to the LongValue
         /// </summary>
-        private void AddOne()
-        {
-            LongValue++;
-        }
+        private void AddOne() => LongValue++;
 
         /// <summary>
         /// Update value from decimal long
         /// </summary>
         /// <param name="value"></param>
-        private void UpdateValueFrom(long value)
-        {
-            LongValue = value;
-        }
+        private void UpdateValueFrom(long value) => LongValue = value;
 
         /// <summary>
         /// Update value from hex string
@@ -166,30 +148,15 @@ namespace WPFHexaEditor.Control
                 SubstractOne();
         }
 
-        private void UpButton_Click(object sender, RoutedEventArgs e)
-        {
-            AddOne();
-        }
+        private void UpButton_Click(object sender, RoutedEventArgs e) => AddOne();
 
-        private void DownButton_Click(object sender, RoutedEventArgs e)
-        {
-            SubstractOne();
-        }
+        private void DownButton_Click(object sender, RoutedEventArgs e) => SubstractOne();
 
-        private void HexTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            UpdateValueFrom(HexTextBox.Text);
-        }
-        
-        private void CopyHexaMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            Clipboard.SetText($"0x{HexTextBox.Text}");
-        }
+        private void HexTextBox_TextChanged(object sender, TextChangedEventArgs e) => UpdateValueFrom(HexTextBox.Text);
 
-        private void CopyLongMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            Clipboard.SetText(LongValue.ToString());
-        }
+        private void CopyHexaMenuItem_Click(object sender, RoutedEventArgs e) => Clipboard.SetText($"0x{HexTextBox.Text}");
+
+        private void CopyLongMenuItem_Click(object sender, RoutedEventArgs e) => Clipboard.SetText(LongValue.ToString());
         #endregion Controls events
     }
 }

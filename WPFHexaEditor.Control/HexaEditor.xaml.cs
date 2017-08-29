@@ -141,8 +141,8 @@ namespace WPFHexaEditor.Control
         #region Build-in CTRL key property
         public bool AllowBuildinCTRLC
         {
-            get { return (bool)GetValue(AllowBuildinCTRLCProperty); }
-            set { SetValue(AllowBuildinCTRLCProperty, value); }
+            get => (bool)GetValue(AllowBuildinCTRLCProperty);
+            set => SetValue(AllowBuildinCTRLCProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for AllowBuildinCTRLC.  This enables animation, styling, binding, etc...
@@ -152,8 +152,8 @@ namespace WPFHexaEditor.Control
 
         public bool AllowBuildinCTRLV
         {
-            get { return (bool)GetValue(AllowBuildinCTRLVProperty); }
-            set { SetValue(AllowBuildinCTRLVProperty, value); }
+            get => (bool)GetValue(AllowBuildinCTRLVProperty);
+            set => SetValue(AllowBuildinCTRLVProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for AllowBuildinCTRLV.  This enables animation, styling, binding, etc...
@@ -163,8 +163,8 @@ namespace WPFHexaEditor.Control
 
         public bool AllowBuildinCTRLA
         {
-            get { return (bool)GetValue(AllowBuildinCTRLAProperty); }
-            set { SetValue(AllowBuildinCTRLAProperty, value); }
+            get => (bool)GetValue(AllowBuildinCTRLAProperty);
+            set => SetValue(AllowBuildinCTRLAProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for AllowBuildinCTRLA.  This enables animation, styling, binding, etc...
@@ -174,8 +174,8 @@ namespace WPFHexaEditor.Control
 
         public bool AllowBuildinCTRLZ
         {
-            get { return (bool)GetValue(AllowBuildinCTRLZProperty); }
-            set { SetValue(AllowBuildinCTRLZProperty, value); }
+            get => (bool)GetValue(AllowBuildinCTRLZProperty);
+            set => SetValue(AllowBuildinCTRLZProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for AllowBuildinCTRLZ.  This enables animation, styling, binding, etc...
@@ -194,8 +194,8 @@ namespace WPFHexaEditor.Control
         #region Colors/fonts property and methods
         public Brush SelectionFirstColor
         {
-            get { return (Brush)GetValue(SelectionFirstColorProperty); }
-            set { SetValue(SelectionFirstColorProperty, value); }
+            get => (Brush)GetValue(SelectionFirstColorProperty);
+            set => SetValue(SelectionFirstColorProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for SelectionFirstColor.  This enables animation, styling, binding, etc...
@@ -205,8 +205,8 @@ namespace WPFHexaEditor.Control
 
         public Brush SelectionSecondColor
         {
-            get { return (Brush)GetValue(SelectionSecondColorProperty); }
-            set { SetValue(SelectionSecondColorProperty, value); }
+            get => (Brush)GetValue(SelectionSecondColorProperty);
+            set => SetValue(SelectionSecondColorProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for SelectionFirstColor.  This enables animation, styling, binding, etc...
@@ -216,8 +216,8 @@ namespace WPFHexaEditor.Control
 
         public Brush ByteModifiedColor
         {
-            get { return (Brush)GetValue(ByteModifiedColorProperty); }
-            set { SetValue(ByteModifiedColorProperty, value); }
+            get => (Brush)GetValue(ByteModifiedColorProperty);
+            set => SetValue(ByteModifiedColorProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for ByteModifiedColor.  This enables animation, styling, binding, etc...
@@ -227,8 +227,8 @@ namespace WPFHexaEditor.Control
 
         public Brush MouseOverColor
         {
-            get { return (Brush)GetValue(MouseOverColorProperty); }
-            set { SetValue(MouseOverColorProperty, value); }
+            get => (Brush)GetValue(MouseOverColorProperty);
+            set => SetValue(MouseOverColorProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for MouseOverColor.  This enables animation, styling, binding, etc...
@@ -238,8 +238,8 @@ namespace WPFHexaEditor.Control
 
         public Brush ByteDeletedColor
         {
-            get { return (Brush)GetValue(ByteDeletedColorProperty); }
-            set { SetValue(ByteDeletedColorProperty, value); }
+            get => (Brush)GetValue(ByteDeletedColorProperty);
+            set => SetValue(ByteDeletedColorProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for ByteDeletedColor.  This enables animation, styling, binding, etc...
@@ -249,8 +249,8 @@ namespace WPFHexaEditor.Control
 
         public Brush HighLightColor
         {
-            get { return (Brush)GetValue(HighLightColorProperty); }
-            set { SetValue(HighLightColorProperty, value); }
+            get => (Brush)GetValue(HighLightColorProperty);
+            set => SetValue(HighLightColorProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for HighLightColor.  This enables animation, styling, binding, etc...
@@ -260,8 +260,8 @@ namespace WPFHexaEditor.Control
 
         public Brush ForegroundOffSetHeaderColor
         {
-            get { return (Brush)GetValue(ForegroundOffSetHeaderColorProperty); }
-            set { SetValue(ForegroundOffSetHeaderColorProperty, value); }
+            get => (Brush)GetValue(ForegroundOffSetHeaderColorProperty);
+            set => SetValue(ForegroundOffSetHeaderColorProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for ForegroundOffSetHeaderColor.  This enables animation, styling, binding, etc...
@@ -281,14 +281,14 @@ namespace WPFHexaEditor.Control
 
         public new Brush Background
         {
-            get { return (Brush)GetValue(BackgroundProperty); }
-            set { SetValue(BackgroundProperty, value); }
+            get => (Brush)GetValue(BackgroundProperty);
+            set => SetValue(BackgroundProperty, value);
         }
 
         public new Brush Foreground
         {
-            get { return (Brush)GetValue(ForegroundProperty); }
-            set { SetValue(ForegroundProperty, value); }
+            get => (Brush)GetValue(ForegroundProperty);
+            set => SetValue(ForegroundProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for Foreground.  This enables animation, styling, binding, etc...
@@ -298,8 +298,8 @@ namespace WPFHexaEditor.Control
 
         public Brush ForegroundContrast
         {
-            get { return (Brush)GetValue(ForegroundContrastProperty); }
-            set { SetValue(ForegroundContrastProperty, value); }
+            get => (Brush)GetValue(ForegroundContrastProperty);
+            set => SetValue(ForegroundContrastProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for ForegroundContrastColor.  This enables animation, styling, binding, etc...
@@ -328,8 +328,8 @@ namespace WPFHexaEditor.Control
 
         public new FontFamily FontFamily
         {
-            get { return (FontFamily)GetValue(FontFamilyProperty); }
-            set { SetValue(FontFamilyProperty, value); }
+            get => (FontFamily)GetValue(FontFamilyProperty);
+            set => SetValue(FontFamilyProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for FontFamily.  This enables animation, styling, binding, etc...
@@ -356,14 +356,10 @@ namespace WPFHexaEditor.Control
 
         public double ScrollLargeChange
         {
-            get
-            {
-                return _scrollLargeChange;
-            }
+            get => _scrollLargeChange;
             set
             {
                 _scrollLargeChange = value;
-
                 UpdateVerticalScroll();
             }
         }
@@ -373,8 +369,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public double LineHeight
         {
-            get { return (double)GetValue(LineHeightProperty); }
-            set { SetValue(LineHeightProperty, value); }
+            get => (double)GetValue(LineHeightProperty);
+            set => SetValue(LineHeightProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for LineHeight.  This enables animation, styling, binding, etc...
@@ -404,8 +400,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public CharacterTableType TypeOfCharacterTable
         {
-            get { return (CharacterTableType)GetValue(TypeOfCharacterTableProperty); }
-            set { SetValue(TypeOfCharacterTableProperty, value); }
+            get => (CharacterTableType)GetValue(TypeOfCharacterTableProperty);
+            set => SetValue(TypeOfCharacterTableProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for TypeOfCharacterTable.  This enables animation, styling, binding, etc...
@@ -428,8 +424,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public bool TBL_ShowMTE
         {
-            get { return (bool)GetValue(TBL_ShowMTEProperty); }
-            set { SetValue(TBL_ShowMTEProperty, value); }
+            get => (bool)GetValue(TBL_ShowMTEProperty);
+            set => SetValue(TBL_ShowMTEProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for TBL_ShowMTE.  This enables animation, styling, binding, etc...
@@ -488,8 +484,6 @@ namespace WPFHexaEditor.Control
             if (_TBLCharacterTable != null)
                 foreach (BookMark mark in _TBLCharacterTable.BookMarks)
                     SetScrollMarker(mark);
-
-            //UpdateScrollMarkerPosition();
         }
 
         /// <summary>
@@ -497,8 +491,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public SolidColorBrush TBL_DTEColor
         {
-            get { return (SolidColorBrush)GetValue(TBL_DTEColorProperty); }
-            set { SetValue(TBL_DTEColorProperty, value); }
+            get => (SolidColorBrush)GetValue(TBL_DTEColorProperty);
+            set => SetValue(TBL_DTEColorProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for TBL_DTEColor.  This enables animation, styling, binding, etc...
@@ -518,8 +512,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public SolidColorBrush TBL_MTEColor
         {
-            get { return (SolidColorBrush)GetValue(TBL_MTEColorProperty); }
-            set { SetValue(TBL_MTEColorProperty, value); }
+            get => (SolidColorBrush)GetValue(TBL_MTEColorProperty);
+            set => SetValue(TBL_MTEColorProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for TBL_DTEColor.  This enables animation, styling, binding, etc...
@@ -533,8 +527,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public SolidColorBrush TBL_EndBlockColor
         {
-            get { return (SolidColorBrush)GetValue(TBL_EndBlockColorProperty); }
-            set { SetValue(TBL_EndBlockColorProperty, value); }
+            get => (SolidColorBrush)GetValue(TBL_EndBlockColorProperty);
+            set => SetValue(TBL_EndBlockColorProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for TBL_DTEColor.  This enables animation, styling, binding, etc...
@@ -548,8 +542,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public SolidColorBrush TBL_EndLineColor
         {
-            get { return (SolidColorBrush)GetValue(TBL_EndLineColorProperty); }
-            set { SetValue(TBL_EndLineColorProperty, value); }
+            get => (SolidColorBrush)GetValue(TBL_EndLineColorProperty);
+            set => SetValue(TBL_EndLineColorProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for TBL_DTEColor.  This enables animation, styling, binding, etc...
@@ -563,8 +557,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public SolidColorBrush TBL_DefaultColor
         {
-            get { return (SolidColorBrush)GetValue(TBL_DefaultColorProperty); }
-            set { SetValue(TBL_DefaultColorProperty, value); }
+            get => (SolidColorBrush)GetValue(TBL_DefaultColorProperty);
+            set => SetValue(TBL_DefaultColorProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for TBL_DTEColor.  This enables animation, styling, binding, etc...
@@ -582,8 +576,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public bool ReadOnlyMode
         {
-            get { return (bool)GetValue(ReadOnlyModeProperty); }
-            set { SetValue(ReadOnlyModeProperty, value); }
+            get => (bool)GetValue(ReadOnlyModeProperty);
+            set => SetValue(ReadOnlyModeProperty, value);
         }
 
         public static readonly DependencyProperty ReadOnlyModeProperty =
@@ -685,8 +679,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public long SelectionLine
         {
-            get { return (long)GetValue(SelectionLineProperty); }
-            internal set { SetValue(SelectionLineProperty, value); }
+            get => (long)GetValue(SelectionLineProperty);
+            internal set => SetValue(SelectionLineProperty, value);
         }
 
         public static readonly DependencyProperty SelectionLineProperty =
@@ -709,16 +703,12 @@ namespace WPFHexaEditor.Control
             }
         }
 
-        private void Control_ByteDeleted(object sender, EventArgs e)
-        {
-            DeleteSelection();
-        }
+        private void Control_ByteDeleted(object sender, EventArgs e) => DeleteSelection();
 
         private void Control_EscapeKey(object sender, EventArgs e)
         {
             UnSelectAll();
             UnHighLightAll();
-
             Focus();
         }
 
@@ -927,8 +917,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public long SelectionStart
         {
-            get { return (long)GetValue(SelectionStartProperty); }
-            set { SetValue(SelectionStartProperty, value); }
+            get => (long)GetValue(SelectionStartProperty);
+            set => SetValue(SelectionStartProperty, value);
         }
 
         public static readonly DependencyProperty SelectionStartProperty =
@@ -981,8 +971,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public long SelectionStop
         {
-            get { return (long)GetValue(SelectionStopProperty); }
-            set { SetValue(SelectionStopProperty, value); }
+            get => (long)GetValue(SelectionStopProperty);
+            set => SetValue(SelectionStopProperty, value);
         }
 
         public static readonly DependencyProperty SelectionStopProperty =
@@ -995,8 +985,6 @@ namespace WPFHexaEditor.Control
             if (d is HexaEditor ctrl)
             {
                 long value = (long)baseValue;
-
-                //Debug.Print($"SelectionStop : {value.ToString()}");
 
                 if (value < -1)
                     return -1L;
@@ -1080,7 +1068,6 @@ namespace WPFHexaEditor.Control
             {
                 MemoryStream ms = new MemoryStream();
                 CopyToStream(ms, true);
-
                 return ms.ToArray();
             }
         }
@@ -1094,7 +1081,6 @@ namespace WPFHexaEditor.Control
             {
                 MemoryStream ms = new MemoryStream();
                 CopyToStream(ms, true);
-
                 return ByteConverters.BytesToString(ms.ToArray());
             }
         }
@@ -1108,7 +1094,6 @@ namespace WPFHexaEditor.Control
             {
                 MemoryStream ms = new MemoryStream();
                 CopyToStream(ms, true);
-
                 return ByteConverters.ByteToHex(ms.ToArray());
             }
         }
@@ -1181,7 +1166,6 @@ namespace WPFHexaEditor.Control
                 }
             }
 
-            //Validation and refresh
             if (SelectionStart < 0)
                 SelectionStart = 0;
 
@@ -1402,8 +1386,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public Visibility HexDataVisibility
         {
-            get { return (Visibility)GetValue(HexDataVisibilityProperty); }
-            set { SetValue(HexDataVisibilityProperty, value); }
+            get => (Visibility)GetValue(HexDataVisibilityProperty);
+            set => SetValue(HexDataVisibilityProperty, value);
         }
 
         public static readonly DependencyProperty HexDataVisibilityProperty =
@@ -1450,8 +1434,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public Visibility HeaderVisibility
         {
-            get { return (Visibility)GetValue(HeaderVisibilityProperty); }
-            set { SetValue(HeaderVisibilityProperty, value); }
+            get => (Visibility)GetValue(HeaderVisibilityProperty);
+            set => SetValue(HeaderVisibilityProperty, value);
         }
 
         public static readonly DependencyProperty HeaderVisibilityProperty =
@@ -1485,8 +1469,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public Visibility StringDataVisibility
         {
-            get { return (Visibility)GetValue(StringDataVisibilityProperty); }
-            set { SetValue(StringDataVisibilityProperty, value); }
+            get => (Visibility)GetValue(StringDataVisibilityProperty);
+            set => SetValue(StringDataVisibilityProperty, value);
         }
 
         public static readonly DependencyProperty StringDataVisibilityProperty =
@@ -1506,7 +1490,6 @@ namespace WPFHexaEditor.Control
                     case Visibility.Visible:
                         ctrl.StringDataStackPanel.Visibility = Visibility.Visible;
                         break;
-
                     case Visibility.Collapsed:
                         ctrl.StringDataStackPanel.Visibility = Visibility.Collapsed;
                         break;
@@ -1519,8 +1502,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public Visibility StatusBarVisibility
         {
-            get { return (Visibility)GetValue(StatusBarVisibilityProperty); }
-            set { SetValue(StatusBarVisibilityProperty, value); }
+            get => (Visibility)GetValue(StatusBarVisibilityProperty);
+            set => SetValue(StatusBarVisibilityProperty, value);
         }
 
         public static readonly DependencyProperty StatusBarVisibilityProperty =
@@ -1653,8 +1636,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public string FileName
         {
-            get { return (string)GetValue(FileNameProperty); }
-            set { SetValue(FileNameProperty, value); }
+            get => (string)GetValue(FileNameProperty);
+            set => SetValue(FileNameProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for FileName.  This enables animation, styling, binding, etc...
@@ -1674,8 +1657,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public MemoryStream Stream
         {
-            get { return (MemoryStream)GetValue(StreamProperty); }
-            set { SetValue(StreamProperty, value); }
+            get => (MemoryStream)GetValue(StreamProperty);
+            set => SetValue(StreamProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for Stream.  This enables animation, styling, binding, etc...
@@ -1977,8 +1960,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public int BytePerLine
         {
-            get { return (int)GetValue(BytePerLineProperty); }
-            set { SetValue(BytePerLineProperty, value); }
+            get => (int)GetValue(BytePerLineProperty);
+            set => SetValue(BytePerLineProperty, value);
         }
 
         public static readonly DependencyProperty BytePerLineProperty =
@@ -2055,7 +2038,7 @@ namespace WPFHexaEditor.Control
             UpdateLinesInfo();
 
             if (RefreshData)
-                UpdateDataViewers(ControlResize);
+                UpdateViewers(ControlResize);
 
             //Update visual of byte control
             UpdateByteModified();
@@ -2220,7 +2203,7 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Update the data and string stackpanels yo current view;
         /// </summary>
-        private void UpdateDataViewers(bool ControlResize)
+        private void UpdateViewers(bool ControlResize)
         {
             var curLevel = ++_priLevel;
             if (ByteProvider.CheckIsOpen(_provider))
@@ -2254,9 +2237,7 @@ namespace WPFHexaEditor.Control
                 var sizeReadyToRead = LinesInfoStackPanel.Children.Count * BytePerLine + 1;
                 _provider.Position = startPosition;
                 var readSize = _provider.Read(_viewBuffer, 0, sizeReadyToRead);
-
                 var index = 0;
-
                 var count = HexDataStackPanel.Children.Count;
 
                 #region
@@ -3272,8 +3253,8 @@ namespace WPFHexaEditor.Control
 
         public bool AllowByteCount
         {
-            get { return (bool)GetValue(AllowByteCountProperty); }
-            set { SetValue(AllowByteCountProperty, value); }
+            get => (bool)GetValue(AllowByteCountProperty);
+            set => SetValue(AllowByteCountProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for AllowByteCount.  This enables animation, styling, binding, etc...

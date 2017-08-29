@@ -16,9 +16,7 @@ namespace WPFHexaEditor.Core
         public long BytePositionInFile { get; set; } = 0;
         public string Description { get; set; } = "";
 
-        public BookMark()
-        {
-        }
+        public BookMark() { }
 
         public BookMark(string description, long position)
         {
@@ -30,9 +28,6 @@ namespace WPFHexaEditor.Core
         /// String representation
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"({ByteConverters.LongToHex(BytePositionInFile)}h){Description}";
-        }
+        public override string ToString() => $"({ByteConverters.LongToHex(BytePositionInFile)}h){Description}";
     }
 }

@@ -96,8 +96,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public long BytePositionInFile
         {
-            get { return (long)GetValue(BytePositionInFileProperty); }
-            set { SetValue(BytePositionInFileProperty, value); }
+            get => (long)GetValue(BytePositionInFileProperty);
+            set => SetValue(BytePositionInFileProperty, value);
         }
 
         public static readonly DependencyProperty BytePositionInFileProperty =
@@ -108,8 +108,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public bool FirstSelected
         {
-            get { return (bool)GetValue(FirstSelectedProperty); }
-            set { SetValue(FirstSelectedProperty, value); }
+            get => (bool)GetValue(FirstSelectedProperty);
+            set => SetValue(FirstSelectedProperty, value);
         }
 
         public static readonly DependencyProperty FirstSelectedProperty =
@@ -120,8 +120,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public byte? Byte
         {
-            get { return (byte?)GetValue(ByteProperty); }
-            set { SetValue(ByteProperty, value); }
+            get => (byte?)GetValue(ByteProperty);
+            set => SetValue(ByteProperty, value);
         }
 
         public static readonly DependencyProperty ByteProperty =
@@ -151,8 +151,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public byte? ByteNext
         {
-            get { return (byte?)GetValue(ByteNextProperty); }
-            set { SetValue(ByteNextProperty, value); }
+            get => (byte?)GetValue(ByteNextProperty);
+            set => SetValue(ByteNextProperty, value);
         }
 
         public static readonly DependencyProperty ByteNextProperty =
@@ -174,8 +174,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public bool IsFocus
         {
-            get { return (bool)GetValue(IsFocusProperty); }
-            set { SetValue(IsFocusProperty, value); }
+            get => (bool)GetValue(IsFocusProperty);
+            set => SetValue(IsFocusProperty, value);
         }
 
         public static readonly DependencyProperty IsFocusProperty =
@@ -194,8 +194,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public bool IsSelected
         {
-            get { return (bool)GetValue(IsSelectedProperty); }
-            set { SetValue(IsSelectedProperty, value); }
+            get => (bool)GetValue(IsSelectedProperty);
+            set => SetValue(IsSelectedProperty, value);
         }
 
         public static readonly DependencyProperty IsSelectedProperty =
@@ -214,8 +214,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public bool IsHighLight
         {
-            get { return (bool)GetValue(IsHighLightProperty); }
-            set { SetValue(IsHighLightProperty, value); }
+            get => (bool)GetValue(IsHighLightProperty);
+            set => SetValue(IsHighLightProperty, value);
         }
 
         public static readonly DependencyProperty IsHighLightProperty =
@@ -235,8 +235,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public bool InternalChange
         {
-            get { return (bool)GetValue(InternalChangeProperty); }
-            set { SetValue(InternalChangeProperty, value); }
+            get => (bool)GetValue(InternalChangeProperty);
+            set => SetValue(InternalChangeProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for InternalChange.  This enables animation, styling, binding, etc...
@@ -248,8 +248,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public ByteAction Action
         {
-            get { return (ByteAction)GetValue(ActionProperty); }
-            set { SetValue(ActionProperty, value); }
+            get => (ByteAction)GetValue(ActionProperty);
+            set => SetValue(ActionProperty, value);
         }
 
         public static readonly DependencyProperty ActionProperty =
@@ -284,8 +284,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public bool TBL_ShowMTE
         {
-            get { return (bool)GetValue(TBL_ShowMTEProperty); }
-            set { SetValue(TBL_ShowMTEProperty, value); }
+            get => (bool)GetValue(TBL_ShowMTEProperty);
+            set => SetValue(TBL_ShowMTEProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for TBL_ShowMTE.  This enables animation, styling, binding, etc...
@@ -306,8 +306,8 @@ namespace WPFHexaEditor.Control
         /// </summary>
         public CharacterTableType TypeOfCharacterTable
         {
-            get { return (CharacterTableType)GetValue(TypeOfCharacterTableProperty); }
-            set { SetValue(TypeOfCharacterTableProperty, value); }
+            get => (CharacterTableType)GetValue(TypeOfCharacterTableProperty);
+            set => SetValue(TypeOfCharacterTableProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for TypeOfCharacterTable.  This enables animation, styling, binding, etc...
@@ -324,14 +324,8 @@ namespace WPFHexaEditor.Control
 
         public TBLStream TBLCharacterTable
         {
-            get
-            {
-                return _TBLCharacterTable;
-            }
-            set
-            {
-                _TBLCharacterTable = value;
-            }
+            get => _TBLCharacterTable;
+            set => _TBLCharacterTable = value;
         }
 
         #endregion Characters tables

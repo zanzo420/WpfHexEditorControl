@@ -17,7 +17,7 @@ using WPFHexaEditor.Core.Interface;
 
 namespace WPFHexaEditor.Control
 {
-    internal partial class StringByte : TextBlock, IByteControl
+    internal class StringByte : TextBlock, IByteControl
     {
         //Global variable
         private HexaEditor _parent;

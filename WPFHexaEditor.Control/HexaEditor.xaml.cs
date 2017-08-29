@@ -348,10 +348,7 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Call Updatevisual methods for all IByteControl
         /// </summary>
-        public void UpdateVisual()
-        {
-            TraverseStringAndDataControls(ctrl => { ctrl.UpdateVisual(); });
-        }
+        public void UpdateVisual() => TraverseHexAndStringBytes(ctrl => { ctrl.UpdateVisual(); });
 
         #endregion Colors/fonts property and methods
 
@@ -725,29 +722,18 @@ namespace WPFHexaEditor.Control
             Focus();
         }
 
-        private void Control_CTRLZKey(object sender, EventArgs e)
-        {
-            Undo();
-        }
+        private void Control_CTRLZKey(object sender, EventArgs e) => Undo();
 
-        private void Control_CTRLCKey(object sender, EventArgs e)
-        {
-            CopyToClipboard();
-        }
+        private void Control_CTRLCKey(object sender, EventArgs e) => CopyToClipboard();
 
-        private void Control_CTRLAKey(object sender, EventArgs e)
-        {
-            SelectAll();
-        }
+        private void Control_CTRLAKey(object sender, EventArgs e) => SelectAll();
 
-        private void Control_CTRLVKey(object sender, EventArgs e)
-        {
-            PasteWithoutInsert();
-        }
+        private void Control_CTRLVKey(object sender, EventArgs e) => PasteWithoutInsert();
 
         private void Control_MovePageUp(object sender, EventArgs e)
         {
-            long byteToMove = (BytePerLine * GetMaxVisibleLine());
+            long visibleLine = GetMaxVisibleLine();
+            long byteToMove = (BytePerLine * visibleLine);
             long test = SelectionStart - byteToMove;
 
             if (Keyboard.Modifiers == ModifierKeys.Shift)
@@ -776,17 +762,17 @@ namespace WPFHexaEditor.Control
 
             if (sender is HexByte || sender is StringByte)
             {
-                VerticalScrollBar.Value -= GetMaxVisibleLine() - 1;
-                SetFocusHexDataPanel(SelectionStart);
+                VerticalScrollBar.Value -= visibleLine - 1;
+                SetFocusAtSelectionStart(sender as IByteControl);
             }
         }
 
         private void Control_MovePageDown(object sender, EventArgs e)
         {
-            long byteToMove = (BytePerLine * GetMaxVisibleLine());
+            long visibleLine = GetMaxVisibleLine();
+            long byteToMove = (BytePerLine * visibleLine);
             long test = SelectionStart + byteToMove;
 
-            //TODO : Validation
             if (Keyboard.Modifiers == ModifierKeys.Shift)
             {
                 if (test < _provider.Length)
@@ -813,8 +799,8 @@ namespace WPFHexaEditor.Control
 
             if (sender is HexByte || sender is StringByte)
             {
-                VerticalScrollBar.Value += GetMaxVisibleLine() - 1;
-                SetFocusHexDataPanel(SelectionStart);
+                VerticalScrollBar.Value += visibleLine - 1;
+                SetFocusAtSelectionStart(sender as IByteControl);
             }
         }
 
@@ -822,8 +808,6 @@ namespace WPFHexaEditor.Control
         {
             long test = SelectionStart + BytePerLine;
 
-
-            //TODO : Validation
             if (Keyboard.Modifiers == ModifierKeys.Shift)
             {
                 if (test < _provider.Length)
@@ -845,24 +829,16 @@ namespace WPFHexaEditor.Control
                 }
             }
 
-            //if (!GetSelectionStartIsVisible() && SelectionLenght == 1)
-            //    SetPosition(SelectionStart, 1);
-
             if (SelectionStart > GetLastVisibleBytePosition())
                 VerticalScrollBar.Value++;
 
-            if (sender is HexByte)
-                SetFocusHexDataPanel(SelectionStart);
-
-            if (sender is StringByte)
-                SetFocusStringDataPanel(SelectionStart);
+            SetFocusAtSelectionStart(sender as IByteControl);
         }
 
         private void Control_MoveUp(object sender, EventArgs e)
         {
             long test = SelectionStart - BytePerLine;
 
-            //TODO : Validation
             if (Keyboard.Modifiers == ModifierKeys.Shift)
             {
                 if (test > -1)
@@ -887,10 +863,7 @@ namespace WPFHexaEditor.Control
             if (SelectionStart < GetFirstVisibleBytePosition())
                 VerticalScrollBar.Value--;
 
-            if (sender is HexByte)
-                SetFocusHexDataPanel(SelectionStart);
-            else
-                SetFocusStringDataPanel(SelectionStart);
+            SetFocusAtSelectionStart(sender as IByteControl);
         }
 
         private void Control_Click(object sender, EventArgs e)
@@ -1106,7 +1079,6 @@ namespace WPFHexaEditor.Control
             get
             {
                 MemoryStream ms = new MemoryStream();
-
                 CopyToStream(ms, true);
 
                 return ms.ToArray();
@@ -1121,7 +1093,6 @@ namespace WPFHexaEditor.Control
             get
             {
                 MemoryStream ms = new MemoryStream();
-
                 CopyToStream(ms, true);
 
                 return ByteConverters.BytesToString(ms.ToArray());
@@ -1136,7 +1107,6 @@ namespace WPFHexaEditor.Control
             get
             {
                 MemoryStream ms = new MemoryStream();
-
                 CopyToStream(ms, true);
 
                 return ByteConverters.ByteToHex(ms.ToArray());
@@ -1183,11 +1153,7 @@ namespace WPFHexaEditor.Control
             if (SelectionStart > GetLastVisibleBytePosition())
                 VerticalScrollBar.Value++;
 
-            if (sender is HexByte)
-                SetFocusHexDataPanel(SelectionStart);
-
-            if (sender is StringByte)
-                SetFocusStringDataPanel(SelectionStart);
+            SetFocusAtSelectionStart(sender as IByteControl);
         }
 
         private void Control_MoveLeft(object sender, EventArgs e)
@@ -1222,13 +1188,21 @@ namespace WPFHexaEditor.Control
             if (SelectionStart < GetFirstVisibleBytePosition())
                 VerticalScrollBar.Value--;
 
-            if (sender is HexByte)
-                SetFocusHexDataPanel(SelectionStart);
-
-            if (sender is StringByte)
-                SetFocusStringDataPanel(SelectionStart);
+            SetFocusAtSelectionStart(sender as IByteControl);
         }
 
+        private void SetFocusAtSelectionStart(IByteControl sender)
+        {
+            switch (sender)
+            {
+                case HexByte hb:
+                    SetFocusHexDataPanel(SelectionStart);
+                    break;
+                case StringByte sb:
+                    SetFocusStringDataPanel(SelectionStart);
+                    break;
+            }
+        }
 
         private void Control_MovePrevious(object sender, EventArgs e)
         {
@@ -1266,10 +1240,7 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Fill the selection with a Byte at selection start
         /// </summary>
-        public void FillWithByte(byte b)
-        {
-            FillWithByte(SelectionStart, SelectionLength, b);
-        }
+        public void FillWithByte(byte b) => FillWithByte(SelectionStart, SelectionLength, b);
 
         /// <summary>
         /// Fill with a Byte at start position
@@ -1288,10 +1259,7 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Replace byte with another at selection position
         /// </summary>
-        public void ReplaceByte(byte original, byte replace)
-        {
-            ReplaceByte(SelectionStart, SelectionLength, original, replace);
-        }
+        public void ReplaceByte(byte original, byte replace) => ReplaceByte(SelectionStart, SelectionLength, original, replace);
 
         /// <summary>
         /// Replace byte with another at start position
@@ -1321,26 +1289,17 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Return true if delete method could be invoked.
         /// </summary>
-        public bool CanDelete()
-        {
-            return CanCopy() && !ReadOnlyMode;
-        }
+        public bool CanDelete() => CanCopy() && !ReadOnlyMode;
 
         /// <summary>
         /// Copy to clipboard with default CopyPasteMode.ASCIIString
         /// </summary>
-        public void CopyToClipboard()
-        {
-            CopyToClipboard(CopyPasteMode.ASCIIString);
-        }
+        public void CopyToClipboard() => CopyToClipboard(CopyPasteMode.ASCIIString);
 
         /// <summary>
         /// Copy to clipboard the current selection with actual change in control
         /// </summary>
-        public void CopyToClipboard(CopyPasteMode copypastemode)
-        {
-            CopyToClipboard(copypastemode, SelectionStart, SelectionStop, true, _TBLCharacterTable);
-        }
+        public void CopyToClipboard(CopyPasteMode copypastemode) => CopyToClipboard(copypastemode, SelectionStart, SelectionStop, true, _TBLCharacterTable);
 
         /// <summary>
         /// Copy to clipboard
@@ -1357,10 +1316,7 @@ namespace WPFHexaEditor.Control
         /// Copy selection to a stream
         /// </summary>
         /// <param name="output">Output stream is not closed after copy</param>
-        public void CopyToStream(Stream output, bool copyChange)
-        {
-            CopyToStream(output, SelectionStart, SelectionStop, copyChange);
-        }
+        public void CopyToStream(Stream output, bool copyChange) => CopyToStream(output, SelectionStart, SelectionStop, copyChange);
 
         /// <summary>
         /// Copy selection to a stream
@@ -1377,10 +1333,7 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Occurs when data is copied in byteprovider instance
         /// </summary>
-        private void Provider_DataCopied(object sender, EventArgs e)
-        {
-            DataCopied?.Invoke(sender, e);
-        }
+        private void Provider_DataCopied(object sender, EventArgs e) => DataCopied?.Invoke(sender, e);
 
         #endregion Copy/Paste/Cut Methods
 
@@ -1403,18 +1356,12 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Get the line number of position in parameter
         /// </summary>
-        public double GetLineNumber(long position)
-        {
-            return position / BytePerLine;
-        }
+        public double GetLineNumber(long position) => position / BytePerLine;
 
         /// <summary>
         /// Set position in control at position in parameter
         /// </summary>
-        public void SetPosition(long position)
-        {
-            SetPosition(position, 0);
-        }
+        public void SetPosition(long position) => SetPosition(position, 0);
 
         /// <summary>
         /// Set position in control at position in parameter
@@ -1566,7 +1513,7 @@ namespace WPFHexaEditor.Control
                 }
             }
         }
-                
+
         /// <summary>
         /// Set or Get value for change visibility of status bar
         /// </summary>
@@ -1902,8 +1849,8 @@ namespace WPFHexaEditor.Control
             LongProgressProgressBar.Visibility = Visibility.Collapsed;
             CancelLongProcessButton.Visibility = Visibility.Collapsed;
 
-            TraverseDataControls(ctrl => ctrl.IsEnabled = true);
-            TraverseStringControls(ctrl => ctrl.IsEnabled = true);
+            TraverseHexBytes(ctrl => ctrl.IsEnabled = true);
+            TraverseStringBytes(ctrl => ctrl.IsEnabled = true);
 
             LongProcessProgressCompleted?.Invoke(this, new EventArgs());
         }
@@ -1913,8 +1860,8 @@ namespace WPFHexaEditor.Control
             LongProgressProgressBar.Visibility = Visibility.Visible;
             CancelLongProcessButton.Visibility = Visibility.Visible;
 
-            TraverseDataControls(ctrl => ctrl.IsEnabled = false);
-            TraverseStringControls(ctrl => ctrl.IsEnabled = false);
+            TraverseHexBytes(ctrl => ctrl.IsEnabled = false);
+            TraverseStringBytes(ctrl => ctrl.IsEnabled = false);
 
             LongProcessProgressStarted?.Invoke(this, new EventArgs());
         }
@@ -1928,15 +1875,9 @@ namespace WPFHexaEditor.Control
             LongProcessProgressChanged?.Invoke(this, new EventArgs());
         }
 
-        private void Provider_ReplaceByteCompleted(object sender, EventArgs e)
-        {
-            ReplaceByteCompleted?.Invoke(this, new EventArgs());
-        }
+        private void Provider_ReplaceByteCompleted(object sender, EventArgs e) => ReplaceByteCompleted?.Invoke(this, new EventArgs());
 
-        private void Provider_FillWithByteCompleted(object sender, EventArgs e)
-        {
-            FillWithByteCompleted?.Invoke(this, new EventArgs());
-        }
+        private void Provider_FillWithByteCompleted(object sender, EventArgs e) => FillWithByteCompleted?.Invoke(this, new EventArgs());
 
         private void CancelLongProcessButton_Click(object sender, RoutedEventArgs e)
         {
@@ -1971,40 +1912,61 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Used to make action on all hexbytecontrol
         /// </summary>
-        private void TraverseDataControls(Action<HexByte> act)
+        private void TraverseHexBytes(Action<HexByte> act)
         {
+            var visibleLine = GetMaxVisibleLine();
+            var cnt = 0;
+
             //HexByte panel
             foreach (StackPanel hexDataStack in HexDataStackPanel.Children)
+            {
+                if (cnt++ == visibleLine) break;
                 foreach (HexByte byteControl in hexDataStack.Children)
                     act(byteControl);
+            }
         }
 
         /// <summary>
         /// Used to make action on all stringbytecontrol
         /// </summary>
-        private void TraverseStringControls(Action<StringByte> act)
+        private void TraverseStringBytes(Action<StringByte> act)
         {
+            var visibleLine = GetMaxVisibleLine();
+            var cnt = 0;
+
             //Stringbyte panel
             foreach (StackPanel stringDataStack in StringDataStackPanel.Children)
+            {
+                if (cnt++ == visibleLine) break;
                 foreach (StringByte sbControl in stringDataStack.Children)
                     act(sbControl);
+            }
         }
 
         /// <summary>
         /// To reduce code.traverse hex and string controls.
         /// </summary>
-        /// <param name="act"></param>
-        private void TraverseStringAndDataControls(Action<IByteControl> act)
+        private void TraverseHexAndStringBytes(Action<IByteControl> act)
         {
+            var visibleLine = GetMaxVisibleLine();
+            var cnt = 0;
+
             //Stringbyte panel
             foreach (StackPanel stringDataStack in StringDataStackPanel.Children)
+            {
+                if (cnt++ == visibleLine) break;
                 foreach (StringByte sbControl in stringDataStack.Children)
                     act(sbControl);
+            }
 
             //HexByte panel
+            cnt = 0;
             foreach (StackPanel hexDataStack in HexDataStackPanel.Children)
+            {
+                if (cnt++ == visibleLine) break;
                 foreach (HexByte byteControl in hexDataStack.Children)
                     act(byteControl);
+            }
         }
         #endregion Traverse ByteControl methods
 
@@ -2055,10 +2017,7 @@ namespace WPFHexaEditor.Control
             if (e.HeightChanged) RefreshView(true);
         }
 
-        private void VerticalScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            RefreshView(false);
-        }
+        private void VerticalScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => RefreshView(false);
 
         /// <summary>
         /// Update vertical scrollbar with file info
@@ -2122,12 +2081,12 @@ namespace WPFHexaEditor.Control
             switch (coloring)
             {
                 case FirstColor.HexByteData:
-                    TraverseDataControls(ctrl => { ctrl.FirstSelected = true; });
-                    TraverseStringControls(ctrl => { ctrl.FirstSelected = false; });
+                    TraverseHexBytes(ctrl => { ctrl.FirstSelected = true; });
+                    TraverseStringBytes(ctrl => { ctrl.FirstSelected = false; });
                     break;
                 case FirstColor.StringByteData:
-                    TraverseDataControls(ctrl => { ctrl.FirstSelected = false; });
-                    TraverseStringControls(ctrl => { ctrl.FirstSelected = true; });
+                    TraverseHexBytes(ctrl => { ctrl.FirstSelected = false; });
+                    TraverseStringBytes(ctrl => { ctrl.FirstSelected = true; });
                     break;
             }
         }
@@ -2213,7 +2172,7 @@ namespace WPFHexaEditor.Control
 
             #region Attach events to each IByteControl
             if (reAttachEvents)
-                TraverseStringAndDataControls(ctrl =>
+                TraverseHexAndStringBytes(ctrl =>
                 {
                     //Detach events
                     ctrl.ByteModified -= Control_ByteModified;
@@ -2287,9 +2246,9 @@ namespace WPFHexaEditor.Control
                     #endregion
                 }
 
-                if (LinesInfoStackPanel.Children.Count == 0)                
+                if (LinesInfoStackPanel.Children.Count == 0)
                     return;
-                
+
                 var firstInfoLabel = LinesInfoStackPanel.Children[0] as TextBlock;
                 var startPosition = ByteConverters.HexLiteralToLong(firstInfoLabel.Text);
                 var sizeReadyToRead = LinesInfoStackPanel.Children.Count * BytePerLine + 1;
@@ -2301,7 +2260,7 @@ namespace WPFHexaEditor.Control
                 var count = HexDataStackPanel.Children.Count;
 
                 #region
-                TraverseDataControls(byteControl =>
+                TraverseHexBytes(byteControl =>
                 {
                     byteControl.Action = ByteAction.Nothing;
                     byteControl.ReadOnlyMode = ReadOnlyMode;
@@ -2328,7 +2287,7 @@ namespace WPFHexaEditor.Control
 
                 index = 0;
                 #region
-                TraverseStringControls(sbCtrl =>
+                TraverseStringBytes(sbCtrl =>
                 {
                     sbCtrl.Action = ByteAction.Nothing;
                     sbCtrl.ReadOnlyMode = ReadOnlyMode;
@@ -2368,7 +2327,7 @@ namespace WPFHexaEditor.Control
             else
             {
                 _viewBuffer = null;
-                TraverseDataControls(control =>
+                TraverseHexBytes(control =>
                 {
                     control.BytePositionInFile = -1;
                     control.Byte = null;
@@ -2379,7 +2338,7 @@ namespace WPFHexaEditor.Control
                     control.ToolTip = null;
                 });
 
-                TraverseStringControls(control =>
+                TraverseStringBytes(control =>
                 {
                     control.BytePositionInFile = -1;
                     control.Byte = null;
@@ -2401,7 +2360,7 @@ namespace WPFHexaEditor.Control
             {
                 var ModifiedBytesDictionary = _provider.GetModifiedBytes(ByteAction.All);
 
-                TraverseStringAndDataControls(ctrl =>
+                TraverseHexAndStringBytes(ctrl =>
                 {
                     if (ModifiedBytesDictionary.TryGetValue(ctrl.BytePositionInFile, out ByteModified byteModified))
                     {
@@ -2426,7 +2385,7 @@ namespace WPFHexaEditor.Control
             long minSelect = SelectionStart <= SelectionStop ? SelectionStart : SelectionStop;
             long maxSelect = SelectionStart <= SelectionStop ? SelectionStop : SelectionStart;
 
-            TraverseStringAndDataControls(ctrl =>
+            TraverseHexAndStringBytes(ctrl =>
             {
                 if (ctrl.BytePositionInFile >= minSelect &&
                         ctrl.BytePositionInFile <= maxSelect &&
@@ -2446,7 +2405,7 @@ namespace WPFHexaEditor.Control
 
             if (_markedPositionList.Count > 0)
             {
-                TraverseStringAndDataControls(Control =>
+                TraverseHexAndStringBytes(Control =>
                 {
                     find = false;
 
@@ -2461,7 +2420,7 @@ namespace WPFHexaEditor.Control
                 });
             }
             else //Un highlight all            
-                TraverseStringAndDataControls(Control => { Control.IsHighLight = false; });
+                TraverseHexAndStringBytes(Control => { Control.IsHighLight = false; });
         }
 
         /// <summary>
@@ -2555,7 +2514,7 @@ namespace WPFHexaEditor.Control
         {
             long rtn = -1;
             int count = 0;
-            TraverseDataControls(ctrl =>
+            TraverseHexBytes(ctrl =>
             {
                 count++;
 
@@ -2572,7 +2531,7 @@ namespace WPFHexaEditor.Control
         public bool GetSelectionStartIsVisible()
         {
             bool rtn = false;
-            TraverseDataControls(ctrl =>
+            TraverseHexBytes(ctrl =>
             {
                 if (ctrl.BytePositionInFile == SelectionStart)
                     rtn = true;
@@ -2602,7 +2561,7 @@ namespace WPFHexaEditor.Control
                     return;
 
                 bool rtn = false;
-                TraverseDataControls(ctrl =>
+                TraverseHexBytes(ctrl =>
                 {
                     if (ctrl.BytePositionInFile == bytePositionInFile)
                     {
@@ -2613,12 +2572,9 @@ namespace WPFHexaEditor.Control
 
                 if (rtn) return;
 
-                if (VerticalScrollBar.Value < VerticalScrollBar.Maximum)
-                {
+                if (VerticalScrollBar.Value < VerticalScrollBar.Maximum)                
                     VerticalScrollBar.Value++;
-                    //TraverseDataControls(ctrl => { if (ctrl.BytePositionInFile == bytePositionInFile) ctrl.Focus(); });
-                }
-
+                
                 if (!GetSelectionStartIsVisible() && SelectionLength == 1)
                     SetPosition(SelectionStart, 1);
             }
@@ -2635,7 +2591,7 @@ namespace WPFHexaEditor.Control
                     return;
 
                 bool rtn = false;
-                TraverseStringControls(ctrl =>
+                TraverseStringBytes(ctrl =>
                 {
                     if (ctrl.BytePositionInFile == bytePositionInFile)
                     {
@@ -2647,10 +2603,7 @@ namespace WPFHexaEditor.Control
                 if (rtn) return;
 
                 if (VerticalScrollBar.Value < VerticalScrollBar.Maximum)
-                {
                     VerticalScrollBar.Value++;
-                    //TraverseStringControls(ctrl => { if (ctrl.BytePositionInFile == bytePositionInFile) ctrl.Focus(); });
-                }
 
                 if (!GetSelectionStartIsVisible() && SelectionLength == 1)
                     SetPosition(SelectionStart, 1);
@@ -2663,10 +2616,7 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Find first occurence of string in stream. Search start as startPosition.
         /// </summary>
-        public long FindFirst(string text, long startPosition = 0)
-        {
-            return FindFirst(ByteConverters.StringToByte(text));
-        }
+        public long FindFirst(string text, long startPosition = 0) => FindFirst(ByteConverters.StringToByte(text));
 
         /// <summary>
         /// Find first occurence of byte[] in stream. Search start as startPosition.
@@ -2694,10 +2644,7 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Find next occurence of string in stream search start at SelectionStart.
         /// </summary>
-        public long FindNext(string text)
-        {
-            return FindNext(ByteConverters.StringToByte(text));
-        }
+        public long FindNext(string text) => FindNext(ByteConverters.StringToByte(text));
 
         /// <summary>
         /// Find next occurence of byte[] in stream search start at SelectionStart.
@@ -2725,10 +2672,7 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Find last occurence of string in stream search start at SelectionStart.
         /// </summary>
-        public long FindLast(string text)
-        {
-            return FindLast(ByteConverters.StringToByte(text));
-        }
+        public long FindLast(string text) => FindLast(ByteConverters.StringToByte(text));
 
         /// <summary>
         /// Find first occurence of byte[] in stream.
@@ -2757,10 +2701,7 @@ namespace WPFHexaEditor.Control
         /// Find all occurence of string in stream.
         /// </summary>
         /// <returns>Return null if no occurence found</returns>
-        public IEnumerable<long> FindAll(string text)
-        {
-            return FindAll(ByteConverters.StringToByte(text));
-        }
+        public IEnumerable<long> FindAll(string text) => FindAll(ByteConverters.StringToByte(text));
 
         /// <summary>
         /// Find all occurence of byte[] in stream.
@@ -2780,10 +2721,7 @@ namespace WPFHexaEditor.Control
         /// Find all occurence of string in stream.
         /// </summary>
         /// <returns>Return null if no occurence found</returns>
-        public IEnumerable<long> FindAll(string text, bool highLight)
-        {
-            return FindAll(ByteConverters.StringToByte(text), highLight);
-        }
+        public IEnumerable<long> FindAll(string text, bool highLight) => FindAll(ByteConverters.StringToByte(text), highLight);
 
         /// <summary>
         /// Find all occurence of string in stream. Highlight occurance in stream is MarcAll as true
@@ -2915,36 +2853,24 @@ namespace WPFHexaEditor.Control
         /// Set bookmark at specified position
         /// </summary>
         /// <param name="position"></param>
-        public void SetBookMark(long position)
-        {
-            SetScrollMarker(position, ScrollMarker.Bookmark);
-        }
+        public void SetBookMark(long position) => SetScrollMarker(position, ScrollMarker.Bookmark);
 
         /// <summary>
         /// Set bookmark at selection start
         /// </summary>
-        public void SetBookMark()
-        {
-            SetScrollMarker(SelectionStart, ScrollMarker.Bookmark);
-        }
+        public void SetBookMark() => SetScrollMarker(SelectionStart, ScrollMarker.Bookmark);
 
         /// <summary>
         /// Set marker at position using bookmark object
         /// </summary>
         /// <param name="mark"></param>
-        private void SetScrollMarker(BookMark mark)
-        {
-            SetScrollMarker(mark.BytePositionInFile, mark.Marker, mark.Description);
-        }
+        private void SetScrollMarker(BookMark mark) => SetScrollMarker(mark.BytePositionInFile, mark.Marker, mark.Description);
 
         /// <summary>
         /// Set marker at position
         /// </summary>
         private void SetScrollMarker(long position, ScrollMarker marker, string description = "")
         {
-            //if (GetScrollMarkers(marker).Count() > 100)
-            //    return;
-
             Rectangle rect = new Rectangle();
             double topPosition = 0;
             double rightPosition = 0;
@@ -3005,25 +2931,21 @@ namespace WPFHexaEditor.Control
                     rect.ToolTip = TryFindResource("ScrollMarkerSearchToolTip");
                     rect.Fill = (SolidColorBrush)TryFindResource("BookMarkColor");
                     break;
-
                 case ScrollMarker.SearchHighLight:
                     rect.ToolTip = TryFindResource("ScrollMarkerSearchToolTip");
                     rect.Fill = (SolidColorBrush)TryFindResource("SearchBookMarkColor");
                     rect.HorizontalAlignment = HorizontalAlignment.Center;
                     break;
-
                 case ScrollMarker.SelectionStart:
                     rect.Fill = (SolidColorBrush)TryFindResource("SelectionStartBookMarkColor");
                     rect.Width = VerticalScrollBar.ActualWidth;
                     rect.Height = 2;
                     break;
-
                 case ScrollMarker.ByteModified:
                     rect.ToolTip = TryFindResource("ScrollMarkerSearchToolTip");
                     rect.Fill = (SolidColorBrush)TryFindResource("ByteModifiedMarkColor");
                     rect.HorizontalAlignment = HorizontalAlignment.Right;
                     break;
-
                 case ScrollMarker.ByteDeleted:
                     rect.ToolTip = TryFindResource("ScrollMarkerSearchToolTip");
                     rect.Fill = (SolidColorBrush)TryFindResource("ByteDeletedMarkColor");
@@ -3075,10 +2997,7 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Clear ScrollMarker
         /// </summary>
-        public void ClearAllScrollMarker()
-        {
-            MarkerGrid.Children.Clear();
-        }
+        public void ClearAllScrollMarker() => MarkerGrid.Children.Clear();
 
         /// <summary>
         /// Clear ScrollMarker
@@ -3189,80 +3108,35 @@ namespace WPFHexaEditor.Control
             }
         }
 
-        private void FindAllCMenu_Click(object sender, RoutedEventArgs e)
-        {
-            FindAll(SelectionByteArray, true);
-        }
+        private void FindAllCMenu_Click(object sender, RoutedEventArgs e) => FindAll(SelectionByteArray, true);
 
-        private void CopyHexaCMenu_Click(object sender, RoutedEventArgs e)
-        {
-            CopyToClipboard(CopyPasteMode.HexaString);
-        }
+        private void CopyHexaCMenu_Click(object sender, RoutedEventArgs e) => CopyToClipboard(CopyPasteMode.HexaString);
 
-        private void CopyASCIICMenu_Click(object sender, RoutedEventArgs e)
-        {
-            CopyToClipboard(CopyPasteMode.ASCIIString);
-        }
+        private void CopyASCIICMenu_Click(object sender, RoutedEventArgs e) => CopyToClipboard(CopyPasteMode.ASCIIString);
 
-        private void CopyCSharpCMenu_Click(object sender, RoutedEventArgs e)
-        {
-            CopyToClipboard(CopyPasteMode.CSharpCode);
-        }
+        private void CopyCSharpCMenu_Click(object sender, RoutedEventArgs e) => CopyToClipboard(CopyPasteMode.CSharpCode);
 
-        private void CopyFSharpCMenu_Click(object sender, RoutedEventArgs e)
-        {
-            CopyToClipboard(CopyPasteMode.FSharp);
-        }
+        private void CopyFSharpCMenu_Click(object sender, RoutedEventArgs e) => CopyToClipboard(CopyPasteMode.FSharp);
 
-        private void CopyVBNetCMenu_Click(object sender, RoutedEventArgs e)
-        {
-            CopyToClipboard(CopyPasteMode.VBNetCode);
-        }
+        private void CopyVBNetCMenu_Click(object sender, RoutedEventArgs e) => CopyToClipboard(CopyPasteMode.VBNetCode);
 
-        private void CopyCCMenu_Click(object sender, RoutedEventArgs e)
-        {
-            CopyToClipboard(CopyPasteMode.CCode);
-        }
+        private void CopyCCMenu_Click(object sender, RoutedEventArgs e) => CopyToClipboard(CopyPasteMode.CCode);
 
-        private void CopyJavaCMenu_Click(object sender, RoutedEventArgs e)
-        {
-            CopyToClipboard(CopyPasteMode.JavaCode);
-        }
+        private void CopyJavaCMenu_Click(object sender, RoutedEventArgs e) => CopyToClipboard(CopyPasteMode.JavaCode);
 
-        private void CopyTBLCMenu_Click(object sender, RoutedEventArgs e)
-        {
-            CopyToClipboard(CopyPasteMode.TBLString);
-        }
+        private void CopyTBLCMenu_Click(object sender, RoutedEventArgs e) => CopyToClipboard(CopyPasteMode.TBLString);
 
-        private void DeleteCMenu_Click(object sender, RoutedEventArgs e)
-        {
-            DeleteSelection();
-        }
+        private void DeleteCMenu_Click(object sender, RoutedEventArgs e) => DeleteSelection();
 
-        private void UndoCMenu_Click(object sender, RoutedEventArgs e)
-        {
-            Undo();
-        }
+        private void UndoCMenu_Click(object sender, RoutedEventArgs e) => Undo();
 
-        private void BookMarkCMenu_Click(object sender, RoutedEventArgs e)
-        {
-            SetBookMark(_rightClickBytePosition);
-        }
+        private void BookMarkCMenu_Click(object sender, RoutedEventArgs e) => SetBookMark(_rightClickBytePosition);
 
-        private void ClearBookMarkCMenu_Click(object sender, RoutedEventArgs e)
-        {
-            ClearScrollMarker(ScrollMarker.Bookmark);
-        }
+        private void ClearBookMarkCMenu_Click(object sender, RoutedEventArgs e) => ClearScrollMarker(ScrollMarker.Bookmark);
 
-        private void PasteMenu_Click(object sender, RoutedEventArgs e)
-        {
-            PasteWithoutInsert();
-        }
+        private void PasteMenu_Click(object sender, RoutedEventArgs e) => PasteWithoutInsert();
 
-        private void SelectAllCMenu_Click(object sender, RoutedEventArgs e)
-        {
-            SelectAll();
-        }
+        private void SelectAllCMenu_Click(object sender, RoutedEventArgs e) => SelectAll();
 
         private void FillByteCMenu_Click(object sender, RoutedEventArgs e)
         {
@@ -3343,10 +3217,7 @@ namespace WPFHexaEditor.Control
             );
         }
 
-        private void BottomRectangle_MouseLeave(object sender, MouseEventArgs e)
-        {
-            _mouseOnBottom = false;
-        }
+        private void BottomRectangle_MouseLeave(object sender, MouseEventArgs e) => _mouseOnBottom = false;
 
         private void TopRectangle_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -3361,10 +3232,7 @@ namespace WPFHexaEditor.Control
             );
         }
 
-        private void TopRectangle_MouseLeave(object sender, MouseEventArgs e)
-        {
-            _mouseOnTop = false;
-        }
+        private void TopRectangle_MouseLeave(object sender, MouseEventArgs e) => _mouseOnTop = false;
         #endregion Bottom and Top rectangle
 
         #region Highlight selected byte        
@@ -3457,10 +3325,7 @@ namespace WPFHexaEditor.Control
             }
         }
 
-        public void Dispose()
-        {
-            Dispose(true);
-        }
+        public void Dispose() => Dispose(true);
         #endregion
     }
 }

@@ -5,7 +5,7 @@
 
 using System;
 using System.Collections.Generic;
-using WPFHexaEditor.Core.Interface;
+using WPFHexaEditor.Core.Interfaces;
 
 namespace WPFHexaEditor.Core.Bytes
 {

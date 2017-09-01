@@ -6,7 +6,7 @@
 
 using System;
 
-namespace WPFHexaEditor.Core.Interface
+namespace WPFHexaEditor.Core.Interfaces
 {
     /// <summary>
     /// All byte control inherit from this interface.

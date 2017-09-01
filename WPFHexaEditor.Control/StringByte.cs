@@ -13,7 +13,7 @@ using System.Windows.Media;
 using WPFHexaEditor.Core;
 using WPFHexaEditor.Core.Bytes;
 using WPFHexaEditor.Core.CharacterTable;
-using WPFHexaEditor.Core.Interface;
+using WPFHexaEditor.Core.Interfaces;
 
 namespace WPFHexaEditor.Control
 {
@@ -62,8 +62,7 @@ namespace WPFHexaEditor.Control
             LoadDictionary("/WPFHexaEditor;component/Resources/Dictionary/ToolTipDictionary.xaml");
 
             //Default properties
-            Width = 12;
-            Height = 22;
+            Width = 10;
             Focusable = true;
             DataContext = this;
             Padding = new Thickness(0);
@@ -282,19 +281,19 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Show or not Multi Title Enconding (MTE) are loaded in TBL file
         /// </summary>
-        public bool TBL_ShowMTE
+        public bool TBLShowMTE
         {
-            get => (bool)GetValue(TBL_ShowMTEProperty);
-            set => SetValue(TBL_ShowMTEProperty, value);
+            get => (bool)GetValue(TBLShowMTEProperty);
+            set => SetValue(TBLShowMTEProperty, value);
         }
 
-        // Using a DependencyProperty as the backing store for TBL_ShowMTE.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty TBL_ShowMTEProperty =
-            DependencyProperty.Register("TBL_ShowMTE", typeof(bool), typeof(StringByte), 
+        // Using a DependencyProperty as the backing store for TBLShowMTE.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty TBLShowMTEProperty =
+            DependencyProperty.Register("TBLShowMTE", typeof(bool), typeof(StringByte), 
                 new FrameworkPropertyMetadata(true, 
-                    new PropertyChangedCallback(TBL_ShowMTE_PropetyChanged)));
+                    new PropertyChangedCallback(TBLShowMTE_PropetyChanged)));
 
-        private static void TBL_ShowMTE_PropetyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void TBLShowMTE_PropetyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is StringByte ctrl)
                 ctrl.UpdateLabelFromByte();
@@ -351,7 +350,7 @@ namespace WPFHexaEditor.Control
                         {
                             string content = "#";
 
-                            if (TBL_ShowMTE)
+                            if (TBLShowMTE)
                                 if (ByteNext.HasValue)
                                 {
                                     string MTE = (ByteConverters.ByteToHex(Byte.Value) + ByteConverters.ByteToHex(ByteNext.Value));
@@ -367,10 +366,10 @@ namespace WPFHexaEditor.Control
                             switch (DTE.TypeDTE(content))
                             {
                                 case DTEType.DualTitleEncoding:
-                                    Width = 12 + content.Length * 2.2D;
+                                    Width = 10 + content.Length * 2.2D;
                                     break;
                                 case DTEType.MultipleTitleEncoding:
-                                    Width = 12 + content.Length * 4.2D + (FontSize / 2);
+                                    Width = 10 + content.Length * 4.2D + (FontSize / 2);
                                     break;
                                 case DTEType.EndLine:
                                     Width = 24;
@@ -379,7 +378,7 @@ namespace WPFHexaEditor.Control
                                     Width = 34;
                                     break;
                                 default:
-                                    Width = 12;
+                                    Width = 10;
                                     break;
                             }
                         }
@@ -448,19 +447,19 @@ namespace WPFHexaEditor.Control
                     switch (DTE.TypeDTE(Text))
                     {
                         case DTEType.DualTitleEncoding:
-                            Foreground = _parent.TBL_DTEColor;
+                            Foreground = _parent.TBLDTEColor;
                             break;
                         case DTEType.MultipleTitleEncoding:
-                            Foreground = _parent.TBL_MTEColor;
+                            Foreground = _parent.TBLMTEColor;
                             break;
                         case DTEType.EndLine:
-                            Foreground = _parent.TBL_EndLineColor;
+                            Foreground = _parent.TBLEndLineColor;
                             break;
                         case DTEType.EndBlock:
-                            Foreground = _parent.TBL_EndBlockColor;
+                            Foreground = _parent.TBLEndBlockColor;
                             break;
                         default:
-                            Foreground = _parent.TBL_DefaultColor;
+                            Foreground = _parent.TBLDefaultColor;
                             break;
                     }
             }

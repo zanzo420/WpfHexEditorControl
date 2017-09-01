@@ -263,6 +263,7 @@ namespace WPFHexaEditor.Core.CharacterTable
                 fs.Close();
             }
 
+            //TODO: Validate TBLfile before open
             StreamReader TBLFile = new StreamReader(_FileName, Encoding.ASCII);
 
             if (TBLFile.BaseStream.CanRead)

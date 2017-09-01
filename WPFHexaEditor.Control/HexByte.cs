@@ -11,19 +11,18 @@ using System.Windows.Input;
 using System.Windows.Media;
 using WPFHexaEditor.Core;
 using WPFHexaEditor.Core.Bytes;
-using WPFHexaEditor.Core.Interface;
+using WPFHexaEditor.Core.Interfaces;
 
 namespace WPFHexaEditor.Control
 {
     internal class HexByte : TextBlock, IByteControl
     {
-
         public HexByte(HexaEditor parent)
         {
             //Default properties
             DataContext = this;
             Focusable = true;
-            Width = 25;
+            Width = 20;
             TextAlignment = TextAlignment.Left;
             Padding = new Thickness(2, 0, 0, 0);
 

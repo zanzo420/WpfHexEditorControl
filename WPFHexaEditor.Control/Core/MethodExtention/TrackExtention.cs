@@ -13,9 +13,9 @@ namespace WPFHexaEditor.Core.MethodExtention
         /// <summary>
         /// Get actual top position of track
         /// </summary>
-        public static double Top(this Track s)
+        public static double Top(this Track track)
         {
-            Grid parent = s.Parent as Grid;
+            Grid parent = track.Parent as Grid;
             RepeatButton TopRepeatButton = (RepeatButton)parent.Children[1];
 
             return TopRepeatButton.ActualHeight + parent.Margin.Top + 1;
@@ -24,10 +24,9 @@ namespace WPFHexaEditor.Core.MethodExtention
         /// <summary>
         /// Get actual bottom position of track
         /// </summary>
-        public static double Bottom(this Track s)
+        public static double Bottom(this Track track)
         {
-            Grid parent = s.Parent as Grid;
-
+            Grid parent = track.Parent as Grid;
             Track TrackControl = (Track)parent.Children[2];
 
             return TrackControl.Top() +
@@ -38,29 +37,16 @@ namespace WPFHexaEditor.Core.MethodExtention
         /// <summary>
         /// Get actual bottom position of track
         /// </summary>
-        public static double ButtonHeight(this Track s)
-        {
-            //Grid parent = s.Parent as Grid;
-
-            //Track TrackControl = (Track)parent.Children[2];
-
-            return s.Top() - 1;
-        }
+        public static double ButtonHeight(this Track track) => track.Top() - 1;
 
         /// <summary>
         /// Get actual Tick Height
         /// </summary>
-        public static double TickHeight(this Track s)
-        {
-            return s.ActualHeight / s.Maximum;
-        }
+        public static double TickHeight(this Track track) => track.ActualHeight / track.Maximum;
 
         /// <summary>
         /// Get actual Tick Height with another maximum value
         /// </summary>
-        public static double TickHeight(this Track s, long maximum)
-        {
-            return s.ActualHeight / maximum;
-        }
+        public static double TickHeight(this Track track, long maximum) => track.ActualHeight / maximum;
     }
 }

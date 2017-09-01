@@ -18,10 +18,7 @@ namespace WPFHexaEditor.Core.Bytes
         /// <summary>
         /// Convert long to hex value
         /// </summary>
-        public static string LongToHex(long l)
-        {
-            return l.ToString(ConstantReadOnly.HexLineInfoStringFormat, CultureInfo.InvariantCulture);
-        }
+        public static string LongToHex(long val) => val.ToString(ConstantReadOnly.HexLineInfoStringFormat, CultureInfo.InvariantCulture);
 
         /// <summary>
         /// Convert Byte to Char (can be used as visible text)
@@ -29,24 +26,20 @@ namespace WPFHexaEditor.Core.Bytes
         /// <remarks>
         /// Code from : https://github.com/pleonex/tinke/blob/master/Be.Windows.Forms.HexBox/ByteCharConverters.cs
         /// </remarks>
-        public static char ByteToChar(byte b)
-        {
-            return b > 0x1F && !(b > 0x7E && b < 0xA0) ? (char)b : '.';
-        }
+        public static char ByteToChar(byte val) => val > 0x1F && !(val > 0x7E && val < 0xA0) ? (char)val : '.';
 
         /// <summary>
         /// Convert Char to Byte
         /// </summary>
-        public static byte CharToByte(char c)
-        {
-            return (byte)c;
-        }
+        public static byte CharToByte(char val) => (byte)val;
 
         /// <summary>
         /// Converts a byte array to a hex string. For example: {10,11} = "0A 0B"
         /// </summary>
         public static string ByteToHex(byte[] data)
         {
+            if (data == null) return string.Empty;
+
             StringBuilder sb = new StringBuilder();
 
             foreach (byte b in data)
@@ -65,24 +58,24 @@ namespace WPFHexaEditor.Core.Bytes
         /// <summary>
         /// Convert a byte to char[2].
         /// </summary>
-        /// <param name="b"></param>
+        /// <param name="val"></param>
         /// <returns></returns>
-        public static char[] ByteToHexCharArray(byte b)
+        public static char[] ByteToHexCharArray(byte val)
         {
             var hexbyteArray = new char[2];
-            hexbyteArray[0] = ByteToHexChar(b >> 4);
-            hexbyteArray[1] = ByteToHexChar(b - ((b >> 4) << 4));
+            hexbyteArray[0] = ByteToHexChar(val >> 4);
+            hexbyteArray[1] = ByteToHexChar(val - ((val >> 4) << 4));
             return hexbyteArray;
         }
 
         //Convert a byte to Hex char,i.e,10 = 'A'
-        public static char ByteToHexChar(int b)
+        public static char ByteToHexChar(int val)
         {
-            if (b < 10)
+            if (val < 10)
             {
-                return (char)(48 + b);
+                return (char)(48 + val);
             }
-            switch (b)
+            switch (val)
             {
                 case 10: return 'A';
                 case 11: return 'B';
@@ -97,16 +90,15 @@ namespace WPFHexaEditor.Core.Bytes
         /// <summary>
         /// Converts the byte to a hex string. For example: "10" = "0A";
         /// </summary>
-        public static string ByteToHex(byte b)
-        {
-            return new string(ByteToHexCharArray(b));
-        }
+        public static string ByteToHex(byte val) => new string(ByteToHexCharArray(val));
 
         /// <summary>
         /// Convert byte to ASCII string
         /// </summary>
         public static string BytesToString(byte[] buffer, ByteToString converter = ByteToString.ByteToCharProcess)
         {
+            if (buffer == null) return string.Empty;
+
             switch (converter)
             {
                 case ByteToString.ASCIIEncoding:
@@ -150,10 +142,7 @@ namespace WPFHexaEditor.Core.Bytes
             return byteArray;
         }
 
-        public static bool HexToByte(string hex, out byte b)
-        {
-            return byte.TryParse(hex, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out b);
-        }
+        public static bool HexToByte(string hex, out byte val) => byte.TryParse(hex, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out val);
 
         public static long HexLiteralToLong(string hex)
         {
@@ -196,10 +185,9 @@ namespace WPFHexaEditor.Core.Bytes
         /// <returns></returns>
         public static bool IsHexaValue(string hexastring)
         {
-            long position = 0;
             try
             {
-                position = HexLiteralToLong(hexastring);
+                long position = HexLiteralToLong(hexastring);
                 return true;
             }
             catch 
@@ -224,11 +212,6 @@ namespace WPFHexaEditor.Core.Bytes
         /// <summary>
         /// Convert String to hex string For example: "barn" = "62 61 72 6e"
         /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        public static string StringToHex(string str)
-        {
-            return ByteToHex(StringToByte(str));
-        }
+        public static string StringToHex(string str) => ByteToHex(StringToByte(str));
     }
 }

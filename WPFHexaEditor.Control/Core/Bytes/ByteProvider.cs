@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using WPFHexaEditor.Core.MethodExtention;
-using WPFHexaEditor.Core.Interface;
+using WPFHexaEditor.Core.Interfaces;
 using WPFHexaEditor.Core.CharacterTable;
 
 namespace WPFHexaEditor.Core.Bytes
@@ -53,7 +53,7 @@ namespace WPFHexaEditor.Core.Bytes
         /// <summary>
         /// Construct new ByteProvider with filename and try to open file
         /// </summary>
-        public ByteProvider(string filename) => FileName = filename;
+        public ByteProvider(string fileName) => FileName = fileName;
 
         /// <summary>
         /// Constuct new ByteProvider with stream
@@ -379,7 +379,7 @@ namespace WPFHexaEditor.Core.Bytes
                 //Create appropriate temp stream for new file.
                 Stream NewStream = null;
 
-                if (Length < ConstantReadOnly.LARGE_FILE_LENGTH)
+                if (Length < ConstantReadOnly.LARGEFILELENGTH)
                     NewStream = new MemoryStream();
                 else
                     NewStream = File.Open(Path.GetTempFileName(), FileMode.Open, FileAccess.ReadWrite);
@@ -413,7 +413,7 @@ namespace WPFHexaEditor.Core.Bytes
                 }
                 else
                 {
-                    byte[] buffer = new byte[ConstantReadOnly.COPY_BLOCK_SIZE];
+                    byte[] buffer = new byte[ConstantReadOnly.COPYBLOCKSIZE];
                     long bufferlength = 0;
                     var SortedBM = GetModifiedBytes(ByteAction.All).OrderBy(b => b.Key);
                     double countChange = SortedBM.Count();
@@ -433,7 +433,7 @@ namespace WPFHexaEditor.Core.Bytes
                             break;
 
                         //Reset buffer
-                        buffer = new byte[ConstantReadOnly.COPY_BLOCK_SIZE];
+                        buffer = new byte[ConstantReadOnly.COPYBLOCKSIZE];
 
                         //start read/write / use little block for optimize memory
                         while (Position != nextByteModified.Key)
@@ -445,7 +445,7 @@ namespace WPFHexaEditor.Core.Bytes
                                 bufferlength = 1;
 
                             //EOF
-                            if (bufferlength < ConstantReadOnly.COPY_BLOCK_SIZE)
+                            if (bufferlength < ConstantReadOnly.COPYBLOCKSIZE)
                                 buffer = new byte[bufferlength];
 
                             _stream.Read(buffer, 0, buffer.Length);
@@ -476,7 +476,7 @@ namespace WPFHexaEditor.Core.Bytes
                                 bufferlength = _stream.Length - Position;
 
                                 //EOF
-                                if (bufferlength < ConstantReadOnly.COPY_BLOCK_SIZE)
+                                if (bufferlength < ConstantReadOnly.COPYBLOCKSIZE)
                                     buffer = new byte[bufferlength];
 
                                 _stream.Read(buffer, 0, buffer.Length);
@@ -497,7 +497,7 @@ namespace WPFHexaEditor.Core.Bytes
                     //Write new data to current stream
                     Position = 0;
                     NewStream.Position = 0;
-                    buffer = new byte[ConstantReadOnly.COPY_BLOCK_SIZE];
+                    buffer = new byte[ConstantReadOnly.COPYBLOCKSIZE];
 
                     while (!EOF)
                     {
@@ -514,7 +514,7 @@ namespace WPFHexaEditor.Core.Bytes
                         bufferlength = _stream.Length - Position;
 
                         //EOF
-                        if (bufferlength < ConstantReadOnly.COPY_BLOCK_SIZE)
+                        if (bufferlength < ConstantReadOnly.COPYBLOCKSIZE)
                             buffer = new byte[bufferlength];
 
                         NewStream.Read(buffer, 0, buffer.Length);
@@ -1113,7 +1113,7 @@ namespace WPFHexaEditor.Core.Bytes
         /// <summary>
         /// Gets or sets the undo stack.
         /// </summary>
-        public Stack<ByteModified> UndoStack { get; set; } = new Stack<ByteModified>();
+        public Stack<ByteModified> UndoStack { get; } = new Stack<ByteModified>();
 
         /// <summary>
         /// Get or set for indicate if control CanUndo
@@ -1217,7 +1217,7 @@ namespace WPFHexaEditor.Core.Bytes
 
             //var
             Position = startPosition;
-            byte[] buffer = new byte[ConstantReadOnly.FIND_BLOCK_SIZE];
+            byte[] buffer = new byte[ConstantReadOnly.FINDBLOCKSIZE];
             IEnumerable<long> findindex;
             List<long> indexList = new List<long>();
             bool cancel = false;

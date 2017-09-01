@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using WPFHexaEditor.Core.Bytes;
 
-namespace WPFHexaEditor.Core.Interface
+namespace WPFHexaEditor.Core.Interfaces
 {
     public interface IByteProvider
     {
@@ -30,7 +30,7 @@ namespace WPFHexaEditor.Core.Interface
         MemoryStream Stream { get; set; }
         ByteProviderStreamType StreamType { get; }
         int UndoCount { get; }
-        Stack<ByteModified> UndoStack { get; set; }
+        Stack<ByteModified> UndoStack { get; }
 
         //Events
         event EventHandler ChangesSubmited;

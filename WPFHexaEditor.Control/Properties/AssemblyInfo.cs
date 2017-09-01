@@ -3,6 +3,7 @@
 // Author : Derek Tremblay (derektremblay666@gmail.com)
 //////////////////////////////////////////////
 
+using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -54,3 +55,6 @@ using System.Windows;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+
+
+[assembly: CLSCompliant(true)]

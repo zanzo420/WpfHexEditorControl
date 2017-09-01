@@ -127,13 +127,22 @@ namespace WPFHexaEditor.Core
     }
 
     /// <summary>
-    /// Used with ByteHeaderAnalyser for give the file format
+    /// IByteControl spacer width
     /// </summary>
-    internal enum FileFormat
+    public enum ByteSpacerWidth : int
     {
-        EXE
-        //JPG
-        //PNG
-        //... add more 
+        NoSpacer = 0,
+        Small = 3,
+        Normal = 6,
+        Large = 9,
+        VeryLarge = 12
+    }
+
+    public enum ByteSpacerGroup : int
+    {
+        TwoByte = 2,
+        FourByte = 4,
+        SixByte = 6,
+        EightByte = 8
     }
 }

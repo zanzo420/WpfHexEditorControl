@@ -5,7 +5,7 @@
 
 using WPFHexaEditor.Core.Bytes;
 
-namespace WPFHexaEditor.Core.Interface
+namespace WPFHexaEditor.Core.Interfaces
 {
     public interface IByteModified
     {

@@ -1,6 +1,6 @@
 ![example](Logo.png?raw=true)
 
-## WPF HexaEditor control       (Project developped in C# 7.0, use visual studio 2017+)
+## WPF HexaEditor control       (Developped in C# 7.0, use vs2017+)
 A fully customisable WPF user control for editing file or stream as hexadecimal.
 
 

@@ -32,6 +32,7 @@ https://www.nuget.org/packages/WPFHexaEditor/
 - Highlight byte with somes find methods
 - Scollbar marker for selection start and byte finded
 - Set Bookmark
+- Group byte in block 
 - ...
 
 ## How to use

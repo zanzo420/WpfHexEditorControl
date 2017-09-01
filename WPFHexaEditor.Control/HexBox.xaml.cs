@@ -35,7 +35,7 @@ namespace WPFHexaEditor.Control
 
         // Using a DependencyProperty as the backing store for MaximumValue.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty MaximumValueProperty =
-            DependencyProperty.Register("MaximumValue", typeof(long), typeof(HexBox), 
+            DependencyProperty.Register(nameof(MaximumValue), typeof(long), typeof(HexBox), 
                 new FrameworkPropertyMetadata(long.MaxValue, new PropertyChangedCallback(MaximumValue_Changed)));
 
         private static void MaximumValue_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -57,7 +57,7 @@ namespace WPFHexaEditor.Control
 
         // Using a DependencyProperty as the backing store for LongValue.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty LongValueProperty =
-            DependencyProperty.Register("LongValue", typeof(long), typeof(HexBox), 
+            DependencyProperty.Register(nameof(LongValue), typeof(long), typeof(HexBox), 
                 new FrameworkPropertyMetadata(0L, 
                     new PropertyChangedCallback(LongValue_Changed), 
                     new CoerceValueCallback(LongValue_CoerceValue)));

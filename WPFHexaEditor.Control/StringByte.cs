@@ -100,7 +100,7 @@ namespace WPFHexaEditor.Control
         }
 
         public static readonly DependencyProperty BytePositionInFileProperty =
-            DependencyProperty.Register("BytePositionInFile", typeof(long), typeof(StringByte), new PropertyMetadata(-1L));
+            DependencyProperty.Register(nameof(BytePositionInFile), typeof(long), typeof(StringByte), new PropertyMetadata(-1L));
 
         /// <summary>
         /// Used for selection coloring
@@ -112,7 +112,7 @@ namespace WPFHexaEditor.Control
         }
 
         public static readonly DependencyProperty FirstSelectedProperty =
-            DependencyProperty.Register("FirstSelected", typeof(bool), typeof(StringByte), new PropertyMetadata(true));
+            DependencyProperty.Register(nameof(FirstSelected), typeof(bool), typeof(StringByte), new PropertyMetadata(true));
 
         /// <summary>
         /// Byte used for this instance
@@ -124,7 +124,7 @@ namespace WPFHexaEditor.Control
         }
 
         public static readonly DependencyProperty ByteProperty =
-            DependencyProperty.Register("Byte", typeof(byte?), typeof(StringByte),
+            DependencyProperty.Register(nameof(Byte), typeof(byte?), typeof(StringByte),
                 new FrameworkPropertyMetadata(null, new PropertyChangedCallback(Byte_PropertyChanged)));
 
         private static void Byte_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -155,7 +155,7 @@ namespace WPFHexaEditor.Control
         }
 
         public static readonly DependencyProperty ByteNextProperty =
-            DependencyProperty.Register("ByteNext", typeof(byte?), typeof(StringByte),
+            DependencyProperty.Register(nameof(ByteNext), typeof(byte?), typeof(StringByte),
                 new FrameworkPropertyMetadata(null, new PropertyChangedCallback(ByteNext_PropertyChanged)));
 
         private static void ByteNext_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -178,7 +178,7 @@ namespace WPFHexaEditor.Control
         }
 
         public static readonly DependencyProperty IsFocusProperty =
-            DependencyProperty.Register("IsFocus", typeof(bool), typeof(StringByte),
+            DependencyProperty.Register(nameof(IsFocus), typeof(bool), typeof(StringByte),
                 new FrameworkPropertyMetadata(false, IsFocus_PropertyChanged));
 
         private static void IsFocus_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -198,7 +198,7 @@ namespace WPFHexaEditor.Control
         }
 
         public static readonly DependencyProperty IsSelectedProperty =
-            DependencyProperty.Register("IsSelected", typeof(bool), typeof(StringByte),
+            DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(StringByte),
                 new FrameworkPropertyMetadata(false, new PropertyChangedCallback(IsSelected_PropertyChangedCallBack)));
 
         private static void IsSelected_PropertyChangedCallBack(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -218,7 +218,7 @@ namespace WPFHexaEditor.Control
         }
 
         public static readonly DependencyProperty IsHighLightProperty =
-            DependencyProperty.Register("IsHighLight", typeof(bool), typeof(StringByte),
+            DependencyProperty.Register(nameof(IsHighLight), typeof(bool), typeof(StringByte),
                 new FrameworkPropertyMetadata(false,
                     new PropertyChangedCallback(IsHighLight_PropertyChanged)));
 
@@ -240,7 +240,7 @@ namespace WPFHexaEditor.Control
 
         // Using a DependencyProperty as the backing store for InternalChange.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty InternalChangeProperty =
-            DependencyProperty.Register("InternalChange", typeof(bool), typeof(StringByte), new PropertyMetadata(false));
+            DependencyProperty.Register(nameof(InternalChange), typeof(bool), typeof(StringByte), new PropertyMetadata(false));
 
         /// <summary>
         /// Action with this byte
@@ -252,7 +252,7 @@ namespace WPFHexaEditor.Control
         }
 
         public static readonly DependencyProperty ActionProperty =
-            DependencyProperty.Register("Action", typeof(ByteAction), typeof(StringByte),
+            DependencyProperty.Register(nameof(Action), typeof(ByteAction), typeof(StringByte),
                 new FrameworkPropertyMetadata(ByteAction.Nothing,
                     new PropertyChangedCallback(Action_ValueChanged),
                     new CoerceValueCallback(Action_CoerceValue)));
@@ -289,7 +289,7 @@ namespace WPFHexaEditor.Control
 
         // Using a DependencyProperty as the backing store for TBLShowMTE.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TBLShowMTEProperty =
-            DependencyProperty.Register("TBLShowMTE", typeof(bool), typeof(StringByte), 
+            DependencyProperty.Register(nameof(TBLShowMTE), typeof(bool), typeof(StringByte), 
                 new FrameworkPropertyMetadata(true, 
                     new PropertyChangedCallback(TBLShowMTE_PropetyChanged)));
 
@@ -311,7 +311,7 @@ namespace WPFHexaEditor.Control
 
         // Using a DependencyProperty as the backing store for TypeOfCharacterTable.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TypeOfCharacterTableProperty =
-            DependencyProperty.Register("TypeOfCharacterTable", typeof(CharacterTableType), typeof(StringByte),
+            DependencyProperty.Register(nameof(TypeOfCharacterTable), typeof(CharacterTableType), typeof(StringByte),
                 new FrameworkPropertyMetadata(CharacterTableType.ASCII,
                     new PropertyChangedCallback(TypeOfCharacterTable_PropertyChanged)));
 

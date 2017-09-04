@@ -114,14 +114,12 @@ namespace WPFHexaEditor.Control
         /// <param name="value"></param>
         private void UpdateValueFrom(string value)
         {
-            try
-            {
-                LongValue = ByteConverters.HexLiteralToLong(value);
-            }
-            catch
-            {
+            var (success, val) = ByteConverters.HexLiteralToLong(value);
+
+            if (success)
+                LongValue = val;
+            else
                 LongValue = 0;
-            }
         }
         #endregion Methods
 

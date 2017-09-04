@@ -20,9 +20,9 @@ namespace WPFHexaEditor.Core.Bytes
         /// <summary>
         /// complete contructor
         /// </summary>
-        public ByteModified(byte? @byte, ByteAction action, long bytePositionInFile, long undoLenght)
+        public ByteModified(byte? val, ByteAction action, long bytePositionInFile, long undoLenght)
         {
-            Byte = @byte;
+            Byte = val;
             Action = action;
             BytePositionInFile = bytePositionInFile;
             UndoLenght = undoLenght;
@@ -73,28 +73,20 @@ namespace WPFHexaEditor.Core.Bytes
             Byte = null;
             Action = ByteAction.Nothing;
             BytePositionInFile = -1;
+            UndoLenght = 1;
         }
 
         /// <summary>
         /// Copy Current instance to another
         /// </summary>
         /// <returns></returns>
-        public ByteModified GetCopy()
+        public ByteModified GetCopy() => new ByteModified()
         {
-            ByteModified copied = null;
-
-            ByteModified newByteModified = new ByteModified()
-            {
-                Action = Action,
-                Byte = Byte,
-                UndoLenght = UndoLenght,
-                BytePositionInFile = BytePositionInFile
-            };
-
-            copied = newByteModified;
-
-            return copied;
-        }
+            Action = Action,
+            Byte = Byte,
+            UndoLenght = UndoLenght,
+            BytePositionInFile = BytePositionInFile
+        };
 
         /// <summary>
         /// Get if bytemodified is valid
@@ -110,10 +102,7 @@ namespace WPFHexaEditor.Core.Bytes
         #endregion Methods
 
         #region IEquatable implementation
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as ByteModified);
-        }
+        public override bool Equals(object obj) => Equals(obj as ByteModified);
 
         public bool Equals(ByteModified other)
         {
@@ -132,15 +121,9 @@ namespace WPFHexaEditor.Core.Bytes
             return hashCode;
         }
 
-        public static bool operator ==(ByteModified modified1, ByteModified modified2)
-        {
-            return EqualityComparer<ByteModified>.Default.Equals(modified1, modified2);
-        }
+        public static bool operator ==(ByteModified modified1, ByteModified modified2) => EqualityComparer<ByteModified>.Default.Equals(modified1, modified2);
 
-        public static bool operator !=(ByteModified modified1, ByteModified modified2)
-        {
-            return !(modified1 == modified2);
-        }
+        public static bool operator !=(ByteModified modified1, ByteModified modified2) => !(modified1 == modified2);
         #endregion IEquatable implementation
     }
 }

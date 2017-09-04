@@ -131,7 +131,7 @@ namespace WPFHexaEditor.Core
     /// </summary>
     public enum ByteSpacerWidth : int
     {
-        NoSpacer = 0,
+        VerySmall = 1,
         Small = 3,
         Normal = 6,
         Large = 9,
@@ -144,5 +144,12 @@ namespace WPFHexaEditor.Core
         FourByte = 4,
         SixByte = 6,
         EightByte = 8
+    }
+
+    public enum ByteSpacerPosition
+    {
+        HexBytePanel,
+        StringBytePanel,
+        Both
     }
 }

@@ -152,21 +152,19 @@ namespace WPFHexaEditorExample
 
         private void GOHexPosition_Click(object sender, RoutedEventArgs e)
         {
-            if (ByteConverters.IsHexaValue(PositionHexText.Text))
-            {
-                long position = ByteConverters.HexLiteralToLong(PositionHexText.Text);
-                if (position > 0)
-                    HexEdit.SetPosition(position, 1);
-                else
-                    MessageBox.Show("Enter hexa value.");
-            }
+            var (success, position) = ByteConverters.HexLiteralToLong(PositionHexText.Text);
 
+            if (success && position > 0)
+                HexEdit.SetPosition(position, 1);
+            else
+                MessageBox.Show("Enter hexa value.");
+            
             ViewMenu.IsSubmenuOpen = false;
-        }
+        } 
 
         private void PositionHexText_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (ByteConverters.IsHexaValue(PositionHexText.Text))
+            if (ByteConverters.IsHexaValue(PositionHexText.Text).success)
                 GoPositionHexaButton.IsEnabled = true;
             else
                 GoPositionHexaButton.IsEnabled = false;

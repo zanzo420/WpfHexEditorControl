@@ -695,14 +695,14 @@ namespace WPFHexaEditor.Control
         {
             if (sender is TextBlock line)
                 if (e.LeftButton == MouseButtonState.Pressed)
-                    SelectionStop = ByteConverters.HexLiteralToLong(line.Text) + BytePerLine - 1;
+                    SelectionStop = ByteConverters.HexLiteralToLong(line.Text).position + BytePerLine - 1;
         }
 
         private void LineInfoLabel_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (sender is TextBlock line)
             {
-                SelectionStart = ByteConverters.HexLiteralToLong(line.Text);
+                SelectionStart = ByteConverters.HexLiteralToLong(line.Text).position;
                 SelectionStop = SelectionStart + BytePerLine - 1;
             }
         }
@@ -956,8 +956,6 @@ namespace WPFHexaEditor.Control
                         ctrl.SelectionByte = ctrl._provider.GetByte(ctrl.SelectionStart);
                     else
                         ctrl.SelectionByte = null;
-
-                    Debug.Print($"SelectionStart : {e.NewValue}");
 
                     ctrl.UpdateSelection();
                     ctrl.UpdateSelectionLine();
@@ -1354,32 +1352,12 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Set position in control at position in parameter
         /// </summary>
-        public void SetPosition(string HexLiteralPosition)
-        {
-            try
-            {
-                SetPosition(ByteConverters.HexLiteralToLong(HexLiteralPosition));
-            }
-            catch
-            {
-                throw new InvalidCastException("Invalid hex string");
-            }
-        }
+        public void SetPosition(string HexLiteralPosition) => SetPosition(ByteConverters.HexLiteralToLong(HexLiteralPosition).position);
 
         /// <summary>
         /// Set position in control at position in parameter with specified selected lenght
         /// </summary>
-        public void SetPosition(string HexLiteralPosition, long byteLenght)
-        {
-            try
-            {
-                SetPosition(ByteConverters.HexLiteralToLong(HexLiteralPosition), byteLenght);
-            }
-            catch
-            {
-                throw new InvalidCastException("Invalid hex string");
-            }
-        }
+        public void SetPosition(string HexLiteralPosition, long byteLenght) => SetPosition(ByteConverters.HexLiteralToLong(HexLiteralPosition).position, byteLenght);
 
         #endregion Set position methods
 
@@ -2037,6 +2015,10 @@ namespace WPFHexaEditor.Control
         /// <param name="ControlResize"></param>
         public void RefreshView(bool ControlResize = false, bool RefreshData = true)
         {
+#if DEBUG
+            var start = DateTime.Now;
+#endif
+
             UpdateLinesOffSet();
 
             if (RefreshData)
@@ -2056,6 +2038,9 @@ namespace WPFHexaEditor.Control
                 UpdateScrollMarkerPosition();
                 UpdateHeader();
             }
+#if DEBUG
+            Debug.Print($"REFRESH TIME MS: {(DateTime.Now - start).Milliseconds}");
+#endif
         }
 
         /// <summary>
@@ -2106,6 +2091,7 @@ namespace WPFHexaEditor.Control
                 for (int i = 0; i < BytePerLine; i++)
                 {
                     if (_TBLCharacterTable == null)
+                        if (ByteSpacerPositioning == ByteSpacerPosition.Both || ByteSpacerPositioning == ByteSpacerPosition.StringBytePanel)
                         AddByteSpacer(dataLineStack, i);
 
                     sbCtrl = new StringByte(this)
@@ -2135,7 +2121,8 @@ namespace WPFHexaEditor.Control
 
                 for (int i = 0; i < BytePerLine; i++)
                 {
-                    AddByteSpacer(hexaDataLineStack, i);
+                    if (ByteSpacerPositioning == ByteSpacerPosition.Both || ByteSpacerPositioning == ByteSpacerPosition.HexBytePanel)
+                        AddByteSpacer(hexaDataLineStack, i);
 
                     byteControl = new HexByte(this)
                     {
@@ -2239,7 +2226,7 @@ namespace WPFHexaEditor.Control
                     return;
 
                 var firstInfoLabel = LinesInfoStackPanel.Children[0] as TextBlock;
-                var startPosition = ByteConverters.HexLiteralToLong(firstInfoLabel.Text);
+                var startPosition = ByteConverters.HexLiteralToLong(firstInfoLabel.Text).position;
                 var sizeReadyToRead = LinesInfoStackPanel.Children.Count * BytePerLine + 1;
                 _provider.Position = startPosition;
                 var readSize = _provider.Read(_viewBuffer, 0, sizeReadyToRead);
@@ -2421,7 +2408,8 @@ namespace WPFHexaEditor.Control
             if (ByteProvider.CheckIsOpen(_provider))
                 for (int i = 0; i < BytePerLine; i++)
                 {
-                    AddByteSpacer(HexHeaderStackPanel, i);
+                    if (ByteSpacerPositioning == ByteSpacerPosition.Both || ByteSpacerPositioning == ByteSpacerPosition.HexBytePanel)
+                        AddByteSpacer(HexHeaderStackPanel, i);
 
                     //Create control
                     TextBlock LineInfoLabel = new TextBlock()
@@ -3332,16 +3320,29 @@ namespace WPFHexaEditor.Control
         #endregion
 
         #region IByteControl grouping
-        
-        public ByteSpacerWidth WidthOfByteSpacer
+
+
+        public ByteSpacerPosition ByteSpacerPositioning
         {
-            get => (ByteSpacerWidth)GetValue(WidthOfByteSpacerProperty);
-            set => SetValue(WidthOfByteSpacerProperty, value);
+            get => (ByteSpacerPosition)GetValue(ByteSpacerPositioningProperty);
+            set => SetValue(ByteSpacerPositioningProperty, value);
+        }
+
+        // Using a DependencyProperty as the backing store for ByteSpacerPositioning.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ByteSpacerPositioningProperty =
+            DependencyProperty.Register(nameof(ByteSpacerPositioning), typeof(ByteSpacerPosition), typeof(HexaEditor),
+                new FrameworkPropertyMetadata(ByteSpacerPosition.Both, new PropertyChangedCallback(ByteSpacer_Changed)));
+
+
+        public ByteSpacerWidth ByteSpacerWidthTickness
+        {
+            get => (ByteSpacerWidth)GetValue(ByteSpacerWidthTicknessProperty);
+            set => SetValue(ByteSpacerWidthTicknessProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for ByteSpacer.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty WidthOfByteSpacerProperty =
-            DependencyProperty.Register(nameof(WidthOfByteSpacer), typeof(ByteSpacerWidth), typeof(HexaEditor), 
+        public static readonly DependencyProperty ByteSpacerWidthTicknessProperty =
+            DependencyProperty.Register(nameof(ByteSpacerWidthTickness), typeof(ByteSpacerWidth), typeof(HexaEditor), 
                 new FrameworkPropertyMetadata(ByteSpacerWidth.Normal, new PropertyChangedCallback(ByteSpacer_Changed)));
 
         private static void ByteSpacer_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -3367,7 +3368,7 @@ namespace WPFHexaEditor.Control
         private void AddByteSpacer(StackPanel stack, int colomn)
         {
             if (colomn % (int)ByteGrouping == 0 && colomn > 0)
-                stack.Children.Add(new TextBlock() { Width = (int)WidthOfByteSpacer });
+                stack.Children.Add(new TextBlock() { Width = (int)ByteSpacerWidthTickness });
         }
 
         #endregion IByteControl grouping

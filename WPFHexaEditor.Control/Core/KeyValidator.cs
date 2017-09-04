@@ -3,7 +3,6 @@
 // Author : Derek Tremblay (derektremblay666@gmail.com)
 //////////////////////////////////////////////
 using System;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Input;
 using WPFHexaEditor.Core.Native;

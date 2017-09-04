@@ -75,6 +75,7 @@ namespace WPFHexaEditor.Core.Bytes
             {
                 return (char)(48 + val);
             }
+
             switch (val)
             {
                 case 10: return 'A';
@@ -131,28 +132,34 @@ namespace WPFHexaEditor.Core.Bytes
             for (int i = 0; i < hexArray.Length; i++)
             {
                 var hexValue = hexArray[i];
-                var isByte = HexToByte(hexValue, out byte b);
+                var (isByte, val) = HexToUniqueByte(hexValue);
 
                 if (!isByte)
                     return null;
 
-                byteArray[i] = b;
+                byteArray[i] = val;
             }
 
             return byteArray;
         }
 
-        public static bool HexToByte(string hex, out byte val) => byte.TryParse(hex, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out val);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="hex"></param>
+        /// <returns>Return Tuple (bool, byte) that bool represent if is a byte</returns>
+        public static (bool success, byte val) HexToUniqueByte(string hex) => (byte.TryParse(hex, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out byte val), val);
 
-        public static long HexLiteralToLong(string hex)
+        public static (bool success, long position) HexLiteralToLong(string hex)
         {
-            if (string.IsNullOrEmpty(hex)) throw new ArgumentException("hex");
+            if (string.IsNullOrEmpty(hex)) return (false, -1);
 
             int i = hex.Length > 1 && hex[0] == '0' && (hex[1] == 'x' || hex[1] == 'X') ? 2 : 0;
             long value = 0;
 
             while (i < hex.Length)
             {
+                #region convert
                 int x = hex[i++];
 
                 if
@@ -165,9 +172,10 @@ namespace WPFHexaEditor.Core.Bytes
                     throw new ArgumentOutOfRangeException("hex");
 
                 value = 16 * value + x;
+                #endregion
             }
 
-            return value;
+            return (true, value);
         }
 
         public static long DecimalLiteralToLong(string hex)
@@ -183,18 +191,7 @@ namespace WPFHexaEditor.Core.Bytes
         /// </summary>
         /// <param name="hexastring"></param>
         /// <returns></returns>
-        public static bool IsHexaValue(string hexastring)
-        {
-            try
-            {
-                long position = HexLiteralToLong(hexastring);
-                return true;
-            }
-            catch 
-            {
-                return false;
-            }
-        }
+        public static (bool success, long value) IsHexaValue(string hexastring) => HexLiteralToLong(hexastring);
 
         /// <summary>
         /// Convert string to byte array

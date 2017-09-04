@@ -23,5 +23,8 @@ namespace WPFHexaEditor.Core.CharacterTable
     {
         ASCII
         //ADD OTHERTYPE...
+        //EBCDIC
+        //MACINTOSH
+        //DOS/IBM-ASCII
     }
 }

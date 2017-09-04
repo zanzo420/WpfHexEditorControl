@@ -17,10 +17,12 @@ namespace WPFHexaEditor.Core.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (ByteConverters.IsHexaValue(value.ToString()))
-                return ByteConverters.HexLiteralToLong(value.ToString());
+            var (success, val) = ByteConverters.IsHexaValue(value.ToString());
+
+            if (success)
+                return val;
             else
-                return "";
+                return string.Empty;            
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

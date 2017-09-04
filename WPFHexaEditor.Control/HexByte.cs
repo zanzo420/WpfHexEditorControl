@@ -475,5 +475,19 @@ namespace WPFHexaEditor.Control
 
             UpdateAutoHighLiteSelectionByteVisual();
         }
+
+        /// <summary>
+        /// Clear control
+        /// </summary>
+        public void Clear()
+        {
+            BytePositionInFile = -1;
+            Byte = null;
+            Action = ByteAction.Nothing;
+            IsHighLight = false;
+            IsFocus = false;
+            IsSelected = false;
+            ToolTip = null;
+        }
     }
 }

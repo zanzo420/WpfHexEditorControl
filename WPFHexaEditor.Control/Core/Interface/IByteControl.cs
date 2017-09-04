@@ -27,6 +27,7 @@ namespace WPFHexaEditor.Core.Interfaces
 
         //Methods
         void UpdateVisual();
+        void Clear();
 
         //Events
         event EventHandler ByteModified;

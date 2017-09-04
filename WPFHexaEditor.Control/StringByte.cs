@@ -666,5 +666,20 @@ namespace WPFHexaEditor.Control
             if (e.RightButton == MouseButtonState.Pressed)            
                 RightClick?.Invoke(this, e);            
         }
+
+        /// <summary>
+        /// Clear control
+        /// </summary>
+        public void Clear()
+        {
+            BytePositionInFile = -1;
+            Byte = null;
+            Action = ByteAction.Nothing;
+            IsHighLight = false;
+            IsFocus = false;
+            IsSelected = false;
+            ToolTip = null;
+            ByteNext = null;
+        }
     }
 }

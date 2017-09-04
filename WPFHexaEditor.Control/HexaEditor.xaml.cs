@@ -35,10 +35,10 @@ namespace WPFHexaEditor.Control
         //The large change of scroll when clicked on bar
         private double _scrollLargeChange = 100;
 
-        //List of byte are high light  (TODO: remplace by dictonnary
+        //List of byte are high light  (TODO: remplace by dictonnary)
         private List<long> _markedPositionList = new List<long>();
 
-        //Byte position in file of the right click;
+        //Byte position in file when mouse right click occurs;
         private long _rightClickBytePosition = -1;
 
         //Custom character table loaded.
@@ -52,10 +52,8 @@ namespace WPFHexaEditor.Control
         private long _priLevel = 0;
 
         //Used with VerticalMoveByTime methods/events to move the scrollbar
-        private bool _mouseOnBottom = false;
-        private long _bottomEnterTimes = 0;
-        private bool _mouseOnTop = false;
-        private long _topEnterTimes = 0;
+        private bool _mouseOnBottom, _mouseOnTop = false;
+        private long _bottomEnterTimes, _topEnterTimes = 0;
         #endregion Global Class variables
 
         #region Events
@@ -2039,7 +2037,7 @@ namespace WPFHexaEditor.Control
                 UpdateHeader();
             }
 #if DEBUG
-            Debug.Print($"REFRESH TIME MS: {(DateTime.Now - start).Milliseconds}");
+            Debug.Print($"REFRESH TIME: {(DateTime.Now - start).Milliseconds} ms");
 #endif
         }
 
@@ -2301,27 +2299,7 @@ namespace WPFHexaEditor.Control
             {
                 #region Clear IByteControl
                 _viewBuffer = null;
-                TraverseHexBytes(control =>
-                {
-                    control.BytePositionInFile = -1;
-                    control.Byte = null;
-                    control.Action = ByteAction.Nothing;
-                    control.IsHighLight = false;
-                    control.IsFocus = false;
-                    control.IsSelected = false;
-                    control.ToolTip = null;
-                });
-
-                TraverseStringBytes(control =>
-                {
-                    control.BytePositionInFile = -1;
-                    control.Byte = null;
-                    control.Action = ByteAction.Nothing;
-                    control.ByteNext = null;
-                    control.IsHighLight = false;
-                    control.IsSelected = false;
-                    control.ToolTip = null;
-                });
+                TraverseHexAndStringBytes(ctrl => { ctrl.Clear(); });                                 
                 #endregion
             }
         }
@@ -2380,22 +2358,22 @@ namespace WPFHexaEditor.Control
 
             if (_markedPositionList.Count > 0)
             {
-                TraverseHexAndStringBytes(Control =>
+                TraverseHexAndStringBytes(ctrl =>
                 {
                     find = false;
 
                     foreach (long position in _markedPositionList)
-                        if (position == Control.BytePositionInFile)
+                        if (position == ctrl.BytePositionInFile)
                         {
                             find = true;
                             break;
                         }
 
-                    Control.IsHighLight = find;
+                    ctrl.IsHighLight = find;
                 });
             }
             else //Un highlight all            
-                TraverseHexAndStringBytes(Control => { Control.IsHighLight = false; });
+                TraverseHexAndStringBytes(ctrl => { ctrl.IsHighLight = false; });
         }
 
         /// <summary>
@@ -2863,98 +2841,99 @@ namespace WPFHexaEditor.Control
         /// </summary>
         private void SetScrollMarker(long position, ScrollMarker marker, string description = "")
         {
-            Rectangle rect = new Rectangle();
-            double topPosition = 0;
-            double rightPosition = 0;
-
-            //create bookmark
-            var bookMark = new BookMark()
+            if (ByteProvider.CheckIsOpen(_provider))
             {
-                Marker = marker,
-                BytePositionInFile = position,
-                Description = description
-            };
+                Rectangle rect = new Rectangle();
+                double topPosition, rightPosition = 0;
 
-            //Remove selection start marker and set position
-            if (marker == ScrollMarker.SelectionStart)
-            {
-                int i = 0;
-                foreach (Rectangle ctrl in MarkerGrid.Children)
+                //create bookmark
+                var bookMark = new BookMark()
                 {
-                    if (((BookMark)ctrl.Tag).Marker == ScrollMarker.SelectionStart)
+                    Marker = marker,
+                    BytePositionInFile = position,
+                    Description = description
+                };
+
+                //Remove selection start marker and set position
+                if (marker == ScrollMarker.SelectionStart)
+                {
+                    int i = 0;
+                    foreach (Rectangle ctrl in MarkerGrid.Children)
                     {
-                        MarkerGrid.Children.RemoveAt(i);
-                        break;
+                        if (((BookMark)ctrl.Tag).Marker == ScrollMarker.SelectionStart)
+                        {
+                            MarkerGrid.Children.RemoveAt(i);
+                            break;
+                        }
+                        i++;
                     }
-                    i++;
+
+                    bookMark.BytePositionInFile = SelectionStart;
                 }
 
-                bookMark.BytePositionInFile = SelectionStart;
-            }
+                //Set position in scrollbar
+                topPosition = (GetLineNumber(bookMark.BytePositionInFile) * VerticalScrollBar.Track.TickHeight(MaxLine) - 1);
 
-            //Set position in scrollbar
-            topPosition = (GetLineNumber(bookMark.BytePositionInFile) * VerticalScrollBar.Track.TickHeight(MaxLine) - 1);
+                if (double.IsNaN(topPosition))
+                    topPosition = 0;
 
-            if (double.IsNaN(topPosition))
-                topPosition = 0;
+                //Check if position already exist and exit if exist
+                if (marker != ScrollMarker.SelectionStart)
+                    foreach (Rectangle ctrl in MarkerGrid.Children)
+                        if (ctrl.Margin.Top == topPosition && ((BookMark)ctrl.Tag).Marker == marker)
+                            return;
 
-            //Check if position already exist and exit if exist
-            if (marker != ScrollMarker.SelectionStart)
-                foreach (Rectangle ctrl in MarkerGrid.Children)
-                    if (ctrl.Margin.Top == topPosition && ((BookMark)ctrl.Tag).Marker == marker)
-                        return;
+                //Somes general properties
+                rect.MouseDown += Rect_MouseDown;
+                rect.VerticalAlignment = VerticalAlignment.Top;
+                rect.HorizontalAlignment = HorizontalAlignment.Left;
+                rect.Tag = bookMark;
+                rect.Width = 5;
+                rect.Height = 3;
 
-            //Somes general properties
-            rect.MouseDown += Rect_MouseDown;
-            rect.VerticalAlignment = VerticalAlignment.Top;
-            rect.HorizontalAlignment = HorizontalAlignment.Left;
-            rect.Tag = bookMark;
-            rect.Width = 5;
-            rect.Height = 3;
+                var byteinfo = new ByteModified() { BytePositionInFile = position };
+                rect.DataContext = byteinfo;
 
-            var byteinfo = new ByteModified() { BytePositionInFile = position };
-            rect.DataContext = byteinfo;
+                //Set somes properties for different marker
+                switch (marker)
+                {
+                    case ScrollMarker.TBLBookmark:
+                    case ScrollMarker.Bookmark:
+                        rect.ToolTip = TryFindResource("ScrollMarkerSearchToolTip");
+                        rect.Fill = (SolidColorBrush)TryFindResource("BookMarkColor");
+                        break;
+                    case ScrollMarker.SearchHighLight:
+                        rect.ToolTip = TryFindResource("ScrollMarkerSearchToolTip");
+                        rect.Fill = (SolidColorBrush)TryFindResource("SearchBookMarkColor");
+                        rect.HorizontalAlignment = HorizontalAlignment.Center;
+                        break;
+                    case ScrollMarker.SelectionStart:
+                        rect.Fill = (SolidColorBrush)TryFindResource("SelectionStartBookMarkColor");
+                        rect.Width = VerticalScrollBar.ActualWidth;
+                        rect.Height = 2;
+                        break;
+                    case ScrollMarker.ByteModified:
+                        rect.ToolTip = TryFindResource("ScrollMarkerSearchToolTip");
+                        rect.Fill = (SolidColorBrush)TryFindResource("ByteModifiedMarkColor");
+                        rect.HorizontalAlignment = HorizontalAlignment.Right;
+                        break;
+                    case ScrollMarker.ByteDeleted:
+                        rect.ToolTip = TryFindResource("ScrollMarkerSearchToolTip");
+                        rect.Fill = (SolidColorBrush)TryFindResource("ByteDeletedMarkColor");
+                        rect.HorizontalAlignment = HorizontalAlignment.Right;
+                        rightPosition = 4;
+                        break;
+                }
 
-            //Set somes properties for different marker
-            switch (marker)
-            {
-                case ScrollMarker.TBLBookmark:
-                case ScrollMarker.Bookmark:
-                    rect.ToolTip = TryFindResource("ScrollMarkerSearchToolTip");
-                    rect.Fill = (SolidColorBrush)TryFindResource("BookMarkColor");
-                    break;
-                case ScrollMarker.SearchHighLight:
-                    rect.ToolTip = TryFindResource("ScrollMarkerSearchToolTip");
-                    rect.Fill = (SolidColorBrush)TryFindResource("SearchBookMarkColor");
-                    rect.HorizontalAlignment = HorizontalAlignment.Center;
-                    break;
-                case ScrollMarker.SelectionStart:
-                    rect.Fill = (SolidColorBrush)TryFindResource("SelectionStartBookMarkColor");
-                    rect.Width = VerticalScrollBar.ActualWidth;
-                    rect.Height = 2;
-                    break;
-                case ScrollMarker.ByteModified:
-                    rect.ToolTip = TryFindResource("ScrollMarkerSearchToolTip");
-                    rect.Fill = (SolidColorBrush)TryFindResource("ByteModifiedMarkColor");
-                    rect.HorizontalAlignment = HorizontalAlignment.Right;
-                    break;
-                case ScrollMarker.ByteDeleted:
-                    rect.ToolTip = TryFindResource("ScrollMarkerSearchToolTip");
-                    rect.Fill = (SolidColorBrush)TryFindResource("ByteDeletedMarkColor");
-                    rect.HorizontalAlignment = HorizontalAlignment.Right;
-                    rightPosition = 4;
-                    break;
-            }
+                try
+                {
+                    rect.Margin = new Thickness(0, topPosition, rightPosition, 0);
+                }
+                catch { }
 
-            try
-            {
-                rect.Margin = new Thickness(0, topPosition, rightPosition, 0);
-            }
-            catch { }
-
-            //Add to grid
-            if (ByteProvider.CheckIsOpen(_provider))
+                //Add to grid
                 MarkerGrid.Children.Add(rect);
+            }
         }
 
         private void Rect_MouseDown(object sender, MouseButtonEventArgs e)
@@ -2997,16 +2976,12 @@ namespace WPFHexaEditor.Control
         /// <param name="marker">Type of marker to clear</param>
         public void ClearScrollMarker(ScrollMarker marker)
         {
-            for (int i = 0; i < MarkerGrid.Children.Count; i++)
-            {
-                BookMark mark = (BookMark)((Rectangle)MarkerGrid.Children[i]).Tag;
-
-                if (mark.Marker == marker)
+            for (int i = 0; i < MarkerGrid.Children.Count; i++)            
+                if (((Rectangle)MarkerGrid.Children[i]).Tag is BookMark mark && mark.Marker == marker)
                 {
                     MarkerGrid.Children.Remove(MarkerGrid.Children[i]);
                     i--;
-                }
-            }
+                }            
         }
 
         /// <summary>
@@ -3015,16 +2990,13 @@ namespace WPFHexaEditor.Control
         /// <param name="marker">Type of marker to clear</param>
         public void ClearScrollMarker(ScrollMarker marker, long position)
         {
-            for (int i = 0; i < MarkerGrid.Children.Count; i++)
-            {
-                BookMark mark = (BookMark)((Rectangle)MarkerGrid.Children[i]).Tag;
-
-                if (mark.Marker == marker && mark.BytePositionInFile == position)
+            for (int i = 0; i < MarkerGrid.Children.Count; i++)            
+                if (((Rectangle)MarkerGrid.Children[i]).Tag is BookMark mark &&
+                    mark.Marker == marker && mark.BytePositionInFile == position)
                 {
                     MarkerGrid.Children.Remove(MarkerGrid.Children[i]);
                     i--;
-                }
-            }
+                }            
         }
 
         /// <summary>
@@ -3033,16 +3005,12 @@ namespace WPFHexaEditor.Control
         /// <param name="marker">Type of marker to clear</param>
         public void ClearScrollMarker(long position)
         {
-            for (int i = 0; i < MarkerGrid.Children.Count; i++)
-            {
-                BookMark mark = (BookMark)((Rectangle)MarkerGrid.Children[i]).Tag;
-
-                if (mark.BytePositionInFile == position)
+            for (int i = 0; i < MarkerGrid.Children.Count; i++)            
+                if (((Rectangle)MarkerGrid.Children[i]).Tag is BookMark mark && mark.BytePositionInFile == position)
                 {
                     MarkerGrid.Children.Remove(MarkerGrid.Children[i]);
                     i--;
-                }
-            }
+                }            
         }
 
         #endregion Bookmark and other scrollmarker
@@ -3189,7 +3157,6 @@ namespace WPFHexaEditor.Control
 
                         //Give the control to dispatcher for do events
                         Application.Current.DoEvents();
-
                     });
                 }
             });
@@ -3203,7 +3170,6 @@ namespace WPFHexaEditor.Control
             VerticalMoveByTime
             (
                 () => _mouseOnBottom && curTime == _bottomEnterTimes,
-
                 () => { return (int)MouseWheelSpeed; }
             );
         }
@@ -3218,7 +3184,6 @@ namespace WPFHexaEditor.Control
             VerticalMoveByTime
             (
                 () => _mouseOnTop && curTime == _topEnterTimes,
-
                 () => { return -(int)MouseWheelSpeed; }
             );
         }
@@ -3259,7 +3224,7 @@ namespace WPFHexaEditor.Control
         }
         #endregion Highlight selected byte
 
-        #region ByteCount property
+        #region ByteCount property/methods
 
         public bool AllowByteCount
         {
@@ -3332,8 +3297,7 @@ namespace WPFHexaEditor.Control
         public static readonly DependencyProperty ByteSpacerPositioningProperty =
             DependencyProperty.Register(nameof(ByteSpacerPositioning), typeof(ByteSpacerPosition), typeof(HexaEditor),
                 new FrameworkPropertyMetadata(ByteSpacerPosition.Both, new PropertyChangedCallback(ByteSpacer_Changed)));
-
-
+        
         public ByteSpacerWidth ByteSpacerWidthTickness
         {
             get => (ByteSpacerWidth)GetValue(ByteSpacerWidthTicknessProperty);

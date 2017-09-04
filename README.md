@@ -1,14 +1,14 @@
 ![example](Logo.png?raw=true)
 
-## WPF HexaEditor control       (Developped in C# 7.0, use vs2017+)
+## WPF HexaEditor control       (Developped in C# 7.0)
 A fully customisable WPF user control for editing file or stream as hexadecimal.
 
 
 Sample with standard ASCII character table
-![example](WPFHexEditorControlSample7-NOTBL.png?raw=true)
+![example](Sample8-NOTBL.png?raw=true)
 
 Sample with Thingy character table on SNES Final Fantasy II US
-![example](WPFHexEditorControlSample7-TBL.png?raw=true)
+![example](Sample8-TBL.png?raw=true)
 
 ## NUGET  Last version : 2017-08-27 (v1.0.0)
 https://www.nuget.org/packages/WPFHexaEditor/

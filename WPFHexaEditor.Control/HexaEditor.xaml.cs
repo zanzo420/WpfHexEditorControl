@@ -1727,10 +1727,10 @@ namespace WPFHexaEditor.Control
                 _provider.DataCopiedToClipboard += Provider_DataCopied;
                 _provider.ChangesSubmited += Provider_ChangesSubmited;
                 _provider.Undone += Provider_Undone;
-                _provider.LongProcessProgressChanged += Provider_LongProcessProgressChanged;
-                _provider.LongProcessProgressStarted += Provider_LongProcessProgressStarted;
-                _provider.LongProcessProgressCompleted += Provider_LongProcessProgressCompleted;
-                _provider.LongProcessProgressCanceled += Provider_LongProcessProgressCompleted; //TODO : implement cancel event
+                _provider.LongProcessChanged += Provider_LongProcessProgressChanged;
+                _provider.LongProcessStarted += Provider_LongProcessProgressStarted;
+                _provider.LongProcessCompleted += Provider_LongProcessProgressCompleted;
+                _provider.LongProcessCanceled += Provider_LongProcessProgressCompleted; //TODO : implement cancel event
                 _provider.FillWithByteCompleted += Provider_FillWithByteCompleted;
                 _provider.ReplaceByteCompleted += Provider_ReplaceByteCompleted;
 
@@ -1781,10 +1781,10 @@ namespace WPFHexaEditor.Control
                 _provider.DataCopiedToClipboard += Provider_DataCopied;
                 _provider.ChangesSubmited += Provider_ChangesSubmited;
                 _provider.Undone += Provider_Undone;
-                _provider.LongProcessProgressChanged += Provider_LongProcessProgressChanged;
-                _provider.LongProcessProgressStarted += Provider_LongProcessProgressStarted;
-                _provider.LongProcessProgressCompleted += Provider_LongProcessProgressCompleted;
-                _provider.LongProcessProgressCanceled += Provider_LongProcessProgressCompleted; //TODO : implement cancel event
+                _provider.LongProcessChanged += Provider_LongProcessProgressChanged;
+                _provider.LongProcessStarted += Provider_LongProcessProgressStarted;
+                _provider.LongProcessCompleted += Provider_LongProcessProgressCompleted;
+                _provider.LongProcessCanceled += Provider_LongProcessProgressCompleted; //TODO : implement cancel event
                 _provider.FillWithByteCompleted += Provider_FillWithByteCompleted;
                 _provider.ReplaceByteCompleted += Provider_ReplaceByteCompleted;
 
@@ -2311,7 +2311,7 @@ namespace WPFHexaEditor.Control
         {
             if (ByteProvider.CheckIsOpen(_provider))
             {
-                var ModifiedBytesDictionary = _provider.GetModifiedBytes(ByteAction.All);
+                var ModifiedBytesDictionary = _provider.GetByteModifieds(ByteAction.All);
 
                 TraverseHexAndStringBytes(ctrl =>
                 {
@@ -2750,8 +2750,8 @@ namespace WPFHexaEditor.Control
                 {
                     #region Show lenght
                     bool MB = false;
-                    long deletedBytesCount = _provider.GetModifiedBytes(ByteAction.Deleted).Count();
-                    long addedBytesCount = _provider.GetModifiedBytes(ByteAction.Added).Count();
+                    long deletedBytesCount = _provider.GetByteModifieds(ByteAction.Deleted).Count();
+                    long addedBytesCount = _provider.GetByteModifieds(ByteAction.Added).Count();
 
                     FileLengthLabel.Content = _provider.Length - deletedBytesCount;
 

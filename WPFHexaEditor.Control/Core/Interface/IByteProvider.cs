@@ -36,10 +36,10 @@ namespace WPFHexaEditor.Core.Interfaces
         event EventHandler ChangesSubmited;
         event EventHandler Closed;
         event EventHandler FillWithByteCompleted;
-        event EventHandler LongProcessProgressCanceled;
-        event EventHandler LongProcessProgressChanged;
-        event EventHandler LongProcessProgressCompleted;
-        event EventHandler LongProcessProgressStarted;
+        event EventHandler LongProcessCanceled;
+        event EventHandler LongProcessChanged;
+        event EventHandler LongProcessCompleted;
+        event EventHandler LongProcessStarted;
         event EventHandler PositionChanged;
         event EventHandler ReadOnlyChanged;
         event EventHandler ReplaceByteCompleted;
@@ -47,14 +47,7 @@ namespace WPFHexaEditor.Core.Interfaces
         event EventHandler Undone;
 
         //Methods
-        bool CanCopy(long selectionStart, long selectionStop);
         void Close();
-        void FillWithByte(long startPosition, long length, byte b);
-        IEnumerable<long> FindIndexOf(byte[] bytesTofind, long startPosition = 0);
-        IEnumerable<long> FindIndexOf(string stringToFind, long startPosition = 0);
-        byte? GetByte(long position, bool copyChange = true);
-        long[] GetByteCount();
-        long GetSelectionLenght(long selectionStart, long selectionStop);
         void OpenFile();
         int Read(byte[] destination, int offset, int count);
         byte[] Read(int count);

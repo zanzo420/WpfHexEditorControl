@@ -44,23 +44,11 @@ namespace WPFHexaEditor.Control
         public event EventHandler CTRLAKey;
 
         /// <summary>
-        /// Load ressources dictionnary
-        /// </summary>
-        /// <param name="url"></param>
-        private void LoadDictionary(string url)
-        {
-            var ttRes = new ResourceDictionary() { Source = new Uri(url, UriKind.Relative) };
-            Resources.MergedDictionaries.Add(ttRes);
-        }
-
-        /// <summary>
         /// Default contructor
         /// </summary>
         /// <param name="parent"></param>
         public StringByte(HexaEditor parent)
         {
-            LoadDictionary("/WPFHexaEditor;component/Resources/Dictionary/ToolTipDictionary.xaml");
-
             //Default properties
             Width = 10;
             Focusable = true;
@@ -68,7 +56,8 @@ namespace WPFHexaEditor.Control
             Padding = new Thickness(0);
             TextAlignment = TextAlignment.Center;
 
-            //Binding
+            #region Binding tooltip
+            LoadDictionary("/WPFHexaEditor;component/Resources/Dictionary/ToolTipDictionary.xaml");
             var txtBinding = new Binding()
             {
                 Source = FindResource("ByteToolTip"),
@@ -76,17 +65,30 @@ namespace WPFHexaEditor.Control
                 Mode = BindingMode.OneWay
             };
 
+            /// <summary>
+            /// Load ressources dictionnary
+            /// </summary>
+            /// <param name="url"></param>
+            void LoadDictionary(string url)
+            {
+                var ttRes = new ResourceDictionary() { Source = new Uri(url, UriKind.Relative) };
+                Resources.MergedDictionaries.Add(ttRes);
+            }
+
             SetBinding(TextBlock.ToolTipProperty, txtBinding);
+            #endregion
 
             //Event
             MouseEnter += UserControl_MouseEnter;
             MouseLeave += UserControl_MouseLeave;
             KeyDown += UserControl_KeyDown;
             MouseDown += StringByteLabel_MouseDown;
+            ToolTipOpening += UserControl_ToolTipOpening;
 
             //Parent hexeditor
             _parent = parent;
         }
+
 
         #region DependencyProperty
 
@@ -667,6 +669,12 @@ namespace WPFHexaEditor.Control
                 RightClick?.Invoke(this, e);            
         }
 
+        private void UserControl_ToolTipOpening(object sender, ToolTipEventArgs e)
+        {
+            if (Byte == null)
+                e.Handled = true;
+        }
+
         /// <summary>
         /// Clear control
         /// </summary>
@@ -678,7 +686,6 @@ namespace WPFHexaEditor.Control
             IsHighLight = false;
             IsFocus = false;
             IsSelected = false;
-            ToolTip = null;
             ByteNext = null;
         }
     }

@@ -1677,6 +1677,9 @@ namespace WPFHexaEditor.Control
             RefreshView();
             UpdateHeader();
             UpdateScrollBar();
+
+            //Debug
+            Debug.Print("PROVIDER CLOSED");
         }
 
         /// <summary>
@@ -1753,11 +1756,12 @@ namespace WPFHexaEditor.Control
 
                 //Update count of byte on file open
                 UpdateByteCount();
+
+                //Debug
+                Debug.Print("FILE OPENED");
             }
-            else
-            {
-                throw new FileNotFoundException();
-            }
+            else            
+                throw new FileNotFoundException();            
         }
 
         /// <summary>
@@ -1800,6 +1804,9 @@ namespace WPFHexaEditor.Control
 
                 //Update count of byte
                 UpdateByteCount();
+
+                //Debug
+                Debug.Print("STREAM OPENED");
             }
             else
             {
@@ -2126,7 +2133,7 @@ namespace WPFHexaEditor.Control
                     {
                         InternalChange = true,
                         ReadOnlyMode = ReadOnlyMode,
-                        ToolTip = TryFindResource("ByteToolTip"),
+                        //ToolTip = TryFindResource("ByteToolTip"),
                         Byte = null,
                         BytePositionInFile = -1
                     };
@@ -2236,9 +2243,6 @@ namespace WPFHexaEditor.Control
                     byteControl.Action = ByteAction.Nothing;
                     byteControl.ReadOnlyMode = ReadOnlyMode;
 
-                    if (byteControl.ToolTip == null)
-                        byteControl.ToolTip = TryFindResource("ByteToolTip");
-
                     byteControl.InternalChange = true;
 
                     if (index < readSize && _priLevel == curLevel)
@@ -2262,9 +2266,6 @@ namespace WPFHexaEditor.Control
                 {
                     sbCtrl.Action = ByteAction.Nothing;
                     sbCtrl.ReadOnlyMode = ReadOnlyMode;
-
-                    if (sbCtrl.ToolTip == null)
-                        sbCtrl.ToolTip = TryFindResource("ByteToolTip");
 
                     sbCtrl.InternalChange = true;
                     sbCtrl.TBLCharacterTable = _TBLCharacterTable;

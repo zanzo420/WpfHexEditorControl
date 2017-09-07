@@ -7,6 +7,7 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using WPFHexaEditor.Core;
@@ -17,24 +18,6 @@ namespace WPFHexaEditor.Control
 {
     internal class HexByte : TextBlock, IByteControl
     {
-        public HexByte(HexaEditor parent)
-        {
-            //Default properties
-            DataContext = this;
-            Focusable = true;
-            Width = 20;
-            TextAlignment = TextAlignment.Left;
-            Padding = new Thickness(2, 0, 0, 0);
-
-            //Event
-            KeyDown += UserControl_KeyDown;
-            MouseDown += HexChar_MouseDown;
-            MouseEnter += UserControl_MouseEnter;
-            MouseLeave += UserControl_MouseLeave;
-
-            //Parent hexeditor
-            _parent = parent;
-        }
 
         private KeyDownLabel _keyDownLabel = KeyDownLabel.FirstChar;
         private HexaEditor _parent;
@@ -57,6 +40,49 @@ namespace WPFHexaEditor.Control
         public event EventHandler CTRLVKey;
         public event EventHandler CTRLCKey;
         public event EventHandler CTRLAKey;
+
+        public HexByte(HexaEditor parent)
+        {
+            //Default properties
+            DataContext = this;
+            Focusable = true;
+            Width = 20;
+            TextAlignment = TextAlignment.Left;
+            Padding = new Thickness(2, 0, 0, 0);
+
+            #region Binding tooltip
+            LoadDictionary("/WPFHexaEditor;component/Resources/Dictionary/ToolTipDictionary.xaml");
+            var txtBinding = new Binding()
+            {
+                Source = FindResource("ByteToolTip"),
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+                Mode = BindingMode.OneWay
+            };
+
+            /// <summary>
+            /// Load ressources dictionnary
+            /// </summary>
+            /// <param name="url"></param>
+            void LoadDictionary(string url)
+            {
+                var ttRes = new ResourceDictionary() { Source = new Uri(url, UriKind.Relative) };
+                Resources.MergedDictionaries.Add(ttRes);
+            }
+
+            SetBinding(TextBlock.ToolTipProperty, txtBinding);
+            #endregion
+                        
+            //Event
+            KeyDown += UserControl_KeyDown;
+            MouseDown += HexChar_MouseDown;
+            MouseEnter += UserControl_MouseEnter;
+            MouseLeave += UserControl_MouseLeave;
+            ToolTipOpening += UserControl_ToolTipOpening;
+
+            //Parent hexeditor
+            _parent = parent;
+        }
+
 
 
         #region DependencyProperty
@@ -476,6 +502,12 @@ namespace WPFHexaEditor.Control
             UpdateAutoHighLiteSelectionByteVisual();
         }
 
+        private void UserControl_ToolTipOpening(object sender, ToolTipEventArgs e)
+        {
+            if (Byte == null)
+                e.Handled = true;
+        }
+
         /// <summary>
         /// Clear control
         /// </summary>
@@ -487,7 +519,6 @@ namespace WPFHexaEditor.Control
             IsHighLight = false;
             IsFocus = false;
             IsSelected = false;
-            ToolTip = null;
         }
     }
 }

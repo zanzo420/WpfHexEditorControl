@@ -22,7 +22,7 @@ namespace WPFHexaEditor.Control.Dialog
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            if (base.Title == "") base.Title = "Enter hexadecimal value.";
+            if (base.Title == string.Empty) base.Title = "Enter hexadecimal value.";
         }
     }
 }

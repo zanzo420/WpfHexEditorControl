@@ -27,7 +27,7 @@ namespace WPFHexaEditor.Core.Bytes
         /// Code from : https://github.com/pleonex/tinke/blob/master/Be.Windows.Forms.HexBox/ByteCharConverters.cs
         /// </remarks>
         public static char ByteToChar(byte val) => val > 0x1F && !(val > 0x7E && val < 0xA0) ? (char)val : '.';
-
+        
         /// <summary>
         /// Convert Char to Byte
         /// </summary>
@@ -114,7 +114,7 @@ namespace WPFHexaEditor.Core.Bytes
                     return builder.ToString();
             }
 
-            return "";
+            return string.Empty;
         }
 
         /// <summary>

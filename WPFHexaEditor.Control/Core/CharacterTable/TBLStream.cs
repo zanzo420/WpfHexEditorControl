@@ -25,7 +25,7 @@ namespace WPFHexaEditor.Core.CharacterTable
         private List<DTE> _DTEList = new List<DTE>();
 
         /// <summary>Commentaire du fichier TBL</summary>
-        //		private string _Commentaire = "";
+        //		private string _Commentaire = string.Empty;
 
         #region Constructeurs
 
@@ -54,7 +54,7 @@ namespace WPFHexaEditor.Core.CharacterTable
         public TBLStream()
         {
             _DTEList.Clear();
-            _FileName = "";
+            _FileName = string.Empty;
         }
 
         #endregion Constructeurs
@@ -316,11 +316,11 @@ namespace WPFHexaEditor.Core.CharacterTable
                         switch (info[0].Substring(0, 1))
                         {
                             case @"/":
-                                dte = new DTE(info[0].Substring(0, info[0].Length - 1), "", DTEType.EndBlock);
+                                dte = new DTE(info[0].Substring(0, info[0].Length - 1), string.Empty, DTEType.EndBlock);
                                 break;
 
                             case @"*":
-                                dte = new DTE(info[0].Substring(0, info[0].Length - 1), "", DTEType.EndLine);
+                                dte = new DTE(info[0].Substring(0, info[0].Length - 1), string.Empty, DTEType.EndLine);
                                 break;
                             //case @"\":
                             default:
@@ -527,7 +527,7 @@ namespace WPFHexaEditor.Core.CharacterTable
                     if (dte.Type == DTEType.EndBlock)
                         return dte.Entry;
 
-                return "";
+                return string.Empty;
             }
         }
 
@@ -542,7 +542,7 @@ namespace WPFHexaEditor.Core.CharacterTable
                     if (dte.Type == DTEType.EndLine)
                         return dte.Entry;
 
-                return "";
+                return string.Empty;
             }
         }
 

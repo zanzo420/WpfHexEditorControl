@@ -153,7 +153,7 @@ namespace WPFHexaEditor.Core.Bytes
                 }
                 catch
                 {
-                    if (MessageBox.Show("The file is locked. Do you want to open it in read-only mode?", "", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                    if (MessageBox.Show("The file is locked. Do you want to open it in read-only mode?", string.Empty, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                     {
                         _stream = File.Open(FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 
@@ -202,7 +202,7 @@ namespace WPFHexaEditor.Core.Bytes
             {
                 _stream.Close();
                 _stream = null;
-                _newfilename = "";
+                _newfilename = string.Empty;
                 ReadOnlyMode = false;
                 IsOnLongProcess = false;
                 LongProcessProgress = 0;
@@ -331,7 +331,7 @@ namespace WPFHexaEditor.Core.Bytes
         /// <param name="newFilename"></param>        
         public bool SubmitChanges(string newFilename, bool overwrite = false)
         {
-            _newfilename = "";
+            _newfilename = string.Empty;
             bool go = false;
 
             if (File.Exists(newFilename) && overwrite)
@@ -842,7 +842,7 @@ namespace WPFHexaEditor.Core.Bytes
 
             //Variables
             byte[] buffer = GetCopyData(selectionStart, selectionStop, copyChange);
-            string sBuffer = "";
+            string sBuffer = string.Empty;
 
             DataObject da = new DataObject();
 

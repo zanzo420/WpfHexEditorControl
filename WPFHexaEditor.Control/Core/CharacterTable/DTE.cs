@@ -23,9 +23,9 @@ namespace WPFHexaEditor.Core.CharacterTable
         /// </summary>
         public DTE()
         {
-            _Entry = "";
+            _Entry = string.Empty;
             Type = DTEType.Invalid;
-            Value = "";
+            Value = string.Empty;
         }
 
         /// <summary>

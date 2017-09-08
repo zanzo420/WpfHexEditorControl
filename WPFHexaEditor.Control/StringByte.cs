@@ -140,7 +140,6 @@ namespace WPFHexaEditor.Control
                             ctrl.ByteModified?.Invoke(ctrl, new EventArgs());
 
                         ctrl.UpdateLabelFromByte();
-                        ctrl.UpdateVisual();
                     }
                 }
                 else
@@ -162,12 +161,12 @@ namespace WPFHexaEditor.Control
 
         private static void ByteNext_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is StringByte ctrl)
-                if (e.NewValue != e.OldValue)
-                {
-                    ctrl.UpdateLabelFromByte();
-                    ctrl.UpdateVisual();
-                }
+            //if (d is StringByte ctrl)
+            //    if (e.NewValue != e.OldValue)
+            //    {
+            //        ctrl.UpdateLabelFromByte();
+            //        //ctrl.UpdateVisual();
+            //    }
         }
 
         /// <summary>

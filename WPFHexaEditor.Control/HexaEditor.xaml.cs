@@ -1623,7 +1623,7 @@ namespace WPFHexaEditor.Control
         // Using a DependencyProperty as the backing store for FileName.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty FileNameProperty =
             DependencyProperty.Register(nameof(FileName), typeof(string), typeof(HexaEditor),
-                new FrameworkPropertyMetadata("",
+                new FrameworkPropertyMetadata(string.Empty,
                     new PropertyChangedCallback(FileName_PropertyChanged)));
 
         private static void FileName_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -2086,7 +2086,6 @@ namespace WPFHexaEditor.Control
             for (int lineIndex = StringDataStackPanel.Children.Count; lineIndex < maxline; lineIndex++)
             {
                 #region Build StringByte
-
                 StackPanel dataLineStack = new StackPanel()
                 {
                     Height = LineHeight,
@@ -2133,7 +2132,6 @@ namespace WPFHexaEditor.Control
                     {
                         InternalChange = true,
                         ReadOnlyMode = ReadOnlyMode,
-                        //ToolTip = TryFindResource("ByteToolTip"),
                         Byte = null,
                         BytePositionInFile = -1
                     };
@@ -2394,7 +2392,7 @@ namespace WPFHexaEditor.Control
                     TextBlock LineInfoLabel = new TextBlock()
                     {
                         Height = LineHeight,
-                        Padding = new Thickness(0, 0, 10, 0),
+                        Padding = new Thickness(2, 0, 10, 0),
                         Foreground = ForegroundOffSetHeaderColor,
                         Width = 20,
                         TextAlignment = TextAlignment.Center,
@@ -2473,9 +2471,7 @@ namespace WPFHexaEditor.Control
                 int count = 0;
                 TraverseHexBytes(ctrl =>
                 {
-                    count++;
-
-                    if (count == 1)
+                    if (++count == 1)
                         rtn = ctrl.BytePositionInFile;
                 });
 
@@ -2494,7 +2490,7 @@ namespace WPFHexaEditor.Control
                 TraverseHexBytes(ctrl =>
                 {
                     if (ctrl.BytePositionInFile == SelectionStart)
-                        rtn = true;
+                        rtn = true;                    
                 });
 
                 return rtn;
@@ -2505,7 +2501,7 @@ namespace WPFHexaEditor.Control
         /// Get last visible byte position in control
         /// </summary>
         /// <returns>Return -1 of no file open.</returns>
-        private long LastVisibleBytePosition => FirstVisibleBytePosition+ (MaxVisibleLine- 1) * BytePerLine - 1;
+        private long LastVisibleBytePosition => FirstVisibleBytePosition + (MaxVisibleLine - 1) * BytePerLine - 1;
 
         #endregion First/Last visible byte methods
 

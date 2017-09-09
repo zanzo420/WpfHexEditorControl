@@ -387,6 +387,45 @@ namespace WPFHexaEditor.Control
         /// Control the mouse wheel speed
         /// </summary>
         public MouseWheelSpeed MouseWheelSpeed { get; set; } = MouseWheelSpeed.Normal;
+        
+        /// <summary>
+        /// Set or get the visual of data header
+        /// </summary>
+        public DataVisualType HeaderStringVisual
+        {
+            get => (DataVisualType)GetValue(HeaderStringVisualProperty);
+            set => SetValue(HeaderStringVisualProperty, value);
+        }
+
+        // Using a DependencyProperty as the backing store for HeaderStringVisual.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty HeaderStringVisualProperty =
+            DependencyProperty.Register(nameof(HeaderStringVisual), typeof(DataVisualType), typeof(HexaEditor),
+                new FrameworkPropertyMetadata(DataVisualType.Hexadecimal,
+                    new PropertyChangedCallback(DataVisualTypeProperty_PropertyChanged)));
+        
+        /// <summary>
+        /// Set or get the visual of line offset header
+        /// </summary>
+        public DataVisualType OffSetStringVisual
+        {
+            get => (DataVisualType)GetValue(OffSetStringVisualProperty);
+            set => SetValue(OffSetStringVisualProperty, value);
+        }
+
+        // Using a DependencyProperty as the backing store for OffSetStringVisual.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty OffSetStringVisualProperty =
+            DependencyProperty.Register(nameof(OffSetStringVisual), typeof(DataVisualType ), typeof(HexaEditor),
+                new FrameworkPropertyMetadata(DataVisualType.Hexadecimal,
+                    new PropertyChangedCallback(DataVisualTypeProperty_PropertyChanged)));
+
+        private static void DataVisualTypeProperty_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is HexaEditor ctrl)
+            {
+                ctrl.UpdateHeader();
+                ctrl.UpdateLinesOffSet();
+            }
+        }
 
         #endregion Miscellaneous property/methods
 
@@ -1044,20 +1083,7 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Get the lenght of byte are selected (base 1)
         /// </summary>
-        public long SelectionLength
-        {
-            get
-            {
-                if (SelectionStop == -1 || SelectionStop == -1)
-                    return 0;
-                else if (SelectionStart == SelectionStop)
-                    return 1;
-                else if (SelectionStart > SelectionStop)
-                    return SelectionStart - SelectionStop + 1;
-                else
-                    return SelectionStop - SelectionStart + 1;
-            }
-        }
+        public long SelectionLength => ByteProvider.GetSelectionLenght(SelectionStart, SelectionStop);
 
         /// <summary>
         /// Get byte array from current selection
@@ -2232,7 +2258,7 @@ namespace WPFHexaEditor.Control
                     return;
 
                 var firstInfoLabel = LinesInfoStackPanel.Children[0] as TextBlock;
-                var startPosition = ByteConverters.HexLiteralToLong(firstInfoLabel.Text).position;
+                var startPosition = ByteConverters.HexLiteralToLong(firstInfoLabel.Tag.ToString()).position;
                 var sizeReadyToRead = LinesInfoStackPanel.Children.Count * BytePerLine + 1;
                 _provider.Position = startPosition;
                 var readSize = _provider.Read(_viewBuffer, 0, sizeReadyToRead);
@@ -2398,12 +2424,24 @@ namespace WPFHexaEditor.Control
                         Padding = new Thickness(2, 0, 10, 0),
                         Foreground = ForegroundOffSetHeaderColor,
                         Width = 20,
-                        TextAlignment = TextAlignment.Center,
-                        Text = ByteConverters.ByteToHex((byte)i),
+                        TextAlignment = TextAlignment.Center,                        
                         ToolTip = $"Column : {i.ToString()}",
-                        FontFamily = FontFamily
+                        FontFamily = FontFamily                        
                     };
 
+                    #region Set text visual of header
+                    switch (HeaderStringVisual)
+                    {
+                        case DataVisualType.Hexadecimal:
+                            LineInfoLabel.Text = ByteConverters.ByteToHex((byte)i);
+                            break;
+                        case DataVisualType.Decimal:
+                            LineInfoLabel.Text = i.ToString("d2");
+                            break;
+                    }
+                    #endregion
+
+                    //Add to stackpanel
                     HexHeaderStackPanel.Children.Add(LineInfoLabel);
                 }
         }
@@ -2453,9 +2491,21 @@ namespace WPFHexaEditor.Control
 
                     if (firstLineByte < _provider.Length)
                     {
-                        //Create control
-                        LineInfoLabel.Text = "0x" + ByteConverters.LongToHex(firstLineByte).ToUpper();
-                        LineInfoLabel.ToolTip = $"Byte : {firstLineByte.ToString()}";
+                        #region Set text visual of header
+                        var tag = $"0x{ByteConverters.LongToHex(firstLineByte).ToUpper()}";
+                        LineInfoLabel.Tag = tag;
+                        switch (OffSetStringVisual)
+                        {
+                            case DataVisualType.Hexadecimal:
+                                LineInfoLabel.Text = tag;
+                                break;
+                            case DataVisualType.Decimal:
+                                LineInfoLabel.Text = $"d{firstLineByte.ToString("d8")}";
+                                break;
+                        }
+                        #endregion       
+                        
+                        LineInfoLabel.ToolTip = $"First byte : {firstLineByte.ToString()}";
                     }
                 }
             }

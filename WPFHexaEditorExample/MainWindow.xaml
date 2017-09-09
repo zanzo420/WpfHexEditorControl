@@ -106,7 +106,9 @@
                                 ByteGrouping="EightByte"
                                 ByteSpacerWidthTickness="Normal"
                                 AllowByteCount="False" 
-                                Width="Auto" Height="Auto" Margin="2" />
+                                Width="Auto"
+                                Height="Auto" 
+                                Margin="2" />
         </DockPanel>
     </Grid>
 </Window>

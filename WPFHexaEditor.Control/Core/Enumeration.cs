@@ -65,6 +65,7 @@ namespace WPFHexaEditor.Core
     {
         FirstChar,
         SecondChar,
+        ThirdChar,
         NextPosition
     }
 
@@ -151,5 +152,15 @@ namespace WPFHexaEditor.Core
         HexBytePanel,
         StringBytePanel,
         Both
+    }
+
+    /// <summary>
+    /// Used with the view mode of HexByte, header or position.
+    /// </summary>
+    public enum DataVisualType
+    {
+        Hexadecimal,
+        Decimal
+        //Binary
     }
 }

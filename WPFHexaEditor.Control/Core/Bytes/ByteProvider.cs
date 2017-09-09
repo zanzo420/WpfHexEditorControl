@@ -735,7 +735,7 @@ namespace WPFHexaEditor.Core.Bytes
         /// <summary>
         /// Get the lenght of byte are selected (base 1)
         /// </summary>
-        private long GetSelectionLenght(long selectionStart, long selectionStop)
+        public static long GetSelectionLenght(long selectionStart, long selectionStop)
         {
             if (selectionStop == -1 || selectionStop == -1)
                 return 0;

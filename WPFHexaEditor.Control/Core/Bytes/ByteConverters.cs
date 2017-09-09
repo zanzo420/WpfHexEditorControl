@@ -183,7 +183,7 @@ namespace WPFHexaEditor.Core.Bytes
             if (long.TryParse(hex, out long value))            
                 return value;            
             else            
-                throw new ArgumentException("hex");            
+                throw new ArgumentException($"This string are not hex : {nameof(hex)}");
         }
 
         /// <summary>

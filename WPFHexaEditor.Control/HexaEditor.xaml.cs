@@ -14,12 +14,12 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using WPFHexaEditor.Control.Dialog;
 using WPFHexaEditor.Core;
 using WPFHexaEditor.Core.Bytes;
 using WPFHexaEditor.Core.CharacterTable;
 using WPFHexaEditor.Core.Interfaces;
 using WPFHexaEditor.Core.MethodExtention;
-using WPFHexaEditor.Control.Dialog;
 
 namespace WPFHexaEditor.Control
 {
@@ -1983,6 +1983,9 @@ namespace WPFHexaEditor.Control
         private void Grid_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (e.HeightChanged) RefreshView(true);
+
+            //TEST
+            //BytePerLine = (int)(e.NewSize.Width / 40);
         }
 
         private void VerticalScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => RefreshView(false);

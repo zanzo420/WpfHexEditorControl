@@ -18,7 +18,6 @@ namespace WPFHexaEditor.Core.Interfaces
         long BytePositionInFile { get; set; }
         ByteAction Action { get; set; }
         byte? Byte { get; set; }
-        bool IsFocus { get; set; }
         bool IsHighLight { get; set; }
         bool IsSelected { get; set; }
         bool FirstSelected { get; set; }

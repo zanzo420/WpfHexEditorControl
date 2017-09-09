@@ -242,26 +242,6 @@ namespace WPFHexaEditor.Control
                 }
         }
 
-        public bool IsFocus
-        {
-            get => (bool)GetValue(IsFocusProperty);
-            set => SetValue(IsFocusProperty, value);
-        }
-
-        public static readonly DependencyProperty IsFocusProperty =
-            DependencyProperty.Register(nameof(IsFocus), typeof(bool), typeof(HexByte),
-                new FrameworkPropertyMetadata(false, IsFocus_PropertyChanged));
-
-        private static void IsFocus_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is HexByte ctrl)
-                if (e.NewValue != e.OldValue)
-                {
-                    ctrl._keyDownLabel = KeyDownLabel.FirstChar;
-                    ctrl.UpdateVisual();
-                }
-        }
-
         /// <summary>
         /// Update Background,foreground and font property
         /// </summary>
@@ -269,12 +249,7 @@ namespace WPFHexaEditor.Control
         {
             FontFamily = _parent.FontFamily;
 
-            if (IsFocus)
-            {
-                Foreground = Brushes.White;
-                Background = Brushes.Black;
-            }
-            else if (IsSelected)
+            if (IsSelected)
             {
                 FontWeight = _parent.FontWeight;
                 Foreground = _parent.ForegroundContrast;
@@ -481,7 +456,7 @@ namespace WPFHexaEditor.Control
                 if (Action != ByteAction.Modified &&
                     Action != ByteAction.Deleted &&
                     Action != ByteAction.Added &&
-                    !IsSelected && !IsHighLight && !IsFocus)
+                    !IsSelected && !IsHighLight)
                     Background = _parent.MouseOverColor;
 
             UpdateAutoHighLiteSelectionByteVisual();
@@ -496,7 +471,7 @@ namespace WPFHexaEditor.Control
                 if (Action != ByteAction.Modified &&
                     Action != ByteAction.Deleted &&
                     Action != ByteAction.Added &&
-                    !IsSelected && !IsHighLight && !IsFocus)
+                    !IsSelected && !IsHighLight)
                     Background = Brushes.Transparent;
 
             UpdateAutoHighLiteSelectionByteVisual();
@@ -517,7 +492,6 @@ namespace WPFHexaEditor.Control
             Byte = null;
             Action = ByteAction.Nothing;
             IsHighLight = false;
-            IsFocus = false;
             IsSelected = false;
         }
     }

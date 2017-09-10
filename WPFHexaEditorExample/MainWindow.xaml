@@ -107,7 +107,7 @@
                                 ByteGrouping="EightByte"
                                 ByteSpacerWidthTickness="Normal"
                                 AllowByteCount="False" 
-                                DataStringVisual="Decimal"
+                                DataStringVisual="Hexadecimal"
                                 Width="Auto"
                                 Height="Auto" 
                                 Margin="2" />

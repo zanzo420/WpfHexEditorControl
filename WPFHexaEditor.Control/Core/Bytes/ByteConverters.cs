@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 
@@ -210,5 +211,23 @@ namespace WPFHexaEditor.Core.Bytes
         /// Convert String to hex string For example: "barn" = "62 61 72 6e"
         /// </summary>
         public static string StringToHex(string str) => ByteToHex(StringToByte(str));
+
+        /// <summary>
+        /// Convert decimal to binary representation
+        /// </summary>
+        public static string DecimalToBinary(long decimalNumber)
+        {
+            long remainder;
+            string result = string.Empty;
+
+            while (decimalNumber > 0)
+            {
+                remainder = decimalNumber % 2;
+                decimalNumber /= 2;
+                result = remainder.ToString() + result;
+            }
+
+            return result;
+        }
     }
 }

@@ -159,8 +159,8 @@ namespace WPFHexaEditor.Core
     /// </summary>
     public enum DataVisualType
     {
-        Hexadecimal,
-        Decimal
-        //Binary
+        Hexadecimal,    //Editable
+        Decimal         //Not editable
+        //Binary        //Editable
     }
 }

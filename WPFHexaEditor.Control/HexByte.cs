@@ -19,9 +19,11 @@ namespace WPFHexaEditor.Control
     internal class HexByte : TextBlock, IByteControl
     {
 
+        //global class variables
         private KeyDownLabel _keyDownLabel = KeyDownLabel.FirstChar;
         private HexaEditor _parent;
 
+        //Events
         public event EventHandler ByteModified;
         public event EventHandler MouseSelection;
         public event EventHandler Click;
@@ -43,10 +45,12 @@ namespace WPFHexaEditor.Control
 
         public HexByte(HexaEditor parent)
         {
+            //Parent hexeditor
+            _parent = parent;
+
             //Default properties
             DataContext = this;
             Focusable = true;
-            Width = 20;
             TextAlignment = TextAlignment.Left;
             Padding = new Thickness(2, 0, 0, 0);
 
@@ -78,9 +82,9 @@ namespace WPFHexaEditor.Control
             MouseEnter += UserControl_MouseEnter;
             MouseLeave += UserControl_MouseLeave;
             ToolTipOpening += UserControl_ToolTipOpening;
-
-            //Parent hexeditor
-            _parent = parent;
+            
+            //Update width
+            UpdateDataVisualWidth();
         }
 
 
@@ -299,12 +303,20 @@ namespace WPFHexaEditor.Control
         }
 
 
-        private void UpdateLabelFromByte()
+        internal void UpdateLabelFromByte()
         {
             if (Byte != null)
             {
-                var chArr = ByteConverters.ByteToHexCharArray(Byte.Value);
-                Text = new string(chArr);
+                switch (_parent.DataStringVisual)
+                {
+                    case DataVisualType.Hexadecimal:
+                        var chArr = ByteConverters.ByteToHexCharArray(Byte.Value);
+                        Text = new string(chArr);
+                        break;
+                    case DataVisualType.Decimal:                        
+                        Text = Byte.Value.ToString("d3");
+                        break;
+                }                
             }
             else            
                 Text = string.Empty;            
@@ -324,6 +336,7 @@ namespace WPFHexaEditor.Control
 
         private void UserControl_KeyDown(object sender, KeyEventArgs e)
         {
+            #region Key validation and launch event if needed
             if (KeyValidator.IsUpKey(e.Key))
             {
                 e.Handled = true;
@@ -415,36 +428,51 @@ namespace WPFHexaEditor.Control
                 CTRLAKey?.Invoke(this, new EventArgs());
                 return;
             }
+            #endregion
 
             //MODIFY BYTE
             if (!ReadOnlyMode)
                 if (KeyValidator.IsHexKey(e.Key))
                 {
-                    string key;
-                    if (KeyValidator.IsNumericKey(e.Key))
-                        key = KeyValidator.GetDigitFromKey(e.Key).ToString();
-                    else
-                        key = e.Key.ToString().ToLower();
-
-                    //Update byte
-                    char[] ByteValueCharArray = ByteConverters.ByteToHexCharArray(Byte.Value);
-                    switch (_keyDownLabel)
+                    switch (_parent.DataStringVisual)
                     {
-                        case KeyDownLabel.FirstChar:
-                            ByteValueCharArray[0] = key.ToCharArray()[0];
-                            _keyDownLabel = KeyDownLabel.SecondChar;
-                            Action = ByteAction.Modified;
-                            Byte = ByteConverters.HexToByte(ByteValueCharArray[0].ToString() + ByteValueCharArray[1].ToString())[0];
+                        case DataVisualType.Hexadecimal:
+
+                            #region Edit hexadecimal value 
+                            string key;
+                            if (KeyValidator.IsNumericKey(e.Key))
+                                key = KeyValidator.GetDigitFromKey(e.Key).ToString();
+                            else
+                                key = e.Key.ToString().ToLower();
+
+                            //Update byte
+                            char[] ByteValueCharArray = ByteConverters.ByteToHexCharArray(Byte.Value);
+                            switch (_keyDownLabel)
+                            {
+                                case KeyDownLabel.FirstChar:
+                                    ByteValueCharArray[0] = key.ToCharArray()[0];
+                                    _keyDownLabel = KeyDownLabel.SecondChar;
+                                    Action = ByteAction.Modified;
+                                    Byte = ByteConverters.HexToByte(ByteValueCharArray[0].ToString() + ByteValueCharArray[1].ToString())[0];
+                                    break;
+                                case KeyDownLabel.SecondChar:
+                                    ByteValueCharArray[1] = key.ToCharArray()[0];
+                                    _keyDownLabel = KeyDownLabel.NextPosition;
+
+                                    Action = ByteAction.Modified;
+                                    Byte = ByteConverters.HexToByte(ByteValueCharArray[0].ToString() + ByteValueCharArray[1].ToString())[0];
+
+                                    //Move focus event
+                                    MoveNext?.Invoke(this, new EventArgs());
+                                    break;
+                            }
+                            #endregion
+
                             break;
-                        case KeyDownLabel.SecondChar:
-                            ByteValueCharArray[1] = key.ToCharArray()[0];
-                            _keyDownLabel = KeyDownLabel.NextPosition;
+                        case DataVisualType.Decimal:
 
-                            Action = ByteAction.Modified;
-                            Byte = ByteConverters.HexToByte(ByteValueCharArray[0].ToString() + ByteValueCharArray[1].ToString())[0];
+                            //Not editable at this moment, maybe in future
 
-                            //Move focus event
-                            MoveNext?.Invoke(this, new EventArgs());
                             break;
                     }
                 }
@@ -493,6 +521,19 @@ namespace WPFHexaEditor.Control
             Action = ByteAction.Nothing;
             IsHighLight = false;
             IsSelected = false;
+        }
+
+        public void UpdateDataVisualWidth()
+        {
+            switch (_parent.DataStringVisual)
+            {
+                case DataVisualType.Decimal:
+                    Width = 25;
+                    break;
+                case DataVisualType.Hexadecimal:
+                    Width = 20;
+                    break;
+            }
         }
     }
 }

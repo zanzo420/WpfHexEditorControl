@@ -389,21 +389,6 @@ namespace WPFHexaEditor.Control
         public MouseWheelSpeed MouseWheelSpeed { get; set; } = MouseWheelSpeed.Normal;
         
         /// <summary>
-        /// Set or get the visual of data header
-        /// </summary>
-        public DataVisualType HeaderStringVisual
-        {
-            get => (DataVisualType)GetValue(HeaderStringVisualProperty);
-            set => SetValue(HeaderStringVisualProperty, value);
-        }
-
-        // Using a DependencyProperty as the backing store for HeaderStringVisual.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty HeaderStringVisualProperty =
-            DependencyProperty.Register(nameof(HeaderStringVisual), typeof(DataVisualType), typeof(HexaEditor),
-                new FrameworkPropertyMetadata(DataVisualType.Hexadecimal,
-                    new PropertyChangedCallback(DataVisualTypeProperty_PropertyChanged)));
-        
-        /// <summary>
         /// Set or get the visual of line offset header
         /// </summary>
         public DataVisualType OffSetStringVisual
@@ -418,13 +403,39 @@ namespace WPFHexaEditor.Control
                 new FrameworkPropertyMetadata(DataVisualType.Hexadecimal,
                     new PropertyChangedCallback(DataVisualTypeProperty_PropertyChanged)));
 
+
         private static void DataVisualTypeProperty_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is HexaEditor ctrl)
-            {
-                ctrl.UpdateHeader();
-                ctrl.UpdateLinesOffSet();
-            }
+                if (e.NewValue != e.OldValue)
+                    ctrl.UpdateLinesOffSet();
+        }
+
+        public DataVisualType DataStringVisual
+        {
+            get { return (DataVisualType)GetValue(DataStringVisualProperty); }
+            set { SetValue(DataStringVisualProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for HexByteStringVisual.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty DataStringVisualProperty =
+            DependencyProperty.Register(nameof(DataStringVisual), typeof(DataVisualType), typeof(HexaEditor),
+                new FrameworkPropertyMetadata(DataVisualType.Hexadecimal,
+                    new PropertyChangedCallback(DataStringVisualTypeProperty_PropertyChanged)));
+
+        private static void DataStringVisualTypeProperty_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is HexaEditor ctrl)
+                if (e.NewValue != e.OldValue)
+                {
+                    ctrl.UpdateHeader();
+
+                    ctrl.TraverseHexBytes(hctrl => 
+                    {
+                        hctrl.UpdateDataVisualWidth();
+                        hctrl.UpdateLabelFromByte();
+                    });
+                }
         }
 
         #endregion Miscellaneous property/methods
@@ -2235,7 +2246,7 @@ namespace WPFHexaEditor.Control
             {
                 if (ControlResize)
                 {
-                    #region 
+                    #region Control need to resize
                     if (_viewBuffer == null)
                     {
                         var fullSizeReadyToRead = MaxVisibleLine* BytePerLine + 1;
@@ -2264,7 +2275,7 @@ namespace WPFHexaEditor.Control
                 var readSize = _provider.Read(_viewBuffer, 0, sizeReadyToRead);
                 var index = 0;
 
-                #region
+                #region Hex byte refresh
                 TraverseHexBytes(byteControl =>
                 {
                     byteControl.Action = ByteAction.Nothing;
@@ -2288,7 +2299,7 @@ namespace WPFHexaEditor.Control
                 #endregion
 
                 index = 0;
-                #region
+                #region string byte refresh
                 TraverseStringBytes(sbCtrl =>
                 {
                     sbCtrl.Action = ByteAction.Nothing;
@@ -2423,20 +2434,21 @@ namespace WPFHexaEditor.Control
                         Height = LineHeight,
                         Padding = new Thickness(2, 0, 10, 0),
                         Foreground = ForegroundOffSetHeaderColor,
-                        Width = 20,
                         TextAlignment = TextAlignment.Center,                        
                         ToolTip = $"Column : {i.ToString()}",
                         FontFamily = FontFamily                        
                     };
 
                     #region Set text visual of header
-                    switch (HeaderStringVisual)
+                    switch (DataStringVisual)
                     {
                         case DataVisualType.Hexadecimal:
                             LineInfoLabel.Text = ByteConverters.ByteToHex((byte)i);
+                            LineInfoLabel.Width = 20;
                             break;
                         case DataVisualType.Decimal:
-                            LineInfoLabel.Text = i.ToString("d2");
+                            LineInfoLabel.Text = i.ToString("d3");
+                            LineInfoLabel.Width = 25;
                             break;
                     }
                     #endregion
@@ -2818,7 +2830,6 @@ namespace WPFHexaEditor.Control
                     #endregion
 
                     #region Byte count of selectionStart
-
                     if (AllowByteCount == true && _bytecount != null && SelectionStart > -1)
                     {
                         ByteCountPanel.Visibility = Visibility.Visible;
@@ -2828,9 +2839,7 @@ namespace WPFHexaEditor.Control
                         CountOfByteLabel.Content = $"0x{ByteConverters.LongToHex(val)}";
                     }
                     else
-                    {
-                        ByteCountPanel.Visibility = Visibility.Collapsed;
-                    }
+                        ByteCountPanel.Visibility = Visibility.Collapsed;                    
                     #endregion
                 }
                 else

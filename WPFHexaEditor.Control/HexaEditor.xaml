@@ -187,13 +187,12 @@
         <Grid x:Name="StatusBarGrid"
               Background="WhiteSmoke"
               Grid.Row="2"
-              Grid.ColumnSpan="5"
-              Height="30"
+              Grid.ColumnSpan="5"              
               Visibility="Visible"
               VerticalAlignment="Top">
 
             <Separator Height="1"
-                       Margin="0,0,0,29"
+                       Margin="0,0,0,20"
                        Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HexaEditor}}, Path=BorderBrush}" />
 
             <StackPanel Orientation="Horizontal">
@@ -271,7 +270,7 @@
                    MouseLeave="BottomRectangle_MouseLeave"
                    Grid.ColumnSpan="4"
                    Grid.RowSpan="2"
-                   Height="31"
+                   Height="25"
                    VerticalAlignment="Bottom" />
 
         <Rectangle x:Name="TopRectangle"

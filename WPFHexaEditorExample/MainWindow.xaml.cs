@@ -270,5 +270,13 @@ namespace WPFHexaEditorExample
                 HexEdit.SubmitChanges(fileDialog.FileName, true);
             }
         }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (HexEdit.DataStringVisual == DataVisualType.Decimal)
+                HexEdit.DataStringVisual = DataVisualType.Hexadecimal;
+            else
+                HexEdit.DataStringVisual = DataVisualType.Decimal;
+        }
     }
 }

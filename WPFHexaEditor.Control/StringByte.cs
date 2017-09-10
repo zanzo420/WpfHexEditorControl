@@ -313,7 +313,7 @@ namespace WPFHexaEditor.Control
         /// <summary>
         /// Update control label from byte property
         /// </summary>
-        private void UpdateLabelFromByte()
+        internal void UpdateLabelFromByte()
         {
             if (Byte != null)
             {
@@ -458,6 +458,7 @@ namespace WPFHexaEditor.Control
 
         private void UserControl_KeyDown(object sender, KeyEventArgs e)
         {
+            #region Key validation and launch event if needed
             if (KeyValidator.IsIgnoredKey(e.Key))
             {
                 e.Handled = true;
@@ -558,6 +559,7 @@ namespace WPFHexaEditor.Control
                 CTRLAKey?.Invoke(this, new EventArgs());
                 return;
             }
+            #endregion
 
             //MODIFY ASCII...
             if (!ReadOnlyMode)

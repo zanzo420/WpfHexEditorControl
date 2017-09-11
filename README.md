@@ -33,6 +33,7 @@ https://www.nuget.org/packages/WPFHexaEditor/
 - Scollbar marker for selection start and byte finded
 - Set Bookmark
 - Group byte in block 
+- Show data as hexadecimal or decimal
 - ...
 
 ## How to use

@@ -14,8 +14,7 @@
              BorderBrush="#FF443E3E"
              BorderThickness="1"
              Focusable="True"
-             d:DesignHeight="350"
-             d:DesignWidth="800" FontSize="11">
+             d:DesignHeight="350" FontSize="11" Width="804">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -192,71 +191,62 @@
               VerticalAlignment="Top">
 
             <Separator Height="1"
-                       Margin="0,0,0,20"
+                       Margin="0,0,0,27"
                        Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HexaEditor}}, Path=BorderBrush}" />
 
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Ln" Padding="5,5,0,5" FontWeight="Bold" />
-                <Label Content="{Binding SelectionLine, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource LongHexConverter}}" Width="80">
-                    <Label.ToolTip>
-                        <StackPanel Orientation="Horizontal">
-                            <Label FontWeight="Bold" Content="Line :"/>
-                            <Label Content="{Binding SelectionLine, UpdateSourceTrigger=PropertyChanged}"/>
-                            <Label Content="{Binding SelectionLine, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource LongHexConverter}}"/>
-                        </StackPanel>
-                    </Label.ToolTip>
-                </Label>
-                <Label Content="Position" Padding="5,5,0,5" FontWeight="Bold" />
-                <Label Content="{Binding SelectionStart, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource LongHexConverter}}" Width="80">
-                    <Label.ToolTip>
-                        <StackPanel Orientation="Horizontal">
-                            <Label FontWeight="Bold" Content="Position :"/>
-                            <Label Content="{Binding SelectionStart, UpdateSourceTrigger=PropertyChanged}"/>
-                            <Label Content="{Binding SelectionStart, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource LongHexConverter}}"/>
-                        </StackPanel>
-                    </Label.ToolTip>
-                </Label>
-                <Label Content="Lenght" 
-                       Padding="5,5,0,5" 
-                       FontWeight="Bold" />
-                <Label x:Name="FileLengthKBLabel" 
-                       ContentStringFormat="N0" />
-                <Label Content="(" Padding="5,5,0,5" />
-                <Label x:Name="FileLengthLabel"
-                       ContentStringFormat="N0"
-                       Padding="0,5,5,5" />
-                <Label Content="Bytes)" 
-                       Padding="0,5,5,5" />
-
-                <StackPanel x:Name="ByteCountPanel" 
-                            Orientation="Horizontal" 
-                            Visibility="Collapsed">
-                    <Label Content="Count of " 
-                           Padding="5,5,0,5" 
-                           FontWeight="Bold" />
-                    <Label x:Name="CountOfByteLabel" 
-                           ToolTip="Byte at position start"/>
-                    <Label Content=":" 
-                           Padding="0,5"/>
-                    <Label x:Name="CountOfByteSumLabel" 
-                           ToolTip="Count of Byte at position start"
-                           ContentStringFormat="N0" />
-                </StackPanel>
-            </StackPanel>
-            <Label x:Name="TBLLabel" 
-                   Content="TBL" 
-                   Visibility="Collapsed"
-                   Height="20" Margin="0,6,26,0"
-                   VerticalAlignment="Top"
-                   HorizontalAlignment="Right" 
-                   Width="31"
-                   Padding="5,0"
-                   FontWeight="Bold" />
+            <!--Statusbar definition-->
+            <StatusBar Height="27">
+                <StatusBarItem Width="90" Padding="0">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Ln" Padding="5,5,0,5" FontWeight="Bold" />
+                        <Label Content="{Binding SelectionLine, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource LongHexConverter}}">
+                            <Label.ToolTip>
+                                <StackPanel Orientation="Horizontal">
+                                    <Label FontWeight="Bold" Content="Line :"/>
+                                    <Label Content="{Binding SelectionLine, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <Label Content="{Binding SelectionLine, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource LongHexConverter}}"/>
+                                </StackPanel>
+                            </Label.ToolTip>
+                        </Label>
+                    </StackPanel>
+                </StatusBarItem>
+                <Separator/>
+                <StatusBarItem Width="125" Padding="0">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Position" Padding="5,5,0,5" FontWeight="Bold" />
+                        <Label Content="{Binding SelectionStart, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource LongHexConverter}}">
+                            <Label.ToolTip>
+                                <StackPanel Orientation="Horizontal">
+                                    <Label FontWeight="Bold" Content="Position :"/>
+                                    <Label Content="{Binding SelectionStart, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <Label Content="{Binding SelectionStart, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource LongHexConverter}}"/>
+                                </StackPanel>
+                            </Label.ToolTip>
+                        </Label>
+                    </StackPanel>
+                </StatusBarItem>
+                <Separator/>
+                <StatusBarItem Width="125" Padding="0">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Lenght" Padding="5,5,0,5" FontWeight="Bold" />
+                        <Label x:Name="FileLengthKBLabel" ContentStringFormat="N0" />
+                    </StackPanel>
+                </StatusBarItem>
+                <Separator/>
+                <StatusBarItem Padding="0" x:Name="ByteCountPanel" Visibility="Visible">
+                    <StackPanel Orientation="Horizontal">                        
+                        <Label Content="Count of " Padding="5,5,0,5" FontWeight="Bold" />
+                        <Label x:Name="CountOfByteLabel" ToolTip="Byte at position start"/>
+                        <Label Content=":" Padding="0,5"/>
+                        <Label x:Name="CountOfByteSumLabel" ToolTip="Count of Byte at position start" ContentStringFormat="N0" />
+                    </StackPanel>
+                </StatusBarItem>
+            </StatusBar>
         </Grid>
 
         <ProgressBar Grid.Row="3"
                      Grid.ColumnSpan="5"
-                     Height="2"
+                     Height="3"
                      BorderThickness="0"
                      x:Name="LongProgressProgressBar"
                      Minimum="0"
@@ -264,14 +254,15 @@
 
         <Rectangle x:Name="BottomRectangle"
                    Fill="#FFF4F4F5"
-                   Opacity="0"
-                   Grid.Row="2"
+                   Opacity="0"                   
                    MouseEnter="BottomRectangle_MouseEnter"
                    MouseLeave="BottomRectangle_MouseLeave"
-                   Grid.ColumnSpan="4"
-                   Grid.RowSpan="2"
+                   Grid.ColumnSpan="5"
+                   Grid.Row="2"
+                   Grid.Column="1"
                    Height="25"
-                   VerticalAlignment="Bottom" />
+                   VerticalAlignment="Bottom" 
+                   Margin="0,0,18,0" />
 
         <Rectangle x:Name="TopRectangle"
                    Fill="#FFF4F4F5"
@@ -320,5 +311,16 @@
                Grid.ColumnSpan="2" 
                Grid.Column="2"               
                />
+
+        <Label x:Name="TBLLabel" 
+                       Content="TBL" 
+                       Visibility="Collapsed"
+                       Margin="0,1,05,1"
+                       HorizontalAlignment="Right" 
+                       Grid.Row="2"                
+                       Grid.RowSpan="2" 
+                       Grid.ColumnSpan="2" 
+                       Grid.Column="2" 
+                       FontWeight="Bold" />
     </Grid>
 </UserControl>

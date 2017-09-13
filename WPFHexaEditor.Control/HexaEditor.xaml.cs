@@ -2815,8 +2815,6 @@ namespace WPFHexaEditor.Control
                     long deletedBytesCount = _provider.GetByteModifieds(ByteAction.Deleted).Count();
                     long addedBytesCount = _provider.GetByteModifieds(ByteAction.Added).Count();
 
-                    FileLengthLabel.Content = _provider.Length - deletedBytesCount;
-
                     //is mega bytes ?
                     double lenght = (_provider.Length - deletedBytesCount + addedBytesCount) / 1024;
 
@@ -2827,6 +2825,7 @@ namespace WPFHexaEditor.Control
                     }
 
                     FileLengthKBLabel.Content = Math.Round(lenght, 2) + (MB == true ? " MB" : " KB");
+                    FileLengthKBLabel.ToolTip = $" {_provider.Length - deletedBytesCount} Bytes";
                     #endregion
 
                     #region Byte count of selectionStart
@@ -2844,7 +2843,6 @@ namespace WPFHexaEditor.Control
                 }
                 else
                 {
-                    FileLengthLabel.Content = 0;
                     FileLengthKBLabel.Content = 0;
                     CountOfByteLabel.Content = 0;
                 }

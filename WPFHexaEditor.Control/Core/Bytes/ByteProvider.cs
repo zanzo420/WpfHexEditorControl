@@ -1304,23 +1304,15 @@ namespace WPFHexaEditor.Core.Bytes
                 if (disposing)
                 {
                     // TODO: supprimer l'état managé (objets managés).
+                    IsOnLongProcess = false;
                     _stream = null;
                 }
-
-                // TODO: libérer les ressources non managées (objets non managés) et remplacer un finaliseur ci-dessous.
-                // TODO: définir les champs de grande taille avec la valeur Null.
 
                 disposedValue = true;
             }
         }
 
-
-        // Ce code est ajouté pour implémenter correctement le modèle supprimable.
-        public void Dispose()
-        {
-            // Ne modifiez pas ce code. Placez le code de nettoyage dans Dispose(bool disposing) ci-dessus.
-            Dispose(true);
-        }
+        public void Dispose() => Dispose(true);
         #endregion IDisposable Support
 
         #region Computing count byte methods...

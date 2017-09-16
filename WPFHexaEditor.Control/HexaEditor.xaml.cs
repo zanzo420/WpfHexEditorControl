@@ -1856,8 +1856,14 @@ namespace WPFHexaEditor.Control
             LongProgressProgressBar.Visibility = Visibility.Collapsed;
             CancelLongProcessButton.Visibility = Visibility.Collapsed;
 
+            #region Enable controls
             TraverseHexBytes(ctrl => ctrl.IsEnabled = true);
             TraverseStringBytes(ctrl => ctrl.IsEnabled = true);
+            TraverseLineInfos(ctrl => ctrl.IsEnabled = true);
+            TraverseHexHeader(ctrl => ctrl.IsEnabled = true);
+            TopRectangle.IsEnabled = BottomRectangle.IsEnabled = true;
+            VerticalScrollBar.IsEnabled = true;            
+            #endregion
 
             LongProcessProgressCompleted?.Invoke(this, new EventArgs());
         }
@@ -1867,8 +1873,14 @@ namespace WPFHexaEditor.Control
             LongProgressProgressBar.Visibility = Visibility.Visible;
             CancelLongProcessButton.Visibility = Visibility.Visible;
 
+            #region Disable controls
             TraverseHexBytes(ctrl => ctrl.IsEnabled = false);
             TraverseStringBytes(ctrl => ctrl.IsEnabled = false);
+            TraverseLineInfos(ctrl => ctrl.IsEnabled = false);
+            TraverseHexHeader(ctrl => ctrl.IsEnabled = false);
+            TopRectangle.IsEnabled = BottomRectangle.IsEnabled = false;
+            VerticalScrollBar.IsEnabled = false;
+            #endregion
 
             LongProcessProgressStarted?.Invoke(this, new EventArgs());
         }
@@ -1914,7 +1926,7 @@ namespace WPFHexaEditor.Control
 
         #endregion Open, Close, Save, byte provider ...
 
-        #region Traverse IByteControl methods
+        #region Traverses methods
 
         /// <summary>
         /// Used to make action on all hexbytecontrol
@@ -1973,6 +1985,40 @@ namespace WPFHexaEditor.Control
                 if (cnt++ == visibleLine) break;
                 foreach (HexByte byteControl in hexDataStack.Children.Cast<object>().Where(ctrl => ctrl.GetType() == typeof(HexByte)))
                     act(byteControl);
+            }
+        }
+
+        /// <summary>
+        /// Used to make action on all lineinfos control
+        /// </summary>
+        private void TraverseLineInfos(Action<TextBlock> act)
+        {
+            var visibleLine = MaxVisibleLine;
+            var cnt = 0;
+
+            //Stringbyte panel
+            foreach (TextBlock lineInfo in LinesInfoStackPanel.Children.Cast<object>().Where(ctrl => ctrl.GetType() == typeof(TextBlock)))
+            {
+                if (cnt++ == visibleLine) break;
+
+                act(lineInfo);
+            }
+        }
+
+        /// <summary>
+        /// Used to make action on all lineinfos control
+        /// </summary>
+        private void TraverseHexHeader(Action<TextBlock> act)
+        {
+            var visibleLine = MaxVisibleLine;
+            var cnt = 0;
+
+            //Stringbyte panel
+            foreach (TextBlock colomn in HexHeaderStackPanel.Children.Cast<object>().Where(ctrl => ctrl.GetType() == typeof(TextBlock)))
+            {
+                if (cnt++ == visibleLine) break;
+
+                act(colomn);
             }
         }
         #endregion Traverse IByteControl methods
@@ -2393,27 +2439,16 @@ namespace WPFHexaEditor.Control
         /// </summary>
         private void UpdateHighLight()
         {
-            bool find = false;
-
             if (_markedPositionList.Count > 0)
             {
                 TraverseHexAndStringBytes(ctrl =>
                 {
-                    find = false;
-
-                    foreach (long position in _markedPositionList)
-                        if (position == ctrl.BytePositionInFile)
-                        {
-                            find = true;
-                            break;
-                        }
-
-                    ctrl.IsHighLight = find;
+                    ctrl.IsHighLight = _markedPositionList.Exists(c => c == ctrl.BytePositionInFile);
                 });
             }
             else //Un highlight all            
                 TraverseHexAndStringBytes(ctrl => { ctrl.IsHighLight = false; });
-        }
+         }
 
         /// <summary>
         /// Update the position info panel at left of the control
@@ -3340,6 +3375,7 @@ namespace WPFHexaEditor.Control
         }
 
         public void Dispose() => Dispose(true);
+
         #endregion
 
         #region IByteControl grouping

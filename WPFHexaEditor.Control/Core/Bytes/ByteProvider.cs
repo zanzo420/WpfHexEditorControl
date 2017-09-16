@@ -237,6 +237,7 @@ namespace WPFHexaEditor.Core.Bytes
             {
                 if (IsOpen)
                 {
+                    //TODO : ADD VALIDATION
                     _stream.Position = value;
 
                     PositionChanged?.Invoke(this, new EventArgs());

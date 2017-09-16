@@ -2900,7 +2900,6 @@ namespace WPFHexaEditor.Control
         {
             if (ByteProvider.CheckIsOpen(_provider))
             {
-                Rectangle rect = new Rectangle();
                 double topPosition, rightPosition = 0;
 
                 //create bookmark
@@ -2911,7 +2910,7 @@ namespace WPFHexaEditor.Control
                     Description = description
                 };
 
-                //Remove selection start marker and set position
+                #region Remove selection start marker and set position
                 if (marker == ScrollMarker.SelectionStart)
                 {
                     int i = 0;
@@ -2927,31 +2926,34 @@ namespace WPFHexaEditor.Control
 
                     bookMark.BytePositionInFile = SelectionStart;
                 }
+                #endregion
 
-                //Set position in scrollbar
-                topPosition = (GetLineNumber(bookMark.BytePositionInFile) * VerticalScrollBar.Track.TickHeight(MaxLine) - 1);
+                #region Set position in scrollbar
+                topPosition = (GetLineNumber(bookMark.BytePositionInFile) * VerticalScrollBar.Track.TickHeight(MaxLine) - 1).Round(1);
 
                 if (double.IsNaN(topPosition))
                     topPosition = 0;
+                #endregion
 
-                //Check if position already exist and exit if exist
+                #region Check if position already exist and exit if exist
                 if (marker != ScrollMarker.SelectionStart)
                     foreach (Rectangle ctrl in MarkerGrid.Children)
                         if (ctrl.Margin.Top == topPosition && ((BookMark)ctrl.Tag).Marker == marker)
                             return;
+                #endregion
 
-                //Somes general properties
-                rect.MouseDown += Rect_MouseDown;
-                rect.VerticalAlignment = VerticalAlignment.Top;
-                rect.HorizontalAlignment = HorizontalAlignment.Left;
-                rect.Tag = bookMark;
-                rect.Width = 5;
-                rect.Height = 3;
+                #region Build rectangle
+                var rect = new Rectangle()
+                {
+                    VerticalAlignment = VerticalAlignment.Top,
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    Tag = bookMark,
+                    Width = 5,
+                    Height = 3
+                };
+                #endregion
 
-                var byteinfo = new ByteModified() { BytePositionInFile = position };
-                rect.DataContext = byteinfo;
-
-                //Set somes properties for different marker
+                #region Set somes properties for different marker
                 switch (marker)
                 {
                     case ScrollMarker.TBLBookmark:
@@ -2982,11 +2984,10 @@ namespace WPFHexaEditor.Control
                         break;
                 }
 
-                try
-                {
-                    rect.Margin = new Thickness(0, topPosition, rightPosition, 0);
-                }
-                catch { }
+                rect.MouseDown += Rect_MouseDown;
+                rect.DataContext = new ByteModified() { BytePositionInFile = position };
+                rect.Margin = new Thickness(0, topPosition, rightPosition, 0);
+                #endregion
 
                 //Add to grid
                 MarkerGrid.Children.Add(rect);

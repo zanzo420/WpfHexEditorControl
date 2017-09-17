@@ -103,14 +103,15 @@
             </Menu>
 
             <Control:HexEditor x:Name="HexEdit" 
-                                ByteSpacerPositioning="HexBytePanel"
-                                ByteGrouping="EightByte"
-                                ByteSpacerWidthTickness="Normal"
-                                AllowByteCount="False" 
-                                DataStringVisual="Hexadecimal"
-                                Width="Auto"
-                                Height="Auto" 
-                                Margin="2" />
+                               ByteSpacerPositioning="HexBytePanel"
+                               ByteGrouping="EightByte"
+                               ByteSpacerWidthTickness="Normal"
+                               AllowByteCount="False" 
+                               ByteSpacerVisualStyle="Dash"
+                               DataStringVisual="Hexadecimal"
+                               Width="Auto"
+                               Height="Auto" 
+                               Margin="2"/>
         </DockPanel>
     </Grid>
 </Window>

@@ -154,6 +154,13 @@ namespace WPFHexaEditor.Core
         Both
     }
 
+    public enum ByteSpacerVisual
+    {
+        Empty,
+        Line,
+        Dash
+    }
+
     /// <summary>
     /// Used with the view mode of HexByte, header or position.
     /// </summary>

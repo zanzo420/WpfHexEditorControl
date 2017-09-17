@@ -383,7 +383,7 @@ namespace WPFHexaEditor
         /// Control the mouse wheel speed
         /// </summary>
         public MouseWheelSpeed MouseWheelSpeed { get; set; } = MouseWheelSpeed.Normal;
-        
+
         /// <summary>
         /// Set or get the visual of line offset header
         /// </summary>
@@ -395,7 +395,7 @@ namespace WPFHexaEditor
 
         // Using a DependencyProperty as the backing store for OffSetStringVisual.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty OffSetStringVisualProperty =
-            DependencyProperty.Register(nameof(OffSetStringVisual), typeof(DataVisualType ), typeof(HexEditor),
+            DependencyProperty.Register(nameof(OffSetStringVisual), typeof(DataVisualType), typeof(HexEditor),
                 new FrameworkPropertyMetadata(DataVisualType.Hexadecimal,
                     new PropertyChangedCallback(DataVisualTypeProperty_PropertyChanged)));
 
@@ -426,7 +426,7 @@ namespace WPFHexaEditor
                 {
                     ctrl.UpdateHeader();
 
-                    ctrl.TraverseHexBytes(hctrl => 
+                    ctrl.TraverseHexBytes(hctrl =>
                     {
                         hctrl.UpdateDataVisualWidth();
                         hctrl.UpdateLabelFromByte();
@@ -1797,8 +1797,8 @@ namespace WPFHexaEditor
                 //Debug
                 Debug.Print("FILE OPENED");
             }
-            else            
-                throw new FileNotFoundException();            
+            else
+                throw new FileNotFoundException();
         }
 
         /// <summary>
@@ -1862,7 +1862,7 @@ namespace WPFHexaEditor
             TraverseLineInfos(ctrl => ctrl.IsEnabled = true);
             TraverseHexHeader(ctrl => ctrl.IsEnabled = true);
             TopRectangle.IsEnabled = BottomRectangle.IsEnabled = true;
-            VerticalScrollBar.IsEnabled = true;            
+            VerticalScrollBar.IsEnabled = true;
             #endregion
 
             LongProcessProgressCompleted?.Invoke(this, new EventArgs());
@@ -2066,32 +2066,36 @@ namespace WPFHexaEditor
         /// </summary>
         public void SetBytePerLineToFit()
         {
-            bool exit = false;
-            int cnt = 0;
-            double StringByteAvgWidth = 0; //Needed average width for adapte with TBL
-            double HexByteWidth = 0;
-
-            TraverseHexBytes(ctrl => 
+            if (ByteProvider.CheckIsOpen(_provider))
             {
-                if (++cnt == 1)
+                bool exit = false;
+                int cnt = 0;
+                double ByteWidth = 0;
+
+                TraverseHexBytes(ctrl =>
                 {
-                    HexByteWidth = ctrl.ActualWidth;
-                    exit = true;
-                }                
-            }, ref exit);
+                    if (++cnt == 1)
+                    {
+                        ByteWidth = ctrl.ActualWidth;
+                        exit = true;
+                    }
+                }, ref exit);
 
-            TraverseStringBytes(ctrl =>
-            {
-                cnt++;
-                StringByteAvgWidth += ctrl.ActualWidth;                
-            });
-            StringByteAvgWidth /= cnt;
-            
-            if (_TBLCharacterTable == null)
-                BytePerLine = (int)((ActualWidth - VerticalScrollBar.ActualWidth - StringDataStackPanel.ActualWidth- LinesInfoStackPanel.ActualWidth) / HexByteWidth);
-            else
-                BytePerLine = (int)((ActualWidth - VerticalScrollBar.ActualWidth - StringDataStackPanel.ActualWidth) / StringByteAvgWidth);
+                exit = false;
+                cnt = 0;
+                TraverseStringBytes(ctrl =>
+                {
+                    if (++cnt == 1)
+                    {
+                        ByteWidth += ctrl.ActualWidth;
+                        exit = true;
+                    }
+                }, ref exit);
 
+                ByteWidth /= 2;
+
+                BytePerLine = (int)((ActualWidth - VerticalScrollBar.ActualWidth - StringDataStackPanel.ActualWidth) / ByteWidth);
+            }
         }
 
         /// <summary>
@@ -2154,7 +2158,7 @@ namespace WPFHexaEditor
                 VerticalScrollBar.Visibility = Visibility.Visible;
                 VerticalScrollBar.SmallChange = 1;
                 VerticalScrollBar.LargeChange = ScrollLargeChange;
-                VerticalScrollBar.Maximum = MaxLine- 1;
+                VerticalScrollBar.Maximum = MaxLine - 1;
             }
         }
 
@@ -2246,12 +2250,12 @@ namespace WPFHexaEditor
                     Height = LineHeight,
                     Orientation = Orientation.Horizontal
                 };
-                
+
                 for (int i = 0; i < BytePerLine; i++)
                 {
                     if (_TBLCharacterTable == null)
                         if (ByteSpacerPositioning == ByteSpacerPosition.Both || ByteSpacerPositioning == ByteSpacerPosition.StringBytePanel)
-                        AddByteSpacer(dataLineStack, i);
+                            AddByteSpacer(dataLineStack, i);
 
                     sbCtrl = new StringByte(this)
                     {
@@ -2350,7 +2354,7 @@ namespace WPFHexaEditor
                 });
             #endregion
         }
-        
+
         /// <summary>
         /// Update the data and string stackpanels yo current view;
         /// </summary>
@@ -2364,15 +2368,15 @@ namespace WPFHexaEditor
                     #region Control need to resize
                     if (_viewBuffer == null)
                     {
-                        var fullSizeReadyToRead = MaxVisibleLine* BytePerLine + 1;
+                        var fullSizeReadyToRead = MaxVisibleLine * BytePerLine + 1;
                         _viewBuffer = new byte[fullSizeReadyToRead];
                         BuildDataLines((int)MaxVisibleLine);
                     }
                     else
                     {
-                        if (_viewBuffer.Length < MaxVisibleLine* BytePerLine + 1)
+                        if (_viewBuffer.Length < MaxVisibleLine * BytePerLine + 1)
                         {
-                            var fullSizeReadyToRead = MaxVisibleLine* BytePerLine + 1;
+                            var fullSizeReadyToRead = MaxVisibleLine * BytePerLine + 1;
                             BuildDataLines((int)MaxVisibleLine);
                             _viewBuffer = new byte[fullSizeReadyToRead];
                         }
@@ -2429,10 +2433,10 @@ namespace WPFHexaEditor
                         sbCtrl.Byte = _viewBuffer[index];
                         sbCtrl.BytePositionInFile = startPosition + index;
 
-                        if (index < readSize - 1)                        
-                            sbCtrl.ByteNext = _viewBuffer[index + 1];                        
-                        else                        
-                            sbCtrl.ByteNext = null;                        
+                        if (index < readSize - 1)
+                            sbCtrl.ByteNext = _viewBuffer[index + 1];
+                        else
+                            sbCtrl.ByteNext = null;
                     }
                     else
                     {
@@ -2450,7 +2454,7 @@ namespace WPFHexaEditor
             {
                 #region Clear IByteControl
                 _viewBuffer = null;
-                TraverseHexAndStringBytes(ctrl => { ctrl.Clear(); });                                 
+                TraverseHexAndStringBytes(ctrl => { ctrl.Clear(); });
                 #endregion
             }
         }
@@ -2514,7 +2518,7 @@ namespace WPFHexaEditor
             }
             else //Un highlight all            
                 TraverseHexAndStringBytes(ctrl => { ctrl.IsHighLight = false; });
-         }
+        }
 
         /// <summary>
         /// Update the position info panel at left of the control
@@ -2527,7 +2531,7 @@ namespace WPFHexaEditor
                 for (int i = 0; i < BytePerLine; i++)
                 {
                     if (ByteSpacerPositioning == ByteSpacerPosition.Both || ByteSpacerPositioning == ByteSpacerPosition.HexBytePanel)
-                        AddByteSpacer(HexHeaderStackPanel, i);
+                        AddByteSpacer(HexHeaderStackPanel, i, true);
 
                     //Create control
                     TextBlock LineInfoLabel = new TextBlock()
@@ -2535,9 +2539,9 @@ namespace WPFHexaEditor
                         Height = LineHeight,
                         Padding = new Thickness(2, 0, 10, 0),
                         Foreground = ForegroundOffSetHeaderColor,
-                        TextAlignment = TextAlignment.Center,                        
+                        TextAlignment = TextAlignment.Center,
                         ToolTip = $"Column : {i.ToString()}",
-                        FontFamily = FontFamily                        
+                        FontFamily = FontFamily
                     };
 
                     #region Set text visual of header
@@ -2616,8 +2620,8 @@ namespace WPFHexaEditor
                                 LineInfoLabel.Text = $"d{firstLineByte.ToString("d8")}";
                                 break;
                         }
-                        #endregion       
-                        
+                        #endregion
+
                         LineInfoLabel.ToolTip = $"First byte : {firstLineByte.ToString()}";
                     }
                 }
@@ -2662,7 +2666,7 @@ namespace WPFHexaEditor
                 {
                     if (ctrl.BytePositionInFile == SelectionStart)
                         rtn = true;
-                    
+
                 }, ref rtn);
 
                 return rtn;
@@ -2701,10 +2705,10 @@ namespace WPFHexaEditor
 
                 if (rtn) return;
 
-                if (VerticalScrollBar.Value < VerticalScrollBar.Maximum)                
+                if (VerticalScrollBar.Value < VerticalScrollBar.Maximum)
                     VerticalScrollBar.Value++;
-                
-                if (!SelectionStartIsVisible&& SelectionLength == 1)
+
+                if (!SelectionStartIsVisible && SelectionLength == 1)
                     SetPosition(SelectionStart, 1);
             }
         }
@@ -2734,7 +2738,7 @@ namespace WPFHexaEditor
                 if (VerticalScrollBar.Value < VerticalScrollBar.Maximum)
                     VerticalScrollBar.Value++;
 
-                if (!SelectionStartIsVisible&& SelectionLength == 1)
+                if (!SelectionStartIsVisible && SelectionLength == 1)
                     SetPosition(SelectionStart, 1);
             }
         }
@@ -2945,7 +2949,7 @@ namespace WPFHexaEditor
                         CountOfByteLabel.Content = $"0x{ByteConverters.LongToHex(val)}";
                     }
                     else
-                        ByteCountPanel.Visibility = Visibility.Collapsed;                    
+                        ByteCountPanel.Visibility = Visibility.Collapsed;
                     #endregion
                 }
                 else
@@ -3141,12 +3145,12 @@ namespace WPFHexaEditor
         /// <param name="marker">Type of marker to clear</param>
         public void ClearScrollMarker(ScrollMarker marker)
         {
-            for (int i = 0; i < MarkerGrid.Children.Count; i++)            
+            for (int i = 0; i < MarkerGrid.Children.Count; i++)
                 if (((Rectangle)MarkerGrid.Children[i]).Tag is BookMark mark && mark.Marker == marker)
                 {
                     MarkerGrid.Children.Remove(MarkerGrid.Children[i]);
                     i--;
-                }            
+                }
         }
 
         /// <summary>
@@ -3155,13 +3159,13 @@ namespace WPFHexaEditor
         /// <param name="marker">Type of marker to clear</param>
         public void ClearScrollMarker(ScrollMarker marker, long position)
         {
-            for (int i = 0; i < MarkerGrid.Children.Count; i++)            
+            for (int i = 0; i < MarkerGrid.Children.Count; i++)
                 if (((Rectangle)MarkerGrid.Children[i]).Tag is BookMark mark &&
                     mark.Marker == marker && mark.BytePositionInFile == position)
                 {
                     MarkerGrid.Children.Remove(MarkerGrid.Children[i]);
                     i--;
-                }            
+                }
         }
 
         /// <summary>
@@ -3170,12 +3174,12 @@ namespace WPFHexaEditor
         /// <param name="marker">Type of marker to clear</param>
         public void ClearScrollMarker(long position)
         {
-            for (int i = 0; i < MarkerGrid.Children.Count; i++)            
+            for (int i = 0; i < MarkerGrid.Children.Count; i++)
                 if (((Rectangle)MarkerGrid.Children[i]).Tag is BookMark mark && mark.BytePositionInFile == position)
                 {
                     MarkerGrid.Children.Remove(MarkerGrid.Children[i]);
                     i--;
-                }            
+                }
         }
 
         #endregion Bookmark and other scrollmarker
@@ -3275,7 +3279,7 @@ namespace WPFHexaEditor
                 if (window.HexTextBox.LongValue <= 255)
                     FillWithByte((byte)window.HexTextBox.LongValue);
         }
-        
+
         private void ReplaceByteCMenu_Click(object sender, RoutedEventArgs e)
         {
             ReplaceByteWindow window = new ReplaceByteWindow()
@@ -3447,12 +3451,9 @@ namespace WPFHexaEditor
         }
 
         public void Dispose() => Dispose(true);
-
         #endregion
 
         #region IByteControl grouping
-
-
         public ByteSpacerPosition ByteSpacerPositioning
         {
             get => (ByteSpacerPosition)GetValue(ByteSpacerPositioningProperty);
@@ -3463,7 +3464,7 @@ namespace WPFHexaEditor
         public static readonly DependencyProperty ByteSpacerPositioningProperty =
             DependencyProperty.Register(nameof(ByteSpacerPositioning), typeof(ByteSpacerPosition), typeof(HexEditor),
                 new FrameworkPropertyMetadata(ByteSpacerPosition.Both, new PropertyChangedCallback(ByteSpacer_Changed)));
-        
+
         public ByteSpacerWidth ByteSpacerWidthTickness
         {
             get => (ByteSpacerWidth)GetValue(ByteSpacerWidthTicknessProperty);
@@ -3472,7 +3473,7 @@ namespace WPFHexaEditor
 
         // Using a DependencyProperty as the backing store for ByteSpacer.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ByteSpacerWidthTicknessProperty =
-            DependencyProperty.Register(nameof(ByteSpacerWidthTickness), typeof(ByteSpacerWidth), typeof(HexEditor), 
+            DependencyProperty.Register(nameof(ByteSpacerWidthTickness), typeof(ByteSpacerWidth), typeof(HexEditor),
                 new FrameworkPropertyMetadata(ByteSpacerWidth.Normal, new PropertyChangedCallback(ByteSpacer_Changed)));
 
         private static void ByteSpacer_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -3480,7 +3481,7 @@ namespace WPFHexaEditor
             if (d is HexEditor ctrl)
                 ctrl.RefreshView(true);
         }
-                
+
         public ByteSpacerGroup ByteGrouping
         {
             get => (ByteSpacerGroup)GetValue(ByteGroupingProperty);
@@ -3492,13 +3493,62 @@ namespace WPFHexaEditor
             DependencyProperty.Register(nameof(ByteGrouping), typeof(ByteSpacerGroup), typeof(HexEditor),
                 new FrameworkPropertyMetadata(ByteSpacerGroup.EightByte, new PropertyChangedCallback(ByteSpacer_Changed)));
 
+        public ByteSpacerVisual ByteSpacerVisualStyle
+        {
+            get { return (ByteSpacerVisual)GetValue(ByteSpacerVisualStyleProperty); }
+            set { SetValue(ByteSpacerVisualStyleProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ByteSpacerVisualStyle.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ByteSpacerVisualStyleProperty =
+            DependencyProperty.Register(nameof(ByteSpacerVisualStyle), typeof(ByteSpacerVisual), typeof(HexEditor),
+                new FrameworkPropertyMetadata(ByteSpacerVisual.Empty, new PropertyChangedCallback(ByteSpacer_Changed)));
+
         /// <summary>
-        /// Add Spacer
+        /// Add byte spacer
         /// </summary>
-        private void AddByteSpacer(StackPanel stack, int colomn)
+        private void AddByteSpacer(StackPanel stack, int colomn, bool forceEmpty = false)
         {
             if (colomn % (int)ByteGrouping == 0 && colomn > 0)
-                stack.Children.Add(new TextBlock() { Width = (int)ByteSpacerWidthTickness });
+            {
+                if (!forceEmpty)
+                    switch (ByteSpacerVisualStyle)
+                    {
+                        case ByteSpacerVisual.Empty:
+                            stack.Children.Add(new TextBlock() { Width = (int)ByteSpacerWidthTickness });
+                            break;
+                        case ByteSpacerVisual.Line:
+                            #region Line
+                            stack.Children.Add(new Line()
+                            {
+                                Y2 = LineHeight,
+                                X1 = (int)ByteSpacerWidthTickness / 2D,
+                                X2 = (int)ByteSpacerWidthTickness / 2D,
+                                Stroke = BorderBrush,
+                                StrokeThickness = 1,
+                                Width = (int)ByteSpacerWidthTickness
+                            });
+                            #endregion
+                            break;
+                        case ByteSpacerVisual.Dash:
+                            #region LineDash
+                            stack.Children.Add(new Line()
+                            {
+                                Y2 = LineHeight - 1,
+                                X1 = (int)ByteSpacerWidthTickness / 2D,
+                                X2 = (int)ByteSpacerWidthTickness / 2D,
+                                Stroke = BorderBrush,
+                                StrokeDashArray = new DoubleCollection(new double[] { 2 }),
+                                StrokeThickness = 1,
+                                Width = (int)ByteSpacerWidthTickness
+                            });
+                            #endregion
+                            break;
+                    }
+                else
+                    stack.Children.Add(new TextBlock() { Width = (int)ByteSpacerWidthTickness });
+            }
+                
         }
 
         #endregion IByteControl grouping

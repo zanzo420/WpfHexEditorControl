@@ -20,7 +20,7 @@ namespace WPFHexaEditor
     internal class StringByte : TextBlock, IByteControl
     {
         //Global variable
-        private HexaEditor _parent;
+        private HexEditor _parent;
         private TBLStream _TBLCharacterTable = null;
 
         //event
@@ -47,7 +47,7 @@ namespace WPFHexaEditor
         /// Default contructor
         /// </summary>
         /// <param name="parent"></param>
-        public StringByte(HexaEditor parent)
+        public StringByte(HexEditor parent)
         {
             //Default properties
             Width = 10;

@@ -3,7 +3,7 @@
       Author : Derek Tremblay (derektremblay666@gmail.com)
  -->
 
-<UserControl x:Class="WPFHexaEditor.HexaEditor"
+<UserControl x:Class="WPFHexaEditor.HexEditor"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -192,7 +192,7 @@
 
             <Separator Height="1"
                        Margin="0,0,0,27"
-                       Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HexaEditor}}, Path=BorderBrush}" />
+                       Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HexEditor}}, Path=BorderBrush}" />
 
             <!--Statusbar definition-->
             <StatusBar Height="27">

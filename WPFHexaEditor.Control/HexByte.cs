@@ -22,7 +22,7 @@ namespace WPFHexaEditor
 
         //global class variables
         private KeyDownLabel _keyDownLabel = KeyDownLabel.FirstChar;
-        private HexaEditor _parent;
+        private HexEditor _parent;
 
         //Events
         public event EventHandler ByteModified;
@@ -44,7 +44,7 @@ namespace WPFHexaEditor
         public event EventHandler CTRLCKey;
         public event EventHandler CTRLAKey;
 
-        public HexByte(HexaEditor parent)
+        public HexByte(HexEditor parent)
         {
             //Parent hexeditor
             _parent = parent;

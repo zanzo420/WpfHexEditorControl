@@ -25,7 +25,7 @@ namespace WPFHexaEditorExample.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("WPF HexaEditor Control")]
+        [global::System.Configuration.DefaultSettingValueAttribute("WPF HexEditor Control")]
         public string ApplicationName {
             get {
                 return ((string)(this["ApplicationName"]));

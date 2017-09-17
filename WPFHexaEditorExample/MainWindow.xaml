@@ -102,7 +102,7 @@
                 <MenuItem Header="TEST" Visibility="Visible" Click="MenuItem_Click"/>
             </Menu>
 
-            <Control:HexaEditor x:Name="HexEdit" 
+            <Control:HexEditor x:Name="HexEdit" 
                                 ByteSpacerPositioning="HexBytePanel"
                                 ByteGrouping="EightByte"
                                 ByteSpacerWidthTickness="Normal"

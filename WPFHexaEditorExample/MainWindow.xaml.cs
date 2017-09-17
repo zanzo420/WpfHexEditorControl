@@ -46,13 +46,9 @@ namespace WPFHexaEditorExample
                     Application.Current.MainWindow.Cursor = Cursors.Wait;
 
                     HexEdit.FileName = fileDialog.FileName;
-                    //MemoryStream stream = new MemoryStream(File.ReadAllBytes(fileDialog.FileName));
-                    //HexEdit.Stream = stream;
 
                     Application.Current.MainWindow.Cursor = null;
                 }
-                //else
-                //    MessageBox.Show("File not found!", Settings.Default.ApplicationName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

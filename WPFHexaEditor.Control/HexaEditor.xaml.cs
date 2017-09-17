@@ -26,7 +26,7 @@ namespace WPFHexaEditor
     /// <summary> 
     /// WPF HexEditor control
     /// </summary>
-    public partial class HexaEditor : UserControl, IDisposable
+    public partial class HexEditor : UserControl, IDisposable
     {
         #region Global class variables
         //byte provider for work with file in stream currently loaded in control.
@@ -120,7 +120,7 @@ namespace WPFHexaEditor
         #endregion Events
 
         #region Constructor
-        public HexaEditor()
+        public HexEditor()
         {
             InitializeComponent();
 
@@ -141,7 +141,7 @@ namespace WPFHexaEditor
 
         // Using a DependencyProperty as the backing store for AllowBuildinCTRLC.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty AllowBuildinCTRLCProperty =
-            DependencyProperty.Register(nameof(AllowBuildinCTRLC), typeof(bool), typeof(HexaEditor),
+            DependencyProperty.Register(nameof(AllowBuildinCTRLC), typeof(bool), typeof(HexEditor),
                 new FrameworkPropertyMetadata(true, new PropertyChangedCallback(Control_AllowBuildinCTRLPropertyChanged)));
 
         public bool AllowBuildinCTRLV
@@ -152,7 +152,7 @@ namespace WPFHexaEditor
 
         // Using a DependencyProperty as the backing store for AllowBuildinCTRLV.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty AllowBuildinCTRLVProperty =
-            DependencyProperty.Register(nameof(AllowBuildinCTRLV), typeof(bool), typeof(HexaEditor),
+            DependencyProperty.Register(nameof(AllowBuildinCTRLV), typeof(bool), typeof(HexEditor),
                 new FrameworkPropertyMetadata(true, new PropertyChangedCallback(Control_AllowBuildinCTRLPropertyChanged)));
 
         public bool AllowBuildinCTRLA
@@ -163,7 +163,7 @@ namespace WPFHexaEditor
 
         // Using a DependencyProperty as the backing store for AllowBuildinCTRLA.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty AllowBuildinCTRLAProperty =
-            DependencyProperty.Register(nameof(AllowBuildinCTRLA), typeof(bool), typeof(HexaEditor),
+            DependencyProperty.Register(nameof(AllowBuildinCTRLA), typeof(bool), typeof(HexEditor),
                 new FrameworkPropertyMetadata(true, new PropertyChangedCallback(Control_AllowBuildinCTRLPropertyChanged)));
 
         public bool AllowBuildinCTRLZ
@@ -174,12 +174,12 @@ namespace WPFHexaEditor
 
         // Using a DependencyProperty as the backing store for AllowBuildinCTRLZ.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty AllowBuildinCTRLZProperty =
-            DependencyProperty.Register(nameof(AllowBuildinCTRLZ), typeof(bool), typeof(HexaEditor),
+            DependencyProperty.Register(nameof(AllowBuildinCTRLZ), typeof(bool), typeof(HexEditor),
                 new FrameworkPropertyMetadata(true, new PropertyChangedCallback(Control_AllowBuildinCTRLPropertyChanged)));
 
         private static void Control_AllowBuildinCTRLPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexaEditor ctrl)
+            if (d is HexEditor ctrl)
                 if (e.NewValue != e.OldValue)
                     ctrl.RefreshView();
         }
@@ -194,7 +194,7 @@ namespace WPFHexaEditor
 
         // Using a DependencyProperty as the backing store for SelectionFirstColor.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty SelectionFirstColorProperty =
-            DependencyProperty.Register(nameof(SelectionFirstColor), typeof(Brush), typeof(HexaEditor),
+            DependencyProperty.Register(nameof(SelectionFirstColor), typeof(Brush), typeof(HexEditor),
                 new FrameworkPropertyMetadata(Brushes.RoyalBlue, new PropertyChangedCallback(Control_ColorPropertyChanged)));
 
         public Brush SelectionSecondColor
@@ -205,7 +205,7 @@ namespace WPFHexaEditor
 
         // Using a DependencyProperty as the backing store for SelectionFirstColor.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty SelectionSecondColorProperty =
-            DependencyProperty.Register(nameof(SelectionSecondColor), typeof(Brush), typeof(HexaEditor),
+            DependencyProperty.Register(nameof(SelectionSecondColor), typeof(Brush), typeof(HexEditor),
                 new FrameworkPropertyMetadata(Brushes.LightSteelBlue, new PropertyChangedCallback(Control_ColorPropertyChanged)));
 
         public Brush ByteModifiedColor
@@ -216,7 +216,7 @@ namespace WPFHexaEditor
 
         // Using a DependencyProperty as the backing store for ByteModifiedColor.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ByteModifiedColorProperty =
-            DependencyProperty.Register(nameof(ByteModifiedColor), typeof(Brush), typeof(HexaEditor),
+            DependencyProperty.Register(nameof(ByteModifiedColor), typeof(Brush), typeof(HexEditor),
                 new FrameworkPropertyMetadata(Brushes.DarkGray, new PropertyChangedCallback(Control_ColorPropertyChanged)));
 
         public Brush MouseOverColor
@@ -227,7 +227,7 @@ namespace WPFHexaEditor
 
         // Using a DependencyProperty as the backing store for MouseOverColor.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty MouseOverColorProperty =
-            DependencyProperty.Register(nameof(MouseOverColor), typeof(Brush), typeof(HexaEditor),
+            DependencyProperty.Register(nameof(MouseOverColor), typeof(Brush), typeof(HexEditor),
                 new FrameworkPropertyMetadata(Brushes.LightSkyBlue, new PropertyChangedCallback(Control_ColorPropertyChanged)));
 
         public Brush ByteDeletedColor
@@ -238,7 +238,7 @@ namespace WPFHexaEditor
 
         // Using a DependencyProperty as the backing store for ByteDeletedColor.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ByteDeletedColorProperty =
-            DependencyProperty.Register(nameof(ByteDeletedColor), typeof(Brush), typeof(HexaEditor),
+            DependencyProperty.Register(nameof(ByteDeletedColor), typeof(Brush), typeof(HexEditor),
                 new FrameworkPropertyMetadata(Brushes.Red, new PropertyChangedCallback(Control_ColorPropertyChanged)));
 
         public Brush HighLightColor
@@ -249,7 +249,7 @@ namespace WPFHexaEditor
 
         // Using a DependencyProperty as the backing store for HighLightColor.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty HighLightColorProperty =
-            DependencyProperty.Register(nameof(HighLightColor), typeof(Brush), typeof(HexaEditor),
+            DependencyProperty.Register(nameof(HighLightColor), typeof(Brush), typeof(HexEditor),
                 new FrameworkPropertyMetadata(Brushes.Gold, new PropertyChangedCallback(Control_ColorPropertyChanged)));
 
         public Brush ForegroundOffSetHeaderColor
@@ -260,12 +260,12 @@ namespace WPFHexaEditor
 
         // Using a DependencyProperty as the backing store for ForegroundOffSetHeaderColor.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ForegroundOffSetHeaderColorProperty =
-            DependencyProperty.Register(nameof(ForegroundOffSetHeaderColor), typeof(Brush), typeof(HexaEditor),
+            DependencyProperty.Register(nameof(ForegroundOffSetHeaderColor), typeof(Brush), typeof(HexEditor),
                 new FrameworkPropertyMetadata(Brushes.Gray, new PropertyChangedCallback(Control_ForegroundOffSetHeaderColorPropertyChanged)));
 
         private static void Control_ForegroundOffSetHeaderColorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexaEditor ctrl)
+            if (d is HexEditor ctrl)
                 if (e.NewValue != e.OldValue)
                 {
                     ctrl.UpdateHeader();
@@ -287,7 +287,7 @@ namespace WPFHexaEditor
 
         // Using a DependencyProperty as the backing store for Foreground.  This enables animation, styling, binding, etc...
         public new static readonly DependencyProperty ForegroundProperty =
-            DependencyProperty.Register(nameof(Foreground), typeof(Brush), typeof(HexaEditor),
+            DependencyProperty.Register(nameof(Foreground), typeof(Brush), typeof(HexEditor),
                 new FrameworkPropertyMetadata(Brushes.Black, new PropertyChangedCallback(Control_ColorPropertyChanged)));
 
         public Brush ForegroundContrast
@@ -298,24 +298,24 @@ namespace WPFHexaEditor
 
         // Using a DependencyProperty as the backing store for ForegroundContrastColor.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ForegroundContrastProperty =
-            DependencyProperty.Register(nameof(ForegroundContrast), typeof(Brush), typeof(HexaEditor),
+            DependencyProperty.Register(nameof(ForegroundContrast), typeof(Brush), typeof(HexEditor),
                 new FrameworkPropertyMetadata(Brushes.White, new PropertyChangedCallback(Control_ColorPropertyChanged)));
 
         // Using a DependencyProperty as the backing store for  Background.  This enables animation, styling, binding, etc...
         public new static readonly DependencyProperty BackgroundProperty =
-            DependencyProperty.Register(nameof(Background), typeof(Brush), typeof(HexaEditor),
+            DependencyProperty.Register(nameof(Background), typeof(Brush), typeof(HexEditor),
                 new FrameworkPropertyMetadata(Brushes.White, new PropertyChangedCallback(Control_BackgroundColorPropertyChanged)));
 
         private static void Control_BackgroundColorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexaEditor ctrl)
+            if (d is HexEditor ctrl)
                 if (e.NewValue != e.OldValue)
                     ctrl.BaseGrid.Background = (Brush)e.NewValue;
         }
 
         private static void Control_ColorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexaEditor ctrl)
+            if (d is HexEditor ctrl)
                 if (e.NewValue != e.OldValue)
                     ctrl.UpdateVisual();
         }
@@ -328,13 +328,13 @@ namespace WPFHexaEditor
 
         // Using a DependencyProperty as the backing store for FontFamily.  This enables animation, styling, binding, etc...
         public new static readonly DependencyProperty FontFamilyProperty =
-            DependencyProperty.Register(nameof(FontFamily), typeof(FontFamily), typeof(HexaEditor),
+            DependencyProperty.Register(nameof(FontFamily), typeof(FontFamily), typeof(HexEditor),
                 new FrameworkPropertyMetadata(new FontFamily("Courier New"),
                     new PropertyChangedCallback(FontFamily_Changed)));
 
         private static void FontFamily_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexaEditor ctrl)
+            if (d is HexEditor ctrl)
                 if (e.NewValue != e.OldValue)
                     ctrl.RefreshView(true);
         }
@@ -369,13 +369,13 @@ namespace WPFHexaEditor
 
         // Using a DependencyProperty as the backing store for LineHeight.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty LineHeightProperty =
-            DependencyProperty.Register(nameof(LineHeight), typeof(double), typeof(HexaEditor),
+            DependencyProperty.Register(nameof(LineHeight), typeof(double), typeof(HexEditor),
                 new FrameworkPropertyMetadata(18D,
                     new PropertyChangedCallback(LineHeight_PropertyChanged)));
 
         private static void LineHeight_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexaEditor ctrl)
+            if (d is HexEditor ctrl)
                 ctrl.RefreshView();
         }
 
@@ -395,14 +395,14 @@ namespace WPFHexaEditor
 
         // Using a DependencyProperty as the backing store for OffSetStringVisual.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty OffSetStringVisualProperty =
-            DependencyProperty.Register(nameof(OffSetStringVisual), typeof(DataVisualType ), typeof(HexaEditor),
+            DependencyProperty.Register(nameof(OffSetStringVisual), typeof(DataVisualType ), typeof(HexEditor),
                 new FrameworkPropertyMetadata(DataVisualType.Hexadecimal,
                     new PropertyChangedCallback(DataVisualTypeProperty_PropertyChanged)));
 
 
         private static void DataVisualTypeProperty_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexaEditor ctrl)
+            if (d is HexEditor ctrl)
                 if (e.NewValue != e.OldValue)
                     ctrl.UpdateLinesOffSet();
         }
@@ -415,13 +415,13 @@ namespace WPFHexaEditor
 
         // Using a DependencyProperty as the backing store for HexByteStringVisual.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty DataStringVisualProperty =
-            DependencyProperty.Register(nameof(DataStringVisual), typeof(DataVisualType), typeof(HexaEditor),
+            DependencyProperty.Register(nameof(DataStringVisual), typeof(DataVisualType), typeof(HexEditor),
                 new FrameworkPropertyMetadata(DataVisualType.Hexadecimal,
                     new PropertyChangedCallback(DataStringVisualTypeProperty_PropertyChanged)));
 
         private static void DataStringVisualTypeProperty_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexaEditor ctrl)
+            if (d is HexEditor ctrl)
                 if (e.NewValue != e.OldValue)
                 {
                     ctrl.UpdateHeader();
@@ -450,13 +450,13 @@ namespace WPFHexaEditor
 
         // Using a DependencyProperty as the backing store for TypeOfCharacterTable.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TypeOfCharacterTableProperty =
-            DependencyProperty.Register(nameof(TypeOfCharacterTable), typeof(CharacterTableType), typeof(HexaEditor),
+            DependencyProperty.Register(nameof(TypeOfCharacterTable), typeof(CharacterTableType), typeof(HexEditor),
                 new FrameworkPropertyMetadata(CharacterTableType.ASCII,
                     new PropertyChangedCallback(TypeOfCharacterTable_PropertyChanged)));
 
         private static void TypeOfCharacterTable_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexaEditor ctrl)
+            if (d is HexEditor ctrl)
             {
                 ctrl.RefreshView(true);
                 ctrl.TypeOfCharacterTableChanged?.Invoke(ctrl, new EventArgs());
@@ -474,13 +474,13 @@ namespace WPFHexaEditor
 
         // Using a DependencyProperty as the backing store for TBLShowMTE.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TBLShowMTEProperty =
-            DependencyProperty.Register(nameof(TBLShowMTE), typeof(bool), typeof(HexaEditor),
+            DependencyProperty.Register(nameof(TBLShowMTE), typeof(bool), typeof(HexEditor),
                 new FrameworkPropertyMetadata(true,
                     new PropertyChangedCallback(TBLShowMTE_PropetyChanged)));
 
         private static void TBLShowMTE_PropetyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexaEditor ctrl)
+            if (d is HexEditor ctrl)
                 ctrl.RefreshView();
         }
 
@@ -543,13 +543,13 @@ namespace WPFHexaEditor
 
         // Using a DependencyProperty as the backing store for TBLDTEColor.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TBLDTEColorProperty =
-            DependencyProperty.Register(nameof(TBLDTEColor), typeof(SolidColorBrush), typeof(HexaEditor),
+            DependencyProperty.Register(nameof(TBLDTEColor), typeof(SolidColorBrush), typeof(HexEditor),
                 new FrameworkPropertyMetadata(Brushes.Red,
                     new PropertyChangedCallback(TBLColor_Changed)));
 
         private static void TBLColor_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexaEditor ctrl)
+            if (d is HexEditor ctrl)
                 ctrl.RefreshView();
         }
 
@@ -564,7 +564,7 @@ namespace WPFHexaEditor
 
         // Using a DependencyProperty as the backing store for TBLDTEColor.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TBLMTEColorProperty =
-            DependencyProperty.Register(nameof(TBLMTEColor), typeof(SolidColorBrush), typeof(HexaEditor),
+            DependencyProperty.Register(nameof(TBLMTEColor), typeof(SolidColorBrush), typeof(HexEditor),
                 new FrameworkPropertyMetadata(Brushes.DarkBlue,
                     new PropertyChangedCallback(TBLColor_Changed)));
 
@@ -579,7 +579,7 @@ namespace WPFHexaEditor
 
         // Using a DependencyProperty as the backing store for TBLDTEColor.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TBLEndBlockColorProperty =
-            DependencyProperty.Register(nameof(TBLEndBlockColor), typeof(SolidColorBrush), typeof(HexaEditor),
+            DependencyProperty.Register(nameof(TBLEndBlockColor), typeof(SolidColorBrush), typeof(HexEditor),
                 new FrameworkPropertyMetadata(Brushes.Blue,
                     new PropertyChangedCallback(TBLColor_Changed)));
 
@@ -594,7 +594,7 @@ namespace WPFHexaEditor
 
         // Using a DependencyProperty as the backing store for TBLDTEColor.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TBLEndLineColorProperty =
-            DependencyProperty.Register(nameof(TBLEndLineColor), typeof(SolidColorBrush), typeof(HexaEditor),
+            DependencyProperty.Register(nameof(TBLEndLineColor), typeof(SolidColorBrush), typeof(HexEditor),
                 new FrameworkPropertyMetadata(Brushes.Blue,
                     new PropertyChangedCallback(TBLColor_Changed)));
 
@@ -609,7 +609,7 @@ namespace WPFHexaEditor
 
         // Using a DependencyProperty as the backing store for TBLDTEColor.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TBLDefaultColorProperty =
-            DependencyProperty.Register(nameof(TBLDefaultColor), typeof(SolidColorBrush), typeof(HexaEditor),
+            DependencyProperty.Register(nameof(TBLDefaultColor), typeof(SolidColorBrush), typeof(HexEditor),
                 new FrameworkPropertyMetadata(Brushes.Black,
                     new PropertyChangedCallback(TBLColor_Changed)));
 
@@ -627,13 +627,13 @@ namespace WPFHexaEditor
         }
 
         public static readonly DependencyProperty ReadOnlyModeProperty =
-            DependencyProperty.Register("ReadOnlyMode", typeof(bool), typeof(HexaEditor),
+            DependencyProperty.Register("ReadOnlyMode", typeof(bool), typeof(HexEditor),
                 new FrameworkPropertyMetadata(false,
                     new PropertyChangedCallback(ReadOnlyMode_PropertyChanged)));
 
         private static void ReadOnlyMode_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexaEditor ctrl)
+            if (d is HexEditor ctrl)
                 if (e.NewValue != e.OldValue)
                     ctrl.RefreshView(true);
         }
@@ -738,7 +738,7 @@ namespace WPFHexaEditor
         }
 
         public static readonly DependencyProperty SelectionLineProperty =
-            DependencyProperty.Register("SelectionLine", typeof(long), typeof(HexaEditor),
+            DependencyProperty.Register("SelectionLine", typeof(long), typeof(HexEditor),
                 new FrameworkPropertyMetadata(0L));
 
         private void LineInfoLabel_MouseMove(object sender, MouseEventArgs e)
@@ -974,13 +974,13 @@ namespace WPFHexaEditor
         }
 
         public static readonly DependencyProperty SelectionStartProperty =
-            DependencyProperty.Register("SelectionStart", typeof(long), typeof(HexaEditor),
+            DependencyProperty.Register("SelectionStart", typeof(long), typeof(HexEditor),
                 new FrameworkPropertyMetadata(-1L, new PropertyChangedCallback(SelectionStart_ChangedCallBack),
                     new CoerceValueCallback(SelectionStart_CoerceValueCallBack)));
 
         private static object SelectionStart_CoerceValueCallBack(DependencyObject d, object baseValue)
         {
-            if (d is HexaEditor ctrl)
+            if (d is HexEditor ctrl)
             {
                 long value = (long)baseValue;
 
@@ -997,7 +997,7 @@ namespace WPFHexaEditor
 
         private static void SelectionStart_ChangedCallBack(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexaEditor ctrl)
+            if (d is HexEditor ctrl)
                 if (e.NewValue != e.OldValue)
                 {
                     if (ByteProvider.CheckIsOpen(ctrl._provider))
@@ -1026,13 +1026,13 @@ namespace WPFHexaEditor
         }
 
         public static readonly DependencyProperty SelectionStopProperty =
-            DependencyProperty.Register("SelectionStop", typeof(long), typeof(HexaEditor),
+            DependencyProperty.Register("SelectionStop", typeof(long), typeof(HexEditor),
                 new FrameworkPropertyMetadata(-1L, new PropertyChangedCallback(SelectionStop_ChangedCallBack),
                     new CoerceValueCallback(SelectionStop_CoerceValueCallBack)));
 
         private static object SelectionStop_CoerceValueCallBack(DependencyObject d, object baseValue)
         {
-            if (d is HexaEditor ctrl)
+            if (d is HexEditor ctrl)
             {
                 long value = (long)baseValue;
 
@@ -1051,7 +1051,7 @@ namespace WPFHexaEditor
 
         private static void SelectionStop_ChangedCallBack(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexaEditor ctrl)
+            if (d is HexEditor ctrl)
                 if (e.NewValue != e.OldValue)
                 {
                     ctrl.UpdateSelection();
@@ -1408,7 +1408,7 @@ namespace WPFHexaEditor
         }
 
         public static readonly DependencyProperty HexDataVisibilityProperty =
-            DependencyProperty.Register("HexDataVisibility", typeof(Visibility), typeof(HexaEditor),
+            DependencyProperty.Register("HexDataVisibility", typeof(Visibility), typeof(HexEditor),
                 new FrameworkPropertyMetadata(Visibility.Visible,
                     new PropertyChangedCallback(HexDataVisibility_PropertyChanged),
                     new CoerceValueCallback(Visibility_CoerceValue)));
@@ -1425,7 +1425,7 @@ namespace WPFHexaEditor
 
         private static void HexDataVisibility_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexaEditor ctrl)
+            if (d is HexEditor ctrl)
             {
                 Visibility value = (Visibility)e.NewValue;
 
@@ -1456,14 +1456,14 @@ namespace WPFHexaEditor
         }
 
         public static readonly DependencyProperty HeaderVisibilityProperty =
-            DependencyProperty.Register("HeaderVisibility", typeof(Visibility), typeof(HexaEditor),
+            DependencyProperty.Register("HeaderVisibility", typeof(Visibility), typeof(HexEditor),
                 new FrameworkPropertyMetadata(Visibility.Visible,
                     new PropertyChangedCallback(HeaderVisibility_PropertyChanged),
                     new CoerceValueCallback(Visibility_CoerceValue)));
 
         private static void HeaderVisibility_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexaEditor ctrl)
+            if (d is HexEditor ctrl)
             {
                 Visibility value = (Visibility)e.NewValue;
 
@@ -1491,14 +1491,14 @@ namespace WPFHexaEditor
         }
 
         public static readonly DependencyProperty StringDataVisibilityProperty =
-            DependencyProperty.Register("StringDataVisibility", typeof(Visibility), typeof(HexaEditor),
+            DependencyProperty.Register("StringDataVisibility", typeof(Visibility), typeof(HexEditor),
                 new FrameworkPropertyMetadata(Visibility.Visible,
                     new PropertyChangedCallback(StringDataVisibility_ValidateValue),
                     new CoerceValueCallback(Visibility_CoerceValue)));
 
         private static void StringDataVisibility_ValidateValue(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexaEditor ctrl)
+            if (d is HexEditor ctrl)
             {
                 Visibility value = (Visibility)e.NewValue;
 
@@ -1524,14 +1524,14 @@ namespace WPFHexaEditor
         }
 
         public static readonly DependencyProperty StatusBarVisibilityProperty =
-            DependencyProperty.Register("StatusBarVisibility", typeof(Visibility), typeof(HexaEditor),
+            DependencyProperty.Register("StatusBarVisibility", typeof(Visibility), typeof(HexEditor),
                 new FrameworkPropertyMetadata(Visibility.Visible,
                     new PropertyChangedCallback(StatusBarVisibility_ValueChange),
                     new CoerceValueCallback(Visibility_CoerceValue)));
 
         private static void StatusBarVisibility_ValueChange(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexaEditor ctrl)
+            if (d is HexEditor ctrl)
             {
                 Visibility value = (Visibility)e.NewValue;
 
@@ -1659,13 +1659,13 @@ namespace WPFHexaEditor
 
         // Using a DependencyProperty as the backing store for FileName.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty FileNameProperty =
-            DependencyProperty.Register(nameof(FileName), typeof(string), typeof(HexaEditor),
+            DependencyProperty.Register(nameof(FileName), typeof(string), typeof(HexEditor),
                 new FrameworkPropertyMetadata(string.Empty,
                     new PropertyChangedCallback(FileName_PropertyChanged)));
 
         private static void FileName_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexaEditor ctrl)
+            if (d is HexEditor ctrl)
                 ctrl.OpenFile((string)e.NewValue);
         }
 
@@ -1680,13 +1680,13 @@ namespace WPFHexaEditor
 
         // Using a DependencyProperty as the backing store for Stream.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty StreamProperty =
-            DependencyProperty.Register(nameof(Stream), typeof(MemoryStream), typeof(HexaEditor),
+            DependencyProperty.Register(nameof(Stream), typeof(MemoryStream), typeof(HexEditor),
                 new FrameworkPropertyMetadata(null,
                     new PropertyChangedCallback(Stream_PropertyChanged)));
 
         private static void Stream_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexaEditor ctrl)
+            if (d is HexEditor ctrl)
             {
                 ctrl.CloseProvider();
                 ctrl.OpenStream((MemoryStream)e.NewValue);
@@ -2104,7 +2104,7 @@ namespace WPFHexaEditor
         }
 
         public static readonly DependencyProperty BytePerLineProperty =
-            DependencyProperty.Register("BytePerLine", typeof(int), typeof(HexaEditor),
+            DependencyProperty.Register("BytePerLine", typeof(int), typeof(HexEditor),
                 new FrameworkPropertyMetadata(16, new PropertyChangedCallback(BytePerLine_PropertyChanged),
                     new CoerceValueCallback(BytePerLine_CoerceValue)));
 
@@ -2122,7 +2122,7 @@ namespace WPFHexaEditor
 
         private static void BytePerLine_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexaEditor ctrl)
+            if (d is HexEditor ctrl)
                 if (e.NewValue != e.OldValue)
                 {
                     ctrl.UpdateScrollBar();
@@ -3378,13 +3378,13 @@ namespace WPFHexaEditor
 
         // Using a DependencyProperty as the backing store for AutoHighLiteSelectionByteBrush.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty AutoHighLiteSelectionByteBrushProperty =
-            DependencyProperty.Register(nameof(AutoHighLiteSelectionByteBrush), typeof(Brush), typeof(HexaEditor),
+            DependencyProperty.Register(nameof(AutoHighLiteSelectionByteBrush), typeof(Brush), typeof(HexEditor),
                 new FrameworkPropertyMetadata(Brushes.LightBlue,
                     new PropertyChangedCallback(AutoHighLiteSelectionByteBrush_Changed)));
 
         private static void AutoHighLiteSelectionByteBrush_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexaEditor ctrl)
+            if (d is HexEditor ctrl)
                 ctrl.UpdateVisual();
         }
         #endregion Highlight selected byte
@@ -3399,12 +3399,12 @@ namespace WPFHexaEditor
 
         // Using a DependencyProperty as the backing store for AllowByteCount.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty AllowByteCountProperty =
-            DependencyProperty.Register(nameof(AllowByteCount), typeof(bool), typeof(HexaEditor),
+            DependencyProperty.Register(nameof(AllowByteCount), typeof(bool), typeof(HexEditor),
                 new FrameworkPropertyMetadata(false, new PropertyChangedCallback(AllowByteCount_PropertyChanged)));
 
         private static void AllowByteCount_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexaEditor ctrl)
+            if (d is HexEditor ctrl)
             {
                 if (e.NewValue != e.OldValue)
                     ctrl.UpdateByteCount();
@@ -3461,7 +3461,7 @@ namespace WPFHexaEditor
 
         // Using a DependencyProperty as the backing store for ByteSpacerPositioning.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ByteSpacerPositioningProperty =
-            DependencyProperty.Register(nameof(ByteSpacerPositioning), typeof(ByteSpacerPosition), typeof(HexaEditor),
+            DependencyProperty.Register(nameof(ByteSpacerPositioning), typeof(ByteSpacerPosition), typeof(HexEditor),
                 new FrameworkPropertyMetadata(ByteSpacerPosition.Both, new PropertyChangedCallback(ByteSpacer_Changed)));
         
         public ByteSpacerWidth ByteSpacerWidthTickness
@@ -3472,12 +3472,12 @@ namespace WPFHexaEditor
 
         // Using a DependencyProperty as the backing store for ByteSpacer.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ByteSpacerWidthTicknessProperty =
-            DependencyProperty.Register(nameof(ByteSpacerWidthTickness), typeof(ByteSpacerWidth), typeof(HexaEditor), 
+            DependencyProperty.Register(nameof(ByteSpacerWidthTickness), typeof(ByteSpacerWidth), typeof(HexEditor), 
                 new FrameworkPropertyMetadata(ByteSpacerWidth.Normal, new PropertyChangedCallback(ByteSpacer_Changed)));
 
         private static void ByteSpacer_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexaEditor ctrl)
+            if (d is HexEditor ctrl)
                 ctrl.RefreshView(true);
         }
                 
@@ -3489,7 +3489,7 @@ namespace WPFHexaEditor
 
         // Using a DependencyProperty as the backing store for ByteGrouping.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ByteGroupingProperty =
-            DependencyProperty.Register(nameof(ByteGrouping), typeof(ByteSpacerGroup), typeof(HexaEditor),
+            DependencyProperty.Register(nameof(ByteGrouping), typeof(ByteSpacerGroup), typeof(HexEditor),
                 new FrameworkPropertyMetadata(ByteSpacerGroup.EightByte, new PropertyChangedCallback(ByteSpacer_Changed)));
 
         /// <summary>

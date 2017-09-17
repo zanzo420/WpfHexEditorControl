@@ -8,7 +8,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:Control="clr-namespace:WPFHexaEditor.Control;assembly=WPFHexaEditor"
+        xmlns:Control="clr-namespace:WPFHexaEditor;assembly=WPFHexaEditor"
         x:Class="WPFHexaEditorExample.MainWindow"
         xmlns:properties="clr-namespace:WPFHexaEditorExample.Properties"
         mc:Ignorable="d"

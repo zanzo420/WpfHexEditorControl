@@ -9,7 +9,7 @@ using System.Windows.Input;
 using WPFHexaEditor.Core;
 using WPFHexaEditor.Core.Bytes;
 
-namespace WPFHexaEditor.Control
+namespace WPFHexaEditor
 {
     /// <summary>
     /// Control for enter hex value and deal with.

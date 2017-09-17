@@ -14,14 +14,14 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using WPFHexaEditor.Control.Dialog;
+using WPFHexaEditor.Dialog;
 using WPFHexaEditor.Core;
 using WPFHexaEditor.Core.Bytes;
 using WPFHexaEditor.Core.CharacterTable;
 using WPFHexaEditor.Core.Interfaces;
 using WPFHexaEditor.Core.MethodExtention;
 
-namespace WPFHexaEditor.Control
+namespace WPFHexaEditor
 {
     /// <summary> 
     /// WPF HexEditor control
@@ -2061,7 +2061,7 @@ namespace WPFHexaEditor.Control
         #region BytePerLine property/methods
 
         /// <summary>
-        /// IN DEVELOPMENT (NOT COMPLETED)
+        /// IN DEVELOPMENT (NOT WORKING PROPRELY)
         /// Set the BytePerLine property to fit to control width
         /// </summary>
         public void SetBytePerLineToFit()
@@ -2087,7 +2087,11 @@ namespace WPFHexaEditor.Control
             });
             StringByteAvgWidth /= cnt;
             
-            BytePerLine = (int)((ActualWidth - LinesInfoStackPanel.ActualWidth - VerticalScrollBar.ActualWidth - StringDataStackPanel.ActualWidth) / HexByteWidth);
+            if (_TBLCharacterTable == null)
+                BytePerLine = (int)((ActualWidth - VerticalScrollBar.ActualWidth - StringDataStackPanel.ActualWidth- LinesInfoStackPanel.ActualWidth) / HexByteWidth);
+            else
+                BytePerLine = (int)((ActualWidth - VerticalScrollBar.ActualWidth - StringDataStackPanel.ActualWidth) / StringByteAvgWidth);
+
         }
 
         /// <summary>

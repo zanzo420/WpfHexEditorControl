@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace WPFHexaEditor.Control.Dialog
+namespace WPFHexaEditor.Dialog
 {
     /// <summary>
     /// This Window is used to give tow hex value for deal with.

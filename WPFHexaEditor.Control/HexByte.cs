@@ -15,7 +15,7 @@ using WPFHexaEditor.Core;
 using WPFHexaEditor.Core.Bytes;
 using WPFHexaEditor.Core.Interfaces;
 
-namespace WPFHexaEditor.Control
+namespace WPFHexaEditor
 {
     internal class HexByte : TextBlock, IByteControl
     {

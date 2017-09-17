@@ -274,10 +274,12 @@ namespace WPFHexaEditorExample
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (HexEdit.DataStringVisual == DataVisualType.Decimal)
-                HexEdit.DataStringVisual = DataVisualType.Hexadecimal;
-            else
-                HexEdit.DataStringVisual = DataVisualType.Decimal;
+            //if (HexEdit.DataStringVisual == DataVisualType.Decimal)
+            //    HexEdit.DataStringVisual = DataVisualType.Hexadecimal;
+            //else
+            //    HexEdit.DataStringVisual = DataVisualType.Decimal;
+
+            HexEdit.SetBytePerLineToFit();
         }
     }
 }

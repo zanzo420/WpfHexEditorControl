@@ -103,7 +103,7 @@
             </Menu>
 
             <Control:HexaEditor x:Name="HexEdit" 
-                                ByteSpacerPositioning="Both"
+                                ByteSpacerPositioning="HexBytePanel"
                                 ByteGrouping="EightByte"
                                 ByteSpacerWidthTickness="Normal"
                                 AllowByteCount="False" 

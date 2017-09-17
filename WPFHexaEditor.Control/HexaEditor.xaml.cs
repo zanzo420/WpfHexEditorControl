@@ -124,10 +124,6 @@ namespace WPFHexaEditor.Control
         {
             InitializeComponent();
 
-            //Load default build-in TBL
-            //TypeOfCharacterTable = CharacterTableType.TBLFile;
-            //LoadDefaultTBL(DefaultCharacterTableType.ASCII);
-
             //Refresh view
             UpdateScrollBar();
             RefreshView(true);
@@ -653,7 +649,7 @@ namespace WPFHexaEditor.Control
 
         #endregion ReadOnly property/event
 
-        #region Add modify delete bytes methods/event
+        #region ByteModified methods/event
 
         private void Control_ByteModified(object sender, EventArgs e)
         {
@@ -692,7 +688,13 @@ namespace WPFHexaEditor.Control
                 UpdateStatusBar();
             }
         }
-        
+
+
+        private void Control_ByteDeleted(object sender, EventArgs e) => DeleteSelection();
+
+        #endregion ByteModified methods/event
+
+        #region Lines methods
         /// <summary>
         /// Obtain the max line for verticalscrollbar
         /// </summary>
@@ -754,8 +756,6 @@ namespace WPFHexaEditor.Control
                 SelectionStop = SelectionStart + BytePerLine - 1;
             }
         }
-
-        private void Control_ByteDeleted(object sender, EventArgs e) => DeleteSelection();
 
         private void Control_EscapeKey(object sender, EventArgs e)
         {
@@ -1929,9 +1929,9 @@ namespace WPFHexaEditor.Control
         #region Traverses methods
 
         /// <summary>
-        /// Used to make action on all hexbytecontrol
+        /// Used to make action on all visible hexbyte
         /// </summary>
-        private void TraverseHexBytes(Action<HexByte> act)
+        private void TraverseHexBytes(Action<HexByte> act, ref bool exit)
         {
             var visibleLine = MaxVisibleLine;
             var cnt = 0;
@@ -1942,88 +1942,153 @@ namespace WPFHexaEditor.Control
                 if (cnt++ == visibleLine) break;
                 foreach (HexByte byteControl in hexDataStack.Children.Cast<object>().Where(ctrl => ctrl.GetType() == typeof(HexByte)))
                     act(byteControl);
+
+                if (exit) return;
             }
         }
 
         /// <summary>
-        /// Used to make action on all stringbyte control
+        /// Used to make action on all visible hexbyte
+        /// </summary>
+        private void TraverseHexBytes(Action<HexByte> act)
+        {
+            var exit = false;
+            TraverseHexBytes(act, ref exit);
+        }
+
+        /// <summary>
+        /// Used to make action on all visible stringbyte
+        /// </summary>
+        private void TraverseStringBytes(Action<StringByte> act, ref bool exit)
+        {
+            var visibleLine = MaxVisibleLine;
+            var cnt = 0;
+
+            //Stringbyte panel
+            foreach (StackPanel stringDataStack in StringDataStackPanel.Children)
+            {
+                if (cnt++ == visibleLine) break;
+                foreach (StringByte sbControl in stringDataStack.Children.Cast<object>().Where(ctrl => ctrl.GetType() == typeof(StringByte)))
+                    act(sbControl);
+
+                if (exit) return;
+            }
+        }
+
+        /// <summary>
+        /// Used to make action on all visible stringbyte
         /// </summary>
         private void TraverseStringBytes(Action<StringByte> act)
         {
-            var visibleLine = MaxVisibleLine;
-            var cnt = 0;
-
-            //Stringbyte panel
-            foreach (StackPanel stringDataStack in StringDataStackPanel.Children)
-            {
-                if (cnt++ == visibleLine) break;
-                foreach (StringByte sbControl in stringDataStack.Children.Cast<object>().Where(ctrl => ctrl.GetType() == typeof(StringByte)))
-                    act(sbControl);
-            }
+            var exit = false;
+            TraverseStringBytes(act, ref exit);
         }
 
         /// <summary>
-        /// To reduce code.traverse hexbyte and stringbyte controls.
+        /// Used to make action on all visible hexbyte and stringbyte.
         /// </summary>
-        private void TraverseHexAndStringBytes(Action<IByteControl> act)
+        private void TraverseHexAndStringBytes(Action<IByteControl> act, ref bool exit)
         {
             var visibleLine = MaxVisibleLine;
             var cnt = 0;
 
-            //Stringbyte panel
+            #region Stringbyte panel
             foreach (StackPanel stringDataStack in StringDataStackPanel.Children)
             {
                 if (cnt++ == visibleLine) break;
                 foreach (StringByte sbControl in stringDataStack.Children.Cast<object>().Where(ctrl => ctrl.GetType() == typeof(StringByte)))
                     act(sbControl);
-            }
 
-            //HexByte panel
+                if (exit) return;
+            }
+            #endregion
+
+            #region HexByte panel
             cnt = 0;
             foreach (StackPanel hexDataStack in HexDataStackPanel.Children)
             {
                 if (cnt++ == visibleLine) break;
                 foreach (HexByte byteControl in hexDataStack.Children.Cast<object>().Where(ctrl => ctrl.GetType() == typeof(HexByte)))
                     act(byteControl);
+
+                if (exit) return;
             }
+            #endregion
         }
 
         /// <summary>
-        /// Used to make action on all lineinfos control
+        /// Used to make action on all visible hexbyte and stringbyte.
+        /// </summary>
+        private void TraverseHexAndStringBytes(Action<IByteControl> act)
+        {
+            var exit = false;
+            TraverseHexAndStringBytes(act, ref exit);
+        }
+
+        /// <summary>
+        /// Used to make action on all visible lineinfos
         /// </summary>
         private void TraverseLineInfos(Action<TextBlock> act)
         {
             var visibleLine = MaxVisibleLine;
             var cnt = 0;
 
-            //Stringbyte panel
+            //lines infos panel
             foreach (TextBlock lineInfo in LinesInfoStackPanel.Children.Cast<object>().Where(ctrl => ctrl.GetType() == typeof(TextBlock)))
             {
                 if (cnt++ == visibleLine) break;
-
                 act(lineInfo);
             }
         }
 
         /// <summary>
-        /// Used to make action on all lineinfos control
+        /// Used to make action on all visible header
         /// </summary>
         private void TraverseHexHeader(Action<TextBlock> act)
         {
             var visibleLine = MaxVisibleLine;
             var cnt = 0;
 
-            //Stringbyte panel
+            //header panel
             foreach (TextBlock colomn in HexHeaderStackPanel.Children.Cast<object>().Where(ctrl => ctrl.GetType() == typeof(TextBlock)))
             {
                 if (cnt++ == visibleLine) break;
-
                 act(colomn);
             }
         }
         #endregion Traverse IByteControl methods
 
-        #region Update/Refresh view
+        #region BytePerLine property/methods
+
+        /// <summary>
+        /// IN DEVELOPMENT (NOT COMPLETED)
+        /// Set the BytePerLine property to fit to control width
+        /// </summary>
+        public void SetBytePerLineToFit()
+        {
+            bool exit = false;
+            int cnt = 0;
+            double StringByteAvgWidth = 0; //Needed average width for adapte with TBL
+            double HexByteWidth = 0;
+
+            TraverseHexBytes(ctrl => 
+            {
+                if (++cnt == 1)
+                {
+                    HexByteWidth = ctrl.ActualWidth;
+                    exit = true;
+                }                
+            }, ref exit);
+
+            TraverseStringBytes(ctrl =>
+            {
+                cnt++;
+                StringByteAvgWidth += ctrl.ActualWidth;                
+            });
+            StringByteAvgWidth /= cnt;
+            
+            BytePerLine = (int)((ActualWidth - LinesInfoStackPanel.ActualWidth - VerticalScrollBar.ActualWidth - StringDataStackPanel.ActualWidth) / HexByteWidth);
+        }
 
         /// <summary>
         /// Get or set the number of byte are show in control
@@ -2062,13 +2127,13 @@ namespace WPFHexaEditor.Control
                     ctrl.UpdateHeader();
                 }
         }
+        #endregion
+
+        #region Update/Refresh view
 
         private void Grid_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (e.HeightChanged) RefreshView(true);
-
-            //TEST
-            //BytePerLine = (int)(e.NewSize.Width / 40);
         }
 
         private void VerticalScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => RefreshView(false);
@@ -2359,14 +2424,11 @@ namespace WPFHexaEditor.Control
                     {
                         sbCtrl.Byte = _viewBuffer[index];
                         sbCtrl.BytePositionInFile = startPosition + index;
-                        if (index < readSize - 1)
-                        {
-                            sbCtrl.ByteNext = _viewBuffer[index + 1];
-                        }
-                        else
-                        {
-                            sbCtrl.ByteNext = null;
-                        }
+
+                        if (index < readSize - 1)                        
+                            sbCtrl.ByteNext = _viewBuffer[index + 1];                        
+                        else                        
+                            sbCtrl.ByteNext = null;                        
                     }
                     else
                     {
@@ -2443,7 +2505,7 @@ namespace WPFHexaEditor.Control
             {
                 TraverseHexAndStringBytes(ctrl =>
                 {
-                    ctrl.IsHighLight = _markedPositionList.Exists(c => c == ctrl.BytePositionInFile);
+                    ctrl.IsHighLight = _markedPositionList.FindIndex(c => c == ctrl.BytePositionInFile) != -1;
                 });
             }
             else //Un highlight all            
@@ -2569,11 +2631,16 @@ namespace WPFHexaEditor.Control
             {
                 long rtn = -1;
                 int count = 0;
+                bool exit = false;
+
                 TraverseHexBytes(ctrl =>
                 {
                     if (++count == 1)
+                    {
                         rtn = ctrl.BytePositionInFile;
-                });
+                        exit = true;
+                    }
+                }, ref exit);
 
                 return rtn;
             }
@@ -2590,8 +2657,9 @@ namespace WPFHexaEditor.Control
                 TraverseHexBytes(ctrl =>
                 {
                     if (ctrl.BytePositionInFile == SelectionStart)
-                        rtn = true;                    
-                });
+                        rtn = true;
+                    
+                }, ref rtn);
 
                 return rtn;
             }
@@ -2625,7 +2693,7 @@ namespace WPFHexaEditor.Control
                         ctrl.Focus();
                         rtn = true;
                     }
-                });
+                }, ref rtn);
 
                 if (rtn) return;
 
@@ -2655,7 +2723,7 @@ namespace WPFHexaEditor.Control
                         ctrl.Focus();
                         rtn = true;
                     }
-                });
+                }, ref rtn);
 
                 if (rtn) return;
 
@@ -3004,7 +3072,7 @@ namespace WPFHexaEditor.Control
                     case ScrollMarker.SelectionStart:
                         rect.Fill = (SolidColorBrush)TryFindResource("SelectionStartBookMarkColor");
                         rect.Width = VerticalScrollBar.ActualWidth;
-                        rect.Height = 2;
+                        rect.Height = 3;
                         break;
                     case ScrollMarker.ByteModified:
                         rect.ToolTip = TryFindResource("ScrollMarkerSearchToolTip");

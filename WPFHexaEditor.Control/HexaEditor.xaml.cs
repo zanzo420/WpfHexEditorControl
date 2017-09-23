@@ -2056,7 +2056,31 @@ namespace WPFHexaEditor
                 act(colomn);
             }
         }
-        #endregion Traverse IByteControl methods
+
+        /// <summary>
+        /// Used to make action on ScrollMarker
+        /// </summary>
+        private void TraverseScrollMarker(Action<Rectangle> act, ref bool exit)
+        {
+            for (int i = MarkerGrid.Children.Count - 1; i >= 0; i--)
+            {
+                if (MarkerGrid.Children[i] is Rectangle rect)
+                    act(rect);
+
+                if (exit) return;
+            }
+        }
+
+        /// <summary>
+        /// Used to make action on ScrollMarker
+        /// </summary>
+        private void TraverseScrollMarker(Action<Rectangle> act)
+        {
+            bool exit = false;
+            TraverseScrollMarker(act, ref exit);
+        }
+
+        #endregion Traverse methods
 
         #region BytePerLine property/methods
 
@@ -2236,6 +2260,7 @@ namespace WPFHexaEditor
             if (rebuild)
             {
                 reAttachEvents = true;
+
                 StringDataStackPanel.Children.Clear();
                 HexDataStackPanel.Children.Clear();
             }
@@ -2963,27 +2988,22 @@ namespace WPFHexaEditor
 
         #region Bookmark and other scrollmarker
         /// <summary>
-        /// Get scrollmarkers 
-        /// </summary>        
-        private IEnumerable<BookMark> GetScrollMarkers(ScrollMarker sm)
-        {
-            foreach (Rectangle rc in MarkerGrid.Children)
-                if (rc.Tag is BookMark bm)
-                    if (bm.Marker == sm)
-                        yield return bm;
-        }
-
-        /// <summary>
         /// Get all bookmark are currently set
         /// </summary>
         public IEnumerable<BookMark> BookMarks
         {
             get
             {
-                foreach (Rectangle rc in MarkerGrid.Children)
-                    if (rc.Tag is BookMark bm)
-                        if (bm.Marker == ScrollMarker.Bookmark)
-                            yield return bm;
+                var bmList = new List<BookMark>();
+
+                TraverseScrollMarker(sm =>
+                {
+                    if (sm.Tag is BookMark bm && bm.Marker == ScrollMarker.Bookmark)
+                        bmList.Add(bm);
+                });
+
+                foreach (BookMark bm in bmList)
+                    yield return bm;
             }
         }
 
@@ -3012,6 +3032,7 @@ namespace WPFHexaEditor
             if (ByteProvider.CheckIsOpen(_provider))
             {
                 double topPosition, rightPosition = 0;
+                bool exit = false;
 
                 //create bookmark
                 var bookMark = new BookMark()
@@ -3024,16 +3045,14 @@ namespace WPFHexaEditor
                 #region Remove selection start marker and set position
                 if (marker == ScrollMarker.SelectionStart)
                 {
-                    int i = 0;
-                    foreach (Rectangle ctrl in MarkerGrid.Children)
+                    TraverseScrollMarker(sm => 
                     {
-                        if (((BookMark)ctrl.Tag).Marker == ScrollMarker.SelectionStart)
+                        if (sm.Tag is BookMark mark && mark.Marker == ScrollMarker.SelectionStart)
                         {
-                            MarkerGrid.Children.RemoveAt(i);
-                            break;
+                            MarkerGrid.Children.Remove(sm);
+                            exit = true;
                         }
-                        i++;
-                    }
+                    }, ref exit);                    
 
                     bookMark.BytePositionInFile = SelectionStart;
                 }
@@ -3046,11 +3065,19 @@ namespace WPFHexaEditor
                     topPosition = 0;
                 #endregion
 
-                #region Check if position already exist and exit if exist
+                #region Check if position already exist and exit if exist                
                 if (marker != ScrollMarker.SelectionStart)
-                    foreach (Rectangle ctrl in MarkerGrid.Children)
-                        if (ctrl.Margin.Top == topPosition && ((BookMark)ctrl.Tag).Marker == marker)
-                            return;
+                {
+                    exit = false;
+
+                    TraverseScrollMarker(sm =>
+                    {
+                        if (sm.Tag is BookMark mark && mark.Marker == marker && sm.Margin.Top == topPosition)
+                            exit = true;
+                    }, ref exit);
+
+                    if (exit) return;
+                }
                 #endregion
 
                 #region Build rectangle
@@ -3122,16 +3149,19 @@ namespace WPFHexaEditor
         /// </summary>
         private void UpdateScrollMarkerPosition()
         {
-            foreach (Rectangle rect in MarkerGrid.Children)
-                if (rect.Tag is BookMark bm)
-                    if (bm.Marker != ScrollMarker.SelectionStart)
-                        rect.Margin = new Thickness
-                            (
-                                0,
-                                (GetLineNumber(bm.BytePositionInFile) * VerticalScrollBar.Track.TickHeight(MaxLine)) - rect.ActualHeight,
-                                0,
-                                0
-                            );
+            TraverseScrollMarker(ctrl => 
+            {
+                if (ctrl.Tag is BookMark bm)
+                {
+                    ctrl.Margin = new Thickness
+                        (
+                            0,
+                            (GetLineNumber(bm.BytePositionInFile) * VerticalScrollBar.Track.TickHeight(MaxLine)) - ctrl.ActualHeight,
+                            0,
+                            0
+                        );
+                }
+            });                    
         }
 
         /// <summary>
@@ -3145,12 +3175,11 @@ namespace WPFHexaEditor
         /// <param name="marker">Type of marker to clear</param>
         public void ClearScrollMarker(ScrollMarker marker)
         {
-            for (int i = 0; i < MarkerGrid.Children.Count; i++)
-                if (((Rectangle)MarkerGrid.Children[i]).Tag is BookMark mark && mark.Marker == marker)
-                {
-                    MarkerGrid.Children.Remove(MarkerGrid.Children[i]);
-                    i--;
-                }
+            TraverseScrollMarker(sm => 
+            {
+                if (sm.Tag is BookMark mark && mark.Marker == marker)
+                    MarkerGrid.Children.Remove(sm);
+            });
         }
 
         /// <summary>
@@ -3159,13 +3188,11 @@ namespace WPFHexaEditor
         /// <param name="marker">Type of marker to clear</param>
         public void ClearScrollMarker(ScrollMarker marker, long position)
         {
-            for (int i = 0; i < MarkerGrid.Children.Count; i++)
-                if (((Rectangle)MarkerGrid.Children[i]).Tag is BookMark mark &&
-                    mark.Marker == marker && mark.BytePositionInFile == position)
-                {
-                    MarkerGrid.Children.Remove(MarkerGrid.Children[i]);
-                    i--;
-                }
+            TraverseScrollMarker(sm =>
+            {
+                if (sm.Tag is BookMark mark && mark.Marker == marker && mark.BytePositionInFile == position)
+                    MarkerGrid.Children.Remove(sm);
+            });
         }
 
         /// <summary>
@@ -3174,14 +3201,12 @@ namespace WPFHexaEditor
         /// <param name="marker">Type of marker to clear</param>
         public void ClearScrollMarker(long position)
         {
-            for (int i = 0; i < MarkerGrid.Children.Count; i++)
-                if (((Rectangle)MarkerGrid.Children[i]).Tag is BookMark mark && mark.BytePositionInFile == position)
-                {
-                    MarkerGrid.Children.Remove(MarkerGrid.Children[i]);
-                    i--;
-                }
+            TraverseScrollMarker(sm =>
+            {
+                if (sm.Tag is BookMark mark && mark.BytePositionInFile == position)
+                    MarkerGrid.Children.Remove(sm);
+            });
         }
-
         #endregion Bookmark and other scrollmarker
 
         #region Context menu

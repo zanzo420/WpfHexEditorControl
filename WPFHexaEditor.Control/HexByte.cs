@@ -447,14 +447,14 @@ namespace WPFHexaEditor
                                     byteValueCharArray[0] = key.ToCharArray()[0];
                                     _keyDownLabel = KeyDownLabel.SecondChar;
                                     Action = ByteAction.Modified;
-                                    Byte = ByteConverters.HexToByte(byteValueCharArray[0].ToString() + byteValueCharArray[1].ToString())[0];
+                                    Byte = ByteConverters.HexToByte(byteValueCharArray[0] + byteValueCharArray[1].ToString())[0];
                                     break;
                                 case KeyDownLabel.SecondChar:
                                     byteValueCharArray[1] = key.ToCharArray()[0];
                                     _keyDownLabel = KeyDownLabel.NextPosition;
 
                                     Action = ByteAction.Modified;
-                                    Byte = ByteConverters.HexToByte(byteValueCharArray[0].ToString() + byteValueCharArray[1].ToString())[0];
+                                    Byte = ByteConverters.HexToByte(byteValueCharArray[0] + byteValueCharArray[1].ToString())[0];
 
                                     //Move focus event
                                     MoveNext?.Invoke(this, new EventArgs());

@@ -396,8 +396,8 @@ namespace WPFHexaEditor.Core.Bytes
                 {
                     byte[] buffer;
                     long bufferlength;
-                    var sortedBm = GetByteModifieds(ByteAction.All).OrderBy(b => b.Key);
-                    double countChange = sortedBm.Count();
+                    var sortedBm = GetByteModifieds(ByteAction.All).OrderBy(b => b.Key).ToList();
+                    double countChange = sortedBm.Count;
                     i = 0;
 
                     //Set position

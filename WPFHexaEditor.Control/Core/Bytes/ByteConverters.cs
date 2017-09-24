@@ -4,8 +4,8 @@
 //////////////////////////////////////////////
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 
 namespace WPFHexaEditor.Core.Bytes
@@ -169,7 +169,7 @@ namespace WPFHexaEditor.Core.Bytes
                 else if
                     (x >= 'a' && x <= 'f') x = x - 'a' + 10;
                 else
-                    throw new ArgumentOutOfRangeException("hex");
+                    throw new ArgumentOutOfRangeException(nameof(hex));
 
                 value = 16 * value + x;
                 #endregion
@@ -195,15 +195,7 @@ namespace WPFHexaEditor.Core.Bytes
         /// <summary>
         /// Convert string to byte array
         /// </summary>
-        public static byte[] StringToByte(string str)
-        {
-            var byteList = new List<byte>();
-
-            foreach (var c in str)
-                byteList.Add(CharToByte(c));
-
-            return byteList.ToArray();
-        }
+        public static byte[] StringToByte(string str) => str.Select(CharToByte).ToArray();
 
         /// <summary>
         /// Convert String to hex string For example: "barn" = "62 61 72 6e"
@@ -215,14 +207,13 @@ namespace WPFHexaEditor.Core.Bytes
         /// </summary>
         public static string DecimalToBinary(long decimalNumber)
         {
-            long remainder;
             var result = string.Empty;
 
             while (decimalNumber > 0)
             {
-                remainder = decimalNumber % 2;
+                var remainder = decimalNumber % 2;
                 decimalNumber /= 2;
-                result = remainder.ToString() + result;
+                result = remainder + result;
             }
 
             return result;

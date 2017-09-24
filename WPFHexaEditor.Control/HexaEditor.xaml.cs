@@ -2540,7 +2540,7 @@ namespace WPFHexaEditor
                         Padding = new Thickness(2, 0, 10, 0),
                         Foreground = ForegroundOffSetHeaderColor,
                         TextAlignment = TextAlignment.Center,
-                        ToolTip = $"Column : {i.ToString()}",
+                        ToolTip = $"Column : {i}",
                         FontFamily = FontFamily
                     };
 
@@ -2622,7 +2622,7 @@ namespace WPFHexaEditor
                         }
                         #endregion
 
-                        lineInfoLabel.ToolTip = $"First byte : {firstLineByte.ToString()}";
+                        lineInfoLabel.ToolTip = $"First byte : {firstLineByte}";
                     }
                 }
             }

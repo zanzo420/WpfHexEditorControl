@@ -11,45 +11,44 @@ namespace WPFHexaEditor.Core.CharacterTable
     /// <summary>
     /// Objet représentant un DTE.
     /// </summary>
-    public sealed class DTE : IEquatable<DTE>
+    public sealed class Dte : IEquatable<Dte>
     {
         /// <summary>Nom du DTE</summary>
-        private string _Entry;
+        private string _entry;
 
         #region Constructeurs
 
         /// <summary>
         /// Constructeur principal
         /// </summary>
-        public DTE()
+        public Dte()
         {
-            _Entry = string.Empty;
-            Type = DTEType.Invalid;
+            _entry = string.Empty;
+            Type = DteType.Invalid;
             Value = string.Empty;
         }
 
         /// <summary>
         /// Contructeur permetant d'ajouter une entrée et une valeur
         /// </summary>
-        /// <param name="Entry">Nom du DTE</param>
-        /// <param name="Value">Valeur du DTE</param>
-        public DTE(string entry, string value)
+        /// <param name="entry">Nom du DTE</param>
+        /// <param name="value">Valeur du DTE</param>
+        public Dte(string entry, string value)
         {
-            _Entry = entry;
+            _entry = entry;
             Value = value;
-            Type = DTEType.DualTitleEncoding;
+            Type = DteType.DualTitleEncoding;
         }
 
         /// <summary>
         /// Contructeur permetant d'ajouter une entrée, une valeur et une description
         /// </summary>
-        /// <param name="Entry">Nom du DTE</param>
-        /// <param name="Value">Valeur du DTE</param>
-        /// <param name="Description">Description du DTE</param>
-        /// <param name="Type">Type de DTE</param>
-        public DTE(string entry, string value, DTEType type)
+        /// <param name="entry">Nom du DTE</param>
+        /// <param name="value">Valeur du DTE</param>
+        /// <param name="type">Type de DTE</param>
+        public Dte(string entry, string value, DteType type)
         {
-            _Entry = entry;
+            _entry = entry;
             Value = value;
             Type = type;
         }
@@ -63,19 +62,19 @@ namespace WPFHexaEditor.Core.CharacterTable
         /// </summary>
         public string Entry
         {
-            set => _Entry = value.ToUpper();
-            get => _Entry;
+            set => _entry = value.ToUpper();
+            get => _entry;
         }
 
         /// <summary>
         /// Valeur du DTE
         /// </summary>
-        public string Value { get; set; }
+        public string Value { get; }
 
         /// <summary>
         /// Type de DTE
         /// </summary>
-        public DTEType Type { get; set; }
+        public DteType Type { get; }
 
         #endregion Propriétés
 
@@ -87,87 +86,86 @@ namespace WPFHexaEditor.Core.CharacterTable
         /// <returns>Retourne le DTE sous forme : [Entry]=[Valeur]</returns>
         public override string ToString()
         {
-            if (Type != DTEType.EndBlock &&
-                Type != DTEType.EndLine)
-                return _Entry + "=" + Value;
-            else
-                return _Entry;
+            if (Type != DteType.EndBlock &&
+                Type != DteType.EndLine)
+                return _entry + "=" + Value;
+            return _entry;
         }
 
         #endregion Méthodes
 
         #region Methodes Static
 
-        public static DTEType TypeDTE(DTE DTEValue)
+        public static DteType TypeDte(Dte dteValue)
         {
             try
             {
-                switch (DTEValue._Entry.Length)
+                switch (dteValue._entry.Length)
                 {
                     case 2:
-                        if (DTEValue.Value.Length == 2)
-                            return DTEType.ASCII;
+                        if (dteValue.Value.Length == 2)
+                            return DteType.Ascii;
                         else
-                            return DTEType.DualTitleEncoding;
+                            return DteType.DualTitleEncoding;
 
                     case 4: // >2
-                        return DTEType.MultipleTitleEncoding;
+                        return DteType.MultipleTitleEncoding;
                 }
             }
             catch (IndexOutOfRangeException)
             {
-                switch (DTEValue._Entry)
+                switch (dteValue._entry)
                 {
                     case @"/":
-                        return DTEType.EndBlock;
+                        return DteType.EndBlock;
 
                     case @"*":
-                        return DTEType.EndLine;
+                        return DteType.EndLine;
                         //case @"\":
                 }
             }
             catch (ArgumentOutOfRangeException)
             { //Du a une entre qui a 2 = de suite... EX:  XX==
-                return DTEType.DualTitleEncoding;
+                return DteType.DualTitleEncoding;
             }
 
-            return DTEType.Invalid;
+            return DteType.Invalid;
         }
 
-        public static DTEType TypeDTE(string DTEValue)
+        public static DteType TypeDte(string dteValue)
         {
             try
             {
-                switch (DTEValue)
+                switch (dteValue)
                 {
                     case @"<end>":
-                        return DTEType.EndBlock;
+                        return DteType.EndBlock;
 
                     case @"<ln>":
-                        return DTEType.EndLine;
+                        return DteType.EndLine;
                         //case @"\":
                 }
 
-                if (DTEValue.Length == 1)
-                    return DTEType.ASCII;
-                else if (DTEValue.Length == 2)
-                    return DTEType.DualTitleEncoding;
-                else if (DTEValue.Length > 2)
-                    return DTEType.MultipleTitleEncoding;
+                if (dteValue.Length == 1)
+                    return DteType.Ascii;
+                if (dteValue.Length == 2)
+                    return DteType.DualTitleEncoding;
+                if (dteValue.Length > 2)
+                    return DteType.MultipleTitleEncoding;
             }
             catch (ArgumentOutOfRangeException)
             { //Du a une entre qui a 2 = de suite... EX:  XX==
-                return DTEType.DualTitleEncoding;
+                return DteType.DualTitleEncoding;
             }
 
-            return DTEType.Invalid;
+            return DteType.Invalid;
         }
         #endregion Methodes Static
 
         #region IEquatable implementation
-        public override bool Equals(object obj) => Equals(obj as DTE);
+        public override bool Equals(object obj) => Equals(obj as Dte);
 
-        public bool Equals(DTE other) => other != null &&
+        public bool Equals(Dte other) => other != null &&
                                          Entry == other.Entry &&
                                          Value == other.Value &&
                                          Type == other.Type;
@@ -181,9 +179,9 @@ namespace WPFHexaEditor.Core.CharacterTable
             return hashCode;
         }
 
-        public static bool operator ==(DTE dTE1, DTE dTE2) => EqualityComparer<DTE>.Default.Equals(dTE1, dTE2);
+        public static bool operator ==(Dte dTe1, Dte dTe2) => EqualityComparer<Dte>.Default.Equals(dTe1, dTe2);
 
-        public static bool operator !=(DTE dTE1, DTE dTE2) => !(dTE1 == dTE2);
+        public static bool operator !=(Dte dTe1, Dte dTe2) => !(dTe1 == dTe2);
         #endregion IEquatable implementation
     }
 }

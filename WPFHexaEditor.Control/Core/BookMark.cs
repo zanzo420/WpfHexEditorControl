@@ -3,7 +3,6 @@
 // Author : Derek Tremblay (derektremblay666@gmail.com)
 //////////////////////////////////////////////
 
-using System;
 using WPFHexaEditor.Core.Bytes;
 
 namespace WPFHexaEditor.Core
@@ -14,7 +13,7 @@ namespace WPFHexaEditor.Core
     public sealed class BookMark
     {
         public ScrollMarker Marker { get; set; } = ScrollMarker.Nothing;
-        public long BytePositionInFile { get; set; } = 0;
+        public long BytePositionInFile { get; set; }
         public string Description { get; set; } = string.Empty;
 
         public BookMark() { }

@@ -5,7 +5,7 @@ namespace WPFHexaEditor.Dialog
     /// <summary>
     /// This Window is used to give a hex value for fill the selection with.
     /// </summary>
-    internal partial class GiveByteWindow : Window
+    internal partial class GiveByteWindow
     {
         public GiveByteWindow() => InitializeComponent();
 

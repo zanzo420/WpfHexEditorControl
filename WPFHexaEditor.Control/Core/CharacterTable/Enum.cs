@@ -8,10 +8,10 @@ namespace WPFHexaEditor.Core.CharacterTable
     /// <summary>
     /// Type de DTE qui sera utilisé dans les classe de DTE
     /// </summary>
-    public enum DTEType
+    public enum DteType
     {
         Invalid = -1,
-        ASCII = 0,
+        Ascii = 0,
         Japonais,
         DualTitleEncoding,
         MultipleTitleEncoding,
@@ -21,7 +21,7 @@ namespace WPFHexaEditor.Core.CharacterTable
 
     public enum DefaultCharacterTableType
     {
-        ASCII
+        Ascii
         //ADD OTHERTYPE...
         //EBCDIC
         //MACINTOSH

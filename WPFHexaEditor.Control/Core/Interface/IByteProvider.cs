@@ -17,7 +17,7 @@ namespace WPFHexaEditor.Core.Interfaces
         bool CanSeek { get; }
         bool CanUndo { get; }
         bool CanWrite { get; }
-        bool EOF { get; }
+        bool Eof { get; }
         string FileName { get; set; }
         bool IsEmpty { get; }
         bool IsOnLongProcess { get; }

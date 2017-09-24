@@ -19,7 +19,7 @@ namespace WPFHexaEditor.Core.MethodExtention
         {
             if (!IsEmptyLocate(self, candidate))
             {
-                for (int i = 0; i < self.Length; i++)
+                for (var i = 0; i < self.Length; i++)
                 {
                     if (!IsMatch(self, i, candidate))
                         continue;
@@ -34,10 +34,10 @@ namespace WPFHexaEditor.Core.MethodExtention
         /// </summary>
         private static bool IsMatch(byte[] array, long position, byte[] candidate)
         {
-            if (candidate.Length > (array.Length - position))
+            if (candidate.Length > array.Length - position)
                 return false;
 
-            for (int i = 0; i < candidate.Length; i++)
+            for (var i = 0; i < candidate.Length; i++)
                 if (array[position + i] != candidate[i])
                     return false;
 

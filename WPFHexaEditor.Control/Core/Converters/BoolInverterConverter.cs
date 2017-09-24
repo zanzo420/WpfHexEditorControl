@@ -21,18 +21,17 @@ namespace WPFHexaEditor.Core.Converters
 
             try
             {
-                val = (bool)value;
+                val = value != null && (bool)value;
             }
-            catch { }
-
-
-            if (val != null)
-                return !val;
-
-            return null;
+            catch
+            {
+                // ignored
+            }
+            
+            return !val;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

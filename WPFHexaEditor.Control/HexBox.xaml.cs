@@ -14,7 +14,7 @@ namespace WPFHexaEditor
     /// <summary>
     /// Control for enter hex value and deal with.
     /// </summary>
-    public partial class HexBox : UserControl
+    public partial class HexBox
     {
         public HexBox() => InitializeComponent();
 
@@ -36,7 +36,7 @@ namespace WPFHexaEditor
         // Using a DependencyProperty as the backing store for MaximumValue.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty MaximumValueProperty =
             DependencyProperty.Register(nameof(MaximumValue), typeof(long), typeof(HexBox), 
-                new FrameworkPropertyMetadata(long.MaxValue, new PropertyChangedCallback(MaximumValue_Changed)));
+                new FrameworkPropertyMetadata(long.MaxValue, MaximumValue_Changed));
 
         private static void MaximumValue_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -59,14 +59,14 @@ namespace WPFHexaEditor
         public static readonly DependencyProperty LongValueProperty =
             DependencyProperty.Register(nameof(LongValue), typeof(long), typeof(HexBox), 
                 new FrameworkPropertyMetadata(0L, 
-                    new PropertyChangedCallback(LongValue_Changed), 
-                    new CoerceValueCallback(LongValue_CoerceValue)));
+                    LongValue_Changed, 
+                    LongValue_CoerceValue));
 
         private static object LongValue_CoerceValue(DependencyObject d, object baseValue)
         {
-            HexBox ctrl = d as HexBox;
+            var ctrl = d as HexBox;
 
-            long newValue = (long)baseValue;
+            var newValue = (long)baseValue;
 
             if (newValue > ctrl.MaximumValue) newValue = ctrl.MaximumValue;
             if (newValue < 0) newValue = 0;
@@ -79,7 +79,7 @@ namespace WPFHexaEditor
             if (d is HexBox ctrl)
                 if (e.NewValue != e.OldValue)
                 {
-                    string val = ByteConverters.LongToHex((long)e.NewValue);
+                    var val = ByteConverters.LongToHex((long)e.NewValue);
                     if (val == "00000000")
                         val = "0";
                     else if (val.Length >= 3) val = val.TrimStart('0');

@@ -5,7 +5,6 @@
 //////////////////////////////////////////////
 
 using System;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -22,7 +21,7 @@ namespace WPFHexaEditor
 
         //global class variables
         private KeyDownLabel _keyDownLabel = KeyDownLabel.FirstChar;
-        private HexEditor _parent;
+        private readonly HexEditor _parent;
 
         //Events
         public event EventHandler ByteModified;
@@ -39,10 +38,10 @@ namespace WPFHexaEditor
         public event EventHandler MovePageUp;
         public event EventHandler ByteDeleted;
         public event EventHandler EscapeKey;
-        public event EventHandler CTRLZKey;
-        public event EventHandler CTRLVKey;
-        public event EventHandler CTRLCKey;
-        public event EventHandler CTRLAKey;
+        public event EventHandler CtrlzKey;
+        public event EventHandler CtrlvKey;
+        public event EventHandler CtrlcKey;
+        public event EventHandler CtrlaKey;
 
         public HexByte(HexEditor parent)
         {
@@ -57,24 +56,21 @@ namespace WPFHexaEditor
 
             #region Binding tooltip
             LoadDictionary("/WPFHexaEditor;component/Resources/Dictionary/ToolTipDictionary.xaml");
-            var txtBinding = new Binding()
+            var txtBinding = new Binding
             {
                 Source = FindResource("ByteToolTip"),
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
                 Mode = BindingMode.OneWay
             };
 
-            /// <summary>
-            /// Load ressources dictionnary
-            /// </summary>
-            /// <param name="url"></param>
+            // Load ressources dictionnary
             void LoadDictionary(string url)
             {
-                var ttRes = new ResourceDictionary() { Source = new Uri(url, UriKind.Relative) };
+                var ttRes = new ResourceDictionary { Source = new Uri(url, UriKind.Relative) };
                 Resources.MergedDictionaries.Add(ttRes);
             }
 
-            SetBinding(TextBlock.ToolTipProperty, txtBinding);
+            SetBinding(ToolTipProperty, txtBinding);
             #endregion
                         
             //Event
@@ -116,17 +112,16 @@ namespace WPFHexaEditor
         public static readonly DependencyProperty ActionProperty =
             DependencyProperty.Register(nameof(Action), typeof(ByteAction), typeof(HexByte),
                 new FrameworkPropertyMetadata(ByteAction.Nothing,
-                    new PropertyChangedCallback(Action_ValueChanged),
-                    new CoerceValueCallback(Action_CoerceValue)));
+                    Action_ValueChanged,
+                    Action_CoerceValue));
 
         private static object Action_CoerceValue(DependencyObject d, object baseValue)
         {
-            ByteAction value = (ByteAction)baseValue;
+            var value = (ByteAction)baseValue;
 
             if (value != ByteAction.All)
                 return baseValue;
-            else
-                return ByteAction.Nothing;
+            return ByteAction.Nothing;
         }
 
         private static void Action_ValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -159,7 +154,7 @@ namespace WPFHexaEditor
 
         public static readonly DependencyProperty ByteProperty =
             DependencyProperty.Register(nameof(Byte), typeof(byte?), typeof(HexByte),
-                new FrameworkPropertyMetadata(null, new PropertyChangedCallback(Byte_PropertyChanged)));
+                new FrameworkPropertyMetadata(null, Byte_PropertyChanged));
 
         private static void Byte_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -210,7 +205,7 @@ namespace WPFHexaEditor
         public static readonly DependencyProperty IsSelectedProperty =
             DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(HexByte),
                 new FrameworkPropertyMetadata(false,
-                    new PropertyChangedCallback(IsSelected_PropertyChange)));
+                    IsSelected_PropertyChange));
 
 
         private static void IsSelected_PropertyChange(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -235,7 +230,7 @@ namespace WPFHexaEditor
         public static readonly DependencyProperty IsHighLightProperty =
             DependencyProperty.Register(nameof(IsHighLight), typeof(bool), typeof(HexByte),
                 new FrameworkPropertyMetadata(false,
-                    new PropertyChangedCallback(IsHighLight_PropertyChanged)));
+                    IsHighLight_PropertyChanged));
 
         private static void IsHighLight_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -259,10 +254,7 @@ namespace WPFHexaEditor
                 FontWeight = _parent.FontWeight;
                 Foreground = _parent.ForegroundContrast;
 
-                if (FirstSelected)
-                    Background = _parent.SelectionFirstColor;
-                else
-                    Background = _parent.SelectionSecondColor;
+                Background = FirstSelected ? _parent.SelectionFirstColor : _parent.SelectionSecondColor;
             }
             else if (IsHighLight)
             {
@@ -345,42 +337,42 @@ namespace WPFHexaEditor
 
                 return;
             }
-            else if (KeyValidator.IsDownKey(e.Key))
+            if (KeyValidator.IsDownKey(e.Key))
             {
                 e.Handled = true;
                 MoveDown?.Invoke(this, new EventArgs());
 
                 return;
             }
-            else if (KeyValidator.IsLeftKey(e.Key))
+            if (KeyValidator.IsLeftKey(e.Key))
             {
                 e.Handled = true;
                 MoveLeft?.Invoke(this, new EventArgs());
 
                 return;
             }
-            else if (KeyValidator.IsRightKey(e.Key))
+            if (KeyValidator.IsRightKey(e.Key))
             {
                 e.Handled = true;
                 MoveRight?.Invoke(this, new EventArgs());
 
                 return;
             }
-            else if (KeyValidator.IsPageDownKey(e.Key))
+            if (KeyValidator.IsPageDownKey(e.Key))
             {
                 e.Handled = true;
                 MovePageDown?.Invoke(this, new EventArgs());
 
                 return;
             }
-            else if (KeyValidator.IsPageUpKey(e.Key))
+            if (KeyValidator.IsPageUpKey(e.Key))
             {
                 e.Handled = true;
                 MovePageUp?.Invoke(this, new EventArgs());
 
                 return;
             }
-            else if (KeyValidator.IsDeleteKey(e.Key))
+            if (KeyValidator.IsDeleteKey(e.Key))
             {
                 if (!ReadOnlyMode)
                 {
@@ -408,27 +400,28 @@ namespace WPFHexaEditor
             else if (KeyValidator.IsCtrlZKey(e.Key))
             {
                 e.Handled = true;
-                CTRLZKey?.Invoke(this, new EventArgs());
+                CtrlzKey?.Invoke(this, new EventArgs());
                 return;
             }
             else if (KeyValidator.IsCtrlVKey(e.Key))
             {
                 e.Handled = true;
-                CTRLVKey?.Invoke(this, new EventArgs());
+                CtrlvKey?.Invoke(this, new EventArgs());
                 return;
             }
             else if (KeyValidator.IsCtrlCKey(e.Key))
             {
                 e.Handled = true;
-                CTRLCKey?.Invoke(this, new EventArgs());
+                CtrlcKey?.Invoke(this, new EventArgs());
                 return;
             }
             else if (KeyValidator.IsCtrlAKey(e.Key))
             {
                 e.Handled = true;
-                CTRLAKey?.Invoke(this, new EventArgs());
+                CtrlaKey?.Invoke(this, new EventArgs());
                 return;
             }
+
             #endregion
 
             //MODIFY BYTE
@@ -447,21 +440,21 @@ namespace WPFHexaEditor
                                 key = e.Key.ToString().ToLower();
 
                             //Update byte
-                            char[] ByteValueCharArray = ByteConverters.ByteToHexCharArray(Byte.Value);
+                            var byteValueCharArray = ByteConverters.ByteToHexCharArray(Byte.Value);
                             switch (_keyDownLabel)
                             {
                                 case KeyDownLabel.FirstChar:
-                                    ByteValueCharArray[0] = key.ToCharArray()[0];
+                                    byteValueCharArray[0] = key.ToCharArray()[0];
                                     _keyDownLabel = KeyDownLabel.SecondChar;
                                     Action = ByteAction.Modified;
-                                    Byte = ByteConverters.HexToByte(ByteValueCharArray[0].ToString() + ByteValueCharArray[1].ToString())[0];
+                                    Byte = ByteConverters.HexToByte(byteValueCharArray[0].ToString() + byteValueCharArray[1].ToString())[0];
                                     break;
                                 case KeyDownLabel.SecondChar:
-                                    ByteValueCharArray[1] = key.ToCharArray()[0];
+                                    byteValueCharArray[1] = key.ToCharArray()[0];
                                     _keyDownLabel = KeyDownLabel.NextPosition;
 
                                     Action = ByteAction.Modified;
-                                    Byte = ByteConverters.HexToByte(ByteValueCharArray[0].ToString() + ByteValueCharArray[1].ToString())[0];
+                                    Byte = ByteConverters.HexToByte(byteValueCharArray[0].ToString() + byteValueCharArray[1].ToString())[0];
 
                                     //Move focus event
                                     MoveNext?.Invoke(this, new EventArgs());

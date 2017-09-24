@@ -8,7 +8,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:Control="clr-namespace:WPFHexaEditor;assembly=WPFHexaEditor"
+        xmlns:control="clr-namespace:WPFHexaEditor;assembly=WPFHexaEditor"
         x:Class="WPFHexaEditorExample.MainWindow"
         xmlns:properties="clr-namespace:WPFHexaEditorExample.Properties"
         mc:Ignorable="d"
@@ -70,9 +70,9 @@
                         </StackPanel>
                     </MenuItem>
                     <MenuItem Header="CharacterTable">
-                        <MenuItem x:Name="CTableASCIIButton" IsCheckable="True" IsChecked="True" Header="ASCII" Click="CTableASCIIButton_Click" />
-                        <MenuItem x:Name="CTableTBLButton" IsCheckable="True" Header="Load TBL file" Click="CTableTBLButton_Click" />
-                        <MenuItem x:Name="CTableTBLDefaultASCIIButton" IsCheckable="True" Header="Load Build-in TBL : ASCII" Click="CTableTBLDefaultASCIIButton_Click" />
+                        <MenuItem x:Name="CTableAsciiButton" IsCheckable="True" IsChecked="True" Header="ASCII" Click="CTableASCIIButton_Click" />
+                        <MenuItem x:Name="CTableTblButton" IsCheckable="True" Header="Load TBL file" Click="CTableTBLButton_Click" />
+                        <MenuItem x:Name="CTableTblDefaultAsciiButton" IsCheckable="True" Header="Load Build-in TBL : ASCII" Click="CTableTBLDefaultASCIIButton_Click" />
                     </MenuItem>
                 </MenuItem>
                 <MenuItem x:Name="PositionMenu" Header="Position">
@@ -102,7 +102,7 @@
                 <MenuItem Header="TEST" Visibility="Visible" Click="MenuItem_Click"/>
             </Menu>
 
-            <Control:HexEditor x:Name="HexEdit" 
+            <control:HexEditor x:Name="HexEdit" 
                                ByteSpacerPositioning="HexBytePanel"
                                ByteGrouping="EightByte"
                                ByteSpacerWidthTickness="Normal"

@@ -139,16 +139,16 @@ namespace WPFHexaEditor.Core
         /// <returns>return a char represent the key passed in parameter</returns>
         public static char GetCharFromKey(Key key)
         {
-            char ch = ' ';
+            var ch = ' ';
 
-            int virtualKey = KeyInterop.VirtualKeyFromKey(key);
-            byte[] keyboardState = new byte[256];
+            var virtualKey = KeyInterop.VirtualKeyFromKey(key);
+            var keyboardState = new byte[256];
             NativeMethods.GetKeyboardState(keyboardState);
 
-            uint scanCode = NativeMethods.MapVirtualKey((uint)virtualKey, NativeMethods.MapType.MAPVK_VK_TO_VSC);
-            StringBuilder stringBuilder = new StringBuilder(2);
+            var scanCode = NativeMethods.MapVirtualKey((uint)virtualKey, NativeMethods.MapType.MapvkVkToVsc);
+            var stringBuilder = new StringBuilder(2);
 
-            int result = NativeMethods.ToUnicode((uint)virtualKey, scanCode, keyboardState, stringBuilder, stringBuilder.Capacity, 0);
+            var result = NativeMethods.ToUnicode((uint)virtualKey, scanCode, keyboardState, stringBuilder, stringBuilder.Capacity, 0);
             switch (result)
             {
                 case -1:

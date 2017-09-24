@@ -32,10 +32,7 @@ namespace WPFHexaEditor.Core.Converters
             {
                 return boolValue ? Visibility.Visible : Visibility.Hidden;
             }
-            else
-            {
-                return boolValue ? Visibility.Visible : Visibility.Collapsed;
-            }
+            return boolValue ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

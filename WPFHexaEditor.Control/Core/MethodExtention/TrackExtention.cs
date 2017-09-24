@@ -15,10 +15,14 @@ namespace WPFHexaEditor.Core.MethodExtention
         /// </summary>
         public static double Top(this Track track)
         {
-            Grid parent = track.Parent as Grid;
-            RepeatButton TopRepeatButton = (RepeatButton)parent.Children[1];
+            if (track.Parent is Grid parent)
+            {
+                var topRepeatButton = (RepeatButton)parent.Children[1];
 
-            return TopRepeatButton.ActualHeight + parent.Margin.Top + 1;
+                return topRepeatButton.ActualHeight + parent.Margin.Top + 1;
+            }
+
+            return 0;
         }
 
         /// <summary>
@@ -26,12 +30,16 @@ namespace WPFHexaEditor.Core.MethodExtention
         /// </summary>
         public static double Bottom(this Track track)
         {
-            Grid parent = track.Parent as Grid;
-            Track TrackControl = (Track)parent.Children[2];
+            if (track.Parent is Grid parent)
+            {
+                var trackControl = (Track)parent.Children[2];
 
-            return TrackControl.Top() +
-                TrackControl.ActualHeight +
-                parent.Margin.Top + 1;
+                return trackControl.Top() +
+                       trackControl.ActualHeight +
+                       parent.Margin.Top + 1;
+            }
+
+            return 0;
         }
 
         /// <summary>

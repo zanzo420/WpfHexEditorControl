@@ -5,7 +5,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 
@@ -41,11 +40,11 @@ namespace WPFHexaEditor.Core.Bytes
         {
             if (data == null) return string.Empty;
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
-            foreach (byte b in data)
+            foreach (var b in data)
             {
-                string hex = ByteToHex(b);
+                var hex = ByteToHex(b);
                 sb.Append(hex);
                 sb.Append(" ");
             }
@@ -103,13 +102,13 @@ namespace WPFHexaEditor.Core.Bytes
 
             switch (converter)
             {
-                case ByteToString.ASCIIEncoding:
+                case ByteToString.AsciiEncoding:
                     return Encoding.ASCII.GetString(buffer, 0, buffer.Length);
 
                 case ByteToString.ByteToCharProcess:
-                    StringBuilder builder = new StringBuilder();
+                    var builder = new StringBuilder();
 
-                    foreach (byte @byte in buffer)
+                    foreach (var @byte in buffer)
                         builder.Append(ByteToChar(@byte));
 
                     return builder.ToString();
@@ -130,7 +129,7 @@ namespace WPFHexaEditor.Core.Bytes
             var hexArray = hex.Split(' ');
             var byteArray = new byte[hexArray.Length];
 
-            for (int i = 0; i < hexArray.Length; i++)
+            for (var i = 0; i < hexArray.Length; i++)
             {
                 var hexValue = hexArray[i];
                 var (isByte, val) = HexToUniqueByte(hexValue);
@@ -149,13 +148,13 @@ namespace WPFHexaEditor.Core.Bytes
         /// </summary>
         /// <param name="hex"></param>
         /// <returns>Return Tuple (bool, byte) that bool represent if is a byte</returns>
-        public static (bool success, byte val) HexToUniqueByte(string hex) => (byte.TryParse(hex, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out byte val), val);
+        public static (bool success, byte val) HexToUniqueByte(string hex) => (byte.TryParse(hex, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var val), val);
 
         public static (bool success, long position) HexLiteralToLong(string hex)
         {
             if (string.IsNullOrEmpty(hex)) return (false, -1);
 
-            int i = hex.Length > 1 && hex[0] == '0' && (hex[1] == 'x' || hex[1] == 'X') ? 2 : 0;
+            var i = hex.Length > 1 && hex[0] == '0' && (hex[1] == 'x' || hex[1] == 'X') ? 2 : 0;
             long value = 0;
 
             while (i < hex.Length)
@@ -166,9 +165,9 @@ namespace WPFHexaEditor.Core.Bytes
                 if
                     (x >= '0' && x <= '9') x = x - '0';
                 else if
-                    (x >= 'A' && x <= 'F') x = (x - 'A') + 10;
+                    (x >= 'A' && x <= 'F') x = x - 'A' + 10;
                 else if
-                    (x >= 'a' && x <= 'f') x = (x - 'a') + 10;
+                    (x >= 'a' && x <= 'f') x = x - 'a' + 10;
                 else
                     throw new ArgumentOutOfRangeException("hex");
 
@@ -181,10 +180,9 @@ namespace WPFHexaEditor.Core.Bytes
 
         public static long DecimalLiteralToLong(string hex)
         {
-            if (long.TryParse(hex, out long value))            
-                return value;            
-            else            
-                throw new ArgumentException($"This string are not hex : {nameof(hex)}");
+            if (long.TryParse(hex, out var value))            
+                return value;
+            throw new ArgumentException($"This string are not hex : {nameof(hex)}");
         }
 
         /// <summary>
@@ -199,9 +197,9 @@ namespace WPFHexaEditor.Core.Bytes
         /// </summary>
         public static byte[] StringToByte(string str)
         {
-            List<byte> byteList = new List<byte>();
+            var byteList = new List<byte>();
 
-            foreach (char c in str)
+            foreach (var c in str)
                 byteList.Add(CharToByte(c));
 
             return byteList.ToArray();
@@ -218,7 +216,7 @@ namespace WPFHexaEditor.Core.Bytes
         public static string DecimalToBinary(long decimalNumber)
         {
             long remainder;
-            string result = string.Empty;
+            var result = string.Empty;
 
             while (decimalNumber > 0)
             {

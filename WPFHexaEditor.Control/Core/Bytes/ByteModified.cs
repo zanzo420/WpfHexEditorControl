@@ -33,7 +33,7 @@ namespace WPFHexaEditor.Core.Bytes
         /// <summary>
         /// Byte mofidied
         /// </summary>
-        public byte? Byte { get; set; } = null;
+        public byte? Byte { get; set; }
 
         /// <summary>
         /// Action have made in this byte
@@ -56,7 +56,7 @@ namespace WPFHexaEditor.Core.Bytes
         /// <summary>
         /// Check if the object is valid and data can be used for action
         /// </summary>
-        public bool IsValid => (BytePositionInFile > -1 && Action != ByteAction.Nothing && Byte != null) ? true: false;
+        public bool IsValid => BytePositionInFile > -1 && Action != ByteAction.Nothing && Byte != null;
 
         /// <summary>
         /// String representation of byte
@@ -80,7 +80,7 @@ namespace WPFHexaEditor.Core.Bytes
         /// Copy Current instance to another
         /// </summary>
         /// <returns></returns>
-        public ByteModified GetCopy() => new ByteModified()
+        public ByteModified GetCopy() => new ByteModified
         {
             Action = Action,
             Byte = Byte,

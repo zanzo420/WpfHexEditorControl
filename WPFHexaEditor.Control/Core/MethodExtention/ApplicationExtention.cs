@@ -13,12 +13,12 @@ namespace WPFHexaEditor.Core.MethodExtention
     /// </summary>
     public static class ApplicationExtention
     {
-        private static DispatcherOperationCallback exitFrameCallback = new DispatcherOperationCallback(ExitFrame);
+        private static readonly DispatcherOperationCallback ExitFrameCallback = ExitFrame;
 
         public static void DoEvents(this Application app, DispatcherPriority priority = DispatcherPriority.Background)
         {
-            DispatcherFrame nestedFrame = new DispatcherFrame();
-            DispatcherOperation exitOperation = Dispatcher.CurrentDispatcher.BeginInvoke(priority, exitFrameCallback, nestedFrame);
+            var nestedFrame = new DispatcherFrame();
+            var exitOperation = Dispatcher.CurrentDispatcher.BeginInvoke(priority, ExitFrameCallback, nestedFrame);
 
             try
             {

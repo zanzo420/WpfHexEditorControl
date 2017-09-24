@@ -43,9 +43,9 @@ namespace WPFHexaEditor.Core.Interfaces
         event EventHandler MovePageUp;
         event EventHandler ByteDeleted;
         event EventHandler EscapeKey;
-        event EventHandler CTRLZKey;
-        event EventHandler CTRLVKey;
-        event EventHandler CTRLCKey;
-        event EventHandler CTRLAKey;
+        event EventHandler CtrlzKey;
+        event EventHandler CtrlvKey;
+        event EventHandler CtrlcKey;
+        event EventHandler CtrlaKey;
     }
 }

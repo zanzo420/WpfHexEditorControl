@@ -21,8 +21,7 @@ namespace WPFHexaEditor.Core.Converters
 
             if (success)
                 return val;
-            else
-                return string.Empty;            
+            return string.Empty;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

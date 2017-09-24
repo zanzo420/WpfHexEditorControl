@@ -37,10 +37,10 @@ namespace WPFHexaEditor.Core
     {
         Byte,
         HexaString,
-        ASCIIString,
-        TBLString,
+        AsciiString,
+        TblString,
         CSharpCode,
-        VBNetCode,
+        VbNetCode,
         JavaCode,
         CCode,
         FSharp
@@ -55,7 +55,7 @@ namespace WPFHexaEditor.Core
         CSharp,
         Java,
         FSharp,
-        VBNET
+        Vbnet
     }
 
     /// <summary>
@@ -79,7 +79,7 @@ namespace WPFHexaEditor.Core
         /// <summary>
         /// System.Text.Encoding.ASCII string encoder
         /// </summary>
-        ASCIIEncoding
+        AsciiEncoding
     }
 
     /// <summary>
@@ -93,7 +93,7 @@ namespace WPFHexaEditor.Core
         SelectionStart,
         ByteModified,
         ByteDeleted,
-        TBLBookmark
+        TblBookmark
     }
 
     /// <summary>
@@ -111,14 +111,14 @@ namespace WPFHexaEditor.Core
     /// </summary>
     public enum CharacterTableType
     {
-        ASCII,
-        TBLFile
+        Ascii,
+        TblFile
     }
 
     /// <summary>
     /// Used for control the speed of mouse wheel
     /// </summary>
-    public enum MouseWheelSpeed : int
+    public enum MouseWheelSpeed
     {
         VerySlow = 1,
         Slow = 3,
@@ -130,7 +130,7 @@ namespace WPFHexaEditor.Core
     /// <summary>
     /// IByteControl spacer width
     /// </summary>
-    public enum ByteSpacerWidth : int
+    public enum ByteSpacerWidth
     {
         VerySmall = 1,
         Small = 3,
@@ -139,7 +139,7 @@ namespace WPFHexaEditor.Core
         VeryLarge = 12
     }
 
-    public enum ByteSpacerGroup : int
+    public enum ByteSpacerGroup
     {
         TwoByte = 2,
         FourByte = 4,

@@ -4,8 +4,6 @@
 //////////////////////////////////////////////
 
 using Microsoft.Win32;
-using System;
-using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -37,7 +35,7 @@ namespace WPFHexaEditorExample
 
         private void OpenMenu_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog fileDialog = new OpenFileDialog();
+            var fileDialog = new OpenFileDialog();
 
             if (fileDialog.ShowDialog() != null)
             {
@@ -139,7 +137,7 @@ namespace WPFHexaEditorExample
 
         private void GOPosition_Click(object sender, RoutedEventArgs e)
         {
-            if (long.TryParse(PositionText.Text, out long position))
+            if (long.TryParse(PositionText.Text, out var position))
                 HexEdit.SetPosition(position, 1);
             else
                 MessageBox.Show("Enter long value.");
@@ -169,7 +167,7 @@ namespace WPFHexaEditorExample
 
         private void PositionText_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (long.TryParse(PositionText.Text, out long position))
+            if (long.TryParse(PositionText.Text, out var position))
                 GoPositionButton.IsEnabled = true;
             else
                 GoPositionButton.IsEnabled = false;
@@ -218,15 +216,15 @@ namespace WPFHexaEditorExample
 
         private void CTableASCIIButton_Click(object sender, RoutedEventArgs e)
         {
-            HexEdit.TypeOfCharacterTable = CharacterTableType.ASCII;
-            CTableASCIIButton.IsChecked = true;
-            CTableTBLButton.IsChecked = false;
-            CTableTBLDefaultASCIIButton.IsChecked = false;
+            HexEdit.TypeOfCharacterTable = CharacterTableType.Ascii;
+            CTableAsciiButton.IsChecked = true;
+            CTableTblButton.IsChecked = false;
+            CTableTblDefaultAsciiButton.IsChecked = false;
         }
 
         private void CTableTBLButton_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog fileDialog = new OpenFileDialog();
+            var fileDialog = new OpenFileDialog();
 
             if (fileDialog.ShowDialog() != null)
             {
@@ -234,11 +232,11 @@ namespace WPFHexaEditorExample
                 {
                     Application.Current.MainWindow.Cursor = Cursors.Wait;
 
-                    HexEdit.LoadTBLFile(fileDialog.FileName);
-                    HexEdit.TypeOfCharacterTable = CharacterTableType.TBLFile;
-                    CTableASCIIButton.IsChecked = false;
-                    CTableTBLButton.IsChecked = true;
-                    CTableTBLDefaultASCIIButton.IsChecked = false;
+                    HexEdit.LoadTblFile(fileDialog.FileName);
+                    HexEdit.TypeOfCharacterTable = CharacterTableType.TblFile;
+                    CTableAsciiButton.IsChecked = false;
+                    CTableTblButton.IsChecked = true;
+                    CTableTblDefaultAsciiButton.IsChecked = false;
 
                     Application.Current.MainWindow.Cursor = null;
                 }
@@ -249,18 +247,18 @@ namespace WPFHexaEditorExample
         {
             Application.Current.MainWindow.Cursor = Cursors.Wait;
 
-            HexEdit.TypeOfCharacterTable = CharacterTableType.TBLFile;
-            HexEdit.LoadDefaultTBL(WPFHexaEditor.Core.CharacterTable.DefaultCharacterTableType.ASCII);
-            CTableASCIIButton.IsChecked = false;
-            CTableTBLButton.IsChecked = false;
-            CTableTBLDefaultASCIIButton.IsChecked = true;
+            HexEdit.TypeOfCharacterTable = CharacterTableType.TblFile;
+            HexEdit.LoadDefaultTbl();
+            CTableAsciiButton.IsChecked = false;
+            CTableTblButton.IsChecked = false;
+            CTableTblDefaultAsciiButton.IsChecked = true;
 
             Application.Current.MainWindow.Cursor = null;
         }
 
         private void SaveAsMenu_Click(object sender, RoutedEventArgs e)
         {
-            SaveFileDialog fileDialog = new SaveFileDialog();
+            var fileDialog = new SaveFileDialog();
 
             if (fileDialog.ShowDialog() != null)
             {

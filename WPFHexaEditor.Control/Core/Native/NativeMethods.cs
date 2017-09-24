@@ -10,10 +10,10 @@ namespace WPFHexaEditor.Core.Native
         /// </summary>
         internal enum MapType : uint
         {
-            MAPVK_VK_TO_VSC = 0x0,
-            MAPVK_VSC_TO_VK = 0x1,
-            MAPVK_VK_TO_CHAR = 0x2,
-            MAPVK_VSC_TO_VK_EX = 0x3,
+            MapvkVkToVsc = 0x0,
+            MapvkVscToVk = 0x1,
+            MapvkVkToChar = 0x2,
+            MapvkVscToVkEx = 0x3,
         }
 
         [DllImport("user32.dll")]

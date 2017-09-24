@@ -8,7 +8,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"              
-             xmlns:local="clr-namespace:WPFHexaEditor"
              mc:Ignorable="d" Height="24" Width="100">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -48,7 +47,7 @@
                 VerticalContentAlignment="Center" 
                 BorderBrush="{x:Null}"
                 Grid.Column="1"
-                Grid.RowSpan="2"
+                 Grid.Row="0" Grid.RowSpan="2"
                 TextChanged="HexTextBox_TextChanged"
                 PreviewKeyDown="HexTextBox_PreviewKeyDown"
                 KeyDown="HexTextBox_KeyDown" 
@@ -67,7 +66,7 @@
         <Label Content="0x" 
                Padding="0" 
                Grid.Column="0"
-               Grid.RowSpan="2"
+               Grid.Row="0" Grid.RowSpan="2"
                HorizontalContentAlignment="Center"
                VerticalContentAlignment="Center"/>
     </Grid>

@@ -438,9 +438,8 @@ namespace WPFHexaEditor
         private void UpdateAutoHighLiteSelectionByteVisual()
         {
             //Auto highlite selectionbyte
-            if (_parent.AllowAutoHightLighSelectionByte && _parent.SelectionByte != null)
-                if (Byte == _parent.SelectionByte && !IsSelected)
-                    Background = _parent.AutoHighLiteSelectionByteBrush;
+            if (_parent.AllowAutoHightLighSelectionByte && _parent.SelectionByte != null && Byte == _parent.SelectionByte && !IsSelected)
+                Background = _parent.AutoHighLiteSelectionByteBrush;
         }
 
         /// <summary>
@@ -598,12 +597,8 @@ namespace WPFHexaEditor
 
         private void UserControl_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (Byte != null)
-                if (Action != ByteAction.Modified &&
-                    Action != ByteAction.Deleted &&
-                    Action != ByteAction.Added &&
-                    !IsSelected && !IsHighLight)
-                    Background = _parent.MouseOverColor;
+            if (Byte != null && Action != ByteAction.Modified && Action != ByteAction.Deleted && Action != ByteAction.Added && !IsSelected && !IsHighLight)
+                Background = _parent.MouseOverColor;
 
             UpdateAutoHighLiteSelectionByteVisual();
 
@@ -613,12 +608,8 @@ namespace WPFHexaEditor
 
         private void UserControl_MouseLeave(object sender, MouseEventArgs e)
         {
-            if (Byte != null)
-                if (Action != ByteAction.Modified &&
-                    Action != ByteAction.Deleted &&
-                    Action != ByteAction.Added &&
-                    !IsSelected && !IsHighLight)
-                    Background = Brushes.Transparent;
+            if (Byte != null && Action != ByteAction.Modified && Action != ByteAction.Deleted && Action != ByteAction.Added && !IsSelected && !IsHighLight)
+                Background = Brushes.Transparent;
 
             UpdateAutoHighLiteSelectionByteVisual();
         }

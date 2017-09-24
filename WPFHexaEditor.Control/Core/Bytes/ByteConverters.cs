@@ -180,9 +180,9 @@ namespace WPFHexaEditor.Core.Bytes
 
         public static long DecimalLiteralToLong(string hex)
         {
-            if (long.TryParse(hex, out var value))            
-                return value;
-            throw new ArgumentException($"This string are not hex : {nameof(hex)}");
+            return long.TryParse(hex, out var value)
+                ? value
+                : throw new ArgumentException($"This string are not hex : {nameof(hex)}");
         }
 
         /// <summary>

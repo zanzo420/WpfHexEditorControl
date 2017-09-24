@@ -119,16 +119,12 @@ namespace WPFHexaEditor
         {
             var value = (ByteAction)baseValue;
 
-            if (value != ByteAction.All)
-                return baseValue;
-            return ByteAction.Nothing;
+            return value != ByteAction.All ? baseValue : ByteAction.Nothing;
         }
 
         private static void Action_ValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexByte ctrl)
-                if (e.NewValue != e.OldValue)
-                    ctrl.UpdateVisual();
+            if (d is HexByte ctrl && e.NewValue != e.OldValue) ctrl.UpdateVisual();
         }
 
         /// <summary>
@@ -210,12 +206,11 @@ namespace WPFHexaEditor
 
         private static void IsSelected_PropertyChange(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexByte ctrl)
-                if (e.NewValue != e.OldValue)
-                {
-                    ctrl._keyDownLabel = KeyDownLabel.FirstChar;
-                    ctrl.UpdateVisual();
-                }
+            if (d is HexByte ctrl && e.NewValue != e.OldValue)
+            {
+                ctrl._keyDownLabel = KeyDownLabel.FirstChar;
+                ctrl.UpdateVisual();
+            }
         }
 
         /// <summary>
@@ -234,12 +229,11 @@ namespace WPFHexaEditor
 
         private static void IsHighLight_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexByte ctrl)
-                if (e.NewValue != e.OldValue)
-                {
-                    ctrl._keyDownLabel = KeyDownLabel.FirstChar;
-                    ctrl.UpdateVisual();
-                }
+            if (d is HexByte ctrl && e.NewValue != e.OldValue)
+            {
+                ctrl._keyDownLabel = KeyDownLabel.FirstChar;
+                ctrl.UpdateVisual();
+            }
         }
 
         /// <summary>
@@ -290,9 +284,8 @@ namespace WPFHexaEditor
         private void UpdateAutoHighLiteSelectionByteVisual()
         {
             //Auto highlite selectionbyte
-            if (_parent.AllowAutoHightLighSelectionByte && _parent.SelectionByte != null)
-                if (Byte == _parent.SelectionByte && !IsSelected)
-                    Background = _parent.AutoHighLiteSelectionByteBrush;
+            if (_parent.AllowAutoHightLighSelectionByte && _parent.SelectionByte != null && Byte == _parent.SelectionByte && !IsSelected)
+                Background = _parent.AutoHighLiteSelectionByteBrush;
         }
 
 
@@ -425,61 +418,55 @@ namespace WPFHexaEditor
             #endregion
 
             //MODIFY BYTE
-            if (!ReadOnlyMode)
-                if (KeyValidator.IsHexKey(e.Key))
+            if (!ReadOnlyMode && KeyValidator.IsHexKey(e.Key))
+                switch (_parent.DataStringVisual)
                 {
-                    switch (_parent.DataStringVisual)
-                    {
-                        case DataVisualType.Hexadecimal:
+                    case DataVisualType.Hexadecimal:
 
-                            #region Edit hexadecimal value 
-                            string key;
-                            if (KeyValidator.IsNumericKey(e.Key))
-                                key = KeyValidator.GetDigitFromKey(e.Key).ToString();
-                            else
-                                key = e.Key.ToString().ToLower();
+                        #region Edit hexadecimal value 
 
-                            //Update byte
-                            var byteValueCharArray = ByteConverters.ByteToHexCharArray(Byte.Value);
-                            switch (_keyDownLabel)
-                            {
-                                case KeyDownLabel.FirstChar:
-                                    byteValueCharArray[0] = key.ToCharArray()[0];
-                                    _keyDownLabel = KeyDownLabel.SecondChar;
-                                    Action = ByteAction.Modified;
-                                    Byte = ByteConverters.HexToByte(byteValueCharArray[0] + byteValueCharArray[1].ToString())[0];
-                                    break;
-                                case KeyDownLabel.SecondChar:
-                                    byteValueCharArray[1] = key.ToCharArray()[0];
-                                    _keyDownLabel = KeyDownLabel.NextPosition;
+                        string key;
+                        key = KeyValidator.IsNumericKey(e.Key) ? KeyValidator.GetDigitFromKey(e.Key).ToString() : e.Key.ToString().ToLower();
 
-                                    Action = ByteAction.Modified;
-                                    Byte = ByteConverters.HexToByte(byteValueCharArray[0] + byteValueCharArray[1].ToString())[0];
+                        //Update byte
+                        var byteValueCharArray = ByteConverters.ByteToHexCharArray(Byte.Value);
+                        switch (_keyDownLabel)
+                        {
+                            case KeyDownLabel.FirstChar:
+                                byteValueCharArray[0] = key.ToCharArray()[0];
+                                _keyDownLabel = KeyDownLabel.SecondChar;
+                                Action = ByteAction.Modified;
+                                Byte = ByteConverters.HexToByte(
+                                    byteValueCharArray[0] + byteValueCharArray[1].ToString())[0];
+                                break;
+                            case KeyDownLabel.SecondChar:
+                                byteValueCharArray[1] = key.ToCharArray()[0];
+                                _keyDownLabel = KeyDownLabel.NextPosition;
 
-                                    //Move focus event
-                                    MoveNext?.Invoke(this, new EventArgs());
-                                    break;
-                            }
-                            #endregion
+                                Action = ByteAction.Modified;
+                                Byte = ByteConverters.HexToByte(
+                                    byteValueCharArray[0] + byteValueCharArray[1].ToString())[0];
 
-                            break;
-                        case DataVisualType.Decimal:
+                                //Move focus event
+                                MoveNext?.Invoke(this, new EventArgs());
+                                break;
+                        }
 
-                            //Not editable at this moment, maybe in future
+                        #endregion
 
-                            break;
-                    }
+                        break;
+                    case DataVisualType.Decimal:
+
+                        //Not editable at this moment, maybe in future
+
+                        break;
                 }
         }
 
         private void UserControl_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (Byte != null)
-                if (Action != ByteAction.Modified &&
-                    Action != ByteAction.Deleted &&
-                    Action != ByteAction.Added &&
-                    !IsSelected && !IsHighLight)
-                    Background = _parent.MouseOverColor;
+            if (Byte != null && Action != ByteAction.Modified && Action != ByteAction.Deleted && Action != ByteAction.Added && !IsSelected && !IsHighLight)
+                Background = _parent.MouseOverColor;
 
             UpdateAutoHighLiteSelectionByteVisual();
 
@@ -489,12 +476,8 @@ namespace WPFHexaEditor
 
         private void UserControl_MouseLeave(object sender, MouseEventArgs e)
         {
-            if (Byte != null)
-                if (Action != ByteAction.Modified &&
-                    Action != ByteAction.Deleted &&
-                    Action != ByteAction.Added &&
-                    !IsSelected && !IsHighLight)
-                    Background = Brushes.Transparent;
+            if (Byte != null && Action != ByteAction.Modified && Action != ByteAction.Deleted && Action != ByteAction.Added && !IsSelected && !IsHighLight)
+                Background = Brushes.Transparent;
 
             UpdateAutoHighLiteSelectionByteVisual();
         }

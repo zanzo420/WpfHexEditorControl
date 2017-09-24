@@ -23,22 +23,16 @@ namespace WPFHexaEditor.Core.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var boolValue = (bool) value;
+
             if (Inverted)
-            {
                 boolValue = !boolValue;
-            }
 
-            if ((string) parameter == "hidden")
-            {
-                return boolValue ? Visibility.Visible : Visibility.Hidden;
-            }
-            return boolValue ? Visibility.Visible : Visibility.Collapsed;
+            return (string) parameter == "hidden"
+                ? (boolValue ? Visibility.Visible : Visibility.Hidden)
+                : (boolValue ? Visibility.Visible : Visibility.Collapsed);
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
 
         #endregion
     }

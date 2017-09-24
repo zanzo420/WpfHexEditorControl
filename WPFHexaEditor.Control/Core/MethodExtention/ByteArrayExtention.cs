@@ -4,6 +4,7 @@
 //////////////////////////////////////////////
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace WPFHexaEditor.Core.MethodExtention
 {
@@ -34,14 +35,8 @@ namespace WPFHexaEditor.Core.MethodExtention
         /// </summary>
         private static bool IsMatch(byte[] array, long position, byte[] candidate)
         {
-            if (candidate.Length > array.Length - position)
-                return false;
-
-            for (var i = 0; i < candidate.Length; i++)
-                if (array[position + i] != candidate[i])
-                    return false;
-
-            return true;
+            return candidate.Length <= array.Length - position &&
+                   !candidate.Where((t, i) => array[position + i] != t).Any();
         }
 
         /// <summary>

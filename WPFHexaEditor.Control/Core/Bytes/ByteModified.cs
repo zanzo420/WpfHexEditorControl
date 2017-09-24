@@ -63,8 +63,7 @@ namespace WPFHexaEditor.Core.Bytes
         /// </summary>
         /// <returns></returns>
         public override string ToString() => $"ByteModified - Action:{Action} Position:{BytePositionInFile} Byte:{Byte}";
-
-
+        
         /// <summary>
         /// Clear object
         /// </summary>
@@ -91,14 +90,8 @@ namespace WPFHexaEditor.Core.Bytes
         /// <summary>
         /// Get if bytemodified is valid
         /// </summary>
-        public static bool CheckIsValid(ByteModified byteModified)
-        {
-            if (byteModified != null)
-                if (byteModified.IsValid)
-                    return true;
+        public static bool CheckIsValid(ByteModified byteModified) => byteModified != null && byteModified.IsValid;
 
-            return false;
-        }
         #endregion Methods
 
         #region IEquatable implementation

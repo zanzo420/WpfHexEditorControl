@@ -86,10 +86,10 @@ namespace WPFHexaEditor.Core.CharacterTable
         /// <returns>Retourne le DTE sous forme : [Entry]=[Valeur]</returns>
         public override string ToString()
         {
-            if (Type != DteType.EndBlock &&
-                Type != DteType.EndLine)
-                return _entry + "=" + Value;
-            return _entry;
+            return Type != DteType.EndBlock &&
+                   Type != DteType.EndLine
+                ? _entry + "=" + Value
+                : _entry;
         }
 
         #endregion Méthodes

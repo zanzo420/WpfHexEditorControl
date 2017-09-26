@@ -19,13 +19,16 @@ namespace WpfHexaEditor
     internal class HexByte : TextBlock, IByteControl
     {
 
-        //global class variables
+        #region Global class variables
         private KeyDownLabel _keyDownLabel = KeyDownLabel.FirstChar;
         private readonly HexEditor _parent;
         private bool _isSelected;
         private bool _isHighLight;
+        private ByteAction _action = ByteAction.Nothing;
+        private byte? _byte;
+        #endregion global class variables
 
-        //Events
+        #region Events
         public event EventHandler ByteModified;
         public event EventHandler MouseSelection;
         public event EventHandler Click;
@@ -44,7 +47,9 @@ namespace WpfHexaEditor
         public event EventHandler CtrlvKey;
         public event EventHandler CtrlcKey;
         public event EventHandler CtrlaKey;
+        #endregion Events
 
+        #region Constructor
         public HexByte(HexEditor parent)
         {
             //Parent hexeditor
@@ -85,11 +90,9 @@ namespace WpfHexaEditor
             //Update width
             UpdateDataVisualWidth();
         }
-
-
-
+        #endregion Contructor
+        
         #region Properties
-
         /// <summary>
         /// Position in file
         /// </summary>
@@ -100,21 +103,13 @@ namespace WpfHexaEditor
         /// </summary>
         public ByteAction Action
         {
-            get => (ByteAction)GetValue(ActionProperty);
-            set => SetValue(ActionProperty, value);
-        }
-
-        public static readonly DependencyProperty ActionProperty =
-            DependencyProperty.Register(nameof(Action), typeof(ByteAction), typeof(HexByte),
-                new FrameworkPropertyMetadata(ByteAction.Nothing,
-                    Action_ValueChanged,
-                    Action_CoerceValue));
-
-        private static object Action_CoerceValue(DependencyObject d, object baseValue) => (ByteAction)baseValue != ByteAction.All ? baseValue : ByteAction.Nothing;
-
-        private static void Action_ValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is HexByte ctrl && e.NewValue != e.OldValue) ctrl.UpdateVisual();
+            get => _action;
+            set
+            {
+                _action = value != ByteAction.All ? value : ByteAction.Nothing;
+                
+                UpdateVisual();
+            }
         }
 
         /// <summary>
@@ -125,33 +120,6 @@ namespace WpfHexaEditor
         /// <summary>
         /// Byte used for this instance
         /// </summary>
-        //public byte? Byte
-        //{
-        //    get => (byte?)GetValue(ByteProperty);
-        //    set => SetValue(ByteProperty, value);
-        //}
-
-        //public static readonly DependencyProperty ByteProperty =
-        //    DependencyProperty.Register(nameof(Byte), typeof(byte?), typeof(HexByte),
-        //        new FrameworkPropertyMetadata(null, Byte_PropertyChanged));
-
-        //private static void Byte_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        //{
-        //    if (d is HexByte ctrl)
-        //        if (e.NewValue != null)
-        //        {
-        //            if (e.NewValue != e.OldValue)
-        //            {
-        //                if (ctrl.Action != ByteAction.Nothing && ctrl.InternalChange == false)
-        //                    ctrl.ByteModified?.Invoke(ctrl, new EventArgs());
-
-        //                ctrl.UpdateLabelFromByte();
-        //            }
-        //        }
-        //        else
-        //            ctrl.UpdateLabelFromByte();
-        //}
-        private byte? _byte;
         public byte? Byte
         {
             get => _byte;
@@ -210,8 +178,9 @@ namespace WpfHexaEditor
                 }
             }
         }
-        #endregion
+        #endregion properties
 
+        #region Methods
         /// <summary>
         /// Update Background,foreground and font property
         /// </summary>
@@ -284,6 +253,35 @@ namespace WpfHexaEditor
                 Text = string.Empty;            
         }
 
+        /// <summary>
+        /// Clear control
+        /// </summary>
+        public void Clear()
+        {
+            InternalChange = true;
+            BytePositionInFile = -1;
+            Byte = null;
+            Action = ByteAction.Nothing;
+            IsHighLight = false;
+            IsSelected = false;
+            InternalChange = false;
+        }
+
+        public void UpdateDataVisualWidth()
+        {
+            switch (_parent.DataStringVisual)
+            {
+                case DataVisualType.Decimal:
+                    Width = 25;
+                    break;
+                case DataVisualType.Hexadecimal:
+                    Width = 20;
+                    break;
+            }
+        }
+        #endregion Methods
+
+        #region Events delegate
         private void HexChar_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
@@ -463,30 +461,6 @@ namespace WpfHexaEditor
             if (Byte == null)
                 e.Handled = true;
         }
-
-        /// <summary>
-        /// Clear control
-        /// </summary>
-        public void Clear()
-        {
-            BytePositionInFile = -1;
-            Byte = null;
-            Action = ByteAction.Nothing;
-            IsHighLight = false;
-            IsSelected = false;
-        }
-
-        public void UpdateDataVisualWidth()
-        {
-            switch (_parent.DataStringVisual)
-            {
-                case DataVisualType.Decimal:
-                    Width = 25;
-                    break;
-                case DataVisualType.Hexadecimal:
-                    Width = 20;
-                    break;
-            }
-        }
+        #endregion Events delegate
     }
 }

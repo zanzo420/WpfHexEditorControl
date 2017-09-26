@@ -19,13 +19,17 @@ namespace WpfHexaEditor
 {
     internal class StringByte : TextBlock, IByteControl
     {
-        //Global variable
+        #region Global class variables
         private readonly HexEditor _parent;
-        private TblStream _tblCharacterTable;
         private bool _isSelected;
         private bool _isHighLight;
+        private ByteAction _action = ByteAction.Nothing;
+        private byte? _byte;
+        private CharacterTableType _typeOfCharacterTable;
+        private bool _tblShowMte;
+        #endregion Global variable
 
-        //event
+        #region Events
         public event EventHandler Click;
         public event EventHandler RightClick;
         public event EventHandler MouseSelection;
@@ -44,11 +48,9 @@ namespace WpfHexaEditor
         public event EventHandler CtrlvKey;
         public event EventHandler CtrlcKey;
         public event EventHandler CtrlaKey;
+        #endregion Events
 
-        /// <summary>
-        /// Default contructor
-        /// </summary>
-        /// <param name="parent"></param>
+        #region Contructor
         public StringByte(HexEditor parent)
         {
             //Default properties
@@ -87,8 +89,8 @@ namespace WpfHexaEditor
             //Parent hexeditor
             _parent = parent;
         }
-
-
+        #endregion Contructor
+        
         #region Properties
 
         /// <summary>
@@ -104,34 +106,6 @@ namespace WpfHexaEditor
         /// <summary>
         /// Byte used for this instance
         /// </summary>
-        //public byte? Byte
-        //{
-        //    get => (byte?)GetValue(ByteProperty);
-        //    set => SetValue(ByteProperty, value);
-        //}
-
-        //public static readonly DependencyProperty ByteProperty =
-        //    DependencyProperty.Register(nameof(Byte), typeof(byte?), typeof(StringByte),
-        //        new FrameworkPropertyMetadata(null, Byte_PropertyChanged));
-
-        //private static void Byte_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        //{
-        //    if (d is StringByte ctrl)
-        //        if (e.NewValue != null)
-        //        {
-        //            if (e.NewValue != e.OldValue)
-        //            {
-        //                if (ctrl.Action != ByteAction.Nothing && ctrl.InternalChange == false)
-        //                    ctrl.ByteModified?.Invoke(ctrl, new EventArgs());
-
-        //                ctrl.UpdateLabelFromByte();
-        //            }
-        //        }
-        //        else
-        //            ctrl.UpdateLabelFromByte();
-        //}
-
-        private byte? _byte;
         public byte? Byte
         {
             get => _byte;
@@ -183,35 +157,29 @@ namespace WpfHexaEditor
         }
 
         /// <summary>
+        /// Get or set if control as in read only mode
+        /// </summary>
+        public bool ReadOnlyMode { get; set; }
+
+        /// <summary>
         /// Used to prevent StringByte event occurc when we dont want!
         /// </summary>
-        public bool InternalChange { get; set; } = false;
+        public bool InternalChange { get; set; }
 
         /// <summary>
         /// Action with this byte
         /// </summary>
         public ByteAction Action
         {
-            get => (ByteAction)GetValue(ActionProperty);
-            set => SetValue(ActionProperty, value);
+            get => _action;
+            set
+            {
+                _action = value != ByteAction.All ? value : ByteAction.Nothing;
+
+                UpdateVisual();
+            }
         }
-
-        public static readonly DependencyProperty ActionProperty =
-            DependencyProperty.Register(nameof(Action), typeof(ByteAction), typeof(StringByte),
-                new FrameworkPropertyMetadata(ByteAction.Nothing,
-                    Action_ValueChanged,
-                    Action_CoerceValue));
-
-        private static object Action_CoerceValue(DependencyObject d, object baseValue) => (ByteAction)baseValue != ByteAction.All ? baseValue : ByteAction.Nothing;
-        
-        private static void Action_ValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is StringByte ctrl)
-                if (e.NewValue != e.OldValue)
-                    ctrl.UpdateVisual();
-        }
-
-        #endregion DependencyProperty
+        #endregion Properties
 
         #region Characters tables
 
@@ -220,20 +188,12 @@ namespace WpfHexaEditor
         /// </summary>
         public bool TblShowMte
         {
-            get => (bool)GetValue(TblShowMteProperty);
-            set => SetValue(TblShowMteProperty, value);
-        }
-
-        // Using a DependencyProperty as the backing store for TBLShowMTE.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty TblShowMteProperty =
-            DependencyProperty.Register(nameof(TblShowMte), typeof(bool), typeof(StringByte), 
-                new FrameworkPropertyMetadata(true, 
-                    TBLShowMTE_PropetyChanged));
-
-        private static void TBLShowMTE_PropetyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is StringByte ctrl)
-                ctrl.UpdateLabelFromByte();
+            get => _tblShowMte;
+            set
+            {
+                _tblShowMte = value;
+                UpdateLabelFromByte();
+            }
         }
 
         /// <summary>
@@ -242,30 +202,19 @@ namespace WpfHexaEditor
         /// </summary>
         public CharacterTableType TypeOfCharacterTable
         {
-            get => (CharacterTableType)GetValue(TypeOfCharacterTableProperty);
-            set => SetValue(TypeOfCharacterTableProperty, value);
+            get => _typeOfCharacterTable;
+            set
+            {
+                _typeOfCharacterTable = value;
+                UpdateLabelFromByte();
+            }
         }
 
-        // Using a DependencyProperty as the backing store for TypeOfCharacterTable.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty TypeOfCharacterTableProperty =
-            DependencyProperty.Register(nameof(TypeOfCharacterTable), typeof(CharacterTableType), typeof(StringByte),
-                new FrameworkPropertyMetadata(CharacterTableType.Ascii,
-                    TypeOfCharacterTable_PropertyChanged));
-
-        private static void TypeOfCharacterTable_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is StringByte ctrl)
-                ctrl.UpdateLabelFromByte();
-        }
-
-        public TblStream TblCharacterTable
-        {
-            get => _tblCharacterTable;
-            set => _tblCharacterTable = value;
-        }
+        public TblStream TblCharacterTable { get; set; }
 
         #endregion Characters tables
 
+        #region Methods
         /// <summary>
         /// Update control label from byte property
         /// </summary>
@@ -279,34 +228,29 @@ namespace WpfHexaEditor
                         Text = ByteConverters.ByteToChar(Byte.Value).ToString();
                         Width = 12;
                         break;
-
                     case CharacterTableType.TblFile:
-                        ReadOnlyMode = !_tblCharacterTable.AllowEdit;
+                        ReadOnlyMode = !TblCharacterTable.AllowEdit;
 
-                        if (_tblCharacterTable != null)
+                        if (TblCharacterTable != null)
                         {
                             var content = "#";
 
                             if (TblShowMte && ByteNext.HasValue)
                             {
-                                var mte = ByteConverters.ByteToHex(Byte.Value) +
-                                          ByteConverters.ByteToHex(ByteNext.Value);
-                                content = _tblCharacterTable.FindMatch(mte, true);
+                                var mte = ByteConverters.ByteToHex(Byte.Value) + ByteConverters.ByteToHex(ByteNext.Value);
+                                content = TblCharacterTable.FindMatch(mte, true);
                             }
 
                             if (content == "#")
-                                content = _tblCharacterTable.FindMatch(ByteConverters.ByteToHex(Byte.Value), true);
+                                content = TblCharacterTable.FindMatch(ByteConverters.ByteToHex(Byte.Value), true);
 
                             Text = content;
 
-                            //TODO: CHECK FOR AUTO ADAPT TO CONTENT AND FONTSIZE
                             switch (Dte.TypeDte(content))
                             {
                                 case DteType.DualTitleEncoding:
-                                    Width = 10 + content.Length * 2.2D;
-                                    break;
                                 case DteType.MultipleTitleEncoding:
-                                    Width = 10 + content.Length * 4.2D + FontSize / 2;
+                                    Width = double.NaN;
                                     break;
                                 case DteType.EndLine:
                                     Width = 24;
@@ -365,8 +309,9 @@ namespace WpfHexaEditor
                         break;
                 }
             }
-            else //TBL COLORING
+            else
             {
+                #region TBL COLORING
                 FontWeight = _parent.FontWeight;
                 Background = Brushes.Transparent;
                 Foreground = _parent.Foreground;
@@ -390,8 +335,9 @@ namespace WpfHexaEditor
                             Foreground = _parent.TblDefaultColor;
                             break;
                     }
+                #endregion
             }
-
+            
             UpdateAutoHighLiteSelectionByteVisual();
         }
 
@@ -403,10 +349,22 @@ namespace WpfHexaEditor
         }
 
         /// <summary>
-        /// Get or set if control as in read only mode
+        /// Clear control
         /// </summary>
-        public bool ReadOnlyMode { get; set; }
+        public void Clear()
+        {
+            InternalChange = true;
+            BytePositionInFile = -1;
+            Byte = null;
+            Action = ByteAction.Nothing;
+            IsHighLight = false;
+            IsSelected = false;
+            ByteNext = null;
+            InternalChange = false;
+        }
+        #endregion Methods
 
+        #region Events delegate
         private void UserControl_KeyDown(object sender, KeyEventArgs e)
         {
             #region Key validation and launch event if needed
@@ -592,18 +550,6 @@ namespace WpfHexaEditor
             if (Byte == null)
                 e.Handled = true;
         }
-
-        /// <summary>
-        /// Clear control
-        /// </summary>
-        public void Clear()
-        {
-            BytePositionInFile = -1;
-            Byte = null;
-            Action = ByteAction.Nothing;
-            IsHighLight = false;
-            IsSelected = false;
-            ByteNext = null;
-        }
+        #endregion Events delegate
     }
 }

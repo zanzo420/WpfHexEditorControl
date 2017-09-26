@@ -3,7 +3,7 @@
 // Author : Derek Tremblay (derektremblay666@gmail.com)
 //////////////////////////////////////////////
 
-using System.Windows;
+using System.Runtime.InteropServices;
 using System.Windows.Threading;
 
 namespace WPFHexaEditorExample
@@ -11,13 +11,11 @@ namespace WPFHexaEditorExample
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App
     {
         private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            var comException = e.Exception as System.Runtime.InteropServices.COMException;
-
-            if (comException != null && comException.ErrorCode == -2147221040)
+            if (e.Exception is COMException comException && comException.ErrorCode == -2147221040)
                 e.Handled = true;
         }
     }

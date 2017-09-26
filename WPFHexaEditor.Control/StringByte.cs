@@ -92,26 +92,28 @@ namespace WpfHexaEditor
         /// <summary>
         /// Position in file
         /// </summary>
-        public long BytePositionInFile
-        {
-            get => (long)GetValue(BytePositionInFileProperty);
-            set => SetValue(BytePositionInFileProperty, value);
-        }
+        //public long BytePositionInFile
+        //{
+        //    get => (long)GetValue(BytePositionInFileProperty);
+        //    set => SetValue(BytePositionInFileProperty, value);
+        //}
 
-        public static readonly DependencyProperty BytePositionInFileProperty =
-            DependencyProperty.Register(nameof(BytePositionInFile), typeof(long), typeof(StringByte), new PropertyMetadata(-1L));
+        //public static readonly DependencyProperty BytePositionInFileProperty =
+        //    DependencyProperty.Register(nameof(BytePositionInFile), typeof(long), typeof(StringByte), new PropertyMetadata(-1L));
+        public long BytePositionInFile { get; set; } = -1L;
 
         /// <summary>
         /// Used for selection coloring
         /// </summary>
-        public bool FirstSelected
-        {
-            get => (bool)GetValue(FirstSelectedProperty);
-            set => SetValue(FirstSelectedProperty, value);
-        }
+        //public bool FirstSelected
+        //{
+        //    get => (bool)GetValue(FirstSelectedProperty);
+        //    set => SetValue(FirstSelectedProperty, value);
+        //}
 
-        public static readonly DependencyProperty FirstSelectedProperty =
-            DependencyProperty.Register(nameof(FirstSelected), typeof(bool), typeof(StringByte), new PropertyMetadata(true));
+        //public static readonly DependencyProperty FirstSelectedProperty =
+        public bool FirstSelected { get; set; } = false;
+        //    DependencyProperty.Register(nameof(FirstSelected), typeof(bool), typeof(StringByte), new PropertyMetadata(true));
 
         /// <summary>
         /// Byte used for this instance
@@ -146,25 +148,26 @@ namespace WpfHexaEditor
         /// <summary>
         /// Next Byte of this instance (used for TBL/MTE decoding)
         /// </summary>
-        public byte? ByteNext
-        {
-            get => (byte?)GetValue(ByteNextProperty);
-            set => SetValue(ByteNextProperty, value);
-        }
+        public byte? ByteNext { get; set; } 
+        //public byte? ByteNext
+        //{
+        //    get => (byte?)GetValue(ByteNextProperty);
+        //    set => SetValue(ByteNextProperty, value);
+        //}
 
-        public static readonly DependencyProperty ByteNextProperty =
-            DependencyProperty.Register(nameof(ByteNext), typeof(byte?), typeof(StringByte),
-                new FrameworkPropertyMetadata(null, ByteNext_PropertyChanged));
+        //public static readonly DependencyProperty ByteNextProperty =
+        //    DependencyProperty.Register(nameof(ByteNext), typeof(byte?), typeof(StringByte),
+        //        new FrameworkPropertyMetadata(null, ByteNext_PropertyChanged));
 
-        private static void ByteNext_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            //if (d is StringByte ctrl)
-            //    if (e.NewValue != e.OldValue)
-            //    {
-            //        ctrl.UpdateLabelFromByte();
-            //        //ctrl.UpdateVisual();
-            //    }
-        }
+        //private static void ByteNext_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        //{
+        //    //if (d is StringByte ctrl)
+        //    //    if (e.NewValue != e.OldValue)
+        //    //    {
+        //    //        ctrl.UpdateLabelFromByte();
+        //    //        //ctrl.UpdateVisual();
+        //    //    }
+        //}
 
         /// <summary>
         /// Get or set if control as selected
@@ -210,15 +213,16 @@ namespace WpfHexaEditor
         /// <summary>
         /// Used to prevent StringByteModified event occurc when we dont want!
         /// </summary>
-        public bool InternalChange
-        {
-            get => (bool)GetValue(InternalChangeProperty);
-            set => SetValue(InternalChangeProperty, value);
-        }
+        //public bool InternalChange
+        //{
+        //    get => (bool)GetValue(InternalChangeProperty);
+        //    set => SetValue(InternalChangeProperty, value);
+        //}
 
-        // Using a DependencyProperty as the backing store for InternalChange.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty InternalChangeProperty =
-            DependencyProperty.Register(nameof(InternalChange), typeof(bool), typeof(StringByte), new PropertyMetadata(false));
+        //// Using a DependencyProperty as the backing store for InternalChange.  This enables animation, styling, binding, etc...
+        //public static readonly DependencyProperty InternalChangeProperty =
+        //    DependencyProperty.Register(nameof(InternalChange), typeof(bool), typeof(StringByte), new PropertyMetadata(false));
+        public bool InternalChange { get; set; } = false;
 
         /// <summary>
         /// Action with this byte

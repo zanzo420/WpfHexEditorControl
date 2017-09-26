@@ -238,3 +238,5 @@ _Pvt_Extensions
 /WPFHexaEditor.Control/Properties
 /WPFHexaEditor.Control/Properties/resources1.Designer.cs
 /WPFHexaEditor.Control/Properties/Resources.fr-CA.resx
+/WPFHexaEditorExample/Window1.xaml
+*.cs

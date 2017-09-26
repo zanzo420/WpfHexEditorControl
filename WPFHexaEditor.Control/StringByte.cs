@@ -22,6 +22,8 @@ namespace WpfHexaEditor
         //Global variable
         private readonly HexEditor _parent;
         private TblStream _tblCharacterTable;
+        private bool _isSelected;
+        private bool _isHighLight;
 
         //event
         public event EventHandler Click;
@@ -87,33 +89,17 @@ namespace WpfHexaEditor
         }
 
 
-        #region DependencyProperty
+        #region Properties
 
         /// <summary>
         /// Position in file
         /// </summary>
-        //public long BytePositionInFile
-        //{
-        //    get => (long)GetValue(BytePositionInFileProperty);
-        //    set => SetValue(BytePositionInFileProperty, value);
-        //}
-
-        //public static readonly DependencyProperty BytePositionInFileProperty =
-        //    DependencyProperty.Register(nameof(BytePositionInFile), typeof(long), typeof(StringByte), new PropertyMetadata(-1L));
         public long BytePositionInFile { get; set; } = -1L;
 
         /// <summary>
         /// Used for selection coloring
         /// </summary>
-        //public bool FirstSelected
-        //{
-        //    get => (bool)GetValue(FirstSelectedProperty);
-        //    set => SetValue(FirstSelectedProperty, value);
-        //}
-
-        //public static readonly DependencyProperty FirstSelectedProperty =
         public bool FirstSelected { get; set; } = false;
-        //    DependencyProperty.Register(nameof(FirstSelected), typeof(bool), typeof(StringByte), new PropertyMetadata(true));
 
         /// <summary>
         /// Byte used for this instance
@@ -148,80 +134,42 @@ namespace WpfHexaEditor
         /// <summary>
         /// Next Byte of this instance (used for TBL/MTE decoding)
         /// </summary>
-        public byte? ByteNext { get; set; } 
-        //public byte? ByteNext
-        //{
-        //    get => (byte?)GetValue(ByteNextProperty);
-        //    set => SetValue(ByteNextProperty, value);
-        //}
-
-        //public static readonly DependencyProperty ByteNextProperty =
-        //    DependencyProperty.Register(nameof(ByteNext), typeof(byte?), typeof(StringByte),
-        //        new FrameworkPropertyMetadata(null, ByteNext_PropertyChanged));
-
-        //private static void ByteNext_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        //{
-        //    //if (d is StringByte ctrl)
-        //    //    if (e.NewValue != e.OldValue)
-        //    //    {
-        //    //        ctrl.UpdateLabelFromByte();
-        //    //        //ctrl.UpdateVisual();
-        //    //    }
-        //}
+        public byte? ByteNext { get; set; }
 
         /// <summary>
         /// Get or set if control as selected
-        /// </summary>
-        public bool IsSelected
-        {
-            get => (bool)GetValue(IsSelectedProperty);
-            set => SetValue(IsSelectedProperty, value);
-        }
-
-        public static readonly DependencyProperty IsSelectedProperty =
-            DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(StringByte),
-                new FrameworkPropertyMetadata(false, IsSelected_PropertyChangedCallBack));
-
-        private static void IsSelected_PropertyChangedCallBack(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is StringByte ctrl)
-                if (e.NewValue != e.OldValue)
-                    ctrl.UpdateVisual();
+        /// </summary>        
+        public bool IsSelected {
+            get => _isSelected;
+            set
+            {
+                if (value != _isSelected)
+                {
+                    _isSelected = value;
+                    UpdateVisual();
+                }
+            }
         }
 
         /// <summary>
         /// Get of Set if control as marked as highlighted
-        /// </summary>
+        /// </summary>        
         public bool IsHighLight
         {
-            get => (bool)GetValue(IsHighLightProperty);
-            set => SetValue(IsHighLightProperty, value);
-        }
-
-        public static readonly DependencyProperty IsHighLightProperty =
-            DependencyProperty.Register(nameof(IsHighLight), typeof(bool), typeof(StringByte),
-                new FrameworkPropertyMetadata(false,
-                    IsHighLight_PropertyChanged));
-
-        private static void IsHighLight_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is StringByte ctrl)
-                if (e.NewValue != e.OldValue)
-                    ctrl.UpdateVisual();
+            get => _isHighLight;
+            set
+            {
+                if (value != _isHighLight)
+                {
+                    _isHighLight = value;
+                    UpdateVisual();
+                }
+            }
         }
 
         /// <summary>
-        /// Used to prevent StringByteModified event occurc when we dont want!
+        /// Used to prevent StringByte event occurc when we dont want!
         /// </summary>
-        //public bool InternalChange
-        //{
-        //    get => (bool)GetValue(InternalChangeProperty);
-        //    set => SetValue(InternalChangeProperty, value);
-        //}
-
-        //// Using a DependencyProperty as the backing store for InternalChange.  This enables animation, styling, binding, etc...
-        //public static readonly DependencyProperty InternalChangeProperty =
-        //    DependencyProperty.Register(nameof(InternalChange), typeof(bool), typeof(StringByte), new PropertyMetadata(false));
         public bool InternalChange { get; set; } = false;
 
         /// <summary>
@@ -239,15 +187,8 @@ namespace WpfHexaEditor
                     Action_ValueChanged,
                     Action_CoerceValue));
 
-        private static object Action_CoerceValue(DependencyObject d, object baseValue)
-        {
-            var value = (ByteAction)baseValue;
-
-            if (value != ByteAction.All)
-                return baseValue;
-            return ByteAction.Nothing;
-        }
-
+        private static object Action_CoerceValue(DependencyObject d, object baseValue) => (ByteAction)baseValue != ByteAction.All ? baseValue : ByteAction.Nothing;
+        
         private static void Action_ValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is StringByte ctrl)

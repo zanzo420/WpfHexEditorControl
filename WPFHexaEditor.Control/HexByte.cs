@@ -22,6 +22,8 @@ namespace WpfHexaEditor
         //global class variables
         private KeyDownLabel _keyDownLabel = KeyDownLabel.FirstChar;
         private readonly HexEditor _parent;
+        private bool _isSelected;
+        private bool _isHighLight;
 
         //Events
         public event EventHandler ByteModified;
@@ -86,19 +88,11 @@ namespace WpfHexaEditor
 
 
 
-        #region DependencyProperty
+        #region Properties
 
         /// <summary>
         /// Position in file
         /// </summary>
-        //public long BytePositionInFile
-        //{
-        //    get => (long)GetValue(BytePositionInFileProperty);
-        //    set => SetValue(BytePositionInFileProperty, value);
-        //}
-
-        //public static readonly DependencyProperty BytePositionInFileProperty =
-        //    DependencyProperty.Register(nameof(BytePositionInFile), typeof(long), typeof(HexByte), new PropertyMetadata(-1L));
         public long BytePositionInFile { get; set; } = -1L;
 
         /// <summary>
@@ -116,12 +110,7 @@ namespace WpfHexaEditor
                     Action_ValueChanged,
                     Action_CoerceValue));
 
-        private static object Action_CoerceValue(DependencyObject d, object baseValue)
-        {
-            var value = (ByteAction)baseValue;
-
-            return value != ByteAction.All ? baseValue : ByteAction.Nothing;
-        }
+        private static object Action_CoerceValue(DependencyObject d, object baseValue) => (ByteAction)baseValue != ByteAction.All ? baseValue : ByteAction.Nothing;
 
         private static void Action_ValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -131,14 +120,6 @@ namespace WpfHexaEditor
         /// <summary>
         /// Used for selection coloring
         /// </summary>
-        //public bool FirstSelected
-        //{
-        //    get => (bool)GetValue(FirstSelectedProperty);
-        //    set => SetValue(FirstSelectedProperty, value);
-        //}
-
-        //public static readonly DependencyProperty FirstSelectedProperty =
-        //    DependencyProperty.Register(nameof(FirstSelected), typeof(bool), typeof(HexByte), new PropertyMetadata(true));
         public bool FirstSelected { get; set; } = false;
 
         /// <summary>
@@ -174,18 +155,8 @@ namespace WpfHexaEditor
         /// <summary>
         /// Used to prevent ByteModified event occurc when we dont want! 
         /// </summary>
-        //public bool InternalChange
-        //{
-        //    get => (bool)GetValue(InternalChangeProperty);
-        //    set => SetValue(InternalChangeProperty, value);
-        //}
-
-        //// Using a DependencyProperty as the backing store for InternalChange.  This enables animation, styling, binding, etc...
-        //public static readonly DependencyProperty InternalChangeProperty =
-        //    DependencyProperty.Register(nameof(InternalChange), typeof(bool), typeof(HexByte), new PropertyMetadata(false));
-
         public bool InternalChange { get; set; } = false;
-        #endregion
+
 
         /// <summary>
         /// Get or set if control as in read only mode
@@ -197,47 +168,34 @@ namespace WpfHexaEditor
         /// </summary>
         public bool IsSelected
         {
-            get => (bool)GetValue(IsSelectedProperty);
-            set => SetValue(IsSelectedProperty, value);
-        }
-
-        public static readonly DependencyProperty IsSelectedProperty =
-            DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(HexByte),
-                new FrameworkPropertyMetadata(false,
-                    IsSelected_PropertyChange));
-
-
-        private static void IsSelected_PropertyChange(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is HexByte ctrl && e.NewValue != e.OldValue)
+            get => _isSelected;
+            set
             {
-                ctrl._keyDownLabel = KeyDownLabel.FirstChar;
-                ctrl.UpdateVisual();
+                if (value != _isSelected)
+                {
+                    _isSelected = value;
+                    UpdateVisual();
+                }
             }
         }
-
+                
         /// <summary>
         /// Get of Set if control as marked as highlighted
-        /// </summary>                        
+        /// </summary>   
         public bool IsHighLight
         {
-            get => (bool)GetValue(IsHighLightProperty);
-            set => SetValue(IsHighLightProperty, value);
-        }
-
-        public static readonly DependencyProperty IsHighLightProperty =
-            DependencyProperty.Register(nameof(IsHighLight), typeof(bool), typeof(HexByte),
-                new FrameworkPropertyMetadata(false,
-                    IsHighLight_PropertyChanged));
-
-        private static void IsHighLight_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is HexByte ctrl && e.NewValue != e.OldValue)
+            get => _isHighLight;
+            set
             {
-                ctrl._keyDownLabel = KeyDownLabel.FirstChar;
-                ctrl.UpdateVisual();
+                if (value != _isHighLight)
+                {
+                    _isHighLight = value;
+                    _keyDownLabel = KeyDownLabel.FirstChar;
+                    UpdateVisual();
+                }
             }
         }
+        #endregion
 
         /// <summary>
         /// Update Background,foreground and font property

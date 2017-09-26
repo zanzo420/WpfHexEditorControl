@@ -8,7 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 
-namespace WPFHexaEditor.Core.Bytes
+namespace WpfHexaEditor.Core.Bytes
 {
     /// <summary>
     /// ByteCharConverter for convert data

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WPFHexaEditor.Properties {
+namespace WpfHexaEditor.Properties {
     using System;
     
     

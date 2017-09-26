@@ -3,7 +3,7 @@
       Author : Derek Tremblay (derektremblay666@gmail.com)
  -->
 
-<UserControl x:Class="WPFHexaEditor.HexBox"
+<UserControl x:Class="WpfHexaEditor.HexBox"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 

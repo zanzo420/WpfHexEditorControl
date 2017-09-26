@@ -3,9 +3,9 @@
 // Author : Derek Tremblay (derektremblay666@gmail.com)
 //////////////////////////////////////////////
 
-using WPFHexaEditor.Core.Bytes;
+using WpfHexaEditor.Core.Bytes;
 
-namespace WPFHexaEditor.Core
+namespace WpfHexaEditor.Core
 {
     /// <summary>
     /// BookMark class

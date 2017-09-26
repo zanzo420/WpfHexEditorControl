@@ -3,7 +3,7 @@
 // Author : Derek Tremblay (derektremblay666@gmail.com)
 //////////////////////////////////////////////
 
-namespace WPFHexaEditor.Core.CharacterTable
+namespace WpfHexaEditor.Core.CharacterTable
 {
     /// <summary>
     /// Type de DTE qui sera utilisé dans les classe de DTE

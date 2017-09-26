@@ -6,7 +6,7 @@
 using System.Windows;
 using System.Windows.Threading;
 
-namespace WPFHexaEditor.Core.MethodExtention
+namespace WpfHexaEditor.Core.MethodExtention
 {
     /// <summary>
     /// DoEvents when control is in long task. Control do not freeze the dispatcher.

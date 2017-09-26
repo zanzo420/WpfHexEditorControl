@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace WPFHexaEditor.Dialog
+namespace WpfHexaEditor.Dialog
 {
     /// <summary>
     /// This Window is used to give a hex value for fill the selection with.

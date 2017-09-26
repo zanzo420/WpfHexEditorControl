@@ -6,7 +6,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace WPFHexaEditor.Core.CharacterTable
+namespace WpfHexaEditor.Core.CharacterTable
 {
     /// <summary>
     /// Objet représentant un DTE.

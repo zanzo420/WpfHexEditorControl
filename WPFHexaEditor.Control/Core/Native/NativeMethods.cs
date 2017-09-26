@@ -1,7 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using System.Text;
 
-namespace WPFHexaEditor.Core.Native
+namespace WpfHexaEditor.Core.Native
 {
     internal class NativeMethods
     {

@@ -7,7 +7,7 @@ using System;
 using System.Globalization;
 using System.Windows.Data;
 
-namespace WPFHexaEditor.Core.Converters
+namespace WpfHexaEditor.Core.Converters
 {
     /// <summary>
     /// Used to convert long value to hexadecimal string like this 0xFFFFFFFF.

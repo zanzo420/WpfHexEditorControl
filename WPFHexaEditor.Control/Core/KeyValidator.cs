@@ -5,9 +5,9 @@
 using System;
 using System.Text;
 using System.Windows.Input;
-using WPFHexaEditor.Core.Native;
+using WpfHexaEditor.Core.Native;
 
-namespace WPFHexaEditor.Core
+namespace WpfHexaEditor.Core
 {
     /// <summary>
     /// Static class for valid keyboard key.

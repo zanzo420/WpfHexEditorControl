@@ -7,7 +7,7 @@ using System;
 using System.Globalization;
 using System.Windows.Data;
 
-namespace WPFHexaEditor.Core.Converters
+namespace WpfHexaEditor.Core.Converters
 {
     /// <summary>
     /// Permet d'inverser des bool

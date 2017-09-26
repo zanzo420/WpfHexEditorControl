@@ -6,9 +6,9 @@
 using System;
 using System.Globalization;
 using System.Windows.Data;
-using WPFHexaEditor.Core.Bytes;
+using WpfHexaEditor.Core.Bytes;
 
-namespace WPFHexaEditor.Core.Converters
+namespace WpfHexaEditor.Core.Converters
 {
     /// <summary>
     /// Used to convert hexadecimal to Long value.

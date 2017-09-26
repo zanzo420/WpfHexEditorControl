@@ -6,7 +6,7 @@
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
-namespace WPFHexaEditor.Core.MethodExtention
+namespace WpfHexaEditor.Core.MethodExtention
 {
     public static class TrackExtention
     {

@@ -6,9 +6,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using WPFHexaEditor.Core.Bytes;
+using WpfHexaEditor.Core.Bytes;
 
-namespace WPFHexaEditor.Core.Interfaces
+namespace WpfHexaEditor.Core.Interfaces
 {
     public interface IByteProvider
     {

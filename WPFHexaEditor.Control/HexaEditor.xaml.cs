@@ -14,14 +14,14 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using WPFHexaEditor.Dialog;
-using WPFHexaEditor.Core;
-using WPFHexaEditor.Core.Bytes;
-using WPFHexaEditor.Core.CharacterTable;
-using WPFHexaEditor.Core.Interfaces;
-using WPFHexaEditor.Core.MethodExtention;
+using WpfHexaEditor.Core;
+using WpfHexaEditor.Core.Bytes;
+using WpfHexaEditor.Core.CharacterTable;
+using WpfHexaEditor.Core.Interfaces;
+using WpfHexaEditor.Dialog;
+using WpfHexaEditor.Core.MethodExtention;
 
-namespace WPFHexaEditor
+namespace WpfHexaEditor
 {
     /// <summary> 
     /// WPF HexEditor control

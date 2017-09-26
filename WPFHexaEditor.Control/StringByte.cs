@@ -10,12 +10,12 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using WPFHexaEditor.Core;
-using WPFHexaEditor.Core.Bytes;
-using WPFHexaEditor.Core.CharacterTable;
-using WPFHexaEditor.Core.Interfaces;
+using WpfHexaEditor.Core;
+using WpfHexaEditor.Core.Bytes;
+using WpfHexaEditor.Core.CharacterTable;
+using WpfHexaEditor.Core.Interfaces;
 
-namespace WPFHexaEditor
+namespace WpfHexaEditor
 {
     internal class StringByte : TextBlock, IByteControl
     {

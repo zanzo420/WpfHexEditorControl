@@ -5,9 +5,9 @@
 
 using System;
 using System.Collections.Generic;
-using WPFHexaEditor.Core.Interfaces;
+using WpfHexaEditor.Core.Interfaces;
 
-namespace WPFHexaEditor.Core.Bytes
+namespace WpfHexaEditor.Core.Bytes
 {
     public class ByteModified : IByteModified, IEquatable<ByteModified>
     {

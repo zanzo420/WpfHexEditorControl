@@ -10,11 +10,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
-using WPFHexaEditor.Core.MethodExtention;
-using WPFHexaEditor.Core.Interfaces;
-using WPFHexaEditor.Core.CharacterTable;
+using WpfHexaEditor.Core.CharacterTable;
+using WpfHexaEditor.Core.Interfaces;
+using WpfHexaEditor.Core.MethodExtention;
 
-namespace WPFHexaEditor.Core.Bytes
+namespace WpfHexaEditor.Core.Bytes
 {
     /// <summary>
     /// Used for interaction with file or stream

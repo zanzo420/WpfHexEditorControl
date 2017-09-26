@@ -6,7 +6,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace WPFHexaEditor.Core.MethodExtention
+namespace WpfHexaEditor.Core.MethodExtention
 {
     /// <summary>
     /// Extention methodes for find match in byte[]

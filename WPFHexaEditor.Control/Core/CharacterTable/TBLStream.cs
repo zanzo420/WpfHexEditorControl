@@ -9,9 +9,9 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
-using WPFHexaEditor.Core.Bytes;
+using WpfHexaEditor.Core.Bytes;
 
-namespace WPFHexaEditor.Core.CharacterTable
+namespace WpfHexaEditor.Core.CharacterTable
 {
     /// <summary>
     /// Cet objet représente un fichier Thingy TBL (entrée + valeur)

@@ -5,7 +5,7 @@
 
 using System;
 
-namespace WPFHexaEditor.Core.MethodExtention
+namespace WpfHexaEditor.Core.MethodExtention
 {
     public static class DoubleExtension
     {

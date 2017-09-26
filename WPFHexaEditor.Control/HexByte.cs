@@ -125,32 +125,47 @@ namespace WpfHexaEditor
         /// <summary>
         /// Byte used for this instance
         /// </summary>
+        //public byte? Byte
+        //{
+        //    get => (byte?)GetValue(ByteProperty);
+        //    set => SetValue(ByteProperty, value);
+        //}
+
+        //public static readonly DependencyProperty ByteProperty =
+        //    DependencyProperty.Register(nameof(Byte), typeof(byte?), typeof(HexByte),
+        //        new FrameworkPropertyMetadata(null, Byte_PropertyChanged));
+
+        //private static void Byte_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        //{
+        //    if (d is HexByte ctrl)
+        //        if (e.NewValue != null)
+        //        {
+        //            if (e.NewValue != e.OldValue)
+        //            {
+        //                if (ctrl.Action != ByteAction.Nothing && ctrl.InternalChange == false)
+        //                    ctrl.ByteModified?.Invoke(ctrl, new EventArgs());
+
+        //                ctrl.UpdateLabelFromByte();
+        //            }
+        //        }
+        //        else
+        //            ctrl.UpdateLabelFromByte();
+        //}
+        private byte? _byte;
         public byte? Byte
         {
-            get => (byte?)GetValue(ByteProperty);
-            set => SetValue(ByteProperty, value);
+            get => _byte;
+            set
+            {
+                _byte = value;
+                
+                if (Action != ByteAction.Nothing && InternalChange == false)
+                    ByteModified?.Invoke(this, new EventArgs());
+
+                UpdateLabelFromByte();
+            }
         }
 
-        public static readonly DependencyProperty ByteProperty =
-            DependencyProperty.Register(nameof(Byte), typeof(byte?), typeof(HexByte),
-                new FrameworkPropertyMetadata(null, Byte_PropertyChanged));
-
-        private static void Byte_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is HexByte ctrl)
-                if (e.NewValue != null)
-                {
-                    if (e.NewValue != e.OldValue)
-                    {
-                        if (ctrl.Action != ByteAction.Nothing && ctrl.InternalChange == false)
-                            ctrl.ByteModified?.Invoke(ctrl, new EventArgs());
-
-                        ctrl.UpdateLabelFromByte();
-                    }
-                }
-                else
-                    ctrl.UpdateLabelFromByte();
-        }
 
         /// <summary>
         /// Used to prevent ByteModified event occurc when we dont want! 

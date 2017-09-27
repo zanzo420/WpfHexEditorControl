@@ -35,8 +35,8 @@ namespace WpfHexaEditor
         //The large change of scroll when clicked on bar
         private double _scrollLargeChange = 100;
 
-        //List of byte are high light  (TODO: remplace by dictonnary)
-        private List<long> _markedPositionList = new List<long>();
+        //List of byte are high light
+        private Dictionary<long, long> _markedPositionList = new Dictionary<long, long>();
 
         //Byte position in file when mouse right click occurs;
         private long _rightClickBytePosition = -1;
@@ -2513,7 +2513,7 @@ namespace WpfHexaEditor
             {
                 TraverseHexAndStringBytes(ctrl =>
                 {
-                    ctrl.IsHighLight = _markedPositionList.FindIndex(c => c == ctrl.BytePositionInFile) != -1;
+                    ctrl.IsHighLight =  _markedPositionList.ContainsKey(ctrl.BytePositionInFile); //_markedPositionList.FindIndex(c => c == ctrl.BytePositionInFile) != -1;
                 });
             }
             else //Un highlight all            
@@ -2882,16 +2882,13 @@ namespace WpfHexaEditor
                 foreach (var position in findAll)
                 {
                     for (var i = position; i < position + data.Length; i++)
-                        _markedPositionList.Add(i);
+                        _markedPositionList.Add(i, i);
 
                     SetScrollMarker(position, ScrollMarker.SearchHighLight);
                 }
 
                 UnSelectAll();
                 UpdateHighLight();
-
-                //Sort list
-                _markedPositionList.Sort();
 
                 return findAll;
             }

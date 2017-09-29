@@ -1,5 +1,5 @@
 //////////////////////////////////////////////
-// Apache 2.0  - 2013-2017
+// Apache 2.0  - 2003-2017
 // Author : Derek Tremblay (derektremblay666@gmail.com)
 //////////////////////////////////////////////
 
@@ -23,8 +23,7 @@ namespace WpfHexaEditor.Core.CharacterTable
 
         /// <summary>Tableau de DTE représentant tous les les entrée du fichier</summary>
         private Dictionary<string, Dte> _dteList = new Dictionary<string, Dte>();
-
-
+        
         #region Constructeurs
 
         /// <summary>
@@ -97,30 +96,27 @@ namespace WpfHexaEditor.Core.CharacterTable
         /// </returns>
         public string ToTblString(byte[] data)
         {
-            if (data != null)
+            if (data == null) return null;
+            
+            var sb = new StringBuilder();
+
+            for (var i = 0; i < data.Length; i++)
             {
-                var sb = new StringBuilder();
-
-                for (var i = 0; i < data.Length; i++)
+                if (i < data.Length - 1)
                 {
-                    if (i < data.Length - 1)
+                    var mte = FindMatch(ByteConverters.ByteToHex(data[i]) + ByteConverters.ByteToHex(data[i + 1]), true);
+
+                    if (mte != "#")
                     {
-                        var mte = FindMatch(ByteConverters.ByteToHex(data[i]) + ByteConverters.ByteToHex(data[i + 1]), true);
-
-                        if (mte != "#")
-                        {
-                            sb.Append(mte);
-                            continue;
-                        }
+                        sb.Append(mte);
+                        continue;
                     }
-
-                    sb.Append(FindMatch(ByteConverters.ByteToHex(data[i]), true));
                 }
 
-                return sb.ToString();
+                sb.Append(FindMatch(ByteConverters.ByteToHex(data[i]), true));
             }
 
-            return null;
+            return sb.ToString();
         }
 
         /// <summary>

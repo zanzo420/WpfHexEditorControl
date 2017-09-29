@@ -229,10 +229,10 @@ namespace WpfHexaEditor
                         Width = 12;
                         break;
                     case CharacterTableType.TblFile:
-                        ReadOnlyMode = !TblCharacterTable.AllowEdit;
-
                         if (TblCharacterTable != null)
                         {
+                            ReadOnlyMode = !TblCharacterTable.AllowEdit;
+
                             var content = "#";
 
                             if (TblShowMte && ByteNext.HasValue)
@@ -250,16 +250,12 @@ namespace WpfHexaEditor
                             {
                                 case DteType.DualTitleEncoding:
                                 case DteType.MultipleTitleEncoding:
+                                case DteType.EndLine:
+                                case DteType.EndBlock:
                                     Width = double.NaN;
                                     break;
-                                case DteType.EndLine:
-                                    Width = 24;
-                                    break;
-                                case DteType.EndBlock:
-                                    Width = 34;
-                                    break;
                                 default:
-                                    Width = 10;
+                                    Width = 12;
                                     break;
                             }
                         }

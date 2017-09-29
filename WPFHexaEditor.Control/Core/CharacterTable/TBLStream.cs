@@ -5,7 +5,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -13,6 +12,7 @@ using WpfHexaEditor.Core.Bytes;
 
 namespace WpfHexaEditor.Core.CharacterTable
 {
+    /// <inheritdoc />
     /// <summary>
     /// Cet objet représente un fichier Thingy TBL (entrée + valeur)
     /// </summary>
@@ -22,10 +22,8 @@ namespace WpfHexaEditor.Core.CharacterTable
         private string _fileName;
 
         /// <summary>Tableau de DTE représentant tous les les entrée du fichier</summary>
-        private List<Dte> _dteList = new List<Dte>();
+        private Dictionary<string, Dte> _dteList = new Dictionary<string, Dte>();
 
-        /// <summary>Commentaire du fichier TBL</summary>
-        //		private string _Commentaire = string.Empty;
 
         #region Constructeurs
 
@@ -63,20 +61,10 @@ namespace WpfHexaEditor.Core.CharacterTable
         /// <summary>
         /// Indexeur permetant de travailler sur les DTE contenue dans TBL a la facons d'un tableau.
         /// </summary>
-        public Dte this[int index]
-        {   // declaration de indexer
-            get
-            {
-                // verifie la limite de l'index
-                if (index < 0 || index > _dteList.Count)
-                    return null;  //throw new IndexOutOfRangeException("Cette item n'existe pas");
-                return _dteList[index];
-            }
-            set
-            {
-                if (!(index < 0 || index >= _dteList.Count))
-                    _dteList[index] = value;
-            }
+        public Dte this[string index]
+        {   
+            get => _dteList[index];
+            set => _dteList[index] = value;
         }
 
         #endregion Indexer
@@ -91,120 +79,18 @@ namespace WpfHexaEditor.Core.CharacterTable
         /// <returns></returns>
         public string FindMatch(string hex, bool showSpecialValue)
         {
-            var rtn = "#";
-            foreach (var dte in _dteList)
+            if (showSpecialValue)
             {
-                if (dte.Entry == hex)
-                {
-                    rtn = dte.Value;
-                    break;
-                }
-
-                if (showSpecialValue)
-                {
-                    if (dte.Entry == "/" + hex)
-                    {
-                        rtn = "<end>";
-                        break;
-                    }
-                    if (dte.Entry == "*" + hex)
-                    {
-                        rtn = "<ln>";
-                        break;
-                    }
-                }
+                if (_dteList.ContainsKey($"/{hex}")) return "<end>";
+                if (_dteList.ContainsKey($"*{hex}")) return "<ln>";
             }
 
-            return rtn;
+            return _dteList.ContainsKey(hex) ? _dteList[hex].Value : "#";
         }
-
-        /// <summary>
-        /// Trouver une entré dans la table de jeu qui corestpond a la valeur hexa
-        /// </summary>
-        /// <param name="hex">Valeur hexa a rechercher dans la TBL</param>
-        /// <returns>Retourne le DTE/MTE trouvé. null si rien trouvé</returns>
-        public Dte GetDte(string hex)
-        {
-            foreach (var dte in _dteList)
-            {
-                if (dte.Entry == hex)
-                    return dte;
-
-                if (dte.Entry == "/" + hex)
-                    return dte;
-
-                if (dte.Entry == "*" + hex)
-                    return dte;
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Trouver une entré dans la table de jeu qui corestpond a la valeur hexa
-        /// </summary>
-        /// <param name="hex">Valeur hexa a rechercher dans la TBL</param>
-        public string FindMatch(string hex)
-        {
-            var rtn = "#";
-            foreach (var dte in _dteList)
-                if (dte.Entry == hex)
-                {
-                    rtn = dte.Value;
-                    break;
-                }
-
-            return rtn;
-        }
-
-        /// <summary>
-        /// Trouver une entré dans la table de jeu qui corestpond a la valeur hexa
-        /// </summary>
-        /// <param name="hex">Valeur hexa a rechercher dans la TBL</param>
-        /// <param name="showSpecialValue">Afficher les valeurs de fin de block et de ligne</param>
-        /// <param name="notShowDte"></param>
-        public string FindMatch(string hex, bool showSpecialValue, bool notShowDte)
-        {
-            var rtn = "#";
-            foreach (var dte in _dteList)
-            {
-                if (dte.Entry == hex)
-                {
-                    if (notShowDte)
-                    {
-                        if (dte.Type == DteType.DualTitleEncoding)
-                            break;
-
-                        rtn = dte.Value;
-                        break;
-                    }
-                    rtn = dte.Value;
-                    break;
-                }
-
-                if (showSpecialValue)
-                {
-                    if (dte.Entry == "/" + hex)
-                    {
-                        rtn = "<end>";
-                        break;
-                    }
-
-                    if (dte.Entry == "*" + hex)
-                    {
-                        rtn = "<ln>";
-                        break;
-                    }
-                }
-            }
-
-            return rtn;
-        }
-
+       
         /// <summary>
         /// Convert data to TBL string. 
         /// </summary>
-        /// <param name="data"></param>
         /// <returns>
         /// Return string converted to TBL string representation.
         /// Return null on error
@@ -313,11 +199,12 @@ namespace WpfHexaEditor.Core.CharacterTable
                         }
                     }
                     catch (ArgumentOutOfRangeException)
-                    { //Du a une entre qui a 2 = de suite... EX:  XX==
+                    { 
+                        //Du a une entre qui a 2 = de suite... EX:  XX==
                         dte = new Dte(info[0], "=", DteType.DualTitleEncoding);
                     }
 
-                    _dteList.Add(dte);
+                    _dteList.Add(dte.Entry, dte);
                 }
 
                 //Load bookmark
@@ -362,10 +249,10 @@ namespace WpfHexaEditor.Core.CharacterTable
             {
                 //Save tbl set
                 foreach (var dte in _dteList)
-                    if (dte.Type != DteType.EndBlock && dte.Type != DteType.EndLine)
-                        tblFile.WriteLine(dte.Entry + "=" + dte.Value);
+                    if (dte.Value.Type != DteType.EndBlock && dte.Value.Type != DteType.EndLine)
+                        tblFile.WriteLine(dte.Value.Entry + "=" + dte.Value);
                     else
-                        tblFile.WriteLine(dte.Entry);
+                        tblFile.WriteLine(dte.Value.Entry);
 
                 //Save bookmark
                 tblFile.WriteLine();
@@ -388,44 +275,14 @@ namespace WpfHexaEditor.Core.CharacterTable
         /// Ajouter un element a la collection
         /// </summary>
         /// <param name="dte">objet DTE a ajouter fans la collection</param>
-        public void Add(Dte dte) => _dteList.Add(dte);
+        public void Add(Dte dte) => _dteList.Add(dte.Entry, dte);
 
         /// <summary>
         /// Effacer un element de la collection a partir d'un objet DTE
         /// </summary>
         /// <param name="dte"></param>
-        public void Remove(Dte dte) => _dteList.Remove(dte);
-
-        /// <summary>
-        /// Effacer un element de la collection avec son index dans la collection
-        /// </summary>
-        /// <param name="index">Index de l'element a effacer</param>
-        public void Remove(int index) => _dteList.RemoveAt(index);
-
-        /// <summary>
-        /// Recherche un élément dans la TBL
-        /// </summary>
-        /// <param name="dte">Objet DTE a rechercher dans la TBL</param>
-        /// <returns>Retourne la position ou ce trouve cette élément dans le tableau</returns>
-        public int Find(Dte dte) => _dteList.BinarySearch(dte);
+        public void Remove(Dte dte) => _dteList.Remove(dte.Entry);
         
-        /// <summary>
-        /// Recherche un élément dans la TBL
-        /// </summary>
-        /// <param name="entry">Entrée sous forme hexadécimal (XX)</param>
-        /// <param name="value">Valeur de l'entré</param>
-        /// <returns>Retourne la position ou ce trouve cette élément dans le tableau</returns>
-        public int Find(string entry, string value) => _dteList.BinarySearch(new Dte(entry, value));
-
-        /// <summary>
-        /// Recherche un élément dans la TBL
-        /// </summary>
-        /// <param name="entry">Entrée sous forme hexadécimal (XX)</param>
-        /// <param name="value">Valeur de l'entré</param>
-        /// <param name="type">Type de DTE</param>
-        /// <returns>Retourne la position ou ce trouve cette élément dans le tableau</returns>
-        public int Find(string entry, string value, DteType type) => _dteList.BinarySearch(new Dte(entry, value, type));
-
         #endregion Méthodes
 
         #region Propriétés
@@ -434,7 +291,6 @@ namespace WpfHexaEditor.Core.CharacterTable
         /// Chemin d'acces au fichier (path)
         /// La fonction load doit etre appeler pour rafraichir la fonction
         /// </summary>
-        [ReadOnly(true)]
         public string FileName
         {
             get => _fileName;
@@ -453,43 +309,42 @@ namespace WpfHexaEditor.Core.CharacterTable
         /// <summary>
         /// Avoir acess au Bookmark
         /// </summary>
-        [Browsable(false)]
         public List<BookMark> BookMarks { get; set; } = new List<BookMark>();
 
         /// <summary>
         /// Obtenir le total d'entré DTE dans la Table
         /// </summary>
-        public int TotalDte => _dteList.Count(l => l.Type == DteType.DualTitleEncoding);
+        public int TotalDte => _dteList.Count(l => l.Value.Type == DteType.DualTitleEncoding);
 
         /// <summary>
         /// Obtenir le total d'entré MTE dans la Table
         /// </summary>
-        public int TotalMte => _dteList.Count(l => l.Type == DteType.MultipleTitleEncoding);
+        public int TotalMte => _dteList.Count(l => l.Value.Type == DteType.MultipleTitleEncoding);
 
         /// <summary>
         /// Obtenir le total d'entré ASCII dans la Table
         /// </summary>
-        public int TotalAscii => _dteList.Count(l => l.Type == DteType.Ascii);
+        public int TotalAscii => _dteList.Count(l => l.Value.Type == DteType.Ascii);
 
         /// <summary>
         /// Obtenir le total d'entré Invalide dans la Table
         /// </summary>
-        public int TotalInvalid => _dteList.Count(l => l.Type == DteType.Invalid);
+        public int TotalInvalid => _dteList.Count(l => l.Value.Type == DteType.Invalid);
 
         /// <summary>
         /// Obtenir le total d'entré Japonais dans la Table
         /// </summary>
-        public int TotalJaponais => _dteList.Count(l => l.Type == DteType.Japonais);
+        public int TotalJaponais => _dteList.Count(l => l.Value.Type == DteType.Japonais);
 
         /// <summary>
         /// Obtenir le total d'entré Fin de ligne dans la Table
         /// </summary>
-        public int TotalEndLine => _dteList.Count(l => l.Type == DteType.EndLine);
+        public int TotalEndLine => _dteList.Count(l => l.Value.Type == DteType.EndLine);
 
         /// <summary>
         /// Obtenir le total d'entré Fin de Block dans la Table
         /// </summary>
-        public int TotalEndBlock => _dteList.Count(l => l.Type == DteType.EndBlock);
+        public int TotalEndBlock => _dteList.Count(l => l.Value.Type == DteType.EndBlock);
 
         /// <summary>
         /// Renvoi le caractere de fin de block
@@ -499,8 +354,8 @@ namespace WpfHexaEditor.Core.CharacterTable
             get
             {
                 foreach (var dte in _dteList)
-                    if (dte.Type == DteType.EndBlock)
-                        return dte.Entry;
+                    if (dte.Value.Type == DteType.EndBlock)
+                        return dte.Value.Entry;
 
                 return string.Empty;
             }
@@ -514,8 +369,8 @@ namespace WpfHexaEditor.Core.CharacterTable
             get
             {
                 foreach (var dte in _dteList)
-                    if (dte.Type == DteType.EndLine)
-                        return dte.Entry;
+                    if (dte.Value.Type == DteType.EndLine)
+                        return dte.Value.Entry;
 
                 return string.Empty;
             }

@@ -14,7 +14,7 @@
         mc:Ignorable="d"
         Closing="Window_Closing"
         Background="WhiteSmoke"
-        Title="WPF HexEditor sample" Height="530" Width="900" Icon="Resources/Icon/Logo-Icon.ico">
+        Title="Wpf HexEditor control sample" Height="530" Width="900" Icon="Resources/Icon/Logo-Icon.ico">
     <Grid>
         <DockPanel>
             <Menu DockPanel.Dock="Top">

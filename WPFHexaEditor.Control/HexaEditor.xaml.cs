@@ -990,7 +990,7 @@ namespace WpfHexaEditor
             if (d is HexEditor ctrl)
                 if (e.NewValue != e.OldValue)
                 {
-                    ctrl.SelectionByte = ByteProvider.CheckIsOpen(ctrl._provider) ? ctrl._provider.GetByte(ctrl.SelectionStart) : null;
+                    ctrl.SelectionByte = ByteProvider.CheckIsOpen(ctrl._provider) ? ctrl._provider.GetByte(ctrl.SelectionStart).singleByte : null;
 
                     ctrl.UpdateSelection();
                     ctrl.UpdateSelectionLine();
@@ -2937,7 +2937,7 @@ namespace WpfHexaEditor
                     {
                         ByteCountPanel.Visibility = Visibility.Visible;
 
-                        var val = _provider.GetByte(SelectionStart).Value;
+                        var val = _provider.GetByte(SelectionStart).singleByte.Value;
                         CountOfByteSumLabel.Content = _bytecount[val];
                         CountOfByteLabel.Content = $"0x{ByteConverters.LongToHex(val)}";
                     }

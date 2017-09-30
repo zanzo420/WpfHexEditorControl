@@ -127,15 +127,11 @@ namespace WpfHexaEditor.Core.CharacterTable
         {
             try
             {
-                switch (dteValue)
-                {
-                    case @"<end>":
-                        return DteType.EndBlock;
+                if (dteValue == Properties.Resources.EndTagString)
+                    return DteType.EndBlock; //<end>
 
-                    case @"<ln>":
-                        return DteType.EndLine;
-                        //case @"\":
-                }
+                if (dteValue == Properties.Resources.LineTagString)
+                    return DteType.EndLine; //<ln>
 
                 if (dteValue.Length == 1)
                     return DteType.Ascii;

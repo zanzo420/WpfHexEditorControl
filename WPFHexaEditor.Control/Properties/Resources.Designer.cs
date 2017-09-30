@@ -70,6 +70,15 @@ namespace WpfHexaEditor.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à &lt;end&gt;.
+        /// </summary>
+        public static string EndTagString {
+            get {
+                return ResourceManager.GetString("EndTagString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Enter hexadecimal value ....
         /// </summary>
         public static string EnterHexValueMsgString {
@@ -88,6 +97,15 @@ namespace WpfHexaEditor.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à &lt;ln&gt;.
+        /// </summary>
+        public static string LineTagString {
+            get {
+                return ResourceManager.GetString("LineTagString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Ok.
         /// </summary>
         public static string OkString {
@@ -102,6 +120,24 @@ namespace WpfHexaEditor.Properties {
         public static string ReplaceByByteString {
             get {
                 return ResourceManager.GetString("ReplaceByByteString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à This string are not hex.
+        /// </summary>
+        public static string ThisStringAreNotHexString {
+            get {
+                return ResourceManager.GetString("ThisStringAreNotHexString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à An error is occurs when writing..
+        /// </summary>
+        public static string WritingErrorExeptionString {
+            get {
+                return ResourceManager.GetString("WritingErrorExeptionString", resourceCulture);
             }
         }
     }

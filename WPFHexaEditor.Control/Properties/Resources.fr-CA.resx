@@ -120,16 +120,28 @@
   <data name="CancelString" xml:space="preserve">
     <value>Annuler</value>
   </data>
+  <data name="EndTagString" xml:space="preserve">
+    <value>&lt;Fin&gt;</value>
+  </data>
   <data name="EnterHexValueMsgString" xml:space="preserve">
     <value>Entrer une valeur hexadecimal ...</value>
   </data>
   <data name="FindByteString" xml:space="preserve">
     <value>Octet à rechercher</value>
   </data>
+  <data name="LineTagString" xml:space="preserve">
+    <value>&lt;ln&gt;</value>
+  </data>
   <data name="OkString" xml:space="preserve">
     <value>Ok</value>
   </data>
   <data name="ReplaceByByteString" xml:space="preserve">
     <value>Remplacer par l'octet</value>
+  </data>
+  <data name="ThisStringAreNotHexString" xml:space="preserve">
+    <value>Cette chaine n'est pas hexadecimal</value>
+  </data>
+  <data name="WritingErrorExeptionString" xml:space="preserve">
+    <value>Une erreur est survenue lors de l'écriture.</value>
   </data>
 </root>

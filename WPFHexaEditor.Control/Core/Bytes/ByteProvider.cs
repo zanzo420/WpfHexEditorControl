@@ -97,7 +97,6 @@ namespace WpfHexaEditor.Core.Bytes
             }
         }
 
-
         /// <summary>
         /// Get or set a MemoryStream for use with byteProvider
         /// </summary>
@@ -316,9 +315,7 @@ namespace WpfHexaEditor.Core.Bytes
                     newStream = File.Open(Path.GetTempFileName(), FileMode.Open, FileAccess.ReadWrite);
 
                 //Fast change only nothing byte deleted or added
-                if (!GetByteModifieds(ByteAction.Deleted).Any() &&
-                    !GetByteModifieds(ByteAction.Added).Any() && 
-                    !File.Exists(_newfilename))
+                if (!GetByteModifieds(ByteAction.Deleted).Any() && !GetByteModifieds(ByteAction.Added).Any() && !File.Exists(_newfilename))
                 {
                     var bytemodifiedList = GetByteModifieds(ByteAction.Modified);
                     double countChange = bytemodifiedList.Count;
@@ -594,7 +591,7 @@ namespace WpfHexaEditor.Core.Bytes
                             break;
 
                         Position = startPosition + i;
-                        if (GetByte(Position) != b)
+                        if (GetByte(Position).singleByte != b)
                             AddByteModified(b, Position - 1);
                     }
                     else
@@ -639,7 +636,7 @@ namespace WpfHexaEditor.Core.Bytes
                             break;
 
                         Position = startPosition + i;
-                        if (GetByte(Position) == original)
+                        if (GetByte(Position).singleByte == original)
                             AddByteModified(replace, Position - 1);
                     }
                     else
@@ -679,22 +676,22 @@ namespace WpfHexaEditor.Core.Bytes
         /// </summary>
         /// <param name="position"></param>
         /// <param name="copyChange">if true take bytemodified in operation</param>
-        public byte? GetByte(long position, bool copyChange = true)
+        public (byte? singleByte, bool succes) GetByte(long position, bool copyChange = true)
         {
-            if (!CanCopy(position, position)) return null;
-
-            byte[] buffer;
+            if (!CanCopy(position, position)) return (null, false);
 
             //Variables
             if (position > -1)
-                buffer = GetCopyData(position, position, copyChange);
+            {
+                var buffer = GetCopyData(position, position, copyChange);
+
+                if (buffer.Any())
+                    return (buffer[0], true);
+            }
             else
-                return null;
+                return (null, false);
 
-            if (buffer.Any())
-                return buffer[0];
-
-            return null;
+            return (null, false);
         }
 
         /// <summary>
@@ -954,7 +951,7 @@ namespace WpfHexaEditor.Core.Bytes
             if (output.CanWrite)
                 output.Write(buffer, (int)output.Length, buffer.Length);
             else
-                throw new Exception("An error is occurs when writing");
+                throw new Exception(Properties.Resources.WritingErrorExeptionString);
 
             DataCopiedToStream?.Invoke(this, new EventArgs());
         }
@@ -975,7 +972,7 @@ namespace WpfHexaEditor.Core.Bytes
                     if (!Eof)
                     {
                         Position = startPosition + i++;
-                        if (GetByte(Position) != ByteConverters.CharToByte(chr))
+                        if (GetByte(Position).singleByte != ByteConverters.CharToByte(chr))
                             AddByteModified(ByteConverters.CharToByte(chr), Position - 1, lenght);
                     }
                     else
@@ -1168,7 +1165,6 @@ namespace WpfHexaEditor.Core.Bytes
             internal set
             {
                 _longProcessProgress = value;
-
                 LongProcessChanged?.Invoke(value, new EventArgs());
             }
         }

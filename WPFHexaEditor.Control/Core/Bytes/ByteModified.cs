@@ -61,7 +61,6 @@ namespace WpfHexaEditor.Core.Bytes
         /// <summary>
         /// String representation of byte
         /// </summary>
-        /// <returns></returns>
         public override string ToString() => $"ByteModified - Action:{Action} Position:{BytePositionInFile} Byte:{Byte}";
         
         /// <summary>

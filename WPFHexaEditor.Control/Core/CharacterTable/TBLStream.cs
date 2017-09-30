@@ -80,8 +80,8 @@ namespace WpfHexaEditor.Core.CharacterTable
         {
             if (showSpecialValue)
             {
-                if (_dteList.ContainsKey($"/{hex}")) return "<end>";
-                if (_dteList.ContainsKey($"*{hex}")) return "<ln>";
+                if (_dteList.ContainsKey($"/{hex}")) return Properties.Resources.EndTagString;  //"<end>";
+                if (_dteList.ContainsKey($"*{hex}")) return Properties.Resources.LineTagString; //"<ln>";
             }
 
             return _dteList.ContainsKey(hex) ? _dteList[hex].Value : "#";
@@ -159,7 +159,7 @@ namespace WpfHexaEditor.Core.CharacterTable
                 //remplir la collection de DTE : this._DTE
                 foreach (var line in lines)
                 {
-                    var info = line.Split('=');
+                    var info = line.Split(sepEqual);
 
                     //ajout a la collection (ne prend pas encore en charge le Japonais)
                     Dte dte;

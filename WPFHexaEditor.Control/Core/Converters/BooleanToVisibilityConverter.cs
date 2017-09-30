@@ -18,8 +18,6 @@ namespace WpfHexaEditor.Core.Converters
     {
         public bool Inverted { get; set; }
 
-        #region IValueConverter Members
-
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var boolValue = (bool) value;
@@ -33,7 +31,5 @@ namespace WpfHexaEditor.Core.Converters
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
-
-        #endregion
     }
 }

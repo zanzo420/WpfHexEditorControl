@@ -61,11 +61,47 @@ namespace WpfHexaEditor.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Byte action.
+        /// </summary>
+        public static string ByteActionString {
+            get {
+                return ResourceManager.GetString("ByteActionString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Byte.
+        /// </summary>
+        public static string ByteString {
+            get {
+                return ResourceManager.GetString("ByteString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Cancel.
         /// </summary>
         public static string CancelString {
             get {
                 return ResourceManager.GetString("CancelString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Click to go to at position..
+        /// </summary>
+        public static string ClickToGoAtPositionString {
+            get {
+                return ResourceManager.GetString("ClickToGoAtPositionString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Description.
+        /// </summary>
+        public static string DescriptionString {
+            get {
+                return ResourceManager.GetString("DescriptionString", resourceCulture);
             }
         }
         
@@ -97,6 +133,15 @@ namespace WpfHexaEditor.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Hex.
+        /// </summary>
+        public static string HexString {
+            get {
+                return ResourceManager.GetString("HexString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à &lt;ln&gt;.
         /// </summary>
         public static string LineTagString {
@@ -106,11 +151,29 @@ namespace WpfHexaEditor.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Long.
+        /// </summary>
+        public static string LongString {
+            get {
+                return ResourceManager.GetString("LongString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Ok.
         /// </summary>
         public static string OkString {
             get {
                 return ResourceManager.GetString("OkString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Position.
+        /// </summary>
+        public static string PositionString {
+            get {
+                return ResourceManager.GetString("PositionString", resourceCulture);
             }
         }
         
@@ -129,6 +192,15 @@ namespace WpfHexaEditor.Properties {
         public static string ThisStringAreNotHexString {
             get {
                 return ResourceManager.GetString("ThisStringAreNotHexString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Value.
+        /// </summary>
+        public static string ValueString {
+            get {
+                return ResourceManager.GetString("ValueString", resourceCulture);
             }
         }
         

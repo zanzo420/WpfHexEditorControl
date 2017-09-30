@@ -117,8 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ByteActionString" xml:space="preserve">
+    <value>Byte action</value>
+  </data>
+  <data name="ByteString" xml:space="preserve">
+    <value>Byte</value>
+  </data>
   <data name="CancelString" xml:space="preserve">
     <value>Cancel</value>
+  </data>
+  <data name="ClickToGoAtPositionString" xml:space="preserve">
+    <value>Click to go to at position.</value>
+  </data>
+  <data name="DescriptionString" xml:space="preserve">
+    <value>Description</value>
   </data>
   <data name="EndTagString" xml:space="preserve">
     <value>&lt;end&gt;</value>
@@ -129,17 +141,29 @@
   <data name="FindByteString" xml:space="preserve">
     <value>Byte to search</value>
   </data>
+  <data name="HexString" xml:space="preserve">
+    <value>Hex</value>
+  </data>
   <data name="LineTagString" xml:space="preserve">
     <value>&lt;ln&gt;</value>
   </data>
+  <data name="LongString" xml:space="preserve">
+    <value>Long</value>
+  </data>
   <data name="OkString" xml:space="preserve">
     <value>Ok</value>
+  </data>
+  <data name="PositionString" xml:space="preserve">
+    <value>Position</value>
   </data>
   <data name="ReplaceByByteString" xml:space="preserve">
     <value>Replace by byte</value>
   </data>
   <data name="ThisStringAreNotHexString" xml:space="preserve">
     <value>This string are not hex</value>
+  </data>
+  <data name="ValueString" xml:space="preserve">
+    <value>Value</value>
   </data>
   <data name="WritingErrorExeptionString" xml:space="preserve">
     <value>An error is occurs when writing.</value>

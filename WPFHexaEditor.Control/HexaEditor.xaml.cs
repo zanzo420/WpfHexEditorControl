@@ -3261,7 +3261,7 @@ namespace WpfHexaEditor
             {
                 Owner = Application.Current.MainWindow
             };
-
+            
             if (window.ShowDialog() == true)
                 if (window.HexTextBox.LongValue <= 255)
                     FillWithByte((byte)window.HexTextBox.LongValue);

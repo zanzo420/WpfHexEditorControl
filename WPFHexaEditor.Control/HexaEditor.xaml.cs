@@ -516,7 +516,7 @@ namespace WpfHexaEditor
             TblShowMte = false;
 
             TblLabel.Visibility = Visibility.Visible;
-            TblLabel.ToolTip = $"Default TBL : {type}";
+            TblLabel.ToolTip = $"{Properties.Resources.DefaultTBLString} : {type}";
 
             RefreshView();
         }
@@ -2619,7 +2619,7 @@ namespace WpfHexaEditor
                         }
                         #endregion
 
-                        lineInfoLabel.ToolTip = $"First byte : {firstLineByte}";
+                        lineInfoLabel.ToolTip = $"{Properties.Resources.FirstByteString} : {firstLineByte}";
                     }
                 }
             }
@@ -2878,8 +2878,10 @@ namespace WpfHexaEditor
                 var findAll = positions as IList<long> ?? positions.ToList();
                 foreach (var position in findAll)
                 {
-                    for (var i = position; i < position + data.Length; i++)
-                        _markedPositionList.Add(i, i);
+                    if (!_markedPositionList.ContainsValue(position))
+                        for (var i = position; i < position + data.Length; i++)
+                            _markedPositionList.Add(i, i);
+
 
                     SetScrollMarker(position, ScrollMarker.SearchHighLight);
                 }
@@ -2928,8 +2930,8 @@ namespace WpfHexaEditor
                         mb = true;
                     }
 
-                    FileLengthKbLabel.Content = Math.Round(lenght, 2) + (mb ? " MB" : " KB");
-                    FileLengthKbLabel.ToolTip = $" {_provider.Length - deletedBytesCount} Bytes";
+                    FileLengthKbLabel.Content = Math.Round(lenght, 2) + (mb ? $" {Properties.Resources.MBTagString}" : $" {Properties.Resources.KBTagString}");
+                    FileLengthKbLabel.ToolTip = $" {_provider.Length - deletedBytesCount} {Properties.Resources.ByteString}";
                     #endregion
 
                     #region Byte count of selectionStart
@@ -3538,5 +3540,11 @@ namespace WpfHexaEditor
         }
 
         #endregion IByteControl grouping
+
+        #region Caret simulation (soon)
+
+        //TODO: Sumulation of caret on focus control
+
+        #endregion
     }
 }

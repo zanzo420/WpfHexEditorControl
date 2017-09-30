@@ -61,6 +61,15 @@ namespace WpfHexaEditor.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Bookmarks.
+        /// </summary>
+        public static string BookmarksString {
+            get {
+                return ResourceManager.GetString("BookmarksString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Byte action.
         /// </summary>
         public static string ByteActionString {
@@ -79,6 +88,24 @@ namespace WpfHexaEditor.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Cancel long process.
+        /// </summary>
+        public static string CancelLongProcessString {
+            get {
+                return ResourceManager.GetString("CancelLongProcessString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Click to cancel long process..
+        /// </summary>
+        public static string CancelLongProcessToolTipString {
+            get {
+                return ResourceManager.GetString("CancelLongProcessToolTipString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Cancel.
         /// </summary>
         public static string CancelString {
@@ -88,11 +115,83 @@ namespace WpfHexaEditor.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Clear bookmark.
+        /// </summary>
+        public static string ClearBookMarkString {
+            get {
+                return ResourceManager.GetString("ClearBookMarkString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Click to go to at position..
         /// </summary>
         public static string ClickToGoAtPositionString {
             get {
                 return ResourceManager.GetString("ClickToGoAtPositionString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Copy as ASCII.
+        /// </summary>
+        public static string CopyAsASCIIString {
+            get {
+                return ResourceManager.GetString("CopyAsASCIIString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Copy as hexadecimal.
+        /// </summary>
+        public static string CopyAsHexadecimalString {
+            get {
+                return ResourceManager.GetString("CopyAsHexadecimalString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à TBL string (character file loaded).
+        /// </summary>
+        public static string CopyAsTBLString {
+            get {
+                return ResourceManager.GetString("CopyAsTBLString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Copy selection as ....
+        /// </summary>
+        public static string CopySelectionAsString {
+            get {
+                return ResourceManager.GetString("CopySelectionAsString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Count of.
+        /// </summary>
+        public static string CountOfString {
+            get {
+                return ResourceManager.GetString("CountOfString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Default TBL.
+        /// </summary>
+        public static string DefaultTBLString {
+            get {
+                return ResourceManager.GetString("DefaultTBLString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Delete.
+        /// </summary>
+        public static string DeleteString {
+            get {
+                return ResourceManager.GetString("DeleteString", resourceCulture);
             }
         }
         
@@ -124,6 +223,15 @@ namespace WpfHexaEditor.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Fill selection with byte....
+        /// </summary>
+        public static string FillSelectionString {
+            get {
+                return ResourceManager.GetString("FillSelectionString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Byte to search.
         /// </summary>
         public static string FindByteString {
@@ -133,11 +241,56 @@ namespace WpfHexaEditor.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Find all occurence of selection.
+        /// </summary>
+        public static string FindSelectionString {
+            get {
+                return ResourceManager.GetString("FindSelectionString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à First byte.
+        /// </summary>
+        public static string FirstByteString {
+            get {
+                return ResourceManager.GetString("FirstByteString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Hex.
         /// </summary>
         public static string HexString {
             get {
                 return ResourceManager.GetString("HexString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Kb.
+        /// </summary>
+        public static string KBTagString {
+            get {
+                return ResourceManager.GetString("KBTagString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Lenght.
+        /// </summary>
+        public static string LenghtString {
+            get {
+                return ResourceManager.GetString("LenghtString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Ln.
+        /// </summary>
+        public static string LineStatusBarTagString {
+            get {
+                return ResourceManager.GetString("LineStatusBarTagString", resourceCulture);
             }
         }
         
@@ -160,11 +313,29 @@ namespace WpfHexaEditor.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Mb.
+        /// </summary>
+        public static string MBTagString {
+            get {
+                return ResourceManager.GetString("MBTagString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Ok.
         /// </summary>
         public static string OkString {
             get {
                 return ResourceManager.GetString("OkString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Paste without inserting.
+        /// </summary>
+        public static string PasteNotInsertString {
+            get {
+                return ResourceManager.GetString("PasteNotInsertString", resourceCulture);
             }
         }
         
@@ -187,11 +358,56 @@ namespace WpfHexaEditor.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Replace byte in selection....
+        /// </summary>
+        public static string ReplaceSelectionString {
+            get {
+                return ResourceManager.GetString("ReplaceSelectionString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Select all.
+        /// </summary>
+        public static string SelectAllString {
+            get {
+                return ResourceManager.GetString("SelectAllString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Set bookmark.
+        /// </summary>
+        public static string SetBookMarkString {
+            get {
+                return ResourceManager.GetString("SetBookMarkString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à TBL.
+        /// </summary>
+        public static string TBLString {
+            get {
+                return ResourceManager.GetString("TBLString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à This string are not hex.
         /// </summary>
         public static string ThisStringAreNotHexString {
             get {
                 return ResourceManager.GetString("ThisStringAreNotHexString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Undo.
+        /// </summary>
+        public static string UndoString {
+            get {
+                return ResourceManager.GetString("UndoString", resourceCulture);
             }
         }
         

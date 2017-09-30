@@ -117,17 +117,50 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="BookmarksString" xml:space="preserve">
+    <value>Bookmarks</value>
+  </data>
   <data name="ByteActionString" xml:space="preserve">
     <value>Byte action</value>
   </data>
   <data name="ByteString" xml:space="preserve">
     <value>Byte</value>
   </data>
+  <data name="CancelLongProcessString" xml:space="preserve">
+    <value>Cancel long process</value>
+  </data>
+  <data name="CancelLongProcessToolTipString" xml:space="preserve">
+    <value>Click to cancel long process.</value>
+  </data>
   <data name="CancelString" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="ClearBookMarkString" xml:space="preserve">
+    <value>Clear bookmark</value>
+  </data>
   <data name="ClickToGoAtPositionString" xml:space="preserve">
     <value>Click to go to at position.</value>
+  </data>
+  <data name="CopyAsASCIIString" xml:space="preserve">
+    <value>Copy as ASCII</value>
+  </data>
+  <data name="CopyAsHexadecimalString" xml:space="preserve">
+    <value>Copy as hexadecimal</value>
+  </data>
+  <data name="CopyAsTBLString" xml:space="preserve">
+    <value>TBL string (character file loaded)</value>
+  </data>
+  <data name="CopySelectionAsString" xml:space="preserve">
+    <value>Copy selection as ...</value>
+  </data>
+  <data name="CountOfString" xml:space="preserve">
+    <value>Count of</value>
+  </data>
+  <data name="DefaultTBLString" xml:space="preserve">
+    <value>Default TBL</value>
+  </data>
+  <data name="DeleteString" xml:space="preserve">
+    <value>Delete</value>
   </data>
   <data name="DescriptionString" xml:space="preserve">
     <value>Description</value>
@@ -138,11 +171,29 @@
   <data name="EnterHexValueMsgString" xml:space="preserve">
     <value>Enter hexadecimal value ...</value>
   </data>
+  <data name="FillSelectionString" xml:space="preserve">
+    <value>Fill selection with byte...</value>
+  </data>
   <data name="FindByteString" xml:space="preserve">
     <value>Byte to search</value>
   </data>
+  <data name="FindSelectionString" xml:space="preserve">
+    <value>Find all occurence of selection</value>
+  </data>
+  <data name="FirstByteString" xml:space="preserve">
+    <value>First byte</value>
+  </data>
   <data name="HexString" xml:space="preserve">
     <value>Hex</value>
+  </data>
+  <data name="KBTagString" xml:space="preserve">
+    <value>Kb</value>
+  </data>
+  <data name="LenghtString" xml:space="preserve">
+    <value>Lenght</value>
+  </data>
+  <data name="LineStatusBarTagString" xml:space="preserve">
+    <value>Ln</value>
   </data>
   <data name="LineTagString" xml:space="preserve">
     <value>&lt;ln&gt;</value>
@@ -150,8 +201,14 @@
   <data name="LongString" xml:space="preserve">
     <value>Long</value>
   </data>
+  <data name="MBTagString" xml:space="preserve">
+    <value>Mb</value>
+  </data>
   <data name="OkString" xml:space="preserve">
     <value>Ok</value>
+  </data>
+  <data name="PasteNotInsertString" xml:space="preserve">
+    <value>Paste without inserting</value>
   </data>
   <data name="PositionString" xml:space="preserve">
     <value>Position</value>
@@ -159,8 +216,23 @@
   <data name="ReplaceByByteString" xml:space="preserve">
     <value>Replace by byte</value>
   </data>
+  <data name="ReplaceSelectionString" xml:space="preserve">
+    <value>Replace byte in selection...</value>
+  </data>
+  <data name="SelectAllString" xml:space="preserve">
+    <value>Select all</value>
+  </data>
+  <data name="SetBookMarkString" xml:space="preserve">
+    <value>Set bookmark</value>
+  </data>
+  <data name="TBLString" xml:space="preserve">
+    <value>TBL</value>
+  </data>
   <data name="ThisStringAreNotHexString" xml:space="preserve">
     <value>This string are not hex</value>
+  </data>
+  <data name="UndoString" xml:space="preserve">
+    <value>Undo</value>
   </data>
   <data name="ValueString" xml:space="preserve">
     <value>Value</value>

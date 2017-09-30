@@ -8,6 +8,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:p="clr-namespace:WpfHexaEditor.Properties"
              xmlns:local="clr-namespace:WpfHexaEditor"             
              MouseWheel="UserControl_MouseWheel" 
              mc:Ignorable="d"
@@ -29,16 +30,16 @@
         <ContextMenu x:Name="CMenu" 
                      Visibility="Collapsed">
             <MenuItem x:Name="UndoCMenu" 
-                      Header="Undo" 
+                      Header="{x:Static p:Resources.UndoString}" 
                       Click="UndoCMenu_Click">
                 <MenuItem.Icon>
                     <Image Source="/WPFHexaEditor;component/Resources/Icon/Undo-Icon.ico"/>
                 </MenuItem.Icon>
             </MenuItem>
             <Separator />
-            <MenuItem Header="Bookmarks">
+            <MenuItem Header="{x:Static p:Resources.BookmarksString}">
                 <MenuItem x:Name="BookMarkCMenu" 
-                          Header="Set bookmark" 
+                          Header="{x:Static p:Resources.SetBookMarkString}" 
                           Click="BookMarkCMenu_Click" 
                           Width="Auto">
                     <MenuItem.Icon>
@@ -47,7 +48,7 @@
                 </MenuItem>
                 <Separator />
                 <MenuItem x:Name="ClearBookMarkCMenu" 
-                          Header="Clear bookmark" 
+                          Header="{x:Static p:Resources.ClearBookMarkString}" 
                           Click="ClearBookMarkCMenu_Click"
                           Width="Auto">
                     <MenuItem.Icon>
@@ -57,21 +58,21 @@
             </MenuItem>
             <Separator />
             <MenuItem x:Name="CopyHexaCMenu"
-                      Header="Copy hexadecimal" 
+                      Header="{x:Static p:Resources.CopyAsHexadecimalString}" 
                       Click="CopyHexaCMenu_Click" >
                 <MenuItem.Icon>
                     <Image Source="/WPFHexaEditor;component/Resources/Icon/Copy-Icon.ico"/>
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem x:Name="CopyAsciicMenu" 
-                      Header="Copy ASCII"
+                      Header="{x:Static p:Resources.CopyAsASCIIString}"
                       Click="CopyASCIICMenu_Click" >
                 <MenuItem.Icon>
                     <Image Source="/WPFHexaEditor;component/Resources/Icon/Copy-Icon.ico"/>
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem x:Name="CopyAsCMenu" 
-                      Header="Copy selection as">
+                      Header="{x:Static p:Resources.CopySelectionAsString}">
                 <MenuItem x:Name="CopyCcMenu" 
                           Header="C" 
                           Click="CopyCCMenu_Click" />
@@ -87,12 +88,12 @@
                           Header="Visual Basic.Net" 
                           Click="CopyVBNetCMenu_Click" />
                 <MenuItem x:Name="CopyTblcMenu" 
-                          Header="TBL string (character file loaded)"
+                          Header="{x:Static p:Resources.CopyAsTBLString}"
                           Click="CopyTBLCMenu_Click"/>
             </MenuItem>
             <Separator/>
             <MenuItem x:Name="PasteMenu"
-                      Header="Paste without inserting" 
+                      Header="{x:Static p:Resources.PasteNotInsertString}" 
                       Click="PasteMenu_Click" >
                 <MenuItem.Icon>
                     <Image Source="/WPFHexaEditor;component/Resources/Icon/Paste-Icon.ico"/>
@@ -100,14 +101,14 @@
             </MenuItem>
             <Separator/>
             <MenuItem x:Name="FillByteCMenu" 
-                      Header="Fill selection with byte..." 
+                      Header="{x:Static p:Resources.FillSelectionString}" 
                       Click="FillByteCMenu_Click">
                 <MenuItem.Icon>
                     <Image Source="/WPFHexaEditor;component/Resources/Icon/0x-Icon.ico"/>
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem x:Name="ReplaceByteCMenu" 
-                      Header="Replace byte in selection..." 
+                      Header="{x:Static p:Resources.ReplaceSelectionString}" 
                       Click="ReplaceByteCMenu_Click">
                 <MenuItem.Icon>
                     <Image Source="/WPFHexaEditor;component/Resources/Icon/0x-Icon.ico"/>
@@ -115,7 +116,7 @@
             </MenuItem>
             <Separator />
             <MenuItem x:Name="DeleteCMenu" 
-                      Header="Delete" 
+                      Header="{x:Static p:Resources.DeleteString}" 
                       Click="DeleteCMenu_Click" >
                 <MenuItem.Icon>
                     <Image Source="/WPFHexaEditor;component/Resources/Icon/Delete-Icon.ico"/>
@@ -123,7 +124,7 @@
             </MenuItem>
             <Separator />
             <MenuItem x:Name="FindAllCMenu" 
-                      Header="Find all occurence of selection" 
+                      Header="{x:Static p:Resources.FindSelectionString}" 
                       Click="FindAllCMenu_Click">
                 <MenuItem.Icon>
                     <Image Source="/WPFHexaEditor;component/Resources/Icon/Find-Icon.ico"/>
@@ -131,7 +132,7 @@
             </MenuItem>
             <Separator />
             <MenuItem x:Name="SelectAllCMenu" 
-                      Header="Select all" 
+                      Header="{x:Static p:Resources.SelectAllString}" 
                       Click="SelectAllCMenu_Click" />
         </ContextMenu>
     </UserControl.ContextMenu>
@@ -198,7 +199,7 @@
             <StatusBar Height="27">
                 <StatusBarItem Width="90" Padding="0">
                     <StackPanel Orientation="Horizontal">
-                        <Label Content="Ln" Padding="5,5,0,5" FontWeight="Bold" />
+                        <Label Content="{x:Static p:Resources.LineStatusBarTagString}" Padding="5,5,0,5" FontWeight="Bold" />
                         <Label Content="{Binding SelectionLine, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource LongHexConverter}}">
                             <Label.ToolTip>
                                 <StackPanel Orientation="Horizontal">
@@ -213,11 +214,11 @@
                 <Separator/>
                 <StatusBarItem Width="125" Padding="0">
                     <StackPanel Orientation="Horizontal">
-                        <Label Content="Position" Padding="5,5,0,5" FontWeight="Bold" />
+                        <Label Content="{x:Static p:Resources.PositionString}" Padding="5,5,0,5" FontWeight="Bold" />
                         <Label Content="{Binding SelectionStart, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource LongHexConverter}}">
                             <Label.ToolTip>
                                 <StackPanel Orientation="Horizontal">
-                                    <Label FontWeight="Bold" Content="Position :"/>
+                                    <Label FontWeight="Bold" Content="{x:Static p:Resources.PositionString}"/>
                                     <Label Content="{Binding SelectionStart, UpdateSourceTrigger=PropertyChanged}"/>
                                     <Label Content="{Binding SelectionStart, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource LongHexConverter}}"/>
                                 </StackPanel>
@@ -228,14 +229,14 @@
                 <Separator/>
                 <StatusBarItem Width="125" Padding="0">
                     <StackPanel Orientation="Horizontal">
-                        <Label Content="Lenght" Padding="5,5,0,5" FontWeight="Bold" />
+                        <Label Content="{x:Static p:Resources.LenghtString}" Padding="5,5,0,5" FontWeight="Bold" />
                         <Label x:Name="FileLengthKbLabel" ContentStringFormat="N0" />
                     </StackPanel>
                 </StatusBarItem>
                 <Separator/>
                 <StatusBarItem Padding="0" x:Name="ByteCountPanel" Visibility="Collapsed">
-                    <StackPanel Orientation="Horizontal">                        
-                        <Label Content="Count of " Padding="5,5,0,5" FontWeight="Bold" />
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="{x:Static p:Resources.CountOfString}" Padding="5,5,0,5" FontWeight="Bold" />
                         <Label x:Name="CountOfByteLabel" ToolTip="Byte at position start"/>
                         <Label Content=":" Padding="0,5"/>
                         <Label x:Name="CountOfByteSumLabel" ToolTip="Count of Byte at position start" ContentStringFormat="N0" />
@@ -286,10 +287,10 @@
                 BorderThickness="2"
                 Height="50">
             <Button 
-                    Content="Cancel long process"
+                    Content="{x:Static p:Resources.CancelLongProcessString}"
                     FontWeight="Bold"
                     BorderThickness="0"
-                    ToolTip="Click to cancel long process."
+                    ToolTip="{x:Static p:Resources.CancelLongProcessToolTipString}"
                     VerticalContentAlignment="Center"                
                     Opacity="0.9"
                     Click="CancelLongProcessButton_Click" />
@@ -313,7 +314,7 @@
                />
 
         <Label x:Name="TblLabel" 
-                       Content="TBL" 
+                       Content="{x:Static p:Resources.TBLString}" 
                        Visibility="Collapsed"
                        Margin="0,1,05,1"
                        HorizontalAlignment="Right" 

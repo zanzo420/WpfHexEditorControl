@@ -2433,10 +2433,7 @@ namespace WpfHexaEditor
                         sbCtrl.Byte = _viewBuffer[index];
                         sbCtrl.BytePositionInFile = startPosition + index;
 
-                        if (index < readSize - 1)
-                            sbCtrl.ByteNext = _viewBuffer[index + 1];
-                        else
-                            sbCtrl.ByteNext = null;
+                        sbCtrl.ByteNext = index < readSize - 1 ? (byte?) _viewBuffer[index + 1] : null;
                     }
                     else
                     {
@@ -3262,7 +3259,6 @@ namespace WpfHexaEditor
         {
             var window = new GiveByteWindow
             {
-                Title = "Enter value for fill selection",
                 Owner = Application.Current.MainWindow
             };
 
@@ -3275,7 +3271,6 @@ namespace WpfHexaEditor
         {
             var window = new ReplaceByteWindow
             {
-                Title = "Enter the byte to replace with another.",
                 Owner = Application.Current.MainWindow
             };
 

@@ -84,14 +84,9 @@ namespace WpfHexaEditor.Core.CharacterTable
         /// Cette fonction permet de retourner le DTE sous forme : [Entry]=[Valeur]
         /// </summary>
         /// <returns>Retourne le DTE sous forme : [Entry]=[Valeur]</returns>
-        public override string ToString()
-        {
-            return Type != DteType.EndBlock &&
-                   Type != DteType.EndLine
-                ? _entry + "=" + Value
-                : _entry;
-        }
-
+        public override string ToString() => Type != DteType.EndBlock && Type != DteType.EndLine
+                                            ? _entry + "=" + Value
+                                            : _entry;
         #endregion Méthodes
 
         #region Methodes Static
@@ -103,11 +98,7 @@ namespace WpfHexaEditor.Core.CharacterTable
                 switch (dteValue._entry.Length)
                 {
                     case 2:
-                        if (dteValue.Value.Length == 2)
-                            return DteType.Ascii;
-                        else
-                            return DteType.DualTitleEncoding;
-
+                        return dteValue.Value.Length == 2 ? DteType.Ascii : DteType.DualTitleEncoding;
                     case 4: // >2
                         return DteType.MultipleTitleEncoding;
                 }

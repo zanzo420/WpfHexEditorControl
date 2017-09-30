@@ -153,14 +153,13 @@ namespace WpfHexaEditor.Core.CharacterTable
 
                 //build strings line
                 var textFromFile = new StringBuilder(tblFile.ReadToEnd());
-                textFromFile.Insert(textFromFile.Length, '\r');
-                textFromFile.Insert(textFromFile.Length, '\n');
+                textFromFile.Insert(textFromFile.Length, new[] {'\r', '\n'});
                 var lines = textFromFile.ToString().Split(sepEndLine);
 
                 //remplir la collection de DTE : this._DTE
                 foreach (var line in lines)
                 {
-                    var info = line.Split(sepEqual);
+                    var info = line.Split('=');
 
                     //ajout a la collection (ne prend pas encore en charge le Japonais)
                     Dte dte;

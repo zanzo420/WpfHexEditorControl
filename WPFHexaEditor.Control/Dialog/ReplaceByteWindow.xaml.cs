@@ -10,19 +10,5 @@ namespace WpfHexaEditor.Dialog
         public ReplaceByteWindow() => InitializeComponent();
 
         private void OKButton_Click(object sender, RoutedEventArgs e) => DialogResult = true;
-
-        /// <summary>
-        /// Title of the window
-        /// </summary>
-        public new string Title
-        {
-            get => base.Title;
-            set => base.Title = value;
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (base.Title == string.Empty) base.Title = "Enter hexadecimal value to replace.";
-        }
     }
 }

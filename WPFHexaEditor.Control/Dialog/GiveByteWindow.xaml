@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:control="clr-namespace:WpfHexaEditor"
+        xmlns:p="clr-namespace:WpfHexaEditor.Properties"
         x:ClassModifier="internal"
         x:Class="WpfHexaEditor.Dialog.GiveByteWindow"
         mc:Ignorable="d"
@@ -11,11 +12,11 @@
         Height="121" Width="359"
         WindowStartupLocation="CenterOwner"
         WindowStyle="SingleBorderWindow" 
-        Loaded="Window_Loaded"
+        Title="{x:Static p:Resources.EnterHexValueMsgString}"
         ResizeMode="NoResize" 
-        ShowInTaskbar="False">
+        ShowInTaskbar="False" Icon="/WPFHexaEditor;component/Resources/Icon/Logo-Icon.ico">
     <Grid>
-        <Button Content="OK"
+        <Button Content="{x:Static p:Resources.OkString}"
                 TabIndex="2" 
                 x:Name="OkButton" 
                 IsDefault="True"
@@ -25,7 +26,7 @@
                 Margin="0,0,92,13" 
                 Click="OKButton_Click"/>
 
-        <Button Content="Cancel"
+        <Button Content="{x:Static p:Resources.CancelString}"
                 TabIndex="3"
                 IsCancel="True"
                 Margin="0,0,12,13" 
@@ -34,7 +35,7 @@
                 HorizontalAlignment="Right"
                 Width="75"/>
 
-        <Label Content="Byte" 
+        <Label Content="{x:Static p:Resources.FindByteString}" 
                HorizontalAlignment="Left"
                Margin="10,18,0,0" 
                VerticalAlignment="Top"/>
@@ -42,7 +43,7 @@
         <control:HexBox
             x:Name="HexTextBox"
             Height="23" 
-            Margin="97,19,50,0" 
+            Margin="121,19,50,0" 
             VerticalAlignment="Top" 
             Width="Auto" MaximumValue="255"/>
     </Grid>

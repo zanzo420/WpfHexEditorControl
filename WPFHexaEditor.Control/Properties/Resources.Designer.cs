@@ -142,6 +142,15 @@ namespace WpfHexaEditor.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Copy as decimal.
+        /// </summary>
+        public static string CopyAsDecimalString {
+            get {
+                return ResourceManager.GetString("CopyAsDecimalString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Copy as hexadecimal.
         /// </summary>
         public static string CopyAsHexadecimalString {

@@ -116,10 +116,7 @@ namespace WpfHexaEditor
         {
             var (success, val) = ByteConverters.HexLiteralToLong(value);
 
-            if (success)
-                LongValue = val;
-            else
-                LongValue = 0;
+            LongValue = success ? val : 0;
         }
         #endregion Methods
 

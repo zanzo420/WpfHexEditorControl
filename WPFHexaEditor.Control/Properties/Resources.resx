@@ -144,6 +144,9 @@
   <data name="CopyAsASCIIString" xml:space="preserve">
     <value>Copy as ASCII</value>
   </data>
+  <data name="CopyAsDecimalString" xml:space="preserve">
+    <value>Copy as decimal</value>
+  </data>
   <data name="CopyAsHexadecimalString" xml:space="preserve">
     <value>Copy as hexadecimal</value>
   </data>

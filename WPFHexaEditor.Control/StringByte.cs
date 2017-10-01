@@ -85,6 +85,8 @@ namespace WpfHexaEditor
             KeyDown += UserControl_KeyDown;
             MouseDown += StringByteLabel_MouseDown;
             ToolTipOpening += UserControl_ToolTipOpening;
+            GotFocus += UserControl_GotFocus;
+            LostFocus += UserControl_LostFocus;
 
             //Parent hexeditor
             _parent = parent;
@@ -547,5 +549,19 @@ namespace WpfHexaEditor
                 e.Handled = true;
         }
         #endregion Events delegate
+
+        #region Caret events
+
+        private void UserControl_LostFocus(object sender, RoutedEventArgs e) => _parent.HideCaret();
+
+        private void UserControl_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (ReadOnlyMode)
+                _parent.HideCaret();
+            else
+                _parent.MoveCaret(TransformToAncestor(_parent).Transform(new Point(0, 0)));
+        }
+
+        #endregion
     }
 }

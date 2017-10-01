@@ -54,6 +54,9 @@ namespace WpfHexaEditor
         //Used with VerticalMoveByTime methods/events to move the scrollbar
         private bool _mouseOnBottom, _mouseOnTop;
         private long _bottomEnterTimes, _topEnterTimes;
+
+        //Caret
+        private readonly Caret _caret = new Caret();
         #endregion Global Class variables
 
         #region Events
@@ -126,6 +129,7 @@ namespace WpfHexaEditor
 
             //Refresh view
             UpdateScrollBar();
+            InitializeCaret();
             RefreshView(true);
 
             DataContext = this;
@@ -195,7 +199,7 @@ namespace WpfHexaEditor
         // Using a DependencyProperty as the backing store for SelectionFirstColor.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty SelectionFirstColorProperty =
             DependencyProperty.Register(nameof(SelectionFirstColor), typeof(Brush), typeof(HexEditor),
-                new FrameworkPropertyMetadata(Brushes.RoyalBlue, Control_ColorPropertyChanged));
+                new FrameworkPropertyMetadata(Brushes.CornflowerBlue, Control_ColorPropertyChanged));
 
         public Brush SelectionSecondColor
         {
@@ -3542,9 +3546,23 @@ namespace WpfHexaEditor
         #endregion IByteControl grouping
 
         #region Caret simulation (soon)
+        
+        private void InitializeCaret()
+        {
+            BaseGrid.Children.Add(_caret);
+            _caret.CaretHeight = FontSize;
+            _caret.Hide();
+        }
 
-        //TODO: Sumulation of caret on focus control
+        internal void MoveCaret(Point point)
+        {
+            _caret.Left = point.X;
+            _caret.Top = point.Y;
+        }
 
+        internal bool IsVisibleCaret => _caret.IsVisibleCaret;
+
+        internal void HideCaret() => _caret.Hide();
         #endregion
     }
 }

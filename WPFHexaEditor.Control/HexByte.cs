@@ -13,6 +13,7 @@ using System.Windows.Media;
 using WpfHexaEditor.Core;
 using WpfHexaEditor.Core.Bytes;
 using WpfHexaEditor.Core.Interfaces;
+using WpfHexaEditor.Core.MethodExtention;
 
 namespace WpfHexaEditor
 {
@@ -86,12 +87,14 @@ namespace WpfHexaEditor
             MouseEnter += UserControl_MouseEnter;
             MouseLeave += UserControl_MouseLeave;
             ToolTipOpening += UserControl_ToolTipOpening;
+            GotFocus += UserControl_GotFocus;
+            LostFocus += UserControl_LostFocus;
             
             //Update width
             UpdateDataVisualWidth();
         }
         #endregion Contructor
-        
+
         #region Properties
         /// <summary>
         /// Position in file
@@ -435,6 +438,8 @@ namespace WpfHexaEditor
 
                         break;
                 }
+
+            UpdateCaret();
         }
 
         private void UserControl_MouseEnter(object sender, MouseEventArgs e)
@@ -462,5 +467,32 @@ namespace WpfHexaEditor
                 e.Handled = true;
         }
         #endregion Events delegate
+
+        #region Caret events/methods
+
+        private void UserControl_LostFocus(object sender, RoutedEventArgs e) => _parent.HideCaret();
+
+        private void UserControl_GotFocus(object sender, RoutedEventArgs e) => UpdateCaret();
+
+        private void UpdateCaret()
+        {
+            if (ReadOnlyMode)
+                _parent.HideCaret();
+            else
+                switch (_keyDownLabel)
+                {
+                    case KeyDownLabel.FirstChar:
+                        _parent.MoveCaret(TransformToAncestor(_parent).Transform(new Point(0, 0)));
+                        break;
+                    case KeyDownLabel.SecondChar:
+                        var width = Text[1].ToString()
+                            .GetScreenSize(FontFamily, FontSize, FontStyle, FontWeight, FontStretch).Width.Round(0);
+                        _parent.MoveCaret(TransformToAncestor(_parent).Transform(new Point(width, 0)));
+                        break;
+                    case KeyDownLabel.NextPosition:
+                        break;
+                }
+        }
+        #endregion
     }
 }

@@ -275,5 +275,10 @@ namespace WPFHexaEditorExample
 
             HexEdit.SetBytePerLineToFit();
         }
+
+        private void TextBlock_GotFocus(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

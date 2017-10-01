@@ -60,6 +60,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Caret.cs" />
     <Compile Include="Core\Interfaces\IByteModified.cs" />
     <Compile Include="Core\Interfaces\IByteProvider.cs" />
     <Compile Include="Core\CharacterTable\DTE.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="Core\Converters\HexToLongStringConverter.cs" />
     <Compile Include="Core\Interfaces\IByteControl.cs" />
     <Compile Include="Core\MethodExtention\DoubleExtension.cs" />
+    <Compile Include="Core\MethodExtention\StringExtension.cs" />
     <Compile Include="Core\Native\NativeMethods.cs" />
     <Compile Include="Dialog\GiveByteWindow.xaml.cs">
       <DependentUpon>GiveByteWindow.xaml</DependentUpon>
@@ -154,6 +156,7 @@
       <LastGenOutput>Resources.fr-CA.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.ru-RU.resx" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

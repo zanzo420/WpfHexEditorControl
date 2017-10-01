@@ -1,5 +1,5 @@
 ﻿//////////////////////////////////////////////
-// Fork : Derek Tremblay (derektremblay666@gmail.com) 
+// Fork 2017 : Derek Tremblay (derektremblay666@gmail.com) 
 // Reference : https://www.codeproject.com/Tips/431000/Caret-for-WPF-User-Controls
 // Reference license : The Code Project Open License (CPOL) 1.02
 //////////////////////////////////////////////
@@ -13,39 +13,38 @@ namespace WpfHexaEditor.Core
 {
     public class Caret : FrameworkElement
     {
-        private Timer timer;
+        #region Global class variables
+
+        private Timer _timer;
         private Point _location;
         private int _blinkPeriod = 500;
         private readonly Pen _pen = new Pen(Brushes.Black, 1);
+        
+        #endregion
 
- 
+        #region Constructor
+
         public Caret()
         {
             _pen.Freeze();
-            CaretHeight = 18;
-            Visible = true;
-            timer = new Timer(BlinkCaret, null, 0, _blinkPeriod);
+            _timer = new Timer(BlinkCaret, null, 0, _blinkPeriod);
+            Hide();
         }
 
-        protected override void OnRender(DrawingContext dc)
-        {
-            if (Visible)
-                dc.DrawLine(_pen, _location, new Point(Left, _location.Y + CaretHeight));
-        }
-
-        public static readonly DependencyProperty VisibleProperty =
-            DependencyProperty.Register("Visible", typeof(bool),
-                typeof(Caret), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.AffectsRender));
+        #endregion
         
-        public bool Visible
+        #region Properties
+        private static readonly DependencyProperty VisibleProperty =
+            DependencyProperty.Register(nameof(Visible), typeof(bool),
+                typeof(Caret), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.AffectsRender));
+
+        private bool Visible
         {
             get => (bool)GetValue(VisibleProperty);
             set => SetValue(VisibleProperty, value);
         }
 
-        private void BlinkCaret(Object state) => Dispatcher.Invoke(delegate { Visible = !Visible; });
-
-        private double CaretHeight { get; }
+        public double CaretHeight { get; set; } = 18;
 
         public double Left
         {
@@ -55,10 +54,8 @@ namespace WpfHexaEditor.Core
                 if (_location.X == value) return;
 
                 _location.X = Math.Floor(value) + .5; //to avoid WPF antialiasing
-                if (Visible)
-                {
-                    Visible = false;
-                }
+                if (Visible) Visible = false;
+                
             }
         }
 
@@ -67,15 +64,30 @@ namespace WpfHexaEditor.Core
             get => _location.Y;
             set
             {
-                if (_location.Y != value)
-                {
-                    _location.Y = Math.Floor(value) + .5; //to avoid WPF antialiasing
-                    if (Visible)
-                    {
-                        Visible = false;
-                    }
-                }
+                if (_location.Y == value) return;
+
+                _location.Y = Math.Floor(value) + .5; //to avoid WPF antialiasing
+                if (Visible) Visible = false;
             }
         }
+        
+        public bool IsVisibleCaret => Left >= CaretHeight && Top > CaretHeight;
+        #endregion
+        
+        #region Methods
+
+        public void Hide() => Top = Left = -1;
+
+        private void BlinkCaret(Object state) => Dispatcher?.Invoke(() =>
+        {
+            Visible = !Visible;
+        });
+
+        protected override void OnRender(DrawingContext dc)
+        {
+            if (Visible)
+                dc.DrawLine(_pen, _location, new Point(Left, _location.Y + CaretHeight));
+        }
+        #endregion
     }
 }

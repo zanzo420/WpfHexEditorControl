@@ -1,59 +1,28 @@
-﻿//////////////////////////////////////////////
-// MIT License  - 2016-2017
-// Author : Derek Tremblay (derektremblay666@gmail.com)
-//////////////////////////////////////////////
+﻿using System.Globalization;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 
-
-using System;
-using System.Text.RegularExpressions;
-
-namespace WPFHexaEditor.Core.MethodExtention
+namespace WpfHexaEditor.Core.MethodExtention
 {
     public static class StringExtension
     {
         /// <summary>
-        /// Indique si l'adresse email est valide
-        /// </summary>        
-        public static bool IsValidEmailAddress(this string s)
-        {
-            Regex regex = new Regex(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
-            return regex.IsMatch(s);
-        }
-
-        /// <summary>
-        /// Retourne le nombre de mot contenue dans la string
-        /// </summary>        
-        public static int WordCount(this String str)
-        {
-            return str.Split(new char[] { ' ', '.', '?' }, StringSplitOptions.RemoveEmptyEntries).Length;
-        }
-
-        /// <summary>
-        /// Retourne True si le chaine est numerique
+        /// The screen size of a string
         /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
-        public static bool IsNumeric(this string s)
+        /// <remarks>
+        /// Code from :
+        /// https://stackoverflow.com/questions/11447019/is-there-any-way-to-find-the-width-of-a-character-in-a-fixed-width-font-given-t
+        /// </remarks>
+        public static Size GetScreenSize(this string text, FontFamily fontFamily, double fontSize, FontStyle fontStyle, FontWeight fontWeight, FontStretch fontStretch)
         {
-            long test = 0;
+            fontFamily = fontFamily ?? new TextBlock().FontFamily;
+            fontSize = fontSize > 0 ? fontSize : new TextBlock().FontSize;
 
-            try
-            {
-                test = Convert.ToInt64(s);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
+            var typeface = new Typeface(fontFamily, fontStyle, fontWeight, fontStretch);
+            var ft = new FormattedText(text ?? string.Empty, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
 
-        /// <summary>
-        /// Retourne seulement un nombre sous forme de string contenue la string
-        /// </summary>        
-        public static string GetNumberInString(this string s)
-        {
-                return Regex.Match(s, @"\d+").Value;
+            return new Size(ft.Width, ft.Height);
         }
     }
 }

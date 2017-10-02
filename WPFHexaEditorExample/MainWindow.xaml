@@ -107,7 +107,6 @@
                                ByteGrouping="EightByte"
                                ByteSpacerWidthTickness="Normal"
                                AllowByteCount="False" 
-                               IsCaretVisible="True"
                                ByteSpacerVisualStyle="Dash"
                                DataStringVisual="Hexadecimal"
                                Width="Auto"

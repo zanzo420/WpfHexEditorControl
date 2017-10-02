@@ -3563,11 +3563,7 @@ namespace WpfHexaEditor
 
         internal void HideCaret() => _caret.Hide();
 
-        public bool IsCaretVisible
-        {
-            get => _caret.IsEnable;
-            set => _caret.IsEnable = value;
-        }
+        public bool IsCaretVisible => _caret.IsVisibleCaret;
 
         #endregion
     }

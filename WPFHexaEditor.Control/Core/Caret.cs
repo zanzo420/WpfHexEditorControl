@@ -18,7 +18,6 @@ namespace WpfHexaEditor.Core
         private Point _location;
         private readonly Pen _pen = new Pen(Brushes.Black, 1);
         private int _blinkPeriod = 500;
-        private bool _isEnable = true;
 
         #endregion
 
@@ -37,17 +36,9 @@ namespace WpfHexaEditor.Core
                 typeof(Caret), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.AffectsRender));
 
         /// <summary>
-        /// Propertie used when caret is blinking
+        /// Get is caret is running
         /// </summary>
-        public bool IsEnable
-        {
-            get => _isEnable;
-            set
-            {
-                _isEnable = value;
-                InitializeTimer();
-            }
-        }
+        public bool IsEnable => _timer != null;
 
         /// <summary>
         /// Propertie used when caret is blinking
@@ -96,7 +87,7 @@ namespace WpfHexaEditor.Core
         /// <summary>
         /// Properties return true if caret is visible
         /// </summary>
-        public bool IsVisibleCaret => Left >= 0 && Top > CaretHeight;
+        public bool IsVisibleCaret => Left >= 0 && Top > 0;
 
         /// <summary>
         /// Blick period in millisecond
@@ -120,7 +111,7 @@ namespace WpfHexaEditor.Core
         public void Hide() => Top = Left = -1;
 
         /// <summary>
-        /// Methode delegate for blink the caret
+        /// Method delegate for blink the caret
         /// </summary>
         private void BlinkCaret(Object state) => Dispatcher?.Invoke(() =>
         {
@@ -130,7 +121,7 @@ namespace WpfHexaEditor.Core
         /// <summary>
         /// Initialise the timer
         /// </summary>
-        private void InitializeTimer() => _timer = IsEnable ? new Timer(BlinkCaret, null, 0, BlinkPeriod) : null;
+        private void InitializeTimer() => _timer = new Timer(BlinkCaret, null, 0, BlinkPeriod);
 
         /// <summary>
         /// Move the caret over the position defined by point parameter
@@ -139,6 +130,20 @@ namespace WpfHexaEditor.Core
         {
             Left = point.X;
             Top = point.Y;
+        }
+
+        /// <summary>
+        /// Start the caret
+        /// </summary>
+        public void Start() => InitializeTimer();
+
+        /// <summary>
+        /// Stop the carret
+        /// </summary>
+        public void Stop()
+        {
+            Hide();
+            _timer = null;
         }
 
         /// <summary>

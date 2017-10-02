@@ -61,7 +61,6 @@ namespace WpfHexaEditor.Core
 
                 _location.X = Math.Floor(value) + .5; //to avoid WPF antialiasing
                 if (Visible) Visible = false;
-                
             }
         }
 
@@ -83,7 +82,7 @@ namespace WpfHexaEditor.Core
         /// <summary>
         /// Properties return true if caret is visible
         /// </summary>
-        public bool IsVisibleCaret => Left >= CaretHeight && Top > CaretHeight;
+        public bool IsVisibleCaret => Left >= 0 && Top > CaretHeight;
 
         /// <summary>
         /// Blick period in millisecond
@@ -117,12 +116,8 @@ namespace WpfHexaEditor.Core
         /// <summary>
         /// Initialise the timer
         /// </summary>
-        private void InitializeTimer()
-        {
-            _timer = new Timer(BlinkCaret, null, 0, BlinkPeriod);
-        }
-
-
+        private void InitializeTimer() => _timer = new Timer(BlinkCaret, null, 0, BlinkPeriod);
+        
         /// <summary>
         /// Move the caret over the position defined by point parameter
         /// </summary>

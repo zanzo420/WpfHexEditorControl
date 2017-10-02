@@ -1926,9 +1926,12 @@ namespace WpfHexaEditor
             foreach (StackPanel hexDataStack in HexDataStackPanel.Children)
             {
                 if (cnt++ == visibleLine) break;
-                foreach (HexByte byteControl in hexDataStack.Children.Cast<object>().Where(ctrl => ctrl.GetType() == typeof(HexByte)))
-                    act(byteControl);
-
+                foreach (var ctrl in hexDataStack.Children) {
+                    if (ctrl is HexByte hexCtrl) {
+                        act(hexCtrl);
+                    }
+                }
+                
                 if (exit) return;
             }
         }
@@ -1954,12 +1957,18 @@ namespace WpfHexaEditor
             foreach (StackPanel stringDataStack in StringDataStackPanel.Children)
             {
                 if (cnt++ == visibleLine) break;
-                foreach (StringByte sbControl in stringDataStack.Children.Cast<object>().Where(ctrl => ctrl.GetType() == typeof(StringByte)))
-                    act(sbControl);
+
+                foreach (var ctrl in stringDataStack.Children) {
+                    if (ctrl is StringByte sbControl) {
+                        act(sbControl);
+                    }
+                }
 
                 if (exit) return;
             }
         }
+
+
 
         /// <summary>
         /// Used to make action on all visible stringbyte
@@ -1978,28 +1987,35 @@ namespace WpfHexaEditor
             var visibleLine = MaxVisibleLine;
             var cnt = 0;
 
-            #region Stringbyte panel
-            foreach (StackPanel stringDataStack in StringDataStackPanel.Children)
-            {
-                if (cnt++ == visibleLine) break;
-                foreach (StringByte sbControl in stringDataStack.Children.Cast<object>().Where(ctrl => ctrl.GetType() == typeof(StringByte)))
-                    act(sbControl);
+            TraverseStringBytes(act);
+            TraverseHexBytes(act);
 
-                if (exit) return;
-            }
-            #endregion
+            //#region Stringbyte panel
+            //foreach (StackPanel stringDataStack in StringDataStackPanel.Children)
+            //{
+            //    if (cnt++ == visibleLine) break;
+            //    foreach (var ctrl in stringDataStack.Children) {
+            //        if(ctrl is StringByte sbControl) {
+            //            act(sbControl);
+            //        }
+            //    }
+            //    if (exit) return;
+            //}
+            //#endregion
 
-            #region HexByte panel
-            cnt = 0;
-            foreach (StackPanel hexDataStack in HexDataStackPanel.Children)
-            {
-                if (cnt++ == visibleLine) break;
-                foreach (HexByte byteControl in hexDataStack.Children.Cast<object>().Where(ctrl => ctrl.GetType() == typeof(HexByte)))
-                    act(byteControl);
-
-                if (exit) return;
-            }
-            #endregion
+            //#region HexByte panel
+            //cnt = 0;
+            //foreach (StackPanel hexDataStack in HexDataStackPanel.Children)
+            //{
+            //    if (cnt++ == visibleLine) break;
+            //    foreach (var ctrl in hexDataStack.Children) {
+            //        if(ctrl is HexByte hexCtrl) {
+            //            act(hexCtrl);
+            //        }
+            //    }
+            //    if (exit) return;
+            //}
+            //#endregion
         }
 
         /// <summary>
@@ -2020,10 +2036,14 @@ namespace WpfHexaEditor
             var cnt = 0;
 
             //lines infos panel
-            foreach (TextBlock lineInfo in LinesInfoStackPanel.Children.Cast<object>().Where(ctrl => ctrl.GetType() == typeof(TextBlock)))
+            foreach (var ctrl in LinesInfoStackPanel.Children)
             {
                 if (cnt++ == visibleLine) break;
-                act(lineInfo);
+
+                if(ctrl is TextBlock lineInfo) {
+                    act(lineInfo);
+                }
+
             }
         }
 
@@ -2036,10 +2056,12 @@ namespace WpfHexaEditor
             var cnt = 0;
 
             //header panel
-            foreach (TextBlock colomn in HexHeaderStackPanel.Children.Cast<object>().Where(ctrl => ctrl.GetType() == typeof(TextBlock)))
+            foreach (var ctrl in HexHeaderStackPanel.Children)
             {
                 if (cnt++ == visibleLine) break;
-                act(colomn);
+                if(ctrl is TextBlock column) {
+                    act(column);
+                }
             }
         }
 
@@ -2611,6 +2633,7 @@ namespace WpfHexaEditor
                     {
                         #region Set text visual of header
                         var tag = $"0x{ByteConverters.LongToHex(firstLineByte).ToUpper()}";
+
                         lineInfoLabel.Tag = tag;
                         switch (OffSetStringVisual)
                         {

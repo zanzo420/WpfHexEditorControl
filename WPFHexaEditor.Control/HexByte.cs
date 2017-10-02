@@ -299,6 +299,8 @@ namespace WpfHexaEditor
 
         private void UserControl_KeyDown(object sender, KeyEventArgs e)
         {
+            if (Byte == null) return;
+
             #region Key validation and launch event if needed
             if (KeyValidator.IsUpKey(e.Key))
             {
@@ -476,7 +478,7 @@ namespace WpfHexaEditor
 
         private void UpdateCaret()
         {
-            if (ReadOnlyMode)
+            if (ReadOnlyMode || Byte == null)
                 _parent.HideCaret();
             else
                 switch (_keyDownLabel)

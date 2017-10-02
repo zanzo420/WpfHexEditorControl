@@ -365,6 +365,8 @@ namespace WpfHexaEditor
         #region Events delegate
         private void UserControl_KeyDown(object sender, KeyEventArgs e)
         {
+            if (Byte == null) return;
+
             #region Key validation and launch event if needed
             if (KeyValidator.IsIgnoredKey(e.Key))
             {
@@ -556,7 +558,7 @@ namespace WpfHexaEditor
 
         private void UserControl_GotFocus(object sender, RoutedEventArgs e)
         {
-            if (ReadOnlyMode)
+            if (ReadOnlyMode || Byte == null)
                 _parent.HideCaret();
             else
                 _parent.MoveCaret(TransformToAncestor(_parent).Transform(new Point(0, 0)));

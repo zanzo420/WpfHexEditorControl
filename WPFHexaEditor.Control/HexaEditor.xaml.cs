@@ -2094,44 +2094,6 @@ namespace WpfHexaEditor
         #region BytePerLine property/methods
 
         /// <summary>
-        /// IN DEVELOPMENT (NOT WORKING PROPRELY)
-        /// Set the BytePerLine property to fit to control width
-        /// </summary>
-        public void SetBytePerLineToFit()
-        {
-            if (ByteProvider.CheckIsOpen(_provider))
-            {
-                var exit = false;
-                var cnt = 0;
-                double byteWidth = 0;
-
-                TraverseHexBytes(ctrl =>
-                {
-                    if (++cnt == 1)
-                    {
-                        byteWidth = ctrl.ActualWidth;
-                        exit = true;
-                    }
-                }, ref exit);
-
-                exit = false;
-                cnt = 0;
-                TraverseStringBytes(ctrl =>
-                {
-                    if (++cnt == 1)
-                    {
-                        byteWidth += ctrl.ActualWidth;
-                        exit = true;
-                    }
-                }, ref exit);
-
-                byteWidth /= 5;
-
-                BytePerLine = (int) (ActualWidth / byteWidth) - 4;
-            }
-        }
-
-        /// <summary>
         /// Get or set the number of byte are show in control
         /// </summary>
         public int BytePerLine
@@ -2147,13 +2109,7 @@ namespace WpfHexaEditor
 
         private static object BytePerLine_CoerceValue(DependencyObject d, object baseValue)
         {
-            var value = (int) baseValue;
-
-            if (value < 8)
-                return 8;
-            if (value > 32)
-                return 32;
-            return baseValue;
+            return (int)baseValue < 8 ? 8 : ((int)baseValue > 32 ? 32 : baseValue);
         }
 
         private static void BytePerLine_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -2177,8 +2133,7 @@ namespace WpfHexaEditor
             if (e.HeightChanged) RefreshView(true);
         }
 
-        private void VerticalScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) =>
-            RefreshView();
+        private void VerticalScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => RefreshView();
 
         /// <summary>
         /// Update vertical scrollbar with file info

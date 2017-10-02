@@ -18,6 +18,7 @@ namespace WpfHexaEditor.Core
         private Point _location;
         private readonly Pen _pen = new Pen(Brushes.Black, 1);
         private int _blinkPeriod = 500;
+        private bool _isEnable = true;
 
         #endregion
 
@@ -34,6 +35,19 @@ namespace WpfHexaEditor.Core
         private static readonly DependencyProperty VisibleProperty =
             DependencyProperty.Register(nameof(Visible), typeof(bool),
                 typeof(Caret), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.AffectsRender));
+
+        /// <summary>
+        /// Propertie used when caret is blinking
+        /// </summary>
+        public bool IsEnable
+        {
+            get => _isEnable;
+            set
+            {
+                _isEnable = value;
+                InitializeTimer();
+            }
+        }
 
         /// <summary>
         /// Propertie used when caret is blinking
@@ -58,7 +72,7 @@ namespace WpfHexaEditor.Core
             internal set
             {
                 if (_location.X == value) return;
-
+                
                 _location.X = Math.Floor(value) + .5; //to avoid WPF antialiasing
                 if (Visible) Visible = false;
             }
@@ -116,8 +130,8 @@ namespace WpfHexaEditor.Core
         /// <summary>
         /// Initialise the timer
         /// </summary>
-        private void InitializeTimer() => _timer = new Timer(BlinkCaret, null, 0, BlinkPeriod);
-        
+        private void InitializeTimer() => _timer = IsEnable ? new Timer(BlinkCaret, null, 0, BlinkPeriod) : null;
+
         /// <summary>
         /// Move the caret over the position defined by point parameter
         /// </summary>

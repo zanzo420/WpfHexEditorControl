@@ -3545,8 +3545,10 @@ namespace WpfHexaEditor
 
         #endregion IByteControl grouping
 
-        #region Caret simulation (soon)
-        
+        #region Caret support
+        /// <summary>
+        /// Initialize the caret
+        /// </summary>
         private void InitializeCaret()
         {
             BaseGrid.Children.Add(_caret);
@@ -3560,6 +3562,13 @@ namespace WpfHexaEditor
         internal bool IsVisibleCaret => _caret.IsVisibleCaret;
 
         internal void HideCaret() => _caret.Hide();
+
+        public bool IsCaretVisible
+        {
+            get => _caret.IsEnable;
+            set => _caret.IsEnable = value;
+        }
+
         #endregion
     }
 }

@@ -18,7 +18,22 @@ namespace WpfHexaEditor.Core.Bytes
         /// <summary>
         /// Convert long to hex value
         /// </summary>
-        public static string LongToHex(long val) => val.ToString(ConstantReadOnly.HexLineInfoStringFormat, CultureInfo.InvariantCulture);
+        public static string LongToHex(long val, int saveBits = -1) {
+            if(saveBits != -1) {
+                var sb = new StringBuilder();
+                while(val % 16 != 0) {
+                    sb.Append(ByteToHexChar((int) (val % 16)));
+                    val /= 16;
+                }
+                while(sb.Length < saveBits) {
+                    sb.Insert(0, 0);
+                }
+                return sb.ToString();
+            }
+            else {
+                return val.ToString(ConstantReadOnly.HexLineInfoStringFormat, CultureInfo.InvariantCulture);
+            }
+        }
 
         /// <summary>
         /// Convert Byte to Char (can be used as visible text)

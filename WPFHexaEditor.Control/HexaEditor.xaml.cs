@@ -2102,9 +2102,9 @@ namespace WpfHexaEditor
                     }
                 }, ref exit);
 
-                byteWidth /= 2;
+                byteWidth /= 5;
 
-                BytePerLine = (int)((ActualWidth - VerticalScrollBar.ActualWidth - StringDataStackPanel.ActualWidth) / byteWidth);
+                BytePerLine = (int) (ActualWidth / byteWidth) - 4;
             }
         }
 
@@ -2935,7 +2935,7 @@ namespace WpfHexaEditor
                     }
 
                     FileLengthKbLabel.Content = Math.Round(lenght, 2) + (mb ? $" {Properties.Resources.MBTagString}" : $" {Properties.Resources.KBTagString}");
-                    FileLengthKbLabel.ToolTip = $" {_provider.Length - deletedBytesCount} {Properties.Resources.ByteString}";
+                    //FileLengthKbLabel.ToolTip = $" {_provider.Length - deletedBytesCount} {Properties.Resources.ByteString}";
                     #endregion
 
                     #region Byte count of selectionStart
@@ -3551,14 +3551,11 @@ namespace WpfHexaEditor
         {
             BaseGrid.Children.Add(_caret);
             _caret.CaretHeight = FontSize;
+            _caret.BlinkPeriod = 600;
             _caret.Hide();
         }
 
-        internal void MoveCaret(Point point)
-        {
-            _caret.Left = point.X;
-            _caret.Top = point.Y;
-        }
+        internal void MoveCaret(Point point) => _caret.MoveCaret(point);
 
         internal bool IsVisibleCaret => _caret.IsVisibleCaret;
 

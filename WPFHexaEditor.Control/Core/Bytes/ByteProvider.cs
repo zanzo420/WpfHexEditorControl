@@ -307,12 +307,9 @@ namespace WpfHexaEditor.Core.Bytes
                 int i;
 
                 //Create appropriate temp stream for new file.
-                Stream newStream;
-
-                if (Length < ConstantReadOnly.Largefilelength)
-                    newStream = new MemoryStream();
-                else
-                    newStream = File.Open(Path.GetTempFileName(), FileMode.Open, FileAccess.ReadWrite);
+                var newStream = Length < ConstantReadOnly.Largefilelength
+                    ? (Stream) new MemoryStream()
+                    : File.Open(Path.GetTempFileName(), FileMode.Open, FileAccess.ReadWrite);
 
                 //Fast change only nothing byte deleted or added
                 if (!GetByteModifieds(ByteAction.Deleted).Any() && !GetByteModifieds(ByteAction.Added).Any() && !File.Exists(_newfilename))
@@ -557,10 +554,10 @@ namespace WpfHexaEditor.Core.Bytes
         /// Return an IEnumerable ByteModified have action set to Modified
         /// </summary>
         /// <returns></returns>
-        public IDictionary<long, ByteModified> GetByteModifieds(ByteAction action)
-        {
-            return action == ByteAction.All ? _byteModifiedDictionary : _byteModifiedDictionary.Where(b => b.Value.Action == action).ToDictionary(k => k.Key, v => v.Value);
-        }
+        public IDictionary<long, ByteModified> GetByteModifieds(ByteAction action) =>
+            action == ByteAction.All
+                ? _byteModifiedDictionary
+                : _byteModifiedDictionary.Where(b => b.Value.Action == action).ToDictionary(k => k.Key, v => v.Value);
 
         /// <summary>
         /// Fill with byte at position
@@ -1009,14 +1006,12 @@ namespace WpfHexaEditor.Core.Bytes
 
                 if (undoLenght > 1)
                     for (var i = 0; i < undoLenght; i++)
-                    {
                         if (UndoStack.Count > 0)
                         {
                             last = UndoStack.Pop();
                             bytePositionList.Add(last.BytePositionInFile);
                             _byteModifiedDictionary.Remove(last.BytePositionInFile);
                         }
-                    }
 
                 Undone?.Invoke(bytePositionList, new EventArgs());
             }

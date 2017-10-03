@@ -54,7 +54,7 @@ namespace WpfHexaEditor
         public HexByte(HexEditor parent)
         {
             //Parent hexeditor
-            _parent = parent;
+            _parent = parent ?? throw new ArgumentNullException(nameof(parent));
 
             //Default properties
             DataContext = this;
@@ -141,7 +141,7 @@ namespace WpfHexaEditor
         /// <summary>
         /// Used to prevent ByteModified event occurc when we dont want! 
         /// </summary>
-        public bool InternalChange { get; set; } = false;
+        public bool InternalChange { get; set; }
 
 
         /// <summary>

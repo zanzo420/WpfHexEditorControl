@@ -113,6 +113,5 @@
                                Height="Auto" 
                                Margin="2"/>
         </DockPanel>
-        <TextBlock HorizontalAlignment="Left" Height="23" Margin="406,515,0,-39" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="107" GotFocus="TextBlock_GotFocus"/>
     </Grid>
 </Window>

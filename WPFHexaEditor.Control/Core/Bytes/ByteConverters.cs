@@ -18,21 +18,24 @@ namespace WpfHexaEditor.Core.Bytes
         /// <summary>
         /// Convert long to hex value
         /// </summary>
-        public static string LongToHex(long val, int saveBits = -1) {
-            if(saveBits != -1) {
+        public static string LongToHex(long val, int saveBits = -1)
+        {
+            if (saveBits != -1)
+            {
                 var sb = new StringBuilder();
-                while(val % 16 != 0) {
+
+                while (val % 16 != 0)
+                {
                     sb.Append(ByteToHexChar((int) (val % 16)));
                     val /= 16;
                 }
-                while(sb.Length < saveBits) {
+                while (sb.Length < saveBits)
                     sb.Insert(0, 0);
-                }
+
                 return sb.ToString();
             }
-            else {
-                return val.ToString(ConstantReadOnly.HexLineInfoStringFormat, CultureInfo.InvariantCulture);
-            }
+
+            return val.ToString(ConstantReadOnly.HexLineInfoStringFormat, CultureInfo.InvariantCulture);
         }
 
         /// <summary>
@@ -87,9 +90,7 @@ namespace WpfHexaEditor.Core.Bytes
         public static char ByteToHexChar(int val)
         {
             if (val < 10)
-            {
-                return (char)(48 + val);
-            }
+                return (char) (48 + val);
 
             switch (val)
             {
@@ -193,12 +194,10 @@ namespace WpfHexaEditor.Core.Bytes
             return (true, value);
         }
 
-        public static long DecimalLiteralToLong(string hex)
-        {
-            return long.TryParse(hex, out var value)
+        public static long DecimalLiteralToLong(string hex) =>
+            long.TryParse(hex, out var value)
                 ? value
                 : throw new ArgumentException($"{Properties.Resources.ThisStringAreNotHexString} : {nameof(hex)}");
-        }
 
         /// <summary>
         /// Check if is an hexa string

@@ -53,6 +53,9 @@ namespace WpfHexaEditor
         #region Contructor
         public StringByte(HexEditor parent)
         {
+            //Parent hexeditor
+            _parent = parent ?? throw new ArgumentNullException(nameof(parent));
+
             //Default properties
             Width = 10;
             Focusable = true;
@@ -87,9 +90,6 @@ namespace WpfHexaEditor
             ToolTipOpening += UserControl_ToolTipOpening;
             GotFocus += UserControl_GotFocus;
             LostFocus += UserControl_LostFocus;
-
-            //Parent hexeditor
-            _parent = parent;
         }
         #endregion Contructor
         

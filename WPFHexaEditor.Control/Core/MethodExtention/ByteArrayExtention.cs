@@ -19,7 +19,6 @@ namespace WpfHexaEditor.Core.MethodExtention
         public static IEnumerable<long> FindIndexOf(this byte[] self, byte[] candidate)
         {
             if (!IsEmptyLocate(self, candidate))
-            {
                 for (var i = 0; i < self.Length; i++)
                 {
                     if (!IsMatch(self, i, candidate))
@@ -27,28 +26,21 @@ namespace WpfHexaEditor.Core.MethodExtention
 
                     yield return i;
                 }
-            }
         }
 
         /// <summary>
         /// Check if match is finded
         /// </summary>
-        private static bool IsMatch(byte[] array, long position, byte[] candidate)
-        {
-            return candidate.Length <= array.Length - position &&
-                   !candidate.Where((t, i) => array[position + i] != t).Any();
-        }
+        private static bool IsMatch(byte[] array, long position, byte[] candidate) =>
+            candidate.Length <= array.Length - position && !candidate.Where((t, i) => array[position + i] != t).Any();
 
         /// <summary>
         /// Check if can find
         /// </summary>
-        private static bool IsEmptyLocate(byte[] array, byte[] candidate)
-        {
-            return array == null
-                || candidate == null
-                || array.Length == 0
-                || candidate.Length == 0
-                || candidate.Length > array.Length;
-        }
+        private static bool IsEmptyLocate(byte[] array, byte[] candidate) => array == null
+                                                                             || candidate == null
+                                                                             || array.Length == 0
+                                                                             || candidate.Length == 0
+                                                                             || candidate.Length > array.Length;
     }
 }

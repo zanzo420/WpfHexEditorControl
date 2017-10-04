@@ -16,10 +16,10 @@ namespace WpfHexaEditor.Core.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var defaultRtn = "0x00000000";
+            const string defaultRtn = "0x00000000";
 
             return value != null
-                ? (Int64.TryParse(value.ToString(), out var longValue)
+                ? (long.TryParse(value.ToString(), out var longValue)
                     ? (longValue > -1
                         ? "0x" + longValue
                               .ToString(ConstantReadOnly.HexLineInfoStringFormat, CultureInfo.InvariantCulture)

@@ -58,9 +58,11 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WpfCaret, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WpfCaret.1.0.0\lib\net45\WpfCaret.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\Caret.cs" />
     <Compile Include="Core\Interfaces\IByteModified.cs" />
     <Compile Include="Core\Interfaces\IByteProvider.cs" />
     <Compile Include="Core\CharacterTable\DTE.cs" />

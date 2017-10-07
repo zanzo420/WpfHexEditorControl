@@ -21,8 +21,7 @@ namespace WpfHexaEditor.Core.Native
             uint wVirtKey,
             uint wScanCode,
             byte[] lpKeyState,
-            [Out, MarshalAs(UnmanagedType.LPWStr, SizeParamIndex = 4)]
-            StringBuilder pwszBuff,
+            [Out, MarshalAs(UnmanagedType.LPWStr, SizeParamIndex = 4)] StringBuilder pwszBuff,
             int cchBuff,
             uint wFlags);
 

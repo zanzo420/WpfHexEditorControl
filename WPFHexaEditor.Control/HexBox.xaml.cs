@@ -19,6 +19,7 @@ namespace WpfHexaEditor
         public HexBox() => InitializeComponent();
 
         #region Properties
+
         /// <summary>
         /// Get hexadecimal value of LongValue
         /// </summary>
@@ -29,21 +30,21 @@ namespace WpfHexaEditor
         /// </summary>
         public long MaximumValue
         {
-            get => (long)GetValue(MaximumValueProperty);
+            get => (long) GetValue(MaximumValueProperty);
             set => SetValue(MaximumValueProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for MaximumValue.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty MaximumValueProperty =
-            DependencyProperty.Register(nameof(MaximumValue), typeof(long), typeof(HexBox), 
+            DependencyProperty.Register(nameof(MaximumValue), typeof(long), typeof(HexBox),
                 new FrameworkPropertyMetadata(long.MaxValue, MaximumValue_Changed));
 
         private static void MaximumValue_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is HexBox ctrl)
                 if (e.NewValue != e.OldValue)
-                    if (ctrl.LongValue > (long)e.NewValue)
-                        ctrl.UpdateValueFrom((long)e.NewValue);
+                    if (ctrl.LongValue > (long) e.NewValue)
+                        ctrl.UpdateValueFrom((long) e.NewValue);
         }
 
         /// <summary>
@@ -51,22 +52,22 @@ namespace WpfHexaEditor
         /// </summary>
         public long LongValue
         {
-            get => (long)GetValue(LongValueProperty);
+            get => (long) GetValue(LongValueProperty);
             set => SetValue(LongValueProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for LongValue.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty LongValueProperty =
-            DependencyProperty.Register(nameof(LongValue), typeof(long), typeof(HexBox), 
-                new FrameworkPropertyMetadata(0L, 
-                    LongValue_Changed, 
+            DependencyProperty.Register(nameof(LongValue), typeof(long), typeof(HexBox),
+                new FrameworkPropertyMetadata(0L,
+                    LongValue_Changed,
                     LongValue_CoerceValue));
 
         private static object LongValue_CoerceValue(DependencyObject d, object baseValue)
         {
             var ctrl = d as HexBox;
 
-            var newValue = (long)baseValue;
+            var newValue = (long) baseValue;
 
             if (newValue > ctrl.MaximumValue) newValue = ctrl.MaximumValue;
             if (newValue < 0) newValue = 0;
@@ -79,7 +80,7 @@ namespace WpfHexaEditor
             if (d is HexBox ctrl)
                 if (e.NewValue != e.OldValue)
                 {
-                    var val = ByteConverters.LongToHex((long)e.NewValue);
+                    var val = ByteConverters.LongToHex((long) e.NewValue);
                     if (val == "00000000")
                         val = "0";
                     else if (val.Length >= 3) val = val.TrimStart('0');
@@ -89,9 +90,11 @@ namespace WpfHexaEditor
                     ctrl.ToolTip = e.NewValue;
                 }
         }
+
         #endregion Properties       
 
         #region Methods
+
         /// <summary>
         /// Substract one to the LongValue
         /// </summary>
@@ -118,9 +121,11 @@ namespace WpfHexaEditor
 
             LongValue = success ? val : 0;
         }
+
         #endregion Methods
 
         #region Controls events
+
         private void HexTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (KeyValidator.IsHexKey(e.Key) ||
@@ -149,9 +154,12 @@ namespace WpfHexaEditor
 
         private void HexTextBox_TextChanged(object sender, TextChangedEventArgs e) => UpdateValueFrom(HexTextBox.Text);
 
-        private void CopyHexaMenuItem_Click(object sender, RoutedEventArgs e) => Clipboard.SetText($"0x{HexTextBox.Text}");
+        private void CopyHexaMenuItem_Click(object sender, RoutedEventArgs e) =>
+            Clipboard.SetText($"0x{HexTextBox.Text}");
 
-        private void CopyLongMenuItem_Click(object sender, RoutedEventArgs e) => Clipboard.SetText(LongValue.ToString());
+        private void CopyLongMenuItem_Click(object sender, RoutedEventArgs e) =>
+            Clipboard.SetText(LongValue.ToString());
+
         #endregion Controls events
     }
 }

@@ -1999,7 +1999,6 @@ namespace WpfHexaEditor
         }
 
 
-
         /// <summary>
         /// Used to make action on all visible stringbyte
         /// </summary>
@@ -2044,7 +2043,6 @@ namespace WpfHexaEditor
                 {
                     act(lineInfo);
                 }
-
             }
         }
 
@@ -2110,7 +2108,7 @@ namespace WpfHexaEditor
 
         private static object BytePerLine_CoerceValue(DependencyObject d, object baseValue)
         {
-            return (int)baseValue < 8 ? 8 : ((int)baseValue > 32 ? 32 : baseValue);
+            return (int) baseValue < 8 ? 8 : ((int) baseValue > 32 ? 32 : baseValue);
         }
 
         private static void BytePerLine_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -2134,7 +2132,8 @@ namespace WpfHexaEditor
             if (e.HeightChanged) RefreshView(true);
         }
 
-        private void VerticalScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => RefreshView();
+        private void VerticalScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) =>
+            RefreshView();
 
         /// <summary>
         /// Update vertical scrollbar with file info
@@ -2450,7 +2449,6 @@ namespace WpfHexaEditor
                 });
 
                 #endregion
-
             }
             else
             {
@@ -2485,7 +2483,6 @@ namespace WpfHexaEditor
                         ctrl.InternalChange = false;
                     }
                 });
-
             }
         }
 
@@ -2605,7 +2602,6 @@ namespace WpfHexaEditor
 
                     LinesInfoStackPanel.Children.Add(lineInfoLabel);
                 }
-
             }
 
             if (ByteProvider.CheckIsOpen(_provider))
@@ -2678,7 +2674,6 @@ namespace WpfHexaEditor
                 {
                     if (ctrl.BytePositionInFile == SelectionStart)
                         rtn = true;
-
                 }, ref rtn);
 
                 return rtn;
@@ -3597,7 +3592,6 @@ namespace WpfHexaEditor
                 else
                     stack.Children.Add(new TextBlock {Width = (int) ByteSpacerWidthTickness});
             }
-
         }
 
         #endregion IByteControl grouping

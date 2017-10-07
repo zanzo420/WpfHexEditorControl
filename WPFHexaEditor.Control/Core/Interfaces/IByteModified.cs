@@ -11,6 +11,7 @@ namespace WpfHexaEditor.Core.Interfaces
     {
         //Properties
         ByteAction Action { get; set; }
+
         byte? Byte { get; set; }
         long BytePositionInFile { get; set; }
         bool IsValid { get; }
@@ -18,6 +19,7 @@ namespace WpfHexaEditor.Core.Interfaces
 
         //Methods
         void Clear();
+
         ByteModified GetCopy();
         string ToString();
     }

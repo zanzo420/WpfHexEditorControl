@@ -2,6 +2,7 @@
 // Apache 2.0  - 2016-2017
 // Author : Derek Tremblay (derektremblay666@gmail.com)
 //////////////////////////////////////////////
+
 using System;
 using System.Text;
 using System.Windows.Input;
@@ -19,8 +20,11 @@ namespace WpfHexaEditor.Core
         /// </summary>
         public static bool IsNumericKey(Key key)
         {
-            return key == Key.D0 || key == Key.D1 || key == Key.D2 || key == Key.D3 || key == Key.D4 || key == Key.D5 || key == Key.D6 || key == Key.D7 || key == Key.D8 || key == Key.D9 ||
-                key == Key.NumPad0 || key == Key.NumPad1 || key == Key.NumPad2 || key == Key.NumPad3 || key == Key.NumPad4 || key == Key.NumPad5 || key == Key.NumPad6 || key == Key.NumPad7 || key == Key.NumPad8 || key == Key.NumPad9;
+            return key == Key.D0 || key == Key.D1 || key == Key.D2 || key == Key.D3 || key == Key.D4 || key == Key.D5 ||
+                   key == Key.D6 || key == Key.D7 || key == Key.D8 || key == Key.D9 ||
+                   key == Key.NumPad0 || key == Key.NumPad1 || key == Key.NumPad2 || key == Key.NumPad3 ||
+                   key == Key.NumPad4 || key == Key.NumPad5 || key == Key.NumPad6 || key == Key.NumPad7 ||
+                   key == Key.NumPad8 || key == Key.NumPad9;
         }
 
         /// <summary>
@@ -31,7 +35,7 @@ namespace WpfHexaEditor.Core
         public static bool IsHexKey(Key key)
         {
             return key == Key.A || key == Key.B || key == Key.C || key == Key.D || key == Key.E || key == Key.F ||
-                IsNumericKey(key);
+                   IsNumericKey(key);
         }
 
         /// <summary>
@@ -64,7 +68,7 @@ namespace WpfHexaEditor.Core
                 default: throw new ArgumentOutOfRangeException("Invalid key: " + key);
             }
         }
-            
+
         public static bool IsIgnoredKey(Key key)
         {
             //ADD SOMES OTHER KEY FOR VALIDATED IN IBYTECONTROL
@@ -81,13 +85,16 @@ namespace WpfHexaEditor.Core
                    key == Key.RightAlt ||
                    key == Key.System ||
                    key == Key.LeftCtrl ||
-                   key == Key.F1 || key == Key.F2 || key == Key.F3 || key == Key.F4 || key == Key.F5 || key == Key.F6 || key == Key.F7 || key == Key.F8 || key == Key.F9 || key == Key.F10 || key == Key.F11 || key == Key.F12 ||
+                   key == Key.F1 || key == Key.F2 || key == Key.F3 || key == Key.F4 || key == Key.F5 || key == Key.F6 ||
+                   key == Key.F7 || key == Key.F8 || key == Key.F9 || key == Key.F10 || key == Key.F11 ||
+                   key == Key.F12 ||
                    key == Key.Home ||
                    key == Key.Insert ||
                    key == Key.End;
         }
 
-        public static bool IsArrowKey(Key key) => key == Key.Up || key == Key.Down || key == Key.Left || key == Key.Right;
+        public static bool IsArrowKey(Key key) =>
+            key == Key.Up || key == Key.Down || key == Key.Left || key == Key.Right;
 
         public static bool IsBackspaceKey(Key key) => key == Key.Back;
 
@@ -145,10 +152,11 @@ namespace WpfHexaEditor.Core
             var keyboardState = new byte[256];
             NativeMethods.GetKeyboardState(keyboardState);
 
-            var scanCode = NativeMethods.MapVirtualKey((uint)virtualKey, NativeMethods.MapType.MapvkVkToVsc);
+            var scanCode = NativeMethods.MapVirtualKey((uint) virtualKey, NativeMethods.MapType.MapvkVkToVsc);
             var stringBuilder = new StringBuilder(2);
 
-            var result = NativeMethods.ToUnicode((uint)virtualKey, scanCode, keyboardState, stringBuilder, stringBuilder.Capacity, 0);
+            var result = NativeMethods.ToUnicode((uint) virtualKey, scanCode, keyboardState, stringBuilder,
+                stringBuilder.Capacity, 0);
             switch (result)
             {
                 case -1:

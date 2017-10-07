@@ -20,6 +20,7 @@ namespace WpfHexaEditor
     internal class StringByte : TextBlock, IByteControl
     {
         #region Global class variables
+
         private readonly HexEditor _parent;
         private bool _isSelected;
         private bool _isHighLight;
@@ -27,9 +28,11 @@ namespace WpfHexaEditor
         private byte? _byte;
         private CharacterTableType _typeOfCharacterTable;
         private bool _tblShowMte;
+
         #endregion Global variable
 
         #region Events
+
         public event EventHandler Click;
         public event EventHandler RightClick;
         public event EventHandler MouseSelection;
@@ -48,9 +51,11 @@ namespace WpfHexaEditor
         public event EventHandler CtrlvKey;
         public event EventHandler CtrlcKey;
         public event EventHandler CtrlaKey;
+
         #endregion Events
 
         #region Contructor
+
         public StringByte(HexEditor parent)
         {
             //Parent hexeditor
@@ -64,6 +69,7 @@ namespace WpfHexaEditor
             TextAlignment = TextAlignment.Center;
 
             #region Binding tooltip
+
             LoadDictionary("/WPFHexaEditor;component/Resources/Dictionary/ToolTipDictionary.xaml");
             var txtBinding = new Binding
             {
@@ -75,11 +81,12 @@ namespace WpfHexaEditor
             // Load ressources dictionnary
             void LoadDictionary(string url)
             {
-                var ttRes = new ResourceDictionary { Source = new Uri(url, UriKind.Relative) };
+                var ttRes = new ResourceDictionary {Source = new Uri(url, UriKind.Relative)};
                 Resources.MergedDictionaries.Add(ttRes);
             }
 
             SetBinding(ToolTipProperty, txtBinding);
+
             #endregion
 
             //Event
@@ -91,8 +98,9 @@ namespace WpfHexaEditor
             GotFocus += UserControl_GotFocus;
             LostFocus += UserControl_LostFocus;
         }
+
         #endregion Contructor
-        
+
         #region Properties
 
         /// <summary>
@@ -130,7 +138,8 @@ namespace WpfHexaEditor
         /// <summary>
         /// Get or set if control as selected
         /// </summary>        
-        public bool IsSelected {
+        public bool IsSelected
+        {
             get => _isSelected;
             set
             {
@@ -181,6 +190,7 @@ namespace WpfHexaEditor
                 UpdateVisual();
             }
         }
+
         #endregion Properties
 
         #region Characters tables
@@ -217,6 +227,7 @@ namespace WpfHexaEditor
         #endregion Characters tables
 
         #region Methods
+
         /// <summary>
         /// Update control label from byte property
         /// </summary>
@@ -239,7 +250,8 @@ namespace WpfHexaEditor
 
                             if (TblShowMte && ByteNext.HasValue)
                             {
-                                var mte = ByteConverters.ByteToHex(Byte.Value) + ByteConverters.ByteToHex(ByteNext.Value);
+                                var mte = ByteConverters.ByteToHex(Byte.Value) +
+                                          ByteConverters.ByteToHex(ByteNext.Value);
                                 content = TblCharacterTable.FindMatch(mte, true);
                             }
 
@@ -310,6 +322,7 @@ namespace WpfHexaEditor
             else
             {
                 #region TBL COLORING
+
                 FontWeight = _parent.FontWeight;
                 Background = Brushes.Transparent;
                 Foreground = _parent.Foreground;
@@ -333,16 +346,18 @@ namespace WpfHexaEditor
                             Foreground = _parent.TblDefaultColor;
                             break;
                     }
+
                 #endregion
             }
-            
+
             UpdateAutoHighLiteSelectionByteVisual();
         }
 
         private void UpdateAutoHighLiteSelectionByteVisual()
         {
             //Auto highlite selectionbyte
-            if (_parent.AllowAutoHightLighSelectionByte && _parent.SelectionByte != null && Byte == _parent.SelectionByte && !IsSelected)
+            if (_parent.AllowAutoHightLighSelectionByte && _parent.SelectionByte != null &&
+                Byte == _parent.SelectionByte && !IsSelected)
                 Background = _parent.AutoHighLiteSelectionByteBrush;
         }
 
@@ -360,14 +375,17 @@ namespace WpfHexaEditor
             ByteNext = null;
             InternalChange = false;
         }
+
         #endregion Methods
 
         #region Events delegate
+
         private void UserControl_KeyDown(object sender, KeyEventArgs e)
         {
             if (Byte == null) return;
 
             #region Key validation and launch event if needed
+
             if (KeyValidator.IsIgnoredKey(e.Key))
             {
                 e.Handled = true;
@@ -483,20 +501,22 @@ namespace WpfHexaEditor
                         Text = KeyValidator.GetCharFromKey(e.Key).ToString();
                         isok = true;
                     }
-                    else if (Keyboard.Modifiers == ModifierKeys.Shift && e.Key != Key.RightShift && e.Key != Key.LeftShift)
+                    else if (Keyboard.Modifiers == ModifierKeys.Shift && e.Key != Key.RightShift &&
+                             e.Key != Key.LeftShift)
                     {
                         isok = true;
-                        Text = KeyValidator.GetCharFromKey(e.Key).ToString().ToLower(); 
+                        Text = KeyValidator.GetCharFromKey(e.Key).ToString().ToLower();
                     }
                 }
                 else
                 {
                     if (Keyboard.Modifiers != ModifierKeys.Shift && e.Key != Key.RightShift && e.Key != Key.LeftShift)
                     {
-                        Text = KeyValidator.GetCharFromKey(e.Key).ToString().ToLower(); 
+                        Text = KeyValidator.GetCharFromKey(e.Key).ToString().ToLower();
                         isok = true;
                     }
-                    else if (Keyboard.Modifiers == ModifierKeys.Shift && e.Key != Key.RightShift && e.Key != Key.LeftShift)
+                    else if (Keyboard.Modifiers == ModifierKeys.Shift && e.Key != Key.RightShift &&
+                             e.Key != Key.LeftShift)
                     {
                         isok = true;
                         Text = KeyValidator.GetCharFromKey(e.Key).ToString();
@@ -515,7 +535,8 @@ namespace WpfHexaEditor
 
         private void UserControl_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (Byte != null && Action != ByteAction.Modified && Action != ByteAction.Deleted && Action != ByteAction.Added && !IsSelected && !IsHighLight)
+            if (Byte != null && Action != ByteAction.Modified && Action != ByteAction.Deleted &&
+                Action != ByteAction.Added && !IsSelected && !IsHighLight)
                 Background = _parent.MouseOverColor;
 
             UpdateAutoHighLiteSelectionByteVisual();
@@ -526,7 +547,8 @@ namespace WpfHexaEditor
 
         private void UserControl_MouseLeave(object sender, MouseEventArgs e)
         {
-            if (Byte != null && Action != ByteAction.Modified && Action != ByteAction.Deleted && Action != ByteAction.Added && !IsSelected && !IsHighLight)
+            if (Byte != null && Action != ByteAction.Modified && Action != ByteAction.Deleted &&
+                Action != ByteAction.Added && !IsSelected && !IsHighLight)
                 Background = Brushes.Transparent;
 
             UpdateAutoHighLiteSelectionByteVisual();
@@ -541,8 +563,8 @@ namespace WpfHexaEditor
                 Click?.Invoke(this, e);
             }
 
-            if (e.RightButton == MouseButtonState.Pressed)            
-                RightClick?.Invoke(this, e);            
+            if (e.RightButton == MouseButtonState.Pressed)
+                RightClick?.Invoke(this, e);
         }
 
         private void UserControl_ToolTipOpening(object sender, ToolTipEventArgs e)
@@ -550,6 +572,7 @@ namespace WpfHexaEditor
             if (Byte == null)
                 e.Handled = true;
         }
+
         #endregion Events delegate
 
         #region Caret events

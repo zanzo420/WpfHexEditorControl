@@ -1,4 +1,4 @@
-﻿ <!--
+﻿<!--
       Apache 2.0  - 2016-2017
       Author : Derek Tremblay (derektremblay666@gmail.com)
  -->
@@ -7,7 +7,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!--THIS DICTIONARY IS USED FOR PUT CUSTOM BRUSH-->
-    
+
     <SolidColorBrush x:Key="BookMarkColor" Color="#B20000FF" />
     <SolidColorBrush x:Key="SearchBookMarkColor" Color="#FFFF8B00" />
     <SolidColorBrush x:Key="SelectionStartBookMarkColor" Color="Blue" />

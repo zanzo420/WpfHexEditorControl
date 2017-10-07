@@ -16,14 +16,14 @@ namespace WpfHexaEditor.Core.CharacterTable
     /// <summary>
     /// Cet objet représente un fichier Thingy TBL (entrée + valeur)
     /// </summary>
-    public sealed class TblStream: IDisposable
+    public sealed class TblStream : IDisposable
     {
         /// <summary>Chemin vers le fichier (path)</summary>
         private string _fileName;
 
         /// <summary>Tableau de DTE représentant tous les les entrée du fichier</summary>
         private Dictionary<string, Dte> _dteList = new Dictionary<string, Dte>();
-        
+
         #region Constructeurs
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace WpfHexaEditor.Core.CharacterTable
         /// Indexeur permetant de travailler sur les DTE contenue dans TBL a la facons d'un tableau.
         /// </summary>
         public Dte this[string index]
-        {   
+        {
             get => _dteList[index];
             set => _dteList[index] = value;
         }
@@ -80,13 +80,13 @@ namespace WpfHexaEditor.Core.CharacterTable
         {
             if (showSpecialValue)
             {
-                if (_dteList.ContainsKey($"/{hex}")) return Properties.Resources.EndTagString;  //"<end>";
+                if (_dteList.ContainsKey($"/{hex}")) return Properties.Resources.EndTagString; //"<end>";
                 if (_dteList.ContainsKey($"*{hex}")) return Properties.Resources.LineTagString; //"<ln>";
             }
 
             return _dteList.ContainsKey(hex) ? _dteList[hex].Value : "#";
         }
-       
+
         /// <summary>
         /// Convert data to TBL string. 
         /// </summary>
@@ -97,14 +97,15 @@ namespace WpfHexaEditor.Core.CharacterTable
         public string ToTblString(byte[] data)
         {
             if (data == null) return null;
-            
+
             var sb = new StringBuilder();
 
             for (var i = 0; i < data.Length; i++)
             {
                 if (i < data.Length - 1)
                 {
-                    var mte = FindMatch(ByteConverters.ByteToHex(data[i]) + ByteConverters.ByteToHex(data[i + 1]), true);
+                    var mte = FindMatch(ByteConverters.ByteToHex(data[i]) + ByteConverters.ByteToHex(data[i + 1]),
+                        true);
 
                     if (mte != "#")
                     {
@@ -148,8 +149,8 @@ namespace WpfHexaEditor.Core.CharacterTable
             if (tblFile.BaseStream.CanRead)
             {
                 //lecture du fichier jusqua la fin et séparation par ligne
-                char[] sepEndLine = { '\n' }; //Fin de ligne
-                char[] sepEqual = { '=' }; //Fin de ligne
+                char[] sepEndLine = {'\n'}; //Fin de ligne
+                char[] sepEqual = {'='}; //Fin de ligne
 
                 //build strings line
                 var textFromFile = new StringBuilder(tblFile.ReadToEnd());
@@ -168,10 +169,14 @@ namespace WpfHexaEditor.Core.CharacterTable
                         switch (info[0].Length)
                         {
                             case 2:
-                                dte = info[1].Length == 2 ? new Dte(info[0], info[1].Substring(0, info[1].Length - 1), DteType.Ascii) : new Dte(info[0], info[1].Substring(0, info[1].Length - 1), DteType.DualTitleEncoding);
+                                dte = info[1].Length == 2
+                                    ? new Dte(info[0], info[1].Substring(0, info[1].Length - 1), DteType.Ascii)
+                                    : new Dte(info[0], info[1].Substring(0, info[1].Length - 1),
+                                        DteType.DualTitleEncoding);
                                 break;
                             case 4: // >2
-                                dte = new Dte(info[0], info[1].Substring(0, info[1].Length - 1), DteType.MultipleTitleEncoding);
+                                dte = new Dte(info[0], info[1].Substring(0, info[1].Length - 1),
+                                    DteType.MultipleTitleEncoding);
                                 break;
                             default:
                                 continue;
@@ -194,7 +199,7 @@ namespace WpfHexaEditor.Core.CharacterTable
                         }
                     }
                     catch (ArgumentOutOfRangeException)
-                    { 
+                    {
                         //Du a une entre qui a 2 = de suite... EX:  XX==
                         dte = new Dte(info[0], "=", DteType.DualTitleEncoding);
                     }
@@ -215,7 +220,8 @@ namespace WpfHexaEditor.Core.CharacterTable
                             fav.Description = lineSplited[1].Substring(0, lineSplited[1].Length - 1);
 
                             lineSplited = line.Split('h');
-                            fav.BytePositionInFile = ByteConverters.HexLiteralToLong(lineSplited[0].Substring(1, lineSplited[0].Length - 1)).position;
+                            fav.BytePositionInFile = ByteConverters
+                                .HexLiteralToLong(lineSplited[0].Substring(1, lineSplited[0].Length - 1)).position;
                             fav.Marker = ScrollMarker.TblBookmark;
                             BookMarks.Add(fav);
                         }
@@ -277,7 +283,7 @@ namespace WpfHexaEditor.Core.CharacterTable
         /// </summary>
         /// <param name="dte"></param>
         public void Remove(Dte dte) => _dteList.Remove(dte.Entry);
-        
+
         #endregion Méthodes
 
         #region Propriétés
@@ -379,6 +385,7 @@ namespace WpfHexaEditor.Core.CharacterTable
         #endregion Propriétés
 
         #region Build default TBL
+
         public static TblStream CreateDefaultAscii(DefaultCharacterTableType type = DefaultCharacterTableType.Ascii)
         {
             var tbl = new TblStream();
@@ -401,6 +408,7 @@ namespace WpfHexaEditor.Core.CharacterTable
         #endregion
 
         #region IDisposable Support
+
         private bool _disposedValue; // Pour détecter les appels redondants
 
         void Dispose(bool disposing)
@@ -422,6 +430,7 @@ namespace WpfHexaEditor.Core.CharacterTable
             // Ne modifiez pas ce code. Placez le code de nettoyage dans Dispose(bool disposing) ci-dessus.
             Dispose(true);
         }
+
         #endregion
     }
 }

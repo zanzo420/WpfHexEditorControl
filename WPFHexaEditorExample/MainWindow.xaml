@@ -1,40 +1,40 @@
-﻿ <!--
+﻿<!--
       Apache 2.0  - 2016-2017
       Author : Derek Tremblay (derektremblay666@gmail.com)
  -->
 
 <Window
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:control="clr-namespace:WpfHexaEditor;assembly=WPFHexaEditor"
-        x:Class="WPFHexaEditorExample.MainWindow"
-        xmlns:properties="clr-namespace:WPFHexaEditorExample.Properties"
-        mc:Ignorable="d"
-        Closing="Window_Closing"
-        Background="WhiteSmoke"
-        Title="Wpf HexEditor control sample" Height="530" Width="900" Icon="Resources/Icon/Logo-Icon.ico">
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:control="clr-namespace:WpfHexaEditor;assembly=WPFHexaEditor"
+    x:Class="WPFHexaEditorExample.MainWindow"
+    xmlns:properties="clr-namespace:WPFHexaEditorExample.Properties"
+    mc:Ignorable="d"
+    Closing="Window_Closing"
+    Background="WhiteSmoke"
+    Title="Wpf HexEditor control sample" Height="530" Width="900" Icon="Resources/Icon/Logo-Icon.ico">
     <Grid>
         <DockPanel>
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="File" Height="26" RenderTransformOrigin="0.656,0.769">
-                    <MenuItem x:Name="OpenMenu" Header="Open..." Click="OpenMenu_Click" >
+                    <MenuItem x:Name="OpenMenu" Header="Open..." Click="OpenMenu_Click">
                         <MenuItem.Icon>
-                            <Image Source="./Resources/Icon/Open-File-Icon.ico"/>
+                            <Image Source="./Resources/Icon/Open-File-Icon.ico" />
                         </MenuItem.Icon>
                     </MenuItem>
-                    <Separator/>
+                    <Separator />
                     <MenuItem x:Name="SaveMenu" Header="Save" Click="SaveMenu_Click">
                         <MenuItem.Icon>
-                            <Image Source="./Resources/Icon/Save-Icon.ico"/>
+                            <Image Source="./Resources/Icon/Save-Icon.ico" />
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="Save as..." IsEnabled="True" Click="SaveAsMenu_Click"/>
-                    <Separator/>
+                    <MenuItem Header="Save as..." IsEnabled="True" Click="SaveAsMenu_Click" />
+                    <Separator />
                     <MenuItem x:Name="CloseFileMenu" Header="Close file" Click="CloseFileMenu_Click">
                         <MenuItem.Icon>
-                            <Image Source="./Resources/Icon/Save-Icon.ico"/>
+                            <Image Source="./Resources/Icon/Save-Icon.ico" />
                         </MenuItem.Icon>
                     </MenuItem>
                     <Separator />
@@ -54,44 +54,59 @@
                     <MenuItem x:Name="SelectAllButton" Header="Select all" Click="SelectAllButton_Click" />
                     <Separator />
                     <MenuItem Header="Bookmarks">
-                        <MenuItem x:Name="SetBookMarkButton" Header="Set position as bookmark" Click="SetBookMarkButton_Click" />
+                        <MenuItem x:Name="SetBookMarkButton" Header="Set position as bookmark"
+                                  Click="SetBookMarkButton_Click" />
                         <MenuItem x:Name="DeleteBookmark" Header="Remove all bookmarks" Click="DeleteBookmark_Click" />
                     </MenuItem>
                     <Separator />
                     <MenuItem Header="Find">
-                        <MenuItem x:Name="FindAllSelection" Header="Find all occurence of selection" Click="FindAllSelection_Click" />
+                        <MenuItem x:Name="FindAllSelection" Header="Find all occurence of selection"
+                                  Click="FindAllSelection_Click" />
                         <StackPanel Orientation="Horizontal">
                             <Label Width="75" Content="Find string" Padding="0,5,5,5" />
-                            <TextBox x:Name="FindText" Width="75" VerticalContentAlignment="Center" TextChanged="FindText_TextChanged" />
-                            <Button x:Name="FindFirstButton" Content="|&lt;--" IsEnabled="False" Click="FindFirstButton_Click" />
-                            <Button x:Name="FindPreviousButton" Content=" &lt; " IsEnabled="False" Click="FindPreviousButton_Click" />
-                            <Button x:Name="FindNextButton" Content=" &gt; " IsEnabled="False" Click="FindNextButton_Click" />
-                            <Button x:Name="FindLastButton" Content="--&gt;|" IsEnabled="False" Click="FindFirstButton_Click" />
+                            <TextBox x:Name="FindText" Width="75" VerticalContentAlignment="Center"
+                                     TextChanged="FindText_TextChanged" />
+                            <Button x:Name="FindFirstButton" Content="|&lt;--" IsEnabled="False"
+                                    Click="FindFirstButton_Click" />
+                            <Button x:Name="FindPreviousButton" Content=" &lt; " IsEnabled="False"
+                                    Click="FindPreviousButton_Click" />
+                            <Button x:Name="FindNextButton" Content=" &gt; " IsEnabled="False"
+                                    Click="FindNextButton_Click" />
+                            <Button x:Name="FindLastButton" Content="--&gt;|" IsEnabled="False"
+                                    Click="FindFirstButton_Click" />
                         </StackPanel>
                     </MenuItem>
                     <MenuItem Header="CharacterTable">
-                        <MenuItem x:Name="CTableAsciiButton" IsCheckable="True" IsChecked="True" Header="ASCII" Click="CTableASCIIButton_Click" />
-                        <MenuItem x:Name="CTableTblButton" IsCheckable="True" Header="Load TBL file" Click="CTableTBLButton_Click" />
-                        <MenuItem x:Name="CTableTblDefaultAsciiButton" IsCheckable="True" Header="Load Build-in TBL : ASCII" Click="CTableTBLDefaultASCIIButton_Click" />
+                        <MenuItem x:Name="CTableAsciiButton" IsCheckable="True" IsChecked="True" Header="ASCII"
+                                  Click="CTableASCIIButton_Click" />
+                        <MenuItem x:Name="CTableTblButton" IsCheckable="True" Header="Load TBL file"
+                                  Click="CTableTBLButton_Click" />
+                        <MenuItem x:Name="CTableTblDefaultAsciiButton" IsCheckable="True"
+                                  Header="Load Build-in TBL : ASCII" Click="CTableTBLDefaultASCIIButton_Click" />
                     </MenuItem>
                 </MenuItem>
                 <MenuItem x:Name="PositionMenu" Header="Position">
                     <StackPanel Margin="0" Orientation="Horizontal">
                         <Label Content="BytePerline" Width="100" />
-                        <TextBox TextWrapping="Wrap" Text="{Binding BytePerLine, ElementName=HexEdit, UpdateSourceTrigger=LostFocus}" Width="75" VerticalContentAlignment="Center" />
+                        <TextBox TextWrapping="Wrap"
+                                 Text="{Binding BytePerLine, ElementName=HexEdit, UpdateSourceTrigger=LostFocus}"
+                                 Width="75" VerticalContentAlignment="Center" />
                         <Label Content="(Lost focus)" />
                     </StackPanel>
                     <Separator />
                     <StackPanel Orientation="Horizontal">
                         <Label Width="100" Content="SetPosition" />
-                        <TextBox x:Name="PositionText" Width="75" VerticalContentAlignment="Center" TextChanged="PositionText_TextChanged" />
+                        <TextBox x:Name="PositionText" Width="75" VerticalContentAlignment="Center"
+                                 TextChanged="PositionText_TextChanged" />
                         <Button x:Name="GoPositionButton" IsEnabled="False" Content="GO" Click="GOPosition_Click" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Label Width="75" Content="SetPosition" />
                         <Label Width="25" Content="0x" />
-                        <TextBox x:Name="PositionHexText" Width="75" VerticalContentAlignment="Center" TextChanged="PositionHexText_TextChanged" />
-                        <Button x:Name="GoPositionHexaButton" Content="GO" IsEnabled="False" Click="GOHexPosition_Click" />
+                        <TextBox x:Name="PositionHexText" Width="75" VerticalContentAlignment="Center"
+                                 TextChanged="PositionHexText_TextChanged" />
+                        <Button x:Name="GoPositionHexaButton" Content="GO" IsEnabled="False"
+                                Click="GOHexPosition_Click" />
                     </StackPanel>
                 </MenuItem>
                 <MenuItem x:Name="ViewMenu" Header="View">
@@ -99,19 +114,19 @@
                               IsCheckable="True"
                               IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HeaderVisibility, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                 </MenuItem>
-                <MenuItem Header="TEST" Visibility="Visible" Click="MenuItem_Click"/>
+                <MenuItem Header="TEST" Visibility="Visible" Click="MenuItem_Click" />
             </Menu>
 
-            <control:HexEditor x:Name="HexEdit" 
+            <control:HexEditor x:Name="HexEdit"
                                ByteSpacerPositioning="HexBytePanel"
                                ByteGrouping="EightByte"
                                ByteSpacerWidthTickness="Normal"
-                               AllowByteCount="False" 
+                               AllowByteCount="False"
                                ByteSpacerVisualStyle="Dash"
                                DataStringVisual="Hexadecimal"
                                Width="Auto"
-                               Height="Auto" 
-                               Margin="2"/>
+                               Height="Auto"
+                               Margin="2" />
         </DockPanel>
     </Grid>
 </Window>

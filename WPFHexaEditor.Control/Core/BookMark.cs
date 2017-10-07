@@ -16,7 +16,9 @@ namespace WpfHexaEditor.Core
         public long BytePositionInFile { get; set; }
         public string Description { get; set; } = string.Empty;
 
-        public BookMark() { }
+        public BookMark()
+        {
+        }
 
         public BookMark(string description, long position)
         {

@@ -22,15 +22,18 @@ namespace WpfHexaEditor.Core.Bytes
     public sealed class ByteProvider : IDisposable, IByteProvider
     {
         #region Globals variable
+
         private readonly IDictionary<long, ByteModified> _byteModifiedDictionary = new Dictionary<long, ByteModified>();
         private string _fileName = string.Empty;
         private Stream _stream;
         private bool _readOnlyMode;
         private double _longProcessProgress;
         private string _newfilename = string.Empty;
+
         #endregion Globals variable
 
         #region Events
+
         public event EventHandler DataCopiedToClipboard;
         public event EventHandler ReadOnlyChanged;
         public event EventHandler Closed;
@@ -46,13 +49,17 @@ namespace WpfHexaEditor.Core.Bytes
         public event EventHandler DataPastedNotInserted;
         public event EventHandler FillWithByteCompleted;
         public event EventHandler ReplaceByteCompleted;
+
         #endregion Events
 
         #region Constructors
+
         /// <summary>
         /// Default constructor
         /// </summary>
-        public ByteProvider() { }
+        public ByteProvider()
+        {
+        }
 
         /// <summary>
         /// Construct new ByteProvider with filename and try to open file
@@ -64,9 +71,11 @@ namespace WpfHexaEditor.Core.Bytes
         /// </summary>
         /// <param name="stream"></param>
         public ByteProvider(MemoryStream stream) => Stream = stream;
+
         #endregion Constructors
 
         #region Properties
+
         /// <summary>
         /// Get the type of stream are opened in byteprovider.
         /// </summary>
@@ -83,6 +92,7 @@ namespace WpfHexaEditor.Core.Bytes
         public bool IsEmpty => !IsOpen || Length == 0;
 
         #region Open/close stream property/methods
+
         /// <summary>
         /// Set or Get the file with the control will show hex
         /// </summary>
@@ -102,7 +112,7 @@ namespace WpfHexaEditor.Core.Bytes
         /// </summary>
         public MemoryStream Stream
         {
-            get => (MemoryStream)_stream;
+            get => (MemoryStream) _stream;
             set
             {
                 var readonlymode = _readOnlyMode;
@@ -116,6 +126,7 @@ namespace WpfHexaEditor.Core.Bytes
                 StreamOpened?.Invoke(this, new EventArgs());
             }
         }
+
         #endregion Properties
 
         /// <summary>
@@ -135,7 +146,8 @@ namespace WpfHexaEditor.Core.Bytes
                 }
                 catch
                 {
-                    if (MessageBox.Show("The file is locked. Do you want to open it in read-only mode?", string.Empty, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                    if (MessageBox.Show("The file is locked. Do you want to open it in read-only mode?", string.Empty,
+                            MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                     {
                         _stream = File.Open(FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 
@@ -192,9 +204,11 @@ namespace WpfHexaEditor.Core.Bytes
                 Closed?.Invoke(this, new EventArgs());
             }
         }
+
         #endregion Open/close stream property/methods
-        
+
         #region Stream position
+
         /// <summary>
         /// Check if position as at EOF.
         /// </summary>
@@ -217,9 +231,11 @@ namespace WpfHexaEditor.Core.Bytes
                 }
             }
         }
+
         #endregion Stream position
 
         #region isOpen property/methods
+
         /// <summary>
         /// Get if file is open
         /// </summary>
@@ -252,7 +268,7 @@ namespace WpfHexaEditor.Core.Bytes
                     var countAdjusted = count;
 
                     if (Length - Position <= count)
-                        countAdjusted = (int)(Length - Position);
+                        countAdjusted = (int) (Length - Position);
 
                     var bytesReaded = new byte[countAdjusted];
                     _stream.Read(bytesReaded, 0, countAdjusted);
@@ -265,7 +281,8 @@ namespace WpfHexaEditor.Core.Bytes
         /// <summary>
         /// Read bytes
         /// </summary>
-        public int Read(byte[] destination, int offset, int count) => IsOpen && _stream.CanRead ? _stream.Read(destination, offset, count) : -1;
+        public int Read(byte[] destination, int offset, int count) =>
+            IsOpen && _stream.CanRead ? _stream.Read(destination, offset, count) : -1;
 
         #endregion read byte
 
@@ -281,7 +298,7 @@ namespace WpfHexaEditor.Core.Bytes
 
             if (File.Exists(newFilename) && !overwrite)
                 return false;
-            
+
             //Save as
             _newfilename = newFilename;
             File.Create(_newfilename).Close();
@@ -299,7 +316,7 @@ namespace WpfHexaEditor.Core.Bytes
                 var cancel = false;
 
                 //Launch event at process started
-                IsOnLongProcess = true;                
+                IsOnLongProcess = true;
                 LongProcessStarted?.Invoke(this, new EventArgs());
 
                 //Set percent of progress to zero and create and iterator for help mesure progress
@@ -312,7 +329,8 @@ namespace WpfHexaEditor.Core.Bytes
                     : File.Open(Path.GetTempFileName(), FileMode.Open, FileAccess.ReadWrite);
 
                 //Fast change only nothing byte deleted or added
-                if (!GetByteModifieds(ByteAction.Deleted).Any() && !GetByteModifieds(ByteAction.Added).Any() && !File.Exists(_newfilename))
+                if (!GetByteModifieds(ByteAction.Deleted).Any() && !GetByteModifieds(ByteAction.Added).Any() &&
+                    !File.Exists(_newfilename))
                 {
                     var bytemodifiedList = GetByteModifieds(ByteAction.Modified);
                     double countChange = bytemodifiedList.Count;
@@ -427,7 +445,7 @@ namespace WpfHexaEditor.Core.Bytes
                     while (!Eof)
                     {
                         //Set percent of progress
-                        LongProcessProgress = Position / (double)Length;
+                        LongProcessProgress = Position / (double) Length;
 
                         //Break process?
                         if (!IsOnLongProcess)
@@ -483,7 +501,8 @@ namespace WpfHexaEditor.Core.Bytes
         /// <summary>
         /// Check if the byte in parameter are modified and return original Bytemodified from list
         /// </summary>
-        public (bool success, ByteModified val) CheckIfIsByteModified(long bytePositionInFile, ByteAction action = ByteAction.Modified)
+        public (bool success, ByteModified val) CheckIfIsByteModified(long bytePositionInFile,
+            ByteAction action = ByteAction.Modified)
         {
             return _byteModifiedDictionary.TryGetValue(bytePositionInFile, out var byteModified)
                    && byteModified.IsValid && (byteModified.Action == action || action == ByteAction.All)
@@ -581,7 +600,7 @@ namespace WpfHexaEditor.Core.Bytes
                     {
                         //Do not freeze UI...
                         if (i % 2000 == 0)
-                            LongProcessProgress = (double)i / length;
+                            LongProcessProgress = (double) i / length;
 
                         //Break long process if needed
                         if (!IsOnLongProcess)
@@ -626,7 +645,7 @@ namespace WpfHexaEditor.Core.Bytes
                     {
                         //Do not freeze UI...
                         if (i % 2000 == 0)
-                            LongProcessProgress = (double)i / length;
+                            LongProcessProgress = (double) i / length;
 
                         //Break long process if needed
                         if (!IsOnLongProcess)
@@ -647,6 +666,7 @@ namespace WpfHexaEditor.Core.Bytes
             IsOnLongProcess = false;
             LongProcessCompleted?.Invoke(this, new EventArgs());
         }
+
         #endregion Bytes modifications methods
 
         #region Copy/Paste/Cut Methods
@@ -708,12 +728,14 @@ namespace WpfHexaEditor.Core.Bytes
             var bufferList = new List<byte>();
 
             #region Set start position
+
             if (selectionStart == selectionStop)
                 byteStartPosition = selectionStart;
             else if (selectionStart > selectionStop)
                 byteStartPosition = selectionStop;
             else
                 byteStartPosition = selectionStart;
+
             #endregion
 
             //set position
@@ -726,22 +748,23 @@ namespace WpfHexaEditor.Core.Bytes
                 _stream.Read(buffer, 0, Convert.ToInt32(GetSelectionLenght(selectionStart, selectionStop)));
                 return buffer;
             }
-            
+
             for (var i = 0; i < GetSelectionLenght(selectionStart, selectionStop); i++)
             {
                 var (success, byteModified) = CheckIfIsByteModified(_stream.Position, ByteAction.All);
 
                 if (!success)
                 {
-                    bufferList.Add((byte)_stream.ReadByte());
+                    bufferList.Add((byte) _stream.ReadByte());
                     continue;
                 }
 
                 switch (byteModified.Action)
                 {
                     case ByteAction.Added: //TODO : IMPLEMENTING ADD BYTE                               
-                    case ByteAction.Deleted://NOTHING to do we dont want to add deleted byte                               
-                        break; 
+                    case ByteAction.Deleted
+                    : //NOTHING to do we dont want to add deleted byte                               
+                        break;
                     case ByteAction.Modified:
                         if (byteModified.IsValid) bufferList.Add(byteModified.Byte.Value);
                         break;
@@ -761,7 +784,8 @@ namespace WpfHexaEditor.Core.Bytes
         /// <param name="copypastemode"></param>
         /// <param name="selectionStart"></param>
         /// <param name="tbl"></param>
-        public void CopyToClipboard(CopyPasteMode copypastemode, long selectionStart, long selectionStop, bool copyChange = true, TblStream tbl = null)
+        public void CopyToClipboard(CopyPasteMode copypastemode, long selectionStart, long selectionStop,
+            bool copyChange = true, TblStream tbl = null)
         {
             if (!CanCopy(selectionStart, selectionStop)) return;
 
@@ -774,7 +798,7 @@ namespace WpfHexaEditor.Core.Bytes
             switch (copypastemode)
             {
                 case CopyPasteMode.Byte:
-                    throw new NotImplementedException();                    
+                    throw new NotImplementedException();
                 case CopyPasteMode.TblString when tbl != null:
                     sBuffer = tbl.ToTblString(buffer);
                     da.SetText(sBuffer, TextDataFormat.Text);
@@ -812,11 +836,12 @@ namespace WpfHexaEditor.Core.Bytes
 
             DataCopiedToClipboard?.Invoke(this, new EventArgs());
         }
-        
+
         /// <summary>
         /// Copy selection to clipboard in code block
         /// </summary>
-        private void CopyToClipboard_Language(long selectionStart, long selectionStop, bool copyChange, DataObject da, CodeLanguage language)
+        private void CopyToClipboard_Language(long selectionStart, long selectionStop, bool copyChange, DataObject da,
+            CodeLanguage language)
         {
             if (!CanCopy(selectionStart, selectionStop)) return;
 
@@ -829,32 +854,39 @@ namespace WpfHexaEditor.Core.Bytes
             var sb = new StringBuilder();
 
             #region define header
+
             switch (language)
             {
                 case CodeLanguage.C:
                 case CodeLanguage.CSharp:
                 case CodeLanguage.Java:
-                    sb.Append($"/* {FileName} ({DateTime.Now.ToString(CultureInfo.CurrentCulture)}), \r\n StartPosition: 0x{ByteConverters.LongToHex(selectionStart)}, StopPosition: 0x{ByteConverters.LongToHex(selectionStop)}, Lenght: 0x{ByteConverters.LongToHex(lenght)} */");
+                    sb.Append(
+                        $"/* {FileName} ({DateTime.Now.ToString(CultureInfo.CurrentCulture)}), \r\n StartPosition: 0x{ByteConverters.LongToHex(selectionStart)}, StopPosition: 0x{ByteConverters.LongToHex(selectionStop)}, Lenght: 0x{ByteConverters.LongToHex(lenght)} */");
                     break;
                 case CodeLanguage.Vbnet:
-                    sb.Append($"' {FileName} ({DateTime.Now.ToString(CultureInfo.CurrentCulture)}), \r\n' StartPosition: &H{ByteConverters.LongToHex(selectionStart)}, StopPosition: &H{ByteConverters.LongToHex(selectionStop)}, Lenght: &H{ByteConverters.LongToHex(lenght)}");
+                    sb.Append(
+                        $"' {FileName} ({DateTime.Now.ToString(CultureInfo.CurrentCulture)}), \r\n' StartPosition: &H{ByteConverters.LongToHex(selectionStart)}, StopPosition: &H{ByteConverters.LongToHex(selectionStop)}, Lenght: &H{ByteConverters.LongToHex(lenght)}");
                     break;
                 case CodeLanguage.FSharp:
-                    sb.Append($"// {FileName} ({DateTime.Now.ToString(CultureInfo.CurrentCulture)}), \r\n// StartPosition: 0x{ByteConverters.LongToHex(selectionStart)}, StopPosition: 0x{ByteConverters.LongToHex(selectionStop)}, Lenght: 0x{ByteConverters.LongToHex(lenght)}");
+                    sb.Append(
+                        $"// {FileName} ({DateTime.Now.ToString(CultureInfo.CurrentCulture)}), \r\n// StartPosition: 0x{ByteConverters.LongToHex(selectionStart)}, StopPosition: 0x{ByteConverters.LongToHex(selectionStop)}, Lenght: 0x{ByteConverters.LongToHex(lenght)}");
                     break;
             }
+
             #endregion
 
             sb.AppendLine();
             sb.AppendLine();
 
             #region define string representation of copied data
+
             switch (language)
             {
                 case CodeLanguage.CSharp:
                     sb.Append($"string sData =\"{ByteConverters.BytesToString(buffer)}\";");
                     sb.AppendLine();
-                    sb.Append($"string sDataHex =\"{ByteConverters.StringToHex(ByteConverters.BytesToString(buffer))}\";");
+                    sb.Append(
+                        $"string sDataHex =\"{ByteConverters.StringToHex(ByteConverters.BytesToString(buffer))}\";");
                     sb.AppendLine();
                     sb.AppendLine();
                     sb.Append("byte[] rawData = {");
@@ -864,7 +896,8 @@ namespace WpfHexaEditor.Core.Bytes
                 case CodeLanguage.Java:
                     sb.Append($"String sData =\"{ByteConverters.BytesToString(buffer)}\";");
                     sb.AppendLine();
-                    sb.Append($"String sDataHex =\"{ByteConverters.StringToHex(ByteConverters.BytesToString(buffer))}\";");
+                    sb.Append(
+                        $"String sDataHex =\"{ByteConverters.StringToHex(ByteConverters.BytesToString(buffer))}\";");
                     sb.AppendLine();
                     sb.AppendLine();
                     sb.Append("byte rawData[] = {");
@@ -874,7 +907,8 @@ namespace WpfHexaEditor.Core.Bytes
                 case CodeLanguage.C:
                     sb.Append($"char sData[] =\"{ByteConverters.BytesToString(buffer)}\";");
                     sb.AppendLine();
-                    sb.Append($"char sDataHex[] =\"{ByteConverters.StringToHex(ByteConverters.BytesToString(buffer))}\";");
+                    sb.Append(
+                        $"char sDataHex[] =\"{ByteConverters.StringToHex(ByteConverters.BytesToString(buffer))}\";");
                     sb.AppendLine();
                     sb.AppendLine();
                     sb.Append($"unsigned char rawData[{lenght}] ");
@@ -884,7 +918,8 @@ namespace WpfHexaEditor.Core.Bytes
                 case CodeLanguage.FSharp:
                     sb.Append($"let sData = @\"{ByteConverters.BytesToString(buffer)}\";");
                     sb.AppendLine();
-                    sb.Append($"let sDataHex = @\"{ByteConverters.StringToHex(ByteConverters.BytesToString(buffer))}\";");
+                    sb.Append(
+                        $"let sDataHex = @\"{ByteConverters.StringToHex(ByteConverters.BytesToString(buffer))}\";");
                     sb.AppendLine();
                     sb.AppendLine();
                     sb.Append("let bytes = [|");
@@ -894,7 +929,8 @@ namespace WpfHexaEditor.Core.Bytes
                 case CodeLanguage.Vbnet:
                     sb.Append($"Dim sData as String =\"{ByteConverters.BytesToString(buffer)}\";");
                     sb.AppendLine();
-                    sb.Append($"Dim sDataHex as String =\"{ByteConverters.StringToHex(ByteConverters.BytesToString(buffer))}\";");
+                    sb.Append(
+                        $"Dim sDataHex as String =\"{ByteConverters.StringToHex(ByteConverters.BytesToString(buffer))}\";");
                     sb.AppendLine();
                     sb.AppendLine();
                     sb.Append("Dim rawData As Byte() = { _");
@@ -902,9 +938,11 @@ namespace WpfHexaEditor.Core.Bytes
                     sb.Append("\t");
                     break;
             }
+
             #endregion
 
             #region Build data array
+
             foreach (var b in buffer)
             {
                 i++;
@@ -914,7 +952,7 @@ namespace WpfHexaEditor.Core.Bytes
                     ? $"&H{ByteConverters.ByteToHex(b)}, "
                     : $"0x{ByteConverters.ByteToHex(b)}{delimiter} ");
 
-                if (i == (language == CodeLanguage.Java ? 6:12))
+                if (i == (language == CodeLanguage.Java ? 6 : 12))
                 {
                     i = 0;
                     if (language == CodeLanguage.Vbnet) sb.Append("_");
@@ -946,7 +984,7 @@ namespace WpfHexaEditor.Core.Bytes
             var buffer = GetCopyData(selectionStart, selectionStop, copyChange);
 
             if (output.CanWrite)
-                output.Write(buffer, (int)output.Length, buffer.Length);
+                output.Write(buffer, (int) output.Length, buffer.Length);
             else
                 throw new Exception(Properties.Resources.WritingErrorExeptionString);
 
@@ -973,7 +1011,7 @@ namespace WpfHexaEditor.Core.Bytes
                             AddByteModified(ByteConverters.CharToByte(chr), Position - 1, lenght);
                     }
                     else
-                        break;                
+                        break;
 
                 DataPastedNotInserted?.Invoke(this, new EventArgs());
             }
@@ -1045,7 +1083,8 @@ namespace WpfHexaEditor.Core.Bytes
         /// <summary>
         /// Return true if Copy method could be invoked.
         /// </summary>
-        public bool CanCopy(long selectionStart, long selectionStop) => GetSelectionLenght(selectionStart, selectionStop) >= 1 && IsOpen;
+        public bool CanCopy(long selectionStart, long selectionStop) =>
+            GetSelectionLenght(selectionStart, selectionStop) >= 1 && IsOpen;
 
         /// <summary>
         /// Update a value indicating whether the current stream is supporting writing.
@@ -1069,7 +1108,8 @@ namespace WpfHexaEditor.Core.Bytes
         /// <summary>
         /// Find all occurance of string in stream and return an IEnumerable contening index when is find.
         /// </summary>
-        public IEnumerable<long> FindIndexOf(string stringToFind, long startPosition = 0) => FindIndexOf(ByteConverters.StringToByte(stringToFind), startPosition);
+        public IEnumerable<long> FindIndexOf(string stringToFind, long startPosition = 0) =>
+            FindIndexOf(ByteConverters.StringToByte(stringToFind), startPosition);
 
         /// <summary>
         /// Find all occurance of byte[] in stream and return an IEnumerable contening index when is find.
@@ -1095,7 +1135,7 @@ namespace WpfHexaEditor.Core.Bytes
             {
                 //Do not freeze UI...
                 if (i % 2000 == 0)
-                    LongProcessProgress = (double)Position / Length;
+                    LongProcessProgress = (double) Position / Length;
 
                 //Break long process if needed
                 if (!IsOnLongProcess)
@@ -1104,7 +1144,7 @@ namespace WpfHexaEditor.Core.Bytes
                     break;
                 }
 
-                if ((byte)ReadByte() == bytesTofind[0])
+                if ((byte) ReadByte() == bytesTofind[0])
                 {
                     //position correction after read one byte
                     Position--;
@@ -1163,9 +1203,11 @@ namespace WpfHexaEditor.Core.Bytes
                 LongProcessChanged?.Invoke(value, new EventArgs());
             }
         }
+
         #endregion Long process progress
 
         #region IDisposable Support
+
         private bool _disposedValue; // Pour détecter les appels redondants
 
         void Dispose(bool disposing)
@@ -1183,6 +1225,7 @@ namespace WpfHexaEditor.Core.Bytes
         }
 
         public void Dispose() => Dispose(true);
+
         #endregion IDisposable Support
 
         #region Computing count byte methods...
@@ -1222,7 +1265,7 @@ namespace WpfHexaEditor.Core.Bytes
 
                     //Do not freeze UI...
                     if (Position % 2000 == 0)
-                        LongProcessProgress = (double)Position / Length;
+                        LongProcessProgress = (double) Position / Length;
 
                     //Break long process if needed
                     if (!IsOnLongProcess)
@@ -1250,6 +1293,5 @@ namespace WpfHexaEditor.Core.Bytes
         }
 
         #endregion
-
     }
 }

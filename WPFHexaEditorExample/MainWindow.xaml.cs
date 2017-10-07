@@ -153,9 +153,9 @@ namespace WPFHexaEditorExample
                 HexEdit.SetPosition(position, 1);
             else
                 MessageBox.Show("Enter hexa value.");
-            
+
             ViewMenu.IsSubmenuOpen = false;
-        } 
+        }
 
         private void PositionHexText_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -268,12 +268,10 @@ namespace WPFHexaEditorExample
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
-
         }
 
         private void TextBlock_GotFocus(object sender, RoutedEventArgs e)
         {
-
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿ <!--
+﻿<!--
       Apache 2.0  - 2016-2017
       Author : Derek Tremblay (derektremblay666@gmail.com)
  -->
@@ -16,17 +16,19 @@
         <StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Label Content="{x:Static p:Resources.ValueString}" FontWeight="Bold" Width="120" />
-                <Label Content="{x:Static p:Resources.ByteString}" FontWeight="Bold" Width="50"/>
+                <Label Content="{x:Static p:Resources.ByteString}" FontWeight="Bold" Width="50" />
                 <Label Content="{Binding Byte, UpdateSourceTrigger=PropertyChanged}" Width="70" />
                 <Label Content="{x:Static p:Resources.HexString}" FontWeight="Bold" />
-                <Label Content="{Binding Byte, Converter={StaticResource LongHexConverter},  UpdateSourceTrigger=PropertyChanged}" />
+                <Label
+                    Content="{Binding Byte, Converter={StaticResource LongHexConverter},  UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Label Content="{x:Static p:Resources.PositionString}" FontWeight="Bold" Width="120" />
                 <Label Content="{x:Static p:Resources.LongString}" FontWeight="Bold" Width="50" />
                 <Label Content="{Binding BytePositionInFile, UpdateSourceTrigger=PropertyChanged}" Width="70" />
                 <Label Content="{x:Static p:Resources.HexString}" FontWeight="Bold" />
-                <Label Content="{Binding BytePositionInFile, Converter={StaticResource LongHexConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                <Label
+                    Content="{Binding BytePositionInFile, Converter={StaticResource LongHexConverter}, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
             <Separator />
             <StackPanel Orientation="Horizontal">
@@ -44,7 +46,8 @@
                 <Label Content="{x:Static p:Resources.LongString}" FontWeight="Bold" />
                 <Label Content="{Binding BytePositionInFile, UpdateSourceTrigger=PropertyChanged}" />
                 <Label Content="{x:Static p:Resources.HexString}" FontWeight="Bold" />
-                <Label Content="{Binding BytePositionInFile, Converter={StaticResource LongHexConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                <Label
+                    Content="{Binding BytePositionInFile, Converter={StaticResource LongHexConverter}, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Label Content="{x:Static p:Resources.DescriptionString}" FontWeight="Bold" Width="120" />

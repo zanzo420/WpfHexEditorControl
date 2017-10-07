@@ -14,13 +14,15 @@ namespace WpfHexaEditor.Core.MethodExtention
         /// Code from :
         /// https://stackoverflow.com/questions/11447019/is-there-any-way-to-find-the-width-of-a-character-in-a-fixed-width-font-given-t
         /// </remarks>
-        public static Size GetScreenSize(this string text, FontFamily fontFamily, double fontSize, FontStyle fontStyle, FontWeight fontWeight, FontStretch fontStretch)
+        public static Size GetScreenSize(this string text, FontFamily fontFamily, double fontSize, FontStyle fontStyle,
+            FontWeight fontWeight, FontStretch fontStretch)
         {
             fontFamily = fontFamily ?? new TextBlock().FontFamily;
             fontSize = fontSize > 0 ? fontSize : new TextBlock().FontSize;
 
             var typeface = new Typeface(fontFamily, fontStyle, fontWeight, fontStretch);
-            var ft = new FormattedText(text ?? string.Empty, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
+            var ft = new FormattedText(text ?? string.Empty, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
+                typeface, fontSize, Brushes.Black);
 
             return new Size(ft.Width, ft.Height);
         }

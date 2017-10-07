@@ -12,10 +12,13 @@ namespace WpfHexaEditor.Core.Bytes
     public class ByteModified : IByteModified, IEquatable<ByteModified>
     {
         #region Constructor
+
         /// <summary>
         /// Default contructor
         /// </summary>
-        public ByteModified() { }
+        public ByteModified()
+        {
+        }
 
         /// <summary>
         /// complete contructor
@@ -27,9 +30,11 @@ namespace WpfHexaEditor.Core.Bytes
             BytePositionInFile = bytePositionInFile;
             UndoLenght = undoLenght;
         }
+
         #endregion constructor
 
         #region properties
+
         /// <summary>
         /// Byte mofidied
         /// </summary>
@@ -53,6 +58,7 @@ namespace WpfHexaEditor.Core.Bytes
         #endregion properties
 
         #region Methods
+
         /// <summary>
         /// Check if the object is valid and data can be used for action
         /// </summary>
@@ -61,8 +67,9 @@ namespace WpfHexaEditor.Core.Bytes
         /// <summary>
         /// String representation of byte
         /// </summary>
-        public override string ToString() => $"ByteModified - Action:{Action} Position:{BytePositionInFile} Byte:{Byte}";
-        
+        public override string ToString() =>
+            $"ByteModified - Action:{Action} Position:{BytePositionInFile} Byte:{Byte}";
+
         /// <summary>
         /// Clear object
         /// </summary>
@@ -94,6 +101,7 @@ namespace WpfHexaEditor.Core.Bytes
         #endregion Methods
 
         #region IEquatable implementation
+
         public override bool Equals(object obj) => Equals(obj as ByteModified);
 
         public bool Equals(ByteModified other)
@@ -113,9 +121,11 @@ namespace WpfHexaEditor.Core.Bytes
             return hashCode;
         }
 
-        public static bool operator ==(ByteModified modified1, ByteModified modified2) => EqualityComparer<ByteModified>.Default.Equals(modified1, modified2);
+        public static bool operator ==(ByteModified modified1, ByteModified modified2) =>
+            EqualityComparer<ByteModified>.Default.Equals(modified1, modified2);
 
         public static bool operator !=(ByteModified modified1, ByteModified modified2) => !(modified1 == modified2);
+
         #endregion IEquatable implementation
     }
 }

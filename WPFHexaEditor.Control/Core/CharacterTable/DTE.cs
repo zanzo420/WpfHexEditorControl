@@ -85,8 +85,9 @@ namespace WpfHexaEditor.Core.CharacterTable
         /// </summary>
         /// <returns>Retourne le DTE sous forme : [Entry]=[Valeur]</returns>
         public override string ToString() => Type != DteType.EndBlock && Type != DteType.EndLine
-                                            ? _entry + "=" + Value
-                                            : _entry;
+            ? _entry + "=" + Value
+            : _entry;
+
         #endregion Méthodes
 
         #region Methodes Static
@@ -112,11 +113,12 @@ namespace WpfHexaEditor.Core.CharacterTable
 
                     case @"*":
                         return DteType.EndLine;
-                        //case @"\":
+                    //case @"\":
                 }
             }
             catch (ArgumentOutOfRangeException)
-            { //Du a une entre qui a 2 = de suite... EX:  XX==
+            {
+                //Du a une entre qui a 2 = de suite... EX:  XX==
                 return DteType.DualTitleEncoding;
             }
 
@@ -141,15 +143,18 @@ namespace WpfHexaEditor.Core.CharacterTable
                     return DteType.MultipleTitleEncoding;
             }
             catch (ArgumentOutOfRangeException)
-            { //Du a une entre qui a 2 = de suite... EX:  XX==
+            {
+                //Du a une entre qui a 2 = de suite... EX:  XX==
                 return DteType.DualTitleEncoding;
             }
 
             return DteType.Invalid;
         }
+
         #endregion Methodes Static
 
         #region IEquatable implementation
+
         public override bool Equals(object obj) => Equals(obj as Dte);
 
         public bool Equals(Dte other) => other != null &&
@@ -169,6 +174,7 @@ namespace WpfHexaEditor.Core.CharacterTable
         public static bool operator ==(Dte dTe1, Dte dTe2) => EqualityComparer<Dte>.Default.Equals(dTe1, dTe2);
 
         public static bool operator !=(Dte dTe1, Dte dTe2) => !(dTe1 == dTe2);
+
         #endregion IEquatable implementation
     }
 }

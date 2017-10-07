@@ -19,17 +19,19 @@ namespace WpfHexaEditor
 {
     internal class HexByte : TextBlock, IByteControl
     {
-
         #region Global class variables
+
         private KeyDownLabel _keyDownLabel = KeyDownLabel.FirstChar;
         private readonly HexEditor _parent;
         private bool _isSelected;
         private bool _isHighLight;
         private ByteAction _action = ByteAction.Nothing;
         private byte? _byte;
+
         #endregion global class variables
 
         #region Events
+
         public event EventHandler ByteModified;
         public event EventHandler MouseSelection;
         public event EventHandler Click;
@@ -48,9 +50,11 @@ namespace WpfHexaEditor
         public event EventHandler CtrlvKey;
         public event EventHandler CtrlcKey;
         public event EventHandler CtrlaKey;
+
         #endregion Events
 
         #region Constructor
+
         public HexByte(HexEditor parent)
         {
             //Parent hexeditor
@@ -63,6 +67,7 @@ namespace WpfHexaEditor
             Padding = new Thickness(2, 0, 0, 0);
 
             #region Binding tooltip
+
             LoadDictionary("/WPFHexaEditor;component/Resources/Dictionary/ToolTipDictionary.xaml");
             var txtBinding = new Binding
             {
@@ -74,13 +79,14 @@ namespace WpfHexaEditor
             // Load ressources dictionnary
             void LoadDictionary(string url)
             {
-                var ttRes = new ResourceDictionary { Source = new Uri(url, UriKind.Relative) };
+                var ttRes = new ResourceDictionary {Source = new Uri(url, UriKind.Relative)};
                 Resources.MergedDictionaries.Add(ttRes);
             }
 
             SetBinding(ToolTipProperty, txtBinding);
+
             #endregion
-                        
+
             //Event
             KeyDown += UserControl_KeyDown;
             MouseDown += HexChar_MouseDown;
@@ -89,13 +95,15 @@ namespace WpfHexaEditor
             ToolTipOpening += UserControl_ToolTipOpening;
             GotFocus += UserControl_GotFocus;
             LostFocus += UserControl_LostFocus;
-            
+
             //Update width
             UpdateDataVisualWidth();
         }
+
         #endregion Contructor
 
         #region Properties
+
         /// <summary>
         /// Position in file
         /// </summary>
@@ -110,7 +118,7 @@ namespace WpfHexaEditor
             set
             {
                 _action = value != ByteAction.All ? value : ByteAction.Nothing;
-                
+
                 UpdateVisual();
             }
         }
@@ -129,7 +137,7 @@ namespace WpfHexaEditor
             set
             {
                 _byte = value;
-                
+
                 if (Action != ByteAction.Nothing && InternalChange == false)
                     ByteModified?.Invoke(this, new EventArgs());
 
@@ -164,7 +172,7 @@ namespace WpfHexaEditor
                 }
             }
         }
-                
+
         /// <summary>
         /// Get of Set if control as marked as highlighted
         /// </summary>   
@@ -181,9 +189,11 @@ namespace WpfHexaEditor
                 }
             }
         }
+
         #endregion properties
 
         #region Methods
+
         /// <summary>
         /// Update Background,foreground and font property
         /// </summary>
@@ -232,7 +242,8 @@ namespace WpfHexaEditor
         private void UpdateAutoHighLiteSelectionByteVisual()
         {
             //Auto highlite selectionbyte
-            if (_parent.AllowAutoHightLighSelectionByte && _parent.SelectionByte != null && Byte == _parent.SelectionByte && !IsSelected)
+            if (_parent.AllowAutoHightLighSelectionByte && _parent.SelectionByte != null &&
+                Byte == _parent.SelectionByte && !IsSelected)
                 Background = _parent.AutoHighLiteSelectionByteBrush;
         }
 
@@ -247,13 +258,13 @@ namespace WpfHexaEditor
                         var chArr = ByteConverters.ByteToHexCharArray(Byte.Value);
                         Text = new string(chArr);
                         break;
-                    case DataVisualType.Decimal:                        
+                    case DataVisualType.Decimal:
                         Text = Byte.Value.ToString("d3");
                         break;
-                }                
+                }
             }
-            else            
-                Text = string.Empty;            
+            else
+                Text = string.Empty;
         }
 
         /// <summary>
@@ -282,9 +293,11 @@ namespace WpfHexaEditor
                     break;
             }
         }
+
         #endregion Methods
 
         #region Events delegate
+
         private void HexChar_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
@@ -293,8 +306,8 @@ namespace WpfHexaEditor
                 Click?.Invoke(this, e);
             }
 
-            if (e.RightButton == MouseButtonState.Pressed)            
-                RightClick?.Invoke(this, e);            
+            if (e.RightButton == MouseButtonState.Pressed)
+                RightClick?.Invoke(this, e);
         }
 
         private void UserControl_KeyDown(object sender, KeyEventArgs e)
@@ -302,6 +315,7 @@ namespace WpfHexaEditor
             if (Byte == null) return;
 
             #region Key validation and launch event if needed
+
             if (KeyValidator.IsUpKey(e.Key))
             {
                 e.Handled = true;
@@ -405,7 +419,9 @@ namespace WpfHexaEditor
                         #region Edit hexadecimal value 
 
                         string key;
-                        key = KeyValidator.IsNumericKey(e.Key) ? KeyValidator.GetDigitFromKey(e.Key).ToString() : e.Key.ToString().ToLower();
+                        key = KeyValidator.IsNumericKey(e.Key)
+                            ? KeyValidator.GetDigitFromKey(e.Key).ToString()
+                            : e.Key.ToString().ToLower();
 
                         //Update byte
                         var byteValueCharArray = ByteConverters.ByteToHexCharArray(Byte.Value);
@@ -446,7 +462,8 @@ namespace WpfHexaEditor
 
         private void UserControl_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (Byte != null && Action != ByteAction.Modified && Action != ByteAction.Deleted && Action != ByteAction.Added && !IsSelected && !IsHighLight)
+            if (Byte != null && Action != ByteAction.Modified && Action != ByteAction.Deleted &&
+                Action != ByteAction.Added && !IsSelected && !IsHighLight)
                 Background = _parent.MouseOverColor;
 
             UpdateAutoHighLiteSelectionByteVisual();
@@ -457,7 +474,8 @@ namespace WpfHexaEditor
 
         private void UserControl_MouseLeave(object sender, MouseEventArgs e)
         {
-            if (Byte != null && Action != ByteAction.Modified && Action != ByteAction.Deleted && Action != ByteAction.Added && !IsSelected && !IsHighLight)
+            if (Byte != null && Action != ByteAction.Modified && Action != ByteAction.Deleted &&
+                Action != ByteAction.Added && !IsSelected && !IsHighLight)
                 Background = Brushes.Transparent;
 
             UpdateAutoHighLiteSelectionByteVisual();
@@ -468,6 +486,7 @@ namespace WpfHexaEditor
             if (Byte == null)
                 e.Handled = true;
         }
+
         #endregion Events delegate
 
         #region Caret events/methods
@@ -495,6 +514,7 @@ namespace WpfHexaEditor
                         break;
                 }
         }
+
         #endregion
     }
 }

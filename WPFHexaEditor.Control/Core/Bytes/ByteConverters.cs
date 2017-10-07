@@ -44,12 +44,12 @@ namespace WpfHexaEditor.Core.Bytes
         /// <remarks>
         /// Code from : https://github.com/pleonex/tinke/blob/master/Be.Windows.Forms.HexBox/ByteCharConverters.cs
         /// </remarks>
-        public static char ByteToChar(byte val) => val > 0x1F && !(val > 0x7E && val < 0xA0) ? (char)val : '.';
-        
+        public static char ByteToChar(byte val) => val > 0x1F && !(val > 0x7E && val < 0xA0) ? (char) val : '.';
+
         /// <summary>
         /// Convert Char to Byte
         /// </summary>
-        public static byte CharToByte(char val) => (byte)val;
+        public static byte CharToByte(char val) => (byte) val;
 
         /// <summary>
         /// Converts a byte array to a hex string. For example: {10,11} = "0A 0B"
@@ -72,7 +72,7 @@ namespace WpfHexaEditor.Core.Bytes
 
             return sb.ToString();
         }
-                
+
         /// <summary>
         /// Convert a byte to char[2].
         /// </summary>
@@ -164,7 +164,8 @@ namespace WpfHexaEditor.Core.Bytes
         /// </summary>
         /// <param name="hex"></param>
         /// <returns>Return Tuple (bool, byte) that bool represent if is a byte</returns>
-        public static (bool success, byte val) HexToUniqueByte(string hex) => (byte.TryParse(hex, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var val), val);
+        public static (bool success, byte val) HexToUniqueByte(string hex) =>
+            (byte.TryParse(hex, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var val), val);
 
         public static (bool success, long position) HexLiteralToLong(string hex)
         {
@@ -176,6 +177,7 @@ namespace WpfHexaEditor.Core.Bytes
             while (i < hex.Length)
             {
                 #region convert
+
                 int x = hex[i++];
 
                 if
@@ -188,6 +190,7 @@ namespace WpfHexaEditor.Core.Bytes
                     throw new ArgumentOutOfRangeException(nameof(hex));
 
                 value = 16 * value + x;
+
                 #endregion
             }
 

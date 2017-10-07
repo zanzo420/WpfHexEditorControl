@@ -14,6 +14,7 @@ namespace WpfHexaEditor.Core.Interfaces
     {
         //Properties
         bool CanRead { get; }
+
         bool CanSeek { get; }
         bool CanUndo { get; }
         bool CanWrite { get; }
@@ -34,6 +35,7 @@ namespace WpfHexaEditor.Core.Interfaces
 
         //Events
         event EventHandler ChangesSubmited;
+
         event EventHandler Closed;
         event EventHandler FillWithByteCompleted;
         event EventHandler LongProcessCanceled;
@@ -48,6 +50,7 @@ namespace WpfHexaEditor.Core.Interfaces
 
         //Methods
         void Close();
+
         void OpenFile();
         int Read(byte[] destination, int offset, int count);
         byte[] Read(int count);

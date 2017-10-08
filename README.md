@@ -14,6 +14,7 @@ Sample with Thingy character table on SNES Final Fantasy II US
 https://www.nuget.org/packages/WPFHexaEditor/
 
 ## Somes features
+- Localized in English, French, Russian and Chinese
 - Include HexBox, an Hexadecimal TextBox with spinner
 - Modify and Delete bytes
 - Save changes

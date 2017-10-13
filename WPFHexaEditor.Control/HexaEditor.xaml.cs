@@ -14,7 +14,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using WpfCaret;
 using WpfHexaEditor.Core;
 using WpfHexaEditor.Core.Bytes;
 using WpfHexaEditor.Core.CharacterTable;

@@ -72,6 +72,7 @@
     <Compile Include="Core\Converters\HexToLongStringConverter.cs" />
     <Compile Include="Core\Interfaces\IByteControl.cs" />
     <Compile Include="Core\MethodExtention\DoubleExtension.cs" />
+    <Compile Include="Core\SerializerHelper.cs" />
     <Compile Include="Core\MethodExtention\StringExtension.cs" />
     <Compile Include="Core\Native\NativeMethods.cs" />
     <Compile Include="Dialog\GiveByteWindow.xaml.cs">

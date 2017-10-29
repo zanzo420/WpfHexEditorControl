@@ -5,10 +5,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using WpfHexaEditor.Core.Interfaces;
 
 namespace WpfHexaEditor.Core.Bytes
 {
+    [Serializable]
     public class ByteModified : IByteModified, IEquatable<ByteModified>
     {
         #region Constructor
@@ -38,21 +40,25 @@ namespace WpfHexaEditor.Core.Bytes
         /// <summary>
         /// Byte mofidied
         /// </summary>
+        [XmlElement("Byte")]
         public byte? Byte { get; set; }
 
         /// <summary>
         /// Action have made in this byte
         /// </summary>
+        [XmlElement("Action")]
         public ByteAction Action { get; set; } = ByteAction.Nothing;
 
         /// <summary>
         /// Get of Set te position in file
         /// </summary>
+        [XmlElement("BytePositionInFile")]
         public long BytePositionInFile { get; set; } = -1;
 
         /// <summary>
         /// Number of byte to undo when this byte is reach
         /// </summary>
+        [XmlIgnore]
         public long UndoLenght { get; set; } = 1;
 
         #endregion properties
@@ -104,13 +110,10 @@ namespace WpfHexaEditor.Core.Bytes
 
         public override bool Equals(object obj) => Equals(obj as ByteModified);
 
-        public bool Equals(ByteModified other)
-        {
-            return other != null &&
-                   EqualityComparer<byte?>.Default.Equals(Byte, other.Byte) &&
-                   Action == other.Action &&
-                   BytePositionInFile == other.BytePositionInFile;
-        }
+        public bool Equals(ByteModified other) => other != null &&
+                                                  EqualityComparer<byte?>.Default.Equals(Byte, other.Byte) &&
+                                                  Action == other.Action &&
+                                                  BytePositionInFile == other.BytePositionInFile;
 
         public override int GetHashCode()
         {
@@ -127,5 +130,6 @@ namespace WpfHexaEditor.Core.Bytes
         public static bool operator !=(ByteModified modified1, ByteModified modified2) => !(modified1 == modified2);
 
         #endregion IEquatable implementation
+
     }
 }

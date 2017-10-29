@@ -119,7 +119,7 @@
 
             <control:HexEditor x:Name="HexEdit"
                                ByteSpacerPositioning="HexBytePanel"
-                               ByteGrouping="EightByte"
+                               ByteGrouping="FourByte"
                                ByteSpacerWidthTickness="Normal"
                                AllowByteCount="False"
                                ByteSpacerVisualStyle="Dash"

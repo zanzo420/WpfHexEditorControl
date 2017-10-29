@@ -501,8 +501,7 @@ namespace WpfHexaEditor.Core.Bytes
         /// <summary>
         /// Check if the byte in parameter are modified and return original Bytemodified from list
         /// </summary>
-        public (bool success, ByteModified val) CheckIfIsByteModified(long bytePositionInFile,
-            ByteAction action = ByteAction.Modified)
+        public (bool success, ByteModified val) CheckIfIsByteModified(long bytePositionInFile, ByteAction action = ByteAction.Modified)
         {
             return _byteModifiedDictionary.TryGetValue(bytePositionInFile, out var byteModified)
                    && byteModified.IsValid && (byteModified.Action == action || action == ByteAction.All)

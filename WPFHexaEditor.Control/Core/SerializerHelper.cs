@@ -1,13 +1,14 @@
 ﻿//////////////////////////////////////////////
 // Fork by : Derek Tremblay (derektremblay666@gmail.com)
-// Original code : https://stackoverflow.com/questions/11447529/convert-an-object-to-an-xml-string
+// Original code from : https://stackoverflow.com/questions/11447529/convert-an-object-to-an-xml-string
 //////////////////////////////////////////////
 
+using System.IO;
 using System.Xml.Serialization;
 
 namespace WpfHexaEditor.Core
 {
-    internal class SerializeHelper
+    public class SerializerHelper
     {
         /// <summary>
         /// Serialize an object
@@ -16,7 +17,7 @@ namespace WpfHexaEditor.Core
         {
             if (dataToSerialize == null) return null;
 
-            using (var stringwriter = new System.IO.StringWriter())
+            using (var stringwriter = new StringWriter())
             {
                 var serializer = new XmlSerializer(typeof(T));
                 serializer.Serialize(stringwriter, dataToSerialize);
@@ -31,7 +32,7 @@ namespace WpfHexaEditor.Core
         {
             if (string.IsNullOrWhiteSpace(xmlText)) return default(T);
 
-            using (var stringReader = new System.IO.StringReader(xmlText))
+            using (var stringReader = new StringReader(xmlText))
             {
                 var serializer = new XmlSerializer(typeof(T));
                 return (T) serializer.Deserialize(stringReader);

@@ -29,36 +29,60 @@ namespace WpfHexaEditor
     public partial class HexEditor : IDisposable
     {
         #region Global class variables
-
-        //byte provider for work with file in stream currently loaded in control.
+        /// <summary>
+        /// Byte provider for work with file or stream currently loaded in control.
+        /// </summary>
         private ByteProvider _provider;
 
-        //The large change of scroll when clicked on bar
+        /// <summary>
+        /// The large change of scroll when clicked on scrollbar
+        /// </summary>
         private double _scrollLargeChange = 100;
 
-        //List of byte are high light
+        /// <summary>
+        /// List of byte are highlighted
+        /// </summary>
         private Dictionary<long, long> _markedPositionList = new Dictionary<long, long>();
 
-        //Byte position in file when mouse right click occurs;
+        /// <summary>
+        /// Byte position in file when mouse right click occurs.
+        /// </summary>
         private long _rightClickBytePosition = -1;
 
-        //Custom character table loaded.
+        /// <summary>
+        /// Custom character table loaded. Used for show byte as texte.
+        /// </summary>
         private TblStream _tblCharacterTable;
 
-        //Hold the count of all byte in file. 
+        /// <summary>
+        /// Hold the count of all byte in file.
+        /// </summary>
         private long[] _bytecount;
 
-        //Save the buffer as a field,To save the time when Scolling.not building them every time when scolling;
+        /// <summary>
+        /// Save the view byte buffer as a field. 
+        /// To save the time when Scolling i do not building them every time when scolling.
+        /// </summary>
         private byte[] _viewBuffer;
 
+        /// <summary>
+        /// Used for control the view on refresh
+        /// </summary>
         private long _priLevel;
 
-        //Used with VerticalMoveByTime methods/events to move the scrollbar
+        /// <summary>
+        /// Used with VerticalMoveByTime methods/events to move the scrollbar.
+        /// </summary>
         private bool _mouseOnBottom, _mouseOnTop;
 
+        /// <summary>
+        /// Used with VerticalMoveByTime methods/events to move the scrollbar.
+        /// </summary>
         private long _bottomEnterTimes, _topEnterTimes;
 
-        //Caret
+        /// <summary>
+        /// Caret used in control to view position
+        /// </summary>
         private readonly Caret _caret = new Caret();
 
         #endregion Global Class variables
@@ -2510,16 +2534,9 @@ namespace WpfHexaEditor
         private void UpdateHighLight()
         {
             if (_markedPositionList.Count > 0)
-            {
-                TraverseHexAndStringBytes(ctrl =>
-                {
-                    ctrl.IsHighLight =
-                        _markedPositionList.ContainsKey(ctrl
-                            .BytePositionInFile); //_markedPositionList.FindIndex(c => c == ctrl.BytePositionInFile) != -1;
-                });
-            }
+                TraverseHexAndStringBytes(ctrl => ctrl.IsHighLight = _markedPositionList.ContainsKey(ctrl.BytePositionInFile));
             else //Un highlight all            
-                TraverseHexAndStringBytes(ctrl => { ctrl.IsHighLight = false; });
+                TraverseHexAndStringBytes(ctrl => ctrl.IsHighLight = false);
         }
 
         /// <summary>
@@ -2912,9 +2929,7 @@ namespace WpfHexaEditor
         /// <returns>Return null if no occurence found</returns>
         public IEnumerable<long> FindAllSelection(bool highLight)
         {
-            if (SelectionLength > 0)
-                return FindAll(SelectionByteArray, highLight);
-            return null;
+            return SelectionLength > 0 ? FindAll(SelectionByteArray, highLight) : null;
         }
 
         #endregion Find methods

@@ -231,7 +231,7 @@ namespace WpfHexaEditor
         /// <summary>
         /// Update control label from byte property
         /// </summary>
-        internal void UpdateLabelFromByte()
+        private void UpdateLabelFromByte()
         {
             if (Byte != null)
             {

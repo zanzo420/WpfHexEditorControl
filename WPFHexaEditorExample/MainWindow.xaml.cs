@@ -53,7 +53,7 @@ namespace WPFHexaEditorExample
         private void SaveMenu_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.MainWindow.Cursor = Cursors.Wait;
-            ///HexEdit.SaveTBLFile();
+            //HexEdit.SaveTBLFile();
             HexEdit.SubmitChanges();
             Application.Current.MainWindow.Cursor = null;
         }
@@ -126,15 +126,6 @@ namespace WPFHexaEditorExample
             HexEdit.DeleteSelection();
         }
 
-        private void ShowScrollMenu_Click(object sender, RoutedEventArgs e)
-        {
-            UpdateSetting(SettingEnum.ScrollVisibility);
-        }
-
-        private void SetPositionMenu_Click(object sender, RoutedEventArgs e)
-        {
-        }
-
         private void GOPosition_Click(object sender, RoutedEventArgs e)
         {
             if (long.TryParse(PositionText.Text, out var position))
@@ -159,18 +150,12 @@ namespace WPFHexaEditorExample
 
         private void PositionHexText_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (ByteConverters.IsHexaValue(PositionHexText.Text).success)
-                GoPositionHexaButton.IsEnabled = true;
-            else
-                GoPositionHexaButton.IsEnabled = false;
+            GoPositionHexaButton.IsEnabled = ByteConverters.IsHexaValue(PositionHexText.Text).success;
         }
 
         private void PositionText_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (long.TryParse(PositionText.Text, out var position))
-                GoPositionButton.IsEnabled = true;
-            else
-                GoPositionButton.IsEnabled = false;
+            GoPositionButton.IsEnabled = long.TryParse(PositionText.Text, out var _);
         }
 
         private void UndoMenu_Click(object sender, RoutedEventArgs e)
@@ -268,10 +253,7 @@ namespace WPFHexaEditorExample
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
-        }
-
-        private void TextBlock_GotFocus(object sender, RoutedEventArgs e)
-        {
+            HexEdit.FontSize = 16;
         }
     }
 }

@@ -14,7 +14,7 @@ using System.Threading;
 
 namespace WpfHexaEditor.Core
 {
-    public class Caret : FrameworkElement, INotifyPropertyChanged
+    public sealed class Caret : FrameworkElement, INotifyPropertyChanged
     {
         #region Global class variables
         private Timer _timer;
@@ -212,7 +212,7 @@ namespace WpfHexaEditor.Core
         public event PropertyChangedEventHandler PropertyChanged;
 
         //[NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

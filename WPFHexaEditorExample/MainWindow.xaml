@@ -124,6 +124,7 @@
                                AllowByteCount="False"
                                ByteSpacerVisualStyle="Dash"
                                DataStringVisual="Hexadecimal"
+                               FontSize="12"
                                Width="Auto"
                                Height="Auto"
                                Margin="2" />

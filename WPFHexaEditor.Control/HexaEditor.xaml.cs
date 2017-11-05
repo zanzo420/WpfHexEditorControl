@@ -2063,9 +2063,7 @@ namespace WpfHexaEditor
                 if (cnt++ == visibleLine) break;
 
                 if (ctrl is TextBlock lineInfo)
-                {
                     act(lineInfo);
-                }
             }
         }
 
@@ -2081,10 +2079,9 @@ namespace WpfHexaEditor
             foreach (var ctrl in HexHeaderStackPanel.Children)
             {
                 if (cnt++ == visibleLine) break;
+
                 if (ctrl is TextBlock column)
-                {
                     act(column);
-                }
             }
         }
 

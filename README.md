@@ -10,7 +10,7 @@ Sample with standard ASCII character table
 Sample with Thingy character table on SNES Final Fantasy II US
 ![example](Sample8-TBL.png?raw=true)
 
-## NUGET  Last version : 2017-09-04 (v1.0.5)
+## NUGET  Last version : 2017-09 (v1.2.1)
 https://www.nuget.org/packages/WPFHexaEditor/
 
 ## Somes features

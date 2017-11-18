@@ -1,7 +1,7 @@
 ![example](Logo.png?raw=true)
 
 ## Wpf HexEditor control       (Developped in C# 7.0 / Framework 4.5)
-A fast, fully customisable WPF user control for editing file or stream as hexadecimal.
+A fast, fully customisable Wpf user control for editing file or stream as hexadecimal.
 
 
 Sample with standard ASCII character table

@@ -213,7 +213,8 @@ namespace WpfHexaEditor
 
         private static readonly DependencyProperty TextProperty =
             DependencyProperty.Register(nameof(Text), typeof(string), typeof(HexByte),
-                new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.AffectsRender));
+                new FrameworkPropertyMetadata(string.Empty, 
+                    FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure));
 
         /// <summary>
         /// Text to be displayed representation of Byte

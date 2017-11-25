@@ -156,11 +156,10 @@ namespace WpfHexaEditor
             get => _isSelected;
             set
             {
-                if (value != _isSelected)
-                {
-                    _isSelected = value;
-                    UpdateVisual();
-                }
+                if (value == _isSelected) return;
+
+                _isSelected = value;
+                UpdateVisual();
             }
         }
 
@@ -172,12 +171,11 @@ namespace WpfHexaEditor
             get => _isHighLight;
             set
             {
-                if (value != _isHighLight)
-                {
-                    _isHighLight = value;
-                    _keyDownLabel = KeyDownLabel.FirstChar;
-                    UpdateVisual();
-                }
+                if (value == _isHighLight) return;
+
+                _isHighLight = value;
+                _keyDownLabel = KeyDownLabel.FirstChar;
+                UpdateVisual();
             }
         }
 

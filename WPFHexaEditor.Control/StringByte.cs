@@ -134,11 +134,10 @@ namespace WpfHexaEditor
             get => _isSelected;
             set
             {
-                if (value != _isSelected)
-                {
-                    _isSelected = value;
-                    UpdateVisual();
-                }
+                if (value == _isSelected) return;
+
+                _isSelected = value;
+                UpdateVisual();
             }
         }
 
@@ -150,11 +149,10 @@ namespace WpfHexaEditor
             get => _isHighLight;
             set
             {
-                if (value != _isHighLight)
-                {
-                    _isHighLight = value;
-                    UpdateVisual();
-                }
+                if (value == _isHighLight) return;
+
+                _isHighLight = value;
+                UpdateVisual();
             }
         }
 
@@ -285,7 +283,7 @@ namespace WpfHexaEditor
                 {
                     case CharacterTableType.Ascii:
                         Text = ByteConverters.ByteToChar(Byte.Value).ToString();
-                        Width = 12;
+                        //Width = 12;
                         break;
                     case CharacterTableType.TblFile:
                         if (TblCharacterTable != null)
@@ -306,20 +304,20 @@ namespace WpfHexaEditor
 
                             Text = content;
 
-                            switch (Dte.TypeDte(content))
-                            {
-                                case DteType.DualTitleEncoding:
-                                    Width = 16;
-                                    break;
-                                case DteType.MultipleTitleEncoding:
-                                case DteType.EndLine:
-                                case DteType.EndBlock:
-                                    Width = Text.GetScreenSize(_parent.FontFamily, _parent.FontSize, _parent.FontStyle, FontWeight, _parent.FontStretch).Width;
-                                    break;
-                                default:
-                                    Width = 12;
-                                    break;
-                            }
+                            //switch (Dte.TypeDte(content))
+                            //{
+                            //    case DteType.DualTitleEncoding:
+                            //        Width = 16;
+                            //        break;
+                            //    case DteType.MultipleTitleEncoding:
+                            //    case DteType.EndLine:
+                            //    case DteType.EndBlock:
+                            //        Width = Text.GetScreenSize(_parent.FontFamily, _parent.FontSize, _parent.FontStyle, FontWeight, _parent.FontStretch).Width;
+                            //        break;
+                            //    default:
+                            //        Width = 12;
+                            //        break;
+                            //}
                         }
                         else
                             goto case CharacterTableType.Ascii;
@@ -412,8 +410,21 @@ namespace WpfHexaEditor
 
             //Draw text
             var typeface = new Typeface(_parent.FontFamily, _parent.FontStyle, FontWeight, _parent.FontStretch);
-            var formatedText = new FormattedText(Text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, _parent.FontSize, Foreground);
-            dc.DrawText(formatedText, new Point(0, 0));
+            var ft = new FormattedText(Text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, _parent.FontSize, Foreground);
+            dc.DrawText(ft, new Point(0, 0));
+
+            #region Update width of control 
+            //It's 8-10 time more fastest to update width on render for TBL string
+            switch (TypeOfCharacterTable)
+            {
+                case CharacterTableType.Ascii:
+                    Width = 12;
+                    break;
+                case CharacterTableType.TblFile:
+                    Width = ft.Width;
+                    break;
+            }
+            #endregion
         }
 
         private void UpdateAutoHighLiteSelectionByteVisual()

@@ -16,7 +16,6 @@ using WpfHexaEditor.Core;
 using WpfHexaEditor.Core.Bytes;
 using WpfHexaEditor.Core.CharacterTable;
 using WpfHexaEditor.Core.Interfaces;
-using WpfHexaEditor.Core.MethodExtention;
 
 namespace WpfHexaEditor
 {
@@ -162,7 +161,7 @@ namespace WpfHexaEditor
         public bool ReadOnlyMode { get; set; }
 
         /// <summary>
-        /// Used to prevent StringByte event occurc when we dont want!
+        /// Used to prevent StringByte event occur when we dont want!
         /// </summary>
         public bool InternalChange { get; set; }
 
@@ -283,7 +282,6 @@ namespace WpfHexaEditor
                 {
                     case CharacterTableType.Ascii:
                         Text = ByteConverters.ByteToChar(Byte.Value).ToString();
-                        //Width = 12;
                         break;
                     case CharacterTableType.TblFile:
                         if (TblCharacterTable != null)
@@ -303,21 +301,6 @@ namespace WpfHexaEditor
                                 content = TblCharacterTable.FindMatch(ByteConverters.ByteToHex(Byte.Value), true);
 
                             Text = content;
-
-                            //switch (Dte.TypeDte(content))
-                            //{
-                            //    case DteType.DualTitleEncoding:
-                            //        Width = 16;
-                            //        break;
-                            //    case DteType.MultipleTitleEncoding:
-                            //    case DteType.EndLine:
-                            //    case DteType.EndBlock:
-                            //        Width = Text.GetScreenSize(_parent.FontFamily, _parent.FontSize, _parent.FontStyle, FontWeight, _parent.FontStretch).Width;
-                            //        break;
-                            //    default:
-                            //        Width = 12;
-                            //        break;
-                            //}
                         }
                         else
                             goto case CharacterTableType.Ascii;
@@ -421,7 +404,7 @@ namespace WpfHexaEditor
                     Width = 12;
                     break;
                 case CharacterTableType.TblFile:
-                    Width = ft.Width;
+                    Width = ft.Width > 12 ? ft.Width : 12;
                     break;
             }
             #endregion

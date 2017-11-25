@@ -30,7 +30,7 @@ namespace WpfHexaEditor
         private ByteAction _action = ByteAction.Nothing;
         private byte? _byte;
         private CharacterTableType _typeOfCharacterTable;
-        private bool _tblShowMte;
+        private bool _tblShowMte = true;
 
         #endregion Global variable
 
@@ -68,8 +68,6 @@ namespace WpfHexaEditor
             Width = 10;
             Focusable = true;
             DataContext = this;
-            //Padding = new Thickness(0);
-            //TextAlignment = TextAlignment.Center;
 
             #region Binding tooltip
 
@@ -185,8 +183,7 @@ namespace WpfHexaEditor
         }
 
         #endregion Properties
-
-
+        
         #region Private base properties
 
         /// <summary>
@@ -312,6 +309,8 @@ namespace WpfHexaEditor
                             switch (Dte.TypeDte(content))
                             {
                                 case DteType.DualTitleEncoding:
+                                    Width = 16;
+                                    break;
                                 case DteType.MultipleTitleEncoding:
                                 case DteType.EndLine:
                                 case DteType.EndBlock:

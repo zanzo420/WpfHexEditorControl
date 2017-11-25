@@ -609,7 +609,7 @@ namespace WpfHexaEditor
         // Using a DependencyProperty as the backing store for TBLDTEColor.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TblmteColorProperty =
             DependencyProperty.Register(nameof(TblmteColor), typeof(SolidColorBrush), typeof(HexEditor),
-                new FrameworkPropertyMetadata(Brushes.DarkBlue,
+                new FrameworkPropertyMetadata(Brushes.DarkSlateGray,
                     TBLColor_Changed));
 
         /// <summary>

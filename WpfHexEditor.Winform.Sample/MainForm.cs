@@ -17,7 +17,7 @@ namespace WpfHexEditor.Winform.Sample
             var fileDialog = new OpenFileDialog();
 
             if (fileDialog.ShowDialog() == DialogResult.OK && File.Exists(fileDialog.FileName))
-                hexEditor1.FileName = fileDialog.FileName;
+                hexEditor.FileName = fileDialog.FileName;
         }
 
         private void toolStripButton2_Click(object sender, EventArgs e)
@@ -26,8 +26,8 @@ namespace WpfHexEditor.Winform.Sample
 
             if (fileDialog.ShowDialog() == DialogResult.OK && File.Exists(fileDialog.FileName))
             {
-                hexEditor1.LoadTblFile(fileDialog.FileName);
-                hexEditor1.TypeOfCharacterTable = CharacterTableType.TblFile;
+                hexEditor.LoadTblFile(fileDialog.FileName);
+                hexEditor.TypeOfCharacterTable = CharacterTableType.TblFile;
             }
         }
     }

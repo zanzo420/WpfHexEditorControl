@@ -28,21 +28,21 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.HexEditor = new System.Windows.Forms.Integration.ElementHost();
-            this.hexEditor1 = new WpfHexaEditor.HexEditor();
+            this.elementHost = new System.Windows.Forms.Integration.ElementHost();
+            this.hexEditor = new WpfHexaEditor.HexEditor();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // HexEditor
+            // elementHost
             // 
-            this.HexEditor.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.HexEditor.Location = new System.Drawing.Point(0, 41);
-            this.HexEditor.Name = "HexEditor";
-            this.HexEditor.Size = new System.Drawing.Size(868, 396);
-            this.HexEditor.TabIndex = 1;
-            this.HexEditor.Text = "HexEditor";
-            this.HexEditor.Child = this.hexEditor1;
+            this.elementHost.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.elementHost.Location = new System.Drawing.Point(0, 41);
+            this.elementHost.Name = "elementHost";
+            this.elementHost.Size = new System.Drawing.Size(868, 396);
+            this.elementHost.TabIndex = 1;
+            this.elementHost.Text = "elementHost";
+            this.elementHost.Child = this.hexEditor;
             // 
             // button1
             // 
@@ -71,7 +71,7 @@
             this.ClientSize = new System.Drawing.Size(868, 437);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.HexEditor);
+            this.Controls.Add(this.elementHost);
             this.Name = "MainForm";
             this.Text = "WpfHexEditor Winform sample";
             this.ResumeLayout(false);
@@ -80,8 +80,8 @@
 
         #endregion
 
-        private System.Windows.Forms.Integration.ElementHost HexEditor;
-        private WpfHexaEditor.HexEditor hexEditor1;
+        private System.Windows.Forms.Integration.ElementHost elementHost;
+        private WpfHexaEditor.HexEditor hexEditor;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
     }

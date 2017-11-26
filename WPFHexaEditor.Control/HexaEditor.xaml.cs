@@ -3403,8 +3403,8 @@ namespace WpfHexaEditor
                 //Dispose managed object
                 if (disposing)
                 {
-                    _provider.Dispose();
-                    _tblCharacterTable.Dispose();
+                    _provider?.Dispose();
+                    _tblCharacterTable?.Dispose();
                     _viewBuffer = null;
                     _markedPositionList = null;
                 }

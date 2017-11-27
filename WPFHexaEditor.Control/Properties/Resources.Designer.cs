@@ -61,6 +61,15 @@ namespace WpfHexaEditor.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à You have reached the end of file. Do you want append one byte ? This operation cannot be canceled if you continue..
+        /// </summary>
+        public static string AppendByteConfirmationString {
+            get {
+                return ResourceManager.GetString("AppendByteConfirmationString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Bookmarks.
         /// </summary>
         public static string BookmarksString {

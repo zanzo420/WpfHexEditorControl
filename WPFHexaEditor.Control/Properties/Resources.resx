@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AppendByteConfirmationString" xml:space="preserve">
+    <value>You have reached the end of file. Do you want append one byte ? This operation cannot be canceled if you continue.</value>
+  </data>
   <data name="BookmarksString" xml:space="preserve">
     <value>Bookmarks</value>
   </data>

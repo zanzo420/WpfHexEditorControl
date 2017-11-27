@@ -243,4 +243,7 @@
   <data name="UndoString" xml:space="preserve">
     <value>Annuler</value>
   </data>
+  <data name="AppendByteConfirmationString" xml:space="preserve">
+    <value>Vous avez atteint la fin du fichier. Voulez-vous ajouter un octet? Cette opération ne peut pas être annulée si vous continuez.</value>
+  </data>
 </root>

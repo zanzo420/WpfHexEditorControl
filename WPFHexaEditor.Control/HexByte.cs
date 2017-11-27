@@ -499,6 +499,7 @@ namespace WpfHexaEditor
                                 Byte = ByteConverters.HexToByte(
                                     byteValueCharArray[0] + byteValueCharArray[1].ToString())[0];
 
+                                //Insert byte at end of file
                                 if (_parent.Lenght == BytePositionInFile + 1)
                                 {
                                     byte byteToAppend = 0;

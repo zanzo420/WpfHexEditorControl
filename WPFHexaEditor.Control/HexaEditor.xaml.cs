@@ -3554,13 +3554,22 @@ namespace WpfHexaEditor
         #endregion
 
         #region AppendByte to end of file
-        
+
+        public bool AllowAppend { get; set; } = true;
+        public bool AppendNeedConfirmation { get; set; } = true;
+
         /// <summary>
         /// Append one byte at end of file
         /// </summary>
         internal void AppendByte(byte byteToAppend)
         {
+            if (!AllowAppend) return;
             if (!ByteProvider.CheckIsOpen(_provider)) return;
+
+            if (AppendNeedConfirmation)
+                if (MessageBox.Show(Properties.Resources.AppendByteConfirmationString, string.Empty,
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Question, MessageBoxResult.Yes) != MessageBoxResult.Yes) return;
 
             _provider.AppendByte(byteToAppend);
             RefreshView();

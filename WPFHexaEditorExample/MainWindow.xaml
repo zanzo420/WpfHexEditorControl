@@ -218,6 +218,8 @@
                 Height="Auto"
                 Margin="2"
                 AllowByteCount="False"
+                AllowAppend="True"
+                AppendNeedConfirmation="False"
                 ByteGrouping="FourByte"
                 ByteSpacerPositioning="HexBytePanel"
                 ByteSpacerVisualStyle="Dash"

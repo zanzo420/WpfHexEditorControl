@@ -585,6 +585,14 @@ namespace WpfHexaEditor
                 {
                     Action = ByteAction.Modified;
                     Byte = ByteConverters.CharToByte(Text[0]);
+
+                    //Insert byte at end of file
+                    if (_parent.Lenght == BytePositionInFile + 1)
+                    {
+                        byte byteToAppend = 0;
+                        _parent.AppendByte(byteToAppend);
+                    }
+
                     MoveNext(this, new EventArgs());
                 }
             }

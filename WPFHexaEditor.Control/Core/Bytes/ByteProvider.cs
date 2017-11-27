@@ -501,7 +501,8 @@ namespace WpfHexaEditor.Core.Bytes
         /// <summary>
         /// Check if the byte in parameter are modified and return original Bytemodified from list
         /// </summary>
-        public (bool success, ByteModified val) CheckIfIsByteModified(long bytePositionInFile, ByteAction action = ByteAction.Modified)
+        public (bool success, ByteModified val) CheckIfIsByteModified(long bytePositionInFile,
+            ByteAction action = ByteAction.Modified)
         {
             return _byteModifiedDictionary.TryGetValue(bytePositionInFile, out var byteModified)
                    && byteModified.IsValid && (byteModified.Action == action || action == ByteAction.All)
@@ -1289,6 +1290,22 @@ namespace WpfHexaEditor.Core.Bytes
             }
 
             return null;
+        }
+
+        #endregion
+
+        #region Add byte at end of file
+
+        /// <summary>
+        /// Append byte at end of file
+        /// </summary>
+        /// <param name="byteToAppend"></param>
+        public void AppendByte(byte byteToAppend)
+        {
+            _stream.Position = _stream.Length;
+            _stream.SetLength(Length + 1);
+            _stream.WriteByte(byteToAppend);
+
         }
 
         #endregion

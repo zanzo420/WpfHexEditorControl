@@ -136,12 +136,10 @@ namespace WpfHexaEditor
             }
         }
 
-
         /// <summary>
         /// Used to prevent ByteModified event occurc when we dont want! 
         /// </summary>
         public bool InternalChange { get; set; }
-
 
         /// <summary>
         /// Get or set if control as in read only mode
@@ -335,6 +333,7 @@ namespace WpfHexaEditor
             IsHighLight = false;
             IsSelected = false;
             InternalChange = false;
+            _keyDownLabel = KeyDownLabel.FirstChar;
         }
 
         public void UpdateDataVisualWidth()
@@ -500,8 +499,16 @@ namespace WpfHexaEditor
                                 Byte = ByteConverters.HexToByte(
                                     byteValueCharArray[0] + byteValueCharArray[1].ToString())[0];
 
+                                if (_parent.Lenght == BytePositionInFile + 1)
+                                {
+                                    byte byteToAppend = 0;
+                                    _parent.AppendByte(byteToAppend);
+                                }
+
                                 //Move focus event
+                                _keyDownLabel = KeyDownLabel.NextPosition;
                                 MoveNext?.Invoke(this, new EventArgs());
+
                                 break;
                         }
 
@@ -566,6 +573,7 @@ namespace WpfHexaEditor
 
         protected override void OnGotFocus(RoutedEventArgs e)
         {
+            _keyDownLabel = KeyDownLabel.FirstChar;
             UpdateCaret();
 
             base.OnGotFocus(e);

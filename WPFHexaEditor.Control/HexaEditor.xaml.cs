@@ -1672,6 +1672,11 @@ namespace WpfHexaEditor
         }
 
         /// <summary>
+        /// Get the lenght of file/stream are opened in control
+        /// </summary>
+        public long Lenght => ByteProvider.CheckIsOpen(_provider) ? _provider.Length : -1;
+
+        /// <summary>
         /// Close file and clear control
         /// ReadOnlyMode is reset to false
         /// </summary>
@@ -3546,6 +3551,20 @@ namespace WpfHexaEditor
 
         public bool IsCaretVisible => _caret.IsVisibleCaret;
 
+        #endregion
+
+        #region AppendByte to end of file
+        
+        /// <summary>
+        /// Append one byte at end of file
+        /// </summary>
+        internal void AppendByte(byte byteToAppend)
+        {
+            if (!ByteProvider.CheckIsOpen(_provider)) return;
+
+            _provider.AppendByte(byteToAppend);
+            RefreshView();
+        }
         #endregion
     }
 }

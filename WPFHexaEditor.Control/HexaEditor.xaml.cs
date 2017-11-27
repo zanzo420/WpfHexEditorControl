@@ -2489,11 +2489,9 @@ namespace WpfHexaEditor
                     {
                         Height = LineHeight,
                         AutoWidth = false,
-                        //Padding = new Thickness(2, 0, 10, 0),
                         Foreground = ForegroundOffSetHeaderColor,
-                        //TextAlignment = TextAlignment.Center,
-                        ToolTip = $"Column : {i}",
-                        //FontFamily = FontFamily
+                        RenderPoint = new Point(2, 0),
+                        ToolTip = $"Column : {i}"
                     };
 
                     #region Set text visual of header
@@ -2536,13 +2534,9 @@ namespace WpfHexaEditor
                     var lineInfoLabel = new FastTextLine(this)
                     {
                         Height = LineHeight,
-                        //Width = 75,
-                        //Padding = new Thickness(0, 0, 10, 0),
                         Foreground = ForegroundOffSetHeaderColor,
                         HorizontalAlignment = HorizontalAlignment.Left,
                         VerticalAlignment = VerticalAlignment.Center,
-                        //TextAlignment = TextAlignment.Left,
-                        //FontFamily = FontFamily
                     };
 
                     //Events

@@ -99,7 +99,22 @@ namespace WpfHexaEditor
 
         #endregion Base properties
 
+        #region Properties
+
         public bool AutoWidth { get; set; } = true;
+        
+        public Point RenderPoint
+        {
+            get => (Point)GetValue(RenderPointProperty);
+            set => SetValue(RenderPointProperty, value);
+        }
+
+        // Using a DependencyProperty as the backing store for RenderPoint.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty RenderPointProperty =
+            DependencyProperty.Register(nameof(RenderPoint), typeof(Point), typeof(FastTextLine),
+                new FrameworkPropertyMetadata(new Point(0, 0), FrameworkPropertyMetadataOptions.AffectsMeasure));
+        
+        #endregion
 
         /// <summary>
         /// Render the control
@@ -113,10 +128,10 @@ namespace WpfHexaEditor
             //Draw text
             var typeface = new Typeface(_parent.FontFamily, _parent.FontStyle, FontWeight, _parent.FontStretch);
             var formatedText = new FormattedText(Text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, _parent.FontSize, Foreground);
-            dc.DrawText(formatedText, new Point(0, 0));
+            dc.DrawText(formatedText, new Point(RenderPoint.X, RenderPoint.Y));
 
             if (AutoWidth)
-                Width = formatedText.Width;
+                Width = formatedText.Width + RenderPoint.X;
         }
 
     }

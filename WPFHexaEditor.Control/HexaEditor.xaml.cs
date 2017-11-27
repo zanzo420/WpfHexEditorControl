@@ -2488,6 +2488,7 @@ namespace WpfHexaEditor
                     var lineInfoLabel = new FastTextLine(this)
                     {
                         Height = LineHeight,
+                        AutoWidth = false,
                         //Padding = new Thickness(2, 0, 10, 0),
                         Foreground = ForegroundOffSetHeaderColor,
                         //TextAlignment = TextAlignment.Center,
@@ -2535,7 +2536,7 @@ namespace WpfHexaEditor
                     var lineInfoLabel = new FastTextLine(this)
                     {
                         Height = LineHeight,
-                        Width = 75,
+                        //Width = 75,
                         //Padding = new Thickness(0, 0, 10, 0),
                         Foreground = ForegroundOffSetHeaderColor,
                         HorizontalAlignment = HorizontalAlignment.Left,

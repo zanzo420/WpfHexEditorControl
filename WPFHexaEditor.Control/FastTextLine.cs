@@ -98,7 +98,9 @@ namespace WpfHexaEditor
         }
 
         #endregion Base properties
-        
+
+        public bool AutoWidth { get; set; } = true;
+
         /// <summary>
         /// Render the control
         /// </summary>
@@ -111,7 +113,10 @@ namespace WpfHexaEditor
             //Draw text
             var typeface = new Typeface(_parent.FontFamily, _parent.FontStyle, FontWeight, _parent.FontStretch);
             var formatedText = new FormattedText(Text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, _parent.FontSize, Foreground);
-            dc.DrawText(formatedText, new Point(2, 0));
+            dc.DrawText(formatedText, new Point(0, 0));
+
+            if (AutoWidth)
+                Width = formatedText.Width;
         }
 
     }

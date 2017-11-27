@@ -16,6 +16,7 @@ Sample with Thingy character table on SNES Final Fantasy II US
 https://www.nuget.org/packages/WPFHexaEditor/
 
 ## Somes features
+- Append byte at end of file (one at time for now... more soon)
 - Localized in English, French, Russian and Chinese
 - Include HexBox, an Hexadecimal TextBox with spinner
 - Modify and Delete bytes

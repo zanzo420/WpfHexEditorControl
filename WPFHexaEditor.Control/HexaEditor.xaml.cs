@@ -765,13 +765,13 @@ namespace WpfHexaEditor
 
         private void LineInfoLabel_MouseMove(object sender, MouseEventArgs e)
         {
-            if (sender is TextBlock line && e.LeftButton == MouseButtonState.Pressed)
+            if (sender is FastTextLine line && e.LeftButton == MouseButtonState.Pressed)
                 SelectionStop = ByteConverters.HexLiteralToLong(line.Text).position + BytePerLine - 1;
         }
 
         private void LineInfoLabel_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (sender is TextBlock line)
+            if (sender is FastTextLine line)
             {
                 SelectionStart = ByteConverters.HexLiteralToLong(line.Text).position;
                 SelectionStop = SelectionStart + BytePerLine - 1;
@@ -1992,7 +1992,7 @@ namespace WpfHexaEditor
         /// <summary>
         /// Used to make action on all visible lineinfos
         /// </summary>
-        private void TraverseLineInfos(Action<TextBlock> act)
+        private void TraverseLineInfos(Action<FastTextLine> act)
         {
             var visibleLine = MaxVisibleLine;
             var cnt = 0;
@@ -2002,7 +2002,7 @@ namespace WpfHexaEditor
             {
                 if (cnt++ == visibleLine) break;
 
-                if (ctrl is TextBlock lineInfo)
+                if (ctrl is FastTextLine lineInfo)
                     act(lineInfo);
             }
         }
@@ -2010,7 +2010,7 @@ namespace WpfHexaEditor
         /// <summary>
         /// Used to make action on all visible header
         /// </summary>
-        private void TraverseHexHeader(Action<TextBlock> act)
+        private void TraverseHexHeader(Action<FastTextLine> act)
         {
             var visibleLine = MaxVisibleLine;
             var cnt = 0;
@@ -2020,7 +2020,7 @@ namespace WpfHexaEditor
             {
                 if (cnt++ == visibleLine) break;
 
-                if (ctrl is TextBlock column)
+                if (ctrl is FastTextLine column)
                     act(column);
             }
         }
@@ -2340,7 +2340,7 @@ namespace WpfHexaEditor
                 if (LinesInfoStackPanel.Children.Count == 0)
                     return;
 
-                var firstInfoLabel = LinesInfoStackPanel.Children[0] as TextBlock;
+                var firstInfoLabel = LinesInfoStackPanel.Children[0] as FastTextLine;
                 var startPosition = ByteConverters.HexLiteralToLong(firstInfoLabel.Tag.ToString()).position;
                 var sizeReadyToRead = LinesInfoStackPanel.Children.Count * BytePerLine + 1;
                 _provider.Position = startPosition;
@@ -2485,14 +2485,14 @@ namespace WpfHexaEditor
                         AddByteSpacer(HexHeaderStackPanel, i, true);
 
                     //Create control
-                    var lineInfoLabel = new TextBlock
+                    var lineInfoLabel = new FastTextLine(this)
                     {
                         Height = LineHeight,
-                        Padding = new Thickness(2, 0, 10, 0),
+                        //Padding = new Thickness(2, 0, 10, 0),
                         Foreground = ForegroundOffSetHeaderColor,
-                        TextAlignment = TextAlignment.Center,
+                        //TextAlignment = TextAlignment.Center,
                         ToolTip = $"Column : {i}",
-                        FontFamily = FontFamily
+                        //FontFamily = FontFamily
                     };
 
                     #region Set text visual of header
@@ -2532,15 +2532,16 @@ namespace WpfHexaEditor
             {
                 for (var i = 0; i < fds - linesCount; i++)
                 {
-                    var lineInfoLabel = new TextBlock
+                    var lineInfoLabel = new FastTextLine(this)
                     {
                         Height = LineHeight,
-                        Padding = new Thickness(0, 0, 10, 0),
+                        Width = 75,
+                        //Padding = new Thickness(0, 0, 10, 0),
                         Foreground = ForegroundOffSetHeaderColor,
                         HorizontalAlignment = HorizontalAlignment.Left,
                         VerticalAlignment = VerticalAlignment.Center,
-                        TextAlignment = TextAlignment.Left,
-                        FontFamily = FontFamily
+                        //TextAlignment = TextAlignment.Left,
+                        //FontFamily = FontFamily
                     };
 
                     //Events
@@ -2556,7 +2557,7 @@ namespace WpfHexaEditor
                 for (var i = 0; i < fds; i++)
                 {
                     var firstLineByte = ((long) VerticalScrollBar.Value + i) * BytePerLine;
-                    var lineInfoLabel = (TextBlock) LinesInfoStackPanel.Children[i];
+                    var lineInfoLabel = (FastTextLine) LinesInfoStackPanel.Children[i];
 
                     if (firstLineByte < _provider.Length)
                     {
@@ -3556,6 +3557,7 @@ namespace WpfHexaEditor
         #region AppendByte to end of file
 
         public bool AllowAppend { get; set; } = true;
+
         public bool AppendNeedConfirmation { get; set; } = true;
 
         /// <summary>
@@ -3574,6 +3576,15 @@ namespace WpfHexaEditor
             _provider.AppendByte(byteToAppend);
             RefreshView();
         }
+        #endregion
+
+        #region Text drop support
+
+        private void UserControl_Drop(object sender, DragEventArgs e)
+        {
+            // will be implemented soon
+        }
+
         #endregion
     }
 }

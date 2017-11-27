@@ -280,7 +280,7 @@ namespace WpfHexaEditor
         }
 
         /// <summary>
-        /// Render the caret
+        /// Render the control
         /// </summary>
         protected override void OnRender(DrawingContext dc)
         {

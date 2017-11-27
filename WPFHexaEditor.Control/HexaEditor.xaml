@@ -18,6 +18,7 @@
     Focusable="True"
     FontSize="11"
     MouseWheel="UserControl_MouseWheel"
+    Drop="UserControl_Drop"
     mc:Ignorable="d">
 
     <UserControl.Resources>

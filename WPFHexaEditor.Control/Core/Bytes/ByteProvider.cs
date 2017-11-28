@@ -1299,15 +1299,17 @@ namespace WpfHexaEditor.Core.Bytes
         /// <summary>
         /// Append byte at end of file
         /// </summary>
-        /// <param name="byteToAppend"></param>
-        public void AppendByte(byte byteToAppend)
+        public void AppendByte(byte[] bytesToAppend)
         {
             _stream.Position = _stream.Length;
             _stream.SetLength(Length + 1);
-            _stream.WriteByte(byteToAppend);
 
+            foreach (byte b in bytesToAppend)
+                _stream.WriteByte(b);
         }
-
+        
         #endregion
+
+
     }
 }

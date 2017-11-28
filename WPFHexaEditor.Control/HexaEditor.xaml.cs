@@ -3549,7 +3549,7 @@ namespace WpfHexaEditor
 
         #endregion
 
-        #region AppendByte to end of file
+        #region Append bytes to end of file
 
         public bool AllowAppend { get; set; } = true;
 
@@ -3558,7 +3558,7 @@ namespace WpfHexaEditor
         /// <summary>
         /// Append one byte at end of file
         /// </summary>
-        internal void AppendByte(byte byteToAppend)
+        internal void AppendByte(byte[] bytesToAppend)
         {
             if (!AllowAppend) return;
             if (!ByteProvider.CheckIsOpen(_provider)) return;
@@ -3568,9 +3568,10 @@ namespace WpfHexaEditor
                         MessageBoxButton.YesNo,
                         MessageBoxImage.Question, MessageBoxResult.Yes) != MessageBoxResult.Yes) return;
 
-            _provider.AppendByte(byteToAppend);
+            _provider.AppendByte(bytesToAppend);
             RefreshView();
         }
+
         #endregion
 
         #region Text drop support

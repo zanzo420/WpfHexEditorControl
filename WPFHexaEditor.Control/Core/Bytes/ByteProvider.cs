@@ -1302,7 +1302,7 @@ namespace WpfHexaEditor.Core.Bytes
         public void AppendByte(byte[] bytesToAppend)
         {
             _stream.Position = _stream.Length;
-            _stream.SetLength(Length + 1);
+            _stream.SetLength(Length + bytesToAppend.Length);
 
             foreach (byte b in bytesToAppend)
                 _stream.WriteByte(b);

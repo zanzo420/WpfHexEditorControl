@@ -162,7 +162,7 @@ namespace WpfHexaEditor
             InitializeCaret();
             RefreshView(true);
 
-            DataContext = this;
+            //DataContext = this;
         }
 
         #endregion Contructor

@@ -224,7 +224,7 @@
                 ByteSpacerPositioning="HexBytePanel"
                 ByteSpacerVisualStyle="Dash"
                 ByteSpacerWidthTickness="Normal"
-                DataStringVisual="Hexadecimal" />
+                DataStringVisual="Hexadecimal"/>
         </DockPanel>
     </Grid>
 </Window>

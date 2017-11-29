@@ -3568,7 +3568,7 @@ namespace WpfHexaEditor
                         MessageBoxButton.YesNo,
                         MessageBoxImage.Question, MessageBoxResult.Yes) != MessageBoxResult.Yes) return;
 
-            _provider.AppendByte(bytesToAppend);
+            _provider?.AppendByte(bytesToAppend);
             RefreshView();
         }
 

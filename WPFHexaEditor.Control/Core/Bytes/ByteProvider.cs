@@ -244,7 +244,7 @@ namespace WpfHexaEditor.Core.Bytes
         /// <summary>
         /// Get if file is open
         /// </summary>
-        public static bool CheckIsOpen(ByteProvider provider) => provider != null && provider.IsOpen;
+        public static bool CheckIsOpen(ByteProvider provider) => provider?.IsOpen == true;
 
         #endregion isOpen property/methods
 

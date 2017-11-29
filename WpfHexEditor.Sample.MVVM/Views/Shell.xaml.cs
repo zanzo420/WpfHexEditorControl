@@ -22,9 +22,8 @@ namespace WpfHexEditor.Sample.MVVM.Views {
     public partial class Shell : Window {
         public Shell() {
             InitializeComponent();
-            this.DataContext = new ShellViewModel();
-        }
 
-        //public void AddInputBinding(InputBinding ib) => this.InputBindings.Add(ib);
+            (this.DataContext as ShellViewModel).FileEditor = HexEdit;
+        }
     }
 }

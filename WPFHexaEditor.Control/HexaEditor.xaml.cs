@@ -26,8 +26,8 @@ namespace WpfHexaEditor
     /// <summary> 
     /// WPF HexEditor control
     /// </summary>
-    public partial class HexEditor : IDisposable
-    {
+    public partial class HexEditor : IDisposable,IFileEditable {
+
         #region Global class variables
         /// <summary>
         /// Byte provider for work with file or stream currently loaded in control.

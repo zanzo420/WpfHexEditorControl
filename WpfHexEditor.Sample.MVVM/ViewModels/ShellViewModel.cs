@@ -2,15 +2,10 @@
 using Prism.Commands;
 using Prism.Interactivity.InteractionRequest;
 using Prism.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using WpfHexaEditor.Core.Interfaces;
 
 namespace WpfHexEditor.Sample.MVVM.ViewModels {
     public class ShellViewModel : BindableBase {
@@ -24,36 +19,56 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
                         if (File.Exists(fileDialog.FileName)) {
                             Application.Current.MainWindow.Cursor = Cursors.Wait;
 
-                            FileName = fileDialog.FileName;
+                            FileEditor.FileName = fileDialog.FileName;
 
                             Application.Current.MainWindow.Cursor = null;
                         }
                     }
-                }
+                },
+                () => FileEditor != null
             ));
-
-        private string _fileName;
-        public string FileName {
-            get => _fileName;
-            set => SetProperty(ref _fileName, value);
-        }
-
+        
         private DelegateCommand _submitChangesCommand;
         public DelegateCommand SubmitChangesCommand => _submitChangesCommand ??
             (_submitChangesCommand = new DelegateCommand(
                 () => {
-                    SubmitChangesRequest.Raise(new Notification());
+                    FileEditor?.SubmitChanges();
                 }
             ));
-        public InteractionRequest<Notification> SubmitChangesRequest { get; } = new InteractionRequest<Notification>();
+
+        private DelegateCommand _saveAsCommand;
+        public DelegateCommand SaveAsCommand => _saveAsCommand ??
+            (_saveAsCommand = new DelegateCommand(
+                () => {
+                    var fileDialog = new SaveFileDialog();
+
+                    if (fileDialog.ShowDialog() != null) {
+                        FileEditor.SubmitChanges(fileDialog.FileName, true);
+                    }
+                }
+            ));
 
         private DelegateCommand _closeCommand;
         public DelegateCommand CloseCommand => _closeCommand ??
             (_closeCommand = new DelegateCommand(
                 () => {
-                    CloseRequest.Raise(null);
+                    FileEditor?.CloseProvider();
                 }
             ));
-        public InteractionRequest<Notification> CloseRequest { get; } = new InteractionRequest<Notification>();
+
+        private DelegateCommand _exitCommand;
+        public DelegateCommand ExitCommand => _exitCommand ??
+            (_exitCommand = new DelegateCommand(
+                () => {
+                    ExitRequest.Raise(new Notification());
+                }
+            ));
+        public InteractionRequest<Notification> ExitRequest { get; } = new InteractionRequest<Notification>();
+
+
+
+        public IFileEditable FileEditor { get; set; }
     }
+
+    
 }

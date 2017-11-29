@@ -9,8 +9,9 @@
         xmlns:properties="clr-namespace:WpfHexEditor.Sample.MVVM.Properties"
         xmlns:prism="http://prismlibrary.com/"
         xmlns:control="clr-namespace:WpfHexaEditor;assembly=WPFHexaEditor"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        xmlns:viewmodels="clr-namespace:WpfHexEditor.Sample.MVVM.ViewModels"
+        prism:ViewModelLocator.AutoWireViewModel="True" x:Name="Window"
+        Title="Wpf HexEditor control sample MVVM" Height="350" Width="525">
     <Grid>
         <DockPanel>
             <Menu DockPanel.Dock="Top">
@@ -34,11 +35,6 @@
                         <MenuItem.Icon>
                             <Image Source=".././Resources/Icon/Save-Icon.ico" />
                         </MenuItem.Icon>
-                        <i:Interaction.Triggers>
-                            <prism:InteractionRequestTrigger SourceObject="{Binding SubmitChangesRequest}">
-                                <ei:CallMethodAction MethodName="SubmitChanges" TargetObject="{Binding ElementName=HexEdit}"/>
-                            </prism:InteractionRequestTrigger>
-                        </i:Interaction.Triggers>
                     </MenuItem>
                     <MenuItem
                         Command="{Binding SaveAsCommand}"
@@ -52,17 +48,18 @@
                         <MenuItem.Icon>
                             <Image Source=".././Resources/Icon/Save-Icon.ico" />
                         </MenuItem.Icon>
-                        <i:Interaction.Triggers>
-                            <prism:InteractionRequestTrigger SourceObject="{Binding CloseRequest}">
-                                <ei:CallMethodAction MethodName="CloseProvider" TargetObject="{Binding ElementName=HexEdit}"/>
-                            </prism:InteractionRequestTrigger>
-                        </i:Interaction.Triggers>
                     </MenuItem>
                     <Separator />
                     <MenuItem
                         x:Name="ExitMenu"
                         Command="{Binding ExitCommand}"
-                        Header="Exit" />
+                        Header="Exit" >
+                        <i:Interaction.Triggers>
+                            <prism:InteractionRequestTrigger SourceObject="{Binding ExitRequest}">
+                                <ei:CallMethodAction MethodName="Close" TargetObject="{Binding ElementName=Window}"/>
+                            </prism:InteractionRequestTrigger>
+                        </i:Interaction.Triggers>
+                    </MenuItem>
                 </MenuItem>
                 <MenuItem Header="Edit">
                     <MenuItem
@@ -227,7 +224,6 @@
 
             <control:HexEditor
                 Stream="{Binding Stream}"
-                FileName="{Binding FileName}"
                 x:Name="HexEdit"
                 Width="Auto"
                 Height="Auto"
@@ -244,4 +240,5 @@
             </control:HexEditor>
         </DockPanel>
     </Grid>
+    
 </Window>

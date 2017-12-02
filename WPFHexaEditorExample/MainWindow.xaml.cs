@@ -29,7 +29,7 @@ namespace WPFHexaEditorExample
 
         public MainWindow()
         {
-            //System.Threading.Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en");
+            System.Threading.Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en");
 
             InitializeComponent();
           

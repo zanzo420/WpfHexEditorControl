@@ -7,7 +7,7 @@ Can be used in WPF or WinForm application
 
 
 Sample with standard ASCII character table
-![example](Sample8-NOTBL.png?raw=true)
+![example](Sample9-NOTBL.png?raw=true)
 
 Sample with Thingy character table on SNES Final Fantasy II US
 ![example](Sample9-TBL.png?raw=true)

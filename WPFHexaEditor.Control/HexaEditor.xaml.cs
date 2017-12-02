@@ -3235,10 +3235,18 @@ namespace WpfHexaEditor
 
         private void FillByteCMenu_Click(object sender, RoutedEventArgs e)
         {
-            var window = new GiveByteWindow
+            var window = new GiveByteWindow();
+
+            //For present crash When used in Winform
+            try
             {
-                Owner = Application.Current.MainWindow
-            };
+                window.Owner = Application.Current.MainWindow;
+            }
+            catch
+            {
+                // TODO : add Winform code
+            }
+            ;
 
             if (window.ShowDialog() == true && window.HexTextBox.LongValue <= 255)
                 FillWithByte((byte) window.HexTextBox.LongValue);
@@ -3246,10 +3254,17 @@ namespace WpfHexaEditor
 
         private void ReplaceByteCMenu_Click(object sender, RoutedEventArgs e)
         {
-            var window = new ReplaceByteWindow
+            var window = new ReplaceByteWindow();
+
+            //For present crash When used in Winform
+            try
             {
-                Owner = Application.Current.MainWindow
-            };
+                window.Owner = Application.Current.MainWindow;
+            }
+            catch
+            {
+                // TODO : add Winform code
+            }
 
             if (window.ShowDialog() == true && window.HexTextBox.LongValue <= 255 && window.ReplaceHexTextBox.LongValue <= 255)
                 ReplaceByte((byte) window.HexTextBox.LongValue, (byte) window.ReplaceHexTextBox.LongValue);

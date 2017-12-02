@@ -96,7 +96,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.ru-RU.resx</DependentUpon>
     </Compile>
-    <Compile Include="Properties\Resources.zh-CN.Designer.cs" />
     <Compile Include="Properties\Resources.zh-CN1.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

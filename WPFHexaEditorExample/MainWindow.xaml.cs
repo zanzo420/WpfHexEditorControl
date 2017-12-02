@@ -3,6 +3,7 @@
 // Author : Derek Tremblay (derektremblay666@gmail.com)
 //////////////////////////////////////////////
 
+using System.Globalization;
 using Microsoft.Win32;
 using System.IO;
 using System.Windows;
@@ -28,8 +29,10 @@ namespace WPFHexaEditorExample
 
         public MainWindow()
         {
-            InitializeComponent();
+            //System.Threading.Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en");
 
+            InitializeComponent();
+          
             UpdateAllSettings();
         }
 
@@ -37,16 +40,13 @@ namespace WPFHexaEditorExample
         {
             var fileDialog = new OpenFileDialog();
 
-            if (fileDialog.ShowDialog() != null)
+            if (fileDialog.ShowDialog() != null && File.Exists(fileDialog.FileName))
             {
-                if (File.Exists(fileDialog.FileName))
-                {
-                    Application.Current.MainWindow.Cursor = Cursors.Wait;
+                Application.Current.MainWindow.Cursor = Cursors.Wait;
 
-                    HexEdit.FileName = fileDialog.FileName;
-
-                    Application.Current.MainWindow.Cursor = null;
-                }
+                HexEdit.FileName = fileDialog.FileName;
+                
+                Application.Current.MainWindow.Cursor = null;
             }
         }
 

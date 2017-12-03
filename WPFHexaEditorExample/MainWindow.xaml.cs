@@ -78,10 +78,7 @@ namespace WPFHexaEditorExample
             switch (setting)
             {
                 case SettingEnum.HeaderVisibility:
-                    if (!Settings.Default.HeaderVisibility)
-                        HexEdit.HeaderVisibility = Visibility.Collapsed;
-                    else
-                        HexEdit.HeaderVisibility = Visibility.Visible;
+                    HexEdit.HeaderVisibility = !Settings.Default.HeaderVisibility ? Visibility.Collapsed : Visibility.Visible;
 
                     Settings.Default.HeaderVisibility = HexEdit.HeaderVisibility == Visibility.Visible;
                     break;

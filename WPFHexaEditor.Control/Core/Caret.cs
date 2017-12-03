@@ -19,7 +19,7 @@ namespace WpfHexaEditor.Core
         #region Global class variables
         private Timer _timer;
         private Point _position;
-        private Pen _pen = new Pen(Brushes.Black, 1);
+        private readonly Pen _pen = new Pen(Brushes.Black, 1);
         private int _blinkPeriod = 500;
         private double _caretHeight = 18;
         #endregion

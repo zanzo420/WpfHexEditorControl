@@ -1,4 +1,4 @@
-![example](Logo.png?raw=true)
+![example](Logo/Logo.png?raw=true)
 
 ## Wpf HexEditor control       (Developped in C# 7.0 / Framework 4.5)
 A fast, fully customisable Wpf user control for editing file or stream as hexadecimal. 

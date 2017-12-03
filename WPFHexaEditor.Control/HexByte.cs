@@ -500,14 +500,17 @@ namespace WpfHexaEditor
                                     byteValueCharArray[0] + byteValueCharArray[1].ToString())[0];
 
                                 //Insert byte at end of file
-                                if (_parent.Lenght == BytePositionInFile + 1)
+                                if (_parent.Lenght != BytePositionInFile + 1)
                                 {
-                                    byte[] byteToAppend = {0};
-                                    _parent.AppendByte(byteToAppend);
+                                    _keyDownLabel = KeyDownLabel.NextPosition;
+                                    MoveNext?.Invoke(this, new EventArgs());
                                 }
+                                break;
+                            case KeyDownLabel.NextPosition:
 
-                                //Move focus event
-                                _keyDownLabel = KeyDownLabel.NextPosition;
+                                byte[] byteToAppend = { (byte)key.ToCharArray()[0] };
+                                _parent.AppendByte(byteToAppend);
+
                                 MoveNext?.Invoke(this, new EventArgs());
 
                                 break;
@@ -587,19 +590,25 @@ namespace WpfHexaEditor
             if (ReadOnlyMode || Byte == null)
                 _parent.HideCaret();
             else
+            {
+                var width = Text[1].ToString()
+                    .GetScreenSize(_parent.FontFamily, _parent.FontSize, _parent.FontStyle, FontWeight,
+                        _parent.FontStretch).Width.Round(0);
+                
                 switch (_keyDownLabel)
                 {
                     case KeyDownLabel.FirstChar:
                         _parent.MoveCaret(TransformToAncestor(_parent).Transform(new Point(0, 0)));
                         break;
                     case KeyDownLabel.SecondChar:
-                        var width = Text[1].ToString()
-                            .GetScreenSize(_parent.FontFamily, _parent.FontSize, _parent.FontStyle, FontWeight, _parent.FontStretch).Width.Round(0);
                         _parent.MoveCaret(TransformToAncestor(_parent).Transform(new Point(width, 0)));
                         break;
                     case KeyDownLabel.NextPosition:
+                        if (_parent.Lenght == BytePositionInFile + 1)
+                            _parent.MoveCaret(TransformToAncestor(_parent).Transform(new Point(width * 2, 0)));
                         break;
                 }
+            }
         }
 
         #endregion

@@ -1294,7 +1294,7 @@ namespace WpfHexaEditor.Core.Bytes
 
         #endregion
 
-        #region Add byte at end of file
+        #region Append byte at end of file
 
         /// <summary>
         /// Append byte at end of file
@@ -1307,8 +1307,20 @@ namespace WpfHexaEditor.Core.Bytes
             foreach (byte b in bytesToAppend)
                 _stream.WriteByte(b);
         }
-        
-        #endregion
+
+        /// <summary>
+        /// Append byte at end of file
+        /// </summary>
+        public void AppendByte(byte byteToAppend, int count = 1)
+        {
+            _stream.Position = _stream.Length;
+            _stream.SetLength(Length + count);
+
+            for (var i = 0; i < count; i++)
+                _stream.WriteByte(byteToAppend);
+        }
+
+        #endregion Append byte at end of file
 
 
     }

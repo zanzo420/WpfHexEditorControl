@@ -2866,7 +2866,7 @@ namespace WpfHexaEditor
             if (StatusBarVisibility == Visibility.Visible)
                 if (ByteProvider.CheckIsOpen(_provider))
                 {
-                    #region Show lenght
+                    #region Show lenght  TODO:REFRESH ONLY WHEN NEEDED
 
                     var mb = false;
                     long deletedBytesCount = _provider.GetByteModifieds(ByteAction.Deleted).Count;
@@ -3246,8 +3246,7 @@ namespace WpfHexaEditor
             {
                 // TODO : add Winform code
             }
-            ;
-
+            
             if (window.ShowDialog() == true && window.HexTextBox.LongValue <= 255)
                 FillWithByte((byte) window.HexTextBox.LongValue);
         }

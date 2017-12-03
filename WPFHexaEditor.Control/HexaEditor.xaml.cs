@@ -1268,7 +1268,7 @@ namespace WpfHexaEditor
                 if (SelectionStart > -1)
                 {
                     _provider.PasteNotInsert(SelectionStart, Clipboard.GetText());
-                    SetScrollMarker(SelectionStart, ScrollMarker.ByteModified, "Paste from clipboard");
+                    SetScrollMarker(SelectionStart, ScrollMarker.ByteModified, Properties.Resources.PasteFromClipboardString);
                     RefreshView();
                 }
         }
@@ -1287,7 +1287,7 @@ namespace WpfHexaEditor
                 if (startPosition > -1 && length > 0)
                 {
                     _provider.FillWithByte(startPosition, length, val);
-                    SetScrollMarker(SelectionStart, ScrollMarker.ByteModified, "Fill selection with byte");
+                    SetScrollMarker(SelectionStart, ScrollMarker.ByteModified, Properties.Resources.FillSelectionAloneString);
                     RefreshView();
                 }
         }
@@ -1307,7 +1307,7 @@ namespace WpfHexaEditor
                 if (startPosition > -1 && length > 0)
                 {
                     _provider.ReplaceByte(startPosition, length, original, replace);
-                    SetScrollMarker(SelectionStart, ScrollMarker.ByteModified, "replace with byte");
+                    SetScrollMarker(SelectionStart, ScrollMarker.ByteModified, Properties.Resources.ReplaceWithByteString);
                     RefreshView();
                 }
         }
@@ -3026,7 +3026,8 @@ namespace WpfHexaEditor
                     HorizontalAlignment = HorizontalAlignment.Left,
                     Tag = bookMark,
                     Width = 5,
-                    Height = 3
+                    Height = 3,
+                    DataContext = bookMark
                 };
 
                 #endregion
@@ -3064,7 +3065,7 @@ namespace WpfHexaEditor
                 }
 
                 rect.MouseDown += Rect_MouseDown;
-                rect.DataContext = new ByteModified {BytePositionInFile = position};
+                //rect.DataContext = new ByteModified {BytePositionInFile = position};
                 rect.Margin = new Thickness(0, topPosition, rightPosition, 0);
 
                 #endregion

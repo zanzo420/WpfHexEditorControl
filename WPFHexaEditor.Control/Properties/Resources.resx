@@ -177,6 +177,9 @@
   <data name="EnterHexValueMsgString" xml:space="preserve">
     <value>Enter hexadecimal value ...</value>
   </data>
+  <data name="FillSelectionAloneString" xml:space="preserve">
+    <value>Fill selection with byte</value>
+  </data>
   <data name="FillSelectionString" xml:space="preserve">
     <value>Fill selection with byte...</value>
   </data>
@@ -213,6 +216,9 @@
   <data name="OkString" xml:space="preserve">
     <value>Ok</value>
   </data>
+  <data name="PasteFromClipboardString" xml:space="preserve">
+    <value>Paste from clipboard</value>
+  </data>
   <data name="PasteNotInsertString" xml:space="preserve">
     <value>Paste without inserting</value>
   </data>
@@ -224,6 +230,9 @@
   </data>
   <data name="ReplaceSelectionString" xml:space="preserve">
     <value>Replace byte in selection...</value>
+  </data>
+  <data name="ReplaceWithByteString" xml:space="preserve">
+    <value>Replace with byte</value>
   </data>
   <data name="SelectAllString" xml:space="preserve">
     <value>Select all</value>

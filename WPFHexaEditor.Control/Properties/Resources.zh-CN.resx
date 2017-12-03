@@ -177,6 +177,9 @@
   <data name="EnterHexValueMsgString" xml:space="preserve">
     <value>请输入十六进制值</value>
   </data>
+  <data name="FillSelectionAloneString" xml:space="preserve">
+    <value>用字节填充选择</value>
+  </data>
   <data name="FillSelectionString" xml:space="preserve">
     <value>填充选定为</value>
   </data>
@@ -213,6 +216,9 @@
   <data name="OkString" xml:space="preserve">
     <value>确定</value>
   </data>
+  <data name="PasteFromClipboardString" xml:space="preserve">
+    <value>从剪贴板粘贴</value>
+  </data>
   <data name="PasteNotInsertString" xml:space="preserve">
     <value>粘贴(替换)</value>
   </data>
@@ -224,6 +230,9 @@
   </data>
   <data name="ReplaceSelectionString" xml:space="preserve">
     <value>替换选中的字符串</value>
+  </data>
+  <data name="ReplaceWithByteString" xml:space="preserve">
+    <value>用字节替换</value>
   </data>
   <data name="SelectAllString" xml:space="preserve">
     <value>全选</value>

@@ -246,4 +246,13 @@
   <data name="AppendByteConfirmationString" xml:space="preserve">
     <value>Vous avez atteint la fin du fichier. Voulez-vous ajouter un octet? Cette opération ne peut pas être annulée si vous continuez.</value>
   </data>
+  <data name="FillSelectionAloneString" xml:space="preserve">
+    <value>Remplir la sélection avec un octet</value>
+  </data>
+  <data name="PasteFromClipboardString" xml:space="preserve">
+    <value>Coller du presse-papiers</value>
+  </data>
+  <data name="ReplaceWithByteString" xml:space="preserve">
+    <value>Remplacer un octet</value>
+  </data>
 </root>

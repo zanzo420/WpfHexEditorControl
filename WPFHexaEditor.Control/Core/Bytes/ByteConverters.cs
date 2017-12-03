@@ -160,10 +160,8 @@ namespace WpfHexaEditor.Core.Bytes
         }
 
         /// <summary>
-        /// 
+        /// Return Tuple (bool, byte) that bool represent if is a byte
         /// </summary>
-        /// <param name="hex"></param>
-        /// <returns>Return Tuple (bool, byte) that bool represent if is a byte</returns>
         public static (bool success, byte val) HexToUniqueByte(string hex) =>
             (byte.TryParse(hex, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var val), val);
 
@@ -205,8 +203,6 @@ namespace WpfHexaEditor.Core.Bytes
         /// <summary>
         /// Check if is an hexa string
         /// </summary>
-        /// <param name="hexastring"></param>
-        /// <returns></returns>
         public static (bool success, long value) IsHexaValue(string hexastring) => HexLiteralToLong(hexastring);
 
         /// <summary>

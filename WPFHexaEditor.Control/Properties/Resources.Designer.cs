@@ -241,6 +241,15 @@ namespace WpfHexaEditor.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Fill selection with byte.
+        /// </summary>
+        public static string FillSelectionAloneString {
+            get {
+                return ResourceManager.GetString("FillSelectionAloneString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Fill selection with byte....
         /// </summary>
         public static string FillSelectionString {
@@ -349,6 +358,15 @@ namespace WpfHexaEditor.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Paste from clipboard.
+        /// </summary>
+        public static string PasteFromClipboardString {
+            get {
+                return ResourceManager.GetString("PasteFromClipboardString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Paste without inserting.
         /// </summary>
         public static string PasteNotInsertString {
@@ -381,6 +399,15 @@ namespace WpfHexaEditor.Properties {
         public static string ReplaceSelectionString {
             get {
                 return ResourceManager.GetString("ReplaceSelectionString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Replace with byte.
+        /// </summary>
+        public static string ReplaceWithByteString {
+            get {
+                return ResourceManager.GetString("ReplaceWithByteString", resourceCulture);
             }
         }
         

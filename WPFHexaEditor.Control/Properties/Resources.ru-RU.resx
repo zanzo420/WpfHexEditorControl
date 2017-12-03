@@ -177,6 +177,9 @@
   <data name="EnterHexValueMsgString" xml:space="preserve">
     <value>Введите шестнадцатеричное значение ...</value>
   </data>
+  <data name="FileDroppingConfirmationString" xml:space="preserve">
+    <value>Вы хотите закрыть текущий файл и открыть:</value>
+  </data>
   <data name="FillSelectionAloneString" xml:space="preserve">
     <value>Заполните выбор байтом</value>
   </data>

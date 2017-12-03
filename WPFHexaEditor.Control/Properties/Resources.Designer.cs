@@ -241,6 +241,15 @@ namespace WpfHexaEditor.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Do you want close the current file and open : .
+        /// </summary>
+        public static string FileDroppingConfirmationString {
+            get {
+                return ResourceManager.GetString("FileDroppingConfirmationString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Fill selection with byte.
         /// </summary>
         public static string FillSelectionAloneString {

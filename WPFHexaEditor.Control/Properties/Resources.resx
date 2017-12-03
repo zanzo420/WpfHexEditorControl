@@ -177,6 +177,9 @@
   <data name="EnterHexValueMsgString" xml:space="preserve">
     <value>Enter hexadecimal value ...</value>
   </data>
+  <data name="FileDroppingConfirmationString" xml:space="preserve">
+    <value>Do you want close the current file and open : </value>
+  </data>
   <data name="FillSelectionAloneString" xml:space="preserve">
     <value>Fill selection with byte</value>
   </data>

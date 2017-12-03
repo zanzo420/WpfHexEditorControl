@@ -20,6 +20,7 @@ using WpfHexaEditor.Core.CharacterTable;
 using WpfHexaEditor.Core.Interfaces;
 using WpfHexaEditor.Dialog;
 using WpfHexaEditor.Core.MethodExtention;
+using Path = System.IO.Path;
 
 namespace WpfHexaEditor
 {
@@ -2089,8 +2090,7 @@ namespace WpfHexaEditor
             if (e.HeightChanged) RefreshView(true);
         }
 
-        private void VerticalScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) =>
-            RefreshView();
+        private void VerticalScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => RefreshView();
 
         /// <summary>
         /// Update vertical scrollbar with file info
@@ -3591,9 +3591,56 @@ namespace WpfHexaEditor
 
         #region Text drop support
 
+        /// <summary>
+        /// Allow the control to catch the file dropping 
+        /// Note : AllowDrop need to be true
+        /// </summary>
+        private bool AllowFileDrop { get; set; } = true;
+
+        /// <summary>
+        /// Allow the control to catch the text dropping 
+        /// Note : AllowDrop need to be true
+        /// </summary>
+        //private bool AllowTextDrop { get; set; } = true;
+
+        /// <summary>
+        /// Show a messagebox for confirm open when a file are already open
+        /// </summary>
+        private bool FileDroppingConfirmation { get; set; } = true;
+
         private void UserControl_Drop(object sender, DragEventArgs e)
         {
             // will be implemented soon
+
+            #region Text Dropping (Will be supported soon)
+            //var textDrop = e.Data.GetData(DataFormats.Text);
+            //if (textDrop != null && AllowTextDrop)
+            //{
+            //    var textDropped = textDrop as string[];
+
+            //    return;
+            //}
+            #endregion
+
+            #region File dropping (Only open first selected file catched in GetData)
+            var fileDrop = e.Data.GetData(DataFormats.FileDrop);
+            if (fileDrop != null && AllowFileDrop)
+            {
+                var filename = fileDrop as string[];
+
+                if (!ByteProvider.CheckIsOpen(_provider))
+                    FileName = filename[0];
+                else
+                {
+                    if (FileDroppingConfirmation && MessageBox.Show(
+                            $"{Properties.Resources.FileDroppingConfirmationString} {Path.GetFileName(filename[0])} ?", "",
+                            MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                        FileName = filename[0];
+                    else
+                        FileName = filename[0];
+                }
+            }
+            #endregion
         }
 
         #endregion

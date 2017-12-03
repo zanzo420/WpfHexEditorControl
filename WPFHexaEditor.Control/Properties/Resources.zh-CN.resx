@@ -177,6 +177,9 @@
   <data name="EnterHexValueMsgString" xml:space="preserve">
     <value>请输入十六进制值</value>
   </data>
+  <data name="FileDroppingConfirmationString" xml:space="preserve">
+    <value>你想关闭当前文件并打开它 ：</value>
+  </data>
   <data name="FillSelectionAloneString" xml:space="preserve">
     <value>用字节填充选择</value>
   </data>

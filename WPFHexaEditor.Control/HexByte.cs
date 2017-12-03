@@ -357,7 +357,15 @@ namespace WpfHexaEditor
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                Focus();
+                if (IsFocused)
+                {
+                    //Is focused set editing to second char.
+                    _keyDownLabel = KeyDownLabel.SecondChar;
+                    UpdateCaret();
+                }
+                else
+                    Focus();
+
                 Click?.Invoke(this, e);
             }
 

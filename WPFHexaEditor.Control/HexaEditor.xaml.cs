@@ -3595,23 +3595,21 @@ namespace WpfHexaEditor
         /// Allow the control to catch the file dropping 
         /// Note : AllowDrop need to be true
         /// </summary>
-        private bool AllowFileDrop { get; set; } = true;
+        public bool AllowFileDrop { get; set; } = true;
 
         /// <summary>
         /// Allow the control to catch the text dropping 
         /// Note : AllowDrop need to be true
         /// </summary>
-        //private bool AllowTextDrop { get; set; } = true;
+        //public bool AllowTextDrop { get; set; } = true;
 
         /// <summary>
         /// Show a messagebox for confirm open when a file are already open
         /// </summary>
-        private bool FileDroppingConfirmation { get; set; } = true;
+        public bool FileDroppingConfirmation { get; set; } = true;
 
         private void UserControl_Drop(object sender, DragEventArgs e)
         {
-            // will be implemented soon
-
             #region Text Dropping (Will be supported soon)
             //var textDrop = e.Data.GetData(DataFormats.Text);
             //if (textDrop != null && AllowTextDrop)

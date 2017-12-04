@@ -395,6 +395,11 @@ namespace WpfHexaEditor
         }
 
         /// <summary>
+        /// The name of your application to be showing in messagebox title
+        /// </summary>
+        public string ApplicationName { get; set; } = "Wpf HexEditor";
+
+        /// <summary>
         /// Height of data line. 
         /// </summary>
         public double LineHeight
@@ -2074,6 +2079,10 @@ namespace WpfHexaEditor
         {
             if (d is HexEditor ctrl && e.NewValue != e.OldValue)
             {
+                //Clear before refresh
+                ctrl.HexHeaderStackPanel.Children.Clear();
+
+                //refresh
                 ctrl.UpdateScrollBar();
                 ctrl.BuildDataLines((int) ctrl.MaxVisibleLine, true);
                 ctrl.RefreshView(true);
@@ -2475,10 +2484,8 @@ namespace WpfHexaEditor
         /// </summary>
         private void UpdateHeader()
         {
-            HexHeaderStackPanel.Children.Clear();
-
             if (ByteProvider.CheckIsOpen(_provider))
-                for (var i = 0; i < BytePerLine; i++)
+                for (var i = HexHeaderStackPanel.Children.Count; i < BytePerLine; i++)
                 {
                     if (ByteSpacerPositioning == ByteSpacerPosition.Both ||
                         ByteSpacerPositioning == ByteSpacerPosition.HexBytePanel)
@@ -2520,8 +2527,6 @@ namespace WpfHexaEditor
         /// </summary>
         private void UpdateLinesOffSet()
         {
-            LinesInfoStackPanel.Children.Clear();
-
             var fds = MaxVisibleLine;
 
             //If the lines are less than "visible lines" create them;
@@ -3565,9 +3570,14 @@ namespace WpfHexaEditor
         #endregion
 
         #region Append bytes to end of file
-
+        /// <summary>
+        /// Allow control to append byte at end of file
+        /// </summary>
         public bool AllowAppend { get; set; } = true;
 
+        /// <summary>
+        /// Show a message box is true before append byte at end of file
+        /// </summary>
         public bool AppendNeedConfirmation { get; set; } = true;
 
         /// <summary>
@@ -3579,7 +3589,7 @@ namespace WpfHexaEditor
             if (!ByteProvider.CheckIsOpen(_provider)) return;
 
             if (AppendNeedConfirmation)
-                if (MessageBox.Show(Properties.Resources.AppendByteConfirmationString, string.Empty,
+                if (MessageBox.Show(Properties.Resources.AppendByteConfirmationString, ApplicationName,
                         MessageBoxButton.YesNo,
                         MessageBoxImage.Question, MessageBoxResult.Yes) != MessageBoxResult.Yes) return;
 
@@ -3631,7 +3641,7 @@ namespace WpfHexaEditor
                 else
                 {
                     if (FileDroppingConfirmation && MessageBox.Show(
-                            $"{Properties.Resources.FileDroppingConfirmationString} {Path.GetFileName(filename[0])} ?", "",
+                            $"{Properties.Resources.FileDroppingConfirmationString} {Path.GetFileName(filename[0])} ?", ApplicationName,
                             MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                         FileName = filename[0];
                     else

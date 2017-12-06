@@ -1027,49 +1027,34 @@ namespace WpfHexaEditor.Core.Bytes
         }
 
         /// <summary>
-        /// Paste the string at position
+        /// Paste the byte array at position with posibility to expend and append at end of file
         /// </summary>
-        /// <param name="pasteString">The string to paste</param>
+        /// <param name="pasteBytes">The byte array to paste</param>
         /// <param name="startPosition">The position to start pasting</param>
-        public void PasteNotInsert(long startPosition, string pasteString)
+        /// <param name="expend">If true expend the file if needed, ATTENTION: bytes expended can't be canceled with undo</param>
+        public void Paste(long startPosition, byte[] pasteBytes, bool expend)
         {
-            long lenght = pasteString.Length;
+            long pastelenght = pasteBytes.Length;
             Position = startPosition;
             var i = 0;
-            if (Position > -1)
-            {
-                foreach (var chr in pasteString)
-                    if (!Eof)
-                    {
-                        Position = startPosition + i++;
-                        if (GetByte(Position).singleByte != ByteConverters.CharToByte(chr))
-                            AddByteModified(ByteConverters.CharToByte(chr), Position - 1, lenght);
-                    }
-                    else
-                        break;
 
-                DataPasted?.Invoke(this, new EventArgs());
+            //Expend if needed
+            if (Position + pastelenght > Length && expend)
+            {
+                var lenghtToExpend = Position - Length + pastelenght;
+                AppendByte(0, lenghtToExpend);
+                Position = startPosition;
             }
-        }
 
-        /// <summary>
-        /// Paste the bytes array at position
-        /// </summary>
-        /// <param name="pasteBytes">The bytes array to paste</param>
-        /// <param name="startPosition">The position to start pasting</param>
-        public void PasteNotInsert(long startPosition, byte[] pasteBytes)
-        {
-            long lenght = pasteBytes.Length;
-            Position = startPosition;
-            var i = 0;
+            //Start to paste the string
             if (Position > -1)
             {
-                foreach (byte bt in pasteBytes)
+                foreach (var bt in pasteBytes)
                     if (!Eof)
                     {
                         Position = startPosition + i++;
                         if (GetByte(Position).singleByte != bt)
-                            AddByteModified(bt, Position - 1, lenght);
+                            AddByteModified(bt, Position - 1, pastelenght);
                     }
                     else
                         break;
@@ -1077,18 +1062,32 @@ namespace WpfHexaEditor.Core.Bytes
                 DataPasted?.Invoke(this, new EventArgs());
             }
         }
+        
+        /// <summary>
+        /// Paste the string at position
+        /// </summary>
+        /// <param name="pasteString">The string to paste</param>
+        public void PasteNotInsert(string pasteString) => Paste(Position, pasteString, false);
 
         /// <summary>
         /// Paste the string at position
         /// </summary>
         /// <param name="pasteString">The string to paste</param>
-        public void PasteNotInsert(string pasteString) => PasteNotInsert(Position, pasteString);
+        /// <param name="position">Start position</param>
+        public void PasteNotInsert(long position, string pasteString) => Paste(position, pasteString, false);
 
         /// <summary>
         /// Paste the bytes array at position
         /// </summary>
         /// <param name="pasteBytes">The bytes array to paste</param>
-        public void PasteNotInsert(byte[] pasteBytes) => PasteNotInsert(Position, pasteBytes);
+        /// <param name="position">Start position</param>
+        public void PasteNotInsert(long position, byte[] pasteBytes) => Paste(position, pasteBytes, false);
+
+        /// <summary>
+        /// Paste the bytes array at actual position
+        /// </summary>
+        /// <param name="pasteBytes">The bytes array to paste</param>
+        public void PasteNotInsert(byte[] pasteBytes) => Paste(Position, pasteBytes, false);
 
         #endregion Copy/Paste/Cut Methods
 

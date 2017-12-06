@@ -15,10 +15,10 @@
     d:DesignWidth="804"
     BorderBrush="#FF443E3E"
     BorderThickness="1"
+    Drop="UserControl_Drop"
     Focusable="True"
     FontSize="11"
     MouseWheel="UserControl_MouseWheel"
-    Drop="UserControl_Drop"
     mc:Ignorable="d">
 
     <UserControl.Resources>

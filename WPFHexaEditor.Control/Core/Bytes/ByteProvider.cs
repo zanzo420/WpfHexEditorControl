@@ -11,7 +11,6 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using WpfHexaEditor.Core.CharacterTable;
-using WpfHexaEditor.Core.Interfaces;
 using WpfHexaEditor.Core.MethodExtention;
 
 namespace WpfHexaEditor.Core.Bytes
@@ -19,7 +18,7 @@ namespace WpfHexaEditor.Core.Bytes
     /// <summary>
     /// Used for interaction with file or stream
     /// </summary>
-    public sealed class ByteProvider : IDisposable, IByteProvider
+    public sealed class ByteProvider : IDisposable
     {
         #region Globals variable
 
@@ -46,7 +45,7 @@ namespace WpfHexaEditor.Core.Bytes
         public event EventHandler LongProcessStarted;
         public event EventHandler LongProcessCompleted;
         public event EventHandler LongProcessCanceled;
-        public event EventHandler DataPastedNotInserted;
+        public event EventHandler DataPasted;
         public event EventHandler FillWithByteCompleted;
         public event EventHandler ReplaceByteCompleted;
 
@@ -761,13 +760,12 @@ namespace WpfHexaEditor.Core.Bytes
 
                 switch (byteModified.Action)
                 {
-                    case ByteAction.Added: //TODO : IMPLEMENTING ADD BYTE                               
-                    case ByteAction.Deleted
-                    : //NOTHING to do we dont want to add deleted byte                               
-                        break;
                     case ByteAction.Modified:
                         if (byteModified.IsValid) bufferList.Add(byteModified.Byte.Value);
                         break;
+                    case ByteAction.Deleted: //NOTHING to do we dont want to add deleted byte   
+                    case ByteAction.Added: //TODO : IMPLEMENTING ADD BYTE       
+                        break; 
                 }
 
                 _stream.Position++;
@@ -992,6 +990,43 @@ namespace WpfHexaEditor.Core.Bytes
         }
 
         /// <summary>
+        /// Paste the string at position with posibility to expend and append at end of file
+        /// </summary>
+        /// <param name="pasteString">The string to paste</param>
+        /// <param name="startPosition">The position to start pasting</param>
+        /// <param name="expend">If true expend the file if needed, ATTENTION: bytes expended can't be canceled with undo</param>
+        public void Paste(long startPosition, string pasteString, bool expend)
+        {
+            long pastelenght = pasteString.Length;
+            Position = startPosition;
+            var i = 0;
+
+            //Expend if needed
+            if (Position + pastelenght > Length && expend)
+            {
+                var lenghtToExpend = Position - Length + pastelenght;
+                AppendByte(0, lenghtToExpend);
+                Position = startPosition;
+            }
+
+            //Start to paste the string
+            if (Position > -1)
+            {
+                foreach (var chr in pasteString)
+                    if (!Eof)
+                    {
+                        Position = startPosition + i++;
+                        if (GetByte(Position).singleByte != ByteConverters.CharToByte(chr))
+                            AddByteModified(ByteConverters.CharToByte(chr), Position - 1, pastelenght);
+                    }
+                    else
+                        break;
+
+                DataPasted?.Invoke(this, new EventArgs());
+            }
+        }
+
+        /// <summary>
         /// Paste the string at position
         /// </summary>
         /// <param name="pasteString">The string to paste</param>
@@ -1013,7 +1048,33 @@ namespace WpfHexaEditor.Core.Bytes
                     else
                         break;
 
-                DataPastedNotInserted?.Invoke(this, new EventArgs());
+                DataPasted?.Invoke(this, new EventArgs());
+            }
+        }
+
+        /// <summary>
+        /// Paste the bytes array at position
+        /// </summary>
+        /// <param name="pasteBytes">The bytes array to paste</param>
+        /// <param name="startPosition">The position to start pasting</param>
+        public void PasteNotInsert(long startPosition, byte[] pasteBytes)
+        {
+            long lenght = pasteBytes.Length;
+            Position = startPosition;
+            var i = 0;
+            if (Position > -1)
+            {
+                foreach (byte bt in pasteBytes)
+                    if (!Eof)
+                    {
+                        Position = startPosition + i++;
+                        if (GetByte(Position).singleByte != bt)
+                            AddByteModified(bt, Position - 1, lenght);
+                    }
+                    else
+                        break;
+
+                DataPasted?.Invoke(this, new EventArgs());
             }
         }
 
@@ -1022,6 +1083,12 @@ namespace WpfHexaEditor.Core.Bytes
         /// </summary>
         /// <param name="pasteString">The string to paste</param>
         public void PasteNotInsert(string pasteString) => PasteNotInsert(Position, pasteString);
+
+        /// <summary>
+        /// Paste the bytes array at position
+        /// </summary>
+        /// <param name="pasteBytes">The bytes array to paste</param>
+        public void PasteNotInsert(byte[] pasteBytes) => PasteNotInsert(Position, pasteBytes);
 
         #endregion Copy/Paste/Cut Methods
 
@@ -1311,7 +1378,7 @@ namespace WpfHexaEditor.Core.Bytes
         /// <summary>
         /// Append byte at end of file
         /// </summary>
-        public void AppendByte(byte byteToAppend, int count = 1)
+        public void AppendByte(byte byteToAppend, long count = 1)
         {
             _stream.Position = _stream.Length;
             _stream.SetLength(Length + count);
@@ -1321,7 +1388,5 @@ namespace WpfHexaEditor.Core.Bytes
         }
 
         #endregion Append byte at end of file
-
-
     }
 }

@@ -1270,13 +1270,13 @@ namespace WpfHexaEditor
         /// </summary>
         private void PasteWithoutInsert()
         {
-            if (ByteProvider.CheckIsOpen(_provider))
-                if (SelectionStart > -1)
-                {
-                    _provider.PasteNotInsert(SelectionStart, Clipboard.GetText());
-                    SetScrollMarker(SelectionStart, ScrollMarker.ByteModified, Properties.Resources.PasteFromClipboardString);
-                    RefreshView();
-                }
+            if (ByteProvider.CheckIsOpen(_provider) && SelectionStart > -1)
+            {
+                //_provider.PasteNotInsert(SelectionStart, Clipboard.GetText());
+                _provider.Paste(SelectionStart, Clipboard.GetText(), true);
+                SetScrollMarker(SelectionStart, ScrollMarker.ByteModified, Properties.Resources.PasteFromClipboardString);
+                RefreshView();
+            }
         }
 
         /// <summary>

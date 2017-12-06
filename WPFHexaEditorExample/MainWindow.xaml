@@ -217,14 +217,15 @@
                 Width="Auto"
                 Height="Auto"
                 Margin="2"
-                AllowByteCount="False"
                 AllowAppend="True"
+                AllowByteCount="False"
+                AllowDrop="True"
                 AppendNeedConfirmation="False"
                 ByteGrouping="FourByte"
                 ByteSpacerPositioning="HexBytePanel"
                 ByteSpacerVisualStyle="Dash"
                 ByteSpacerWidthTickness="Normal"
-                DataStringVisual="Hexadecimal" AllowDrop="True" />
+                DataStringVisual="Hexadecimal" />
         </DockPanel>
     </Grid>
 </Window>

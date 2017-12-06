@@ -2079,14 +2079,11 @@ namespace WpfHexaEditor
         {
             if (d is HexEditor ctrl && e.NewValue != e.OldValue)
             {
-                //Clear before refresh
-                ctrl.HexHeaderStackPanel.Children.Clear();
-
                 //refresh
                 ctrl.UpdateScrollBar();
                 ctrl.BuildDataLines((int) ctrl.MaxVisibleLine, true);
                 ctrl.RefreshView(true);
-                ctrl.UpdateHeader();
+                ctrl.UpdateHeader(true);
             }
         }
 
@@ -2482,8 +2479,11 @@ namespace WpfHexaEditor
         /// <summary>
         /// Update the position info panel at left of the control
         /// </summary>
-        private void UpdateHeader()
+        private void UpdateHeader(bool clear = false)
         {
+            //Clear before refresh
+            if (clear) HexHeaderStackPanel.Children.Clear();
+
             if (ByteProvider.CheckIsOpen(_provider))
                 for (var i = HexHeaderStackPanel.Children.Count; i < BytePerLine; i++)
                 {

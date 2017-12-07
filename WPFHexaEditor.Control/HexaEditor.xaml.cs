@@ -1272,8 +1272,19 @@ namespace WpfHexaEditor
         {
             if (ByteProvider.CheckIsOpen(_provider) && SelectionStart > -1)
             {
-                _provider.PasteNotInsert(SelectionStart, Clipboard.GetText());
+                var clipBoardText = Clipboard.GetText();
+
+                var (success, byteArray) = ByteConverters.IsHexaByteStringValue(clipBoardText);
+
+                if (success)
+                    _provider.PasteNotInsert(SelectionStart, byteArray);
+                else
+                    _provider.PasteNotInsert(SelectionStart, clipBoardText);
+
+
                 //_provider.Paste(SelectionStart, Clipboard.GetText(), true);
+
+
                 SetScrollMarker(SelectionStart, ScrollMarker.ByteModified, Properties.Resources.PasteFromClipboardString);
                 RefreshView();
             }

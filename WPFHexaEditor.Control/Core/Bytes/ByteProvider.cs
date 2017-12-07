@@ -261,20 +261,18 @@ namespace WpfHexaEditor.Core.Bytes
         /// <returns></returns>
         public byte[] Read(int count)
         {
-            if (IsOpen)
-                if (_stream.CanRead)
-                {
-                    var countAdjusted = count;
+            if (!IsOpen) return null;
+            if (!_stream.CanRead) return null;
 
-                    if (Length - Position <= count)
-                        countAdjusted = (int) (Length - Position);
+            var countAdjusted = count;
 
-                    var bytesReaded = new byte[countAdjusted];
-                    _stream.Read(bytesReaded, 0, countAdjusted);
-                    return bytesReaded;
-                }
+            if (Length - Position <= count)
+                countAdjusted = (int) (Length - Position);
 
-            return null;
+            var bytesReaded = new byte[countAdjusted];
+            _stream.Read(bytesReaded, 0, countAdjusted);
+
+            return bytesReaded;
         }
 
         /// <summary>
@@ -335,7 +333,7 @@ namespace WpfHexaEditor.Core.Bytes
                     double countChange = bytemodifiedList.Count;
                     i = 0;
 
-                    //Fast save. only save byteaction=modified
+                    #region Fast save. only save byteaction=modified
                     foreach (var bm in bytemodifiedList)
                         if (bm.Value.IsValid)
                         {
@@ -352,6 +350,7 @@ namespace WpfHexaEditor.Core.Bytes
                             _stream.Position = bm.Key;
                             _stream.WriteByte(bm.Value.Byte.Value);
                         }
+                    #endregion  
                 }
                 else
                 {
@@ -364,7 +363,7 @@ namespace WpfHexaEditor.Core.Bytes
                     //Set position
                     Position = 0;
 
-                    ////Start update and rewrite file.
+                    //Start update and rewrite file.
                     foreach (var nextByteModified in sortedBm)
                     {
                         //Set percent of progress
@@ -377,7 +376,7 @@ namespace WpfHexaEditor.Core.Bytes
                         //Reset buffer
                         buffer = new byte[ConstantReadOnly.Copyblocksize];
 
-                        //start read/write / use little block for optimize memory
+                        #region start read/write / use little block for optimize memory
                         while (Position != nextByteModified.Key)
                         {
                             bufferlength = nextByteModified.Key - Position;
@@ -393,8 +392,9 @@ namespace WpfHexaEditor.Core.Bytes
                             _stream.Read(buffer, 0, buffer.Length);
                             newStream.Write(buffer, 0, buffer.Length);
                         }
+                        #endregion
 
-                        //Apply ByteAction!
+                        #region Apply ByteAction!
                         switch (nextByteModified.Value.Action)
                         {
                             case ByteAction.Added:
@@ -409,8 +409,9 @@ namespace WpfHexaEditor.Core.Bytes
                                 newStream.WriteByte(nextByteModified.Value.Byte.Value);
                                 break;
                         }
+                        #endregion
 
-                        //Read/Write the last section of file
+                        #region Read/Write the last section of file
                         if (nextByteModified.Key == sortedBm.Last().Key)
                         {
                             while (!Eof)
@@ -425,9 +426,10 @@ namespace WpfHexaEditor.Core.Bytes
                                 newStream.Write(buffer, 0, buffer.Length);
                             }
                         }
+                        #endregion
                     }
 
-                    //Set stream to new file (save as)
+                    #region Set stream to new file (save as)
                     var refreshByteProvider = false;
                     if (File.Exists(_newfilename))
                     {
@@ -435,8 +437,9 @@ namespace WpfHexaEditor.Core.Bytes
                         _stream.SetLength(newStream.Length);
                         refreshByteProvider = true;
                     }
+                    #endregion
 
-                    //Write new data to current stream
+                    #region Write new data to current stream
                     Position = 0;
                     newStream.Position = 0;
                     buffer = new byte[ConstantReadOnly.Copyblocksize];
@@ -463,6 +466,7 @@ namespace WpfHexaEditor.Core.Bytes
                         _stream.Write(buffer, 0, buffer.Length);
                     }
                     _stream.SetLength(newStream.Length);
+                    #endregion
 
                     //dispose resource
                     newStream.Close();
@@ -681,10 +685,9 @@ namespace WpfHexaEditor.Core.Bytes
             if (selectionStart == selectionStop)
                 return 1;
 
-            if (selectionStart > selectionStop)
-                return selectionStart - selectionStop + 1;
-
-            return selectionStop - selectionStart + 1;
+            return selectionStart > selectionStop
+                ? selectionStart - selectionStop + 1
+                : selectionStop - selectionStart + 1;
         }
 
         /// <summary>
@@ -723,22 +726,16 @@ namespace WpfHexaEditor.Core.Bytes
             if (selectionStop == -1 || selectionStop == -1) return new byte[0];
 
             //Variable
-            long byteStartPosition;
             var bufferList = new List<byte>();
 
             #region Set start position
 
-            if (selectionStart == selectionStop)
-                byteStartPosition = selectionStart;
-            else if (selectionStart > selectionStop)
-                byteStartPosition = selectionStop;
-            else
-                byteStartPosition = selectionStart;
+            _stream.Position = selectionStart != selectionStop
+                ? (selectionStart > selectionStop ? selectionStop : selectionStart)
+                : selectionStart;
 
             #endregion
 
-            //set position
-            _stream.Position = byteStartPosition;
 
             //Exclude byte deleted from copy
             if (!copyChange)
@@ -1276,18 +1273,17 @@ namespace WpfHexaEditor.Core.Bytes
 
         private bool _disposedValue; // Pour détecter les appels redondants
 
-        void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
-            if (!_disposedValue)
-            {
-                if (disposing)
-                {
-                    IsOnLongProcess = false;
-                    _stream = null;
-                }
+            if (_disposedValue) return;
 
-                _disposedValue = true;
+            if (disposing)
+            {
+                IsOnLongProcess = false;
+                _stream = null;
             }
+
+            _disposedValue = true;
         }
 
         public void Dispose() => Dispose(true);

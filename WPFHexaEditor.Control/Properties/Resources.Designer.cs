@@ -367,6 +367,15 @@ namespace WpfHexaEditor.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Paste operation reached the end of file. Do you want extend the file for complete operation ? This operation cannot be canceled if you continue..
+        /// </summary>
+        public static string PasteExtendByteConfirmationString {
+            get {
+                return ResourceManager.GetString("PasteExtendByteConfirmationString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Paste from clipboard.
         /// </summary>
         public static string PasteFromClipboardString {

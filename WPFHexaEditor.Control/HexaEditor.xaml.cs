@@ -797,7 +797,7 @@ namespace WpfHexaEditor
 
         private void Control_CTRLAKey(object sender, EventArgs e) => SelectAll();
 
-        private void Control_CTRLVKey(object sender, EventArgs e) => PasteWithoutInsert();
+        private void Control_CTRLVKey(object sender, EventArgs e) => Paste(AllowExtend);
 
         private void Control_MovePageUp(object sender, EventArgs e)
         {
@@ -1268,26 +1268,37 @@ namespace WpfHexaEditor
         /// <summary>
         /// Paste clipboard string without inserting byte at selection start
         /// </summary>
-        private void PasteWithoutInsert()
+        /// <param name="expendIfneeded">Set AllowExpend to true for working</param>
+        private void Paste(bool expendIfneeded)
         {
-            if (ByteProvider.CheckIsOpen(_provider) && SelectionStart > -1)
-            {
-                var clipBoardText = Clipboard.GetText();
+            if (!ByteProvider.CheckIsOpen(_provider) || SelectionStart <= -1) return;
+            
+            var clipBoardText = Clipboard.GetText();
+            var (success, byteArray) = ByteConverters.IsHexaByteStringValue(clipBoardText);
 
-                var (success, byteArray) = ByteConverters.IsHexaByteStringValue(clipBoardText);
-
-                if (success)
-                    _provider.PasteNotInsert(SelectionStart, byteArray);
+            #region Expend stream if needed
+            var pastelenght = success ? byteArray.Length : clipBoardText.Length;
+            var needToBeExtent = _provider.Position + pastelenght > _provider.Length;
+            var expend = false;
+            if (expendIfneeded && AllowExtend && needToBeExtent)
+                if (AppendNeedConfirmation)
+                {
+                    if (MessageBox.Show(Properties.Resources.PasteExtendByteConfirmationString, ApplicationName,
+                            MessageBoxButton.YesNo,
+                            MessageBoxImage.Question, MessageBoxResult.Yes) == MessageBoxResult.Yes)
+                        expend = true;
+                }
                 else
-                    _provider.PasteNotInsert(SelectionStart, clipBoardText);
+                    expend = true;
+            #endregion
 
+            if (success)
+                _provider.Paste(SelectionStart, byteArray, expend);
+            else
+                _provider.Paste(SelectionStart, clipBoardText, expend);
 
-                //_provider.Paste(SelectionStart, Clipboard.GetText(), true);
-
-
-                SetScrollMarker(SelectionStart, ScrollMarker.ByteModified, Properties.Resources.PasteFromClipboardString);
-                RefreshView();
-            }
+            SetScrollMarker(SelectionStart, ScrollMarker.ByteModified, Properties.Resources.PasteFromClipboardString);
+            RefreshView();
         }
 
         /// <summary>
@@ -3246,7 +3257,7 @@ namespace WpfHexaEditor
         private void ClearBookMarkCMenu_Click(object sender, RoutedEventArgs e) =>
             ClearScrollMarker(ScrollMarker.Bookmark);
 
-        private void PasteMenu_Click(object sender, RoutedEventArgs e) => PasteWithoutInsert();
+        private void PasteMenu_Click(object sender, RoutedEventArgs e) => Paste(false); //Paste Without Insert
 
         private void SelectAllCMenu_Click(object sender, RoutedEventArgs e) => SelectAll();
 
@@ -3580,12 +3591,12 @@ namespace WpfHexaEditor
 
         #endregion
 
-        #region Append bytes to end of file
+        #region Append/expend bytes to end of file
         /// <summary>
-        /// Allow control to append byte at end of file
+        /// Allow control to append/expend byte at end of file
         /// </summary>
-        public bool AllowAppend { get; set; } = true;
-
+        public bool AllowExtend { get; set; } = true;
+        
         /// <summary>
         /// Show a message box is true before append byte at end of file
         /// </summary>
@@ -3596,7 +3607,7 @@ namespace WpfHexaEditor
         /// </summary>
         internal void AppendByte(byte[] bytesToAppend)
         {
-            if (!AllowAppend) return;
+            if (!AllowExtend) return;
             if (!ByteProvider.CheckIsOpen(_provider)) return;
 
             if (AppendNeedConfirmation)

@@ -219,6 +219,9 @@
   <data name="OkString" xml:space="preserve">
     <value>ОК</value>
   </data>
+  <data name="PasteExtendByteConfirmationString" xml:space="preserve">
+    <value>Операция вставки достигла конца файла. Вы хотите расширить файл для полной работы? Эта операция не может быть отменена, если вы продолжите.</value>
+  </data>
   <data name="PasteFromClipboardString" xml:space="preserve">
     <value>Вставить из буфера обмена</value>
   </data>

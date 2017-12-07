@@ -160,7 +160,7 @@
     <value>复制选中内容为...</value>
   </data>
   <data name="CountOfString" xml:space="preserve">
-    <value>CountOfString</value>
+    <value>字节数</value>
   </data>
   <data name="DefaultTBLString" xml:space="preserve">
     <value>默认TBL</value>
@@ -218,6 +218,9 @@
   </data>
   <data name="OkString" xml:space="preserve">
     <value>确定</value>
+  </data>
+  <data name="PasteExtendByteConfirmationString" xml:space="preserve">
+    <value>粘贴操作到达文件的末尾。 你想扩展文件的完整操作吗？ 如果你继续，这个操作不能被取消。</value>
   </data>
   <data name="PasteFromClipboardString" xml:space="preserve">
     <value>从剪贴板粘贴</value>

@@ -219,6 +219,9 @@
   <data name="OkString" xml:space="preserve">
     <value>Ok</value>
   </data>
+  <data name="PasteExtendByteConfirmationString" xml:space="preserve">
+    <value>Paste operation reached the end of file. Do you want extend the file for complete operation ? This operation cannot be canceled if you continue.</value>
+  </data>
   <data name="PasteFromClipboardString" xml:space="preserve">
     <value>Paste from clipboard</value>
   </data>

@@ -2574,6 +2574,8 @@ namespace WpfHexaEditor
                 }
             }
 
+            TraverseLineInfos(ctrl => { ctrl.Text = string.Empty; });
+
             if (ByteProvider.CheckIsOpen(_provider))
             {
                 for (var i = 0; i < fds; i++)
@@ -2583,7 +2585,7 @@ namespace WpfHexaEditor
 
                     if (firstLineByte < _provider.Length)
                     {
-                        #region Set text visual of header
+                        #region Set text visual
 
                         var tag = $"0x{ByteConverters.LongToHex(firstLineByte).ToUpper()}";
 

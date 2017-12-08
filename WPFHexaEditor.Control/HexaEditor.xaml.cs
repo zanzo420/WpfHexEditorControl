@@ -3597,7 +3597,7 @@ namespace WpfHexaEditor
         /// <summary>
         /// Allow control to append/expend byte at end of file
         /// </summary>
-        public bool AllowExtend { get; set; } = true;
+        public bool AllowExtend { get; set; }
         
         /// <summary>
         /// Show a message box is true before append byte at end of file

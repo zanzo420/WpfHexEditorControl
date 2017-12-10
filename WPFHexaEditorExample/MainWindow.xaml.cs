@@ -248,9 +248,10 @@ namespace WPFHexaEditorExample
             }
         }
 
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        private void TESTMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            HexEdit.FontSize = 16;
+            //HexEdit.SaveCurrentState("test.xml");
+            //HexEdit.LoadCurrentState("test.xml");
         }
     }
 }

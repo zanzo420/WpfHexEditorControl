@@ -3689,5 +3689,28 @@ namespace WpfHexaEditor
         }
 
         #endregion
+
+        #region Save/Load control state
+
+        /// <summary>
+        /// Save the current state of ByteProvider in a xml text file.
+        /// </summary>
+        public void SaveCurrentState(string filename)
+        {
+            if (!ByteProvider.CheckIsOpen(_provider)) return;
+            _provider.SaveState(filename);
+        }
+
+        /// <summary>
+        /// Load state of control from a xml text file.
+        /// </summary>
+        public void LoadCurrentState(string filename)
+        {
+            if (!ByteProvider.CheckIsOpen(_provider)) return;
+            _provider.LoadState(filename);
+            RefreshView();
+        }
+
+        #endregion
     }
 }

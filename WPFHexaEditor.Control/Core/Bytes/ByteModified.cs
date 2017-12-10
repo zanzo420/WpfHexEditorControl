@@ -3,13 +3,10 @@
 // Author : Derek Tremblay (derektremblay666@gmail.com)
 //////////////////////////////////////////////
 
-using System;
-using System.Xml.Serialization;
 using WpfHexaEditor.Core.Interfaces;
 
 namespace WpfHexaEditor.Core.Bytes
 {
-    [Serializable]
     public class ByteModified : IByteModified
     {
         #region Constructor
@@ -39,25 +36,21 @@ namespace WpfHexaEditor.Core.Bytes
         /// <summary>
         /// Byte mofidied
         /// </summary>
-        [XmlElement("Byte")]
         public byte? Byte { get; set; }
 
         /// <summary>
         /// Action have made in this byte
         /// </summary>
-        [XmlElement("Action")]
         public ByteAction Action { get; set; } = ByteAction.Nothing;
 
         /// <summary>
         /// Get of Set te position in file
         /// </summary>
-        [XmlElement("BytePositionInFile")]
         public long BytePositionInFile { get; set; } = -1;
 
         /// <summary>
         /// Number of byte to undo when this byte is reach
         /// </summary>
-        [XmlIgnore]
         public long UndoLenght { get; set; } = 1;
 
         #endregion properties

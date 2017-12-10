@@ -146,7 +146,7 @@ namespace WpfHexaEditor
         public event EventHandler ReplaceByteCompleted;
 
         /// <summary>
-        /// Occura when the fill with byte method are completed
+        /// Occurs when the fill with byte method are completed
         /// </summary>
         public event EventHandler FillWithByteCompleted;
 
@@ -690,8 +690,22 @@ namespace WpfHexaEditor
 
         #endregion ReadOnly property/event
 
-        #region ByteModified methods/event
+        #region ByteModified methods/event/property
 
+        /// <summary>
+        /// Stream or file are modified when IsModified are set to true.
+        /// </summary>
+        public bool IsModified
+        {
+            get => (bool)GetValue(IsModifiedProperty);
+            set => SetValue(IsModifiedProperty, value);
+        }
+
+        // Using a DependencyProperty as the backing store for IsModified.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsModifiedProperty =
+            DependencyProperty.Register(nameof(IsModified), typeof(bool), typeof(HexEditor),
+                new PropertyMetadata(false));
+        
         private void Control_ByteModified(object sender, EventArgs e)
         {
             if (sender is IByteControl ctrl)
@@ -710,19 +724,17 @@ namespace WpfHexaEditor
         public void DeleteSelection()
         {
             if (!CanDelete()) return;
+            if (!ByteProvider.CheckIsOpen(_provider)) return;
 
-            if (ByteProvider.CheckIsOpen(_provider))
-            {
-                var position = SelectionStart > SelectionStop ? SelectionStop : SelectionStart;
+            var position = SelectionStart > SelectionStop ? SelectionStop : SelectionStart;
 
-                _provider.AddByteDeleted(position, SelectionLength);
+            _provider.AddByteDeleted(position, SelectionLength);
 
-                SetScrollMarker(position, ScrollMarker.ByteDeleted);
+            SetScrollMarker(position, ScrollMarker.ByteDeleted);
 
-                UpdateByteModified();
-                UpdateSelection();
-                UpdateStatusBar();
-            }
+            UpdateByteModified();
+            UpdateSelection();
+            UpdateStatusBar();
         }
 
 
@@ -1265,6 +1277,8 @@ namespace WpfHexaEditor
 
         #region Copy/Paste/Cut Methods
 
+        public CopyPasteMode DefaultCopyToClipboardMode { get; set; } = CopyPasteMode.HexaString;
+
         /// <summary>
         /// Paste clipboard string without inserting byte at selection start
         /// </summary>
@@ -1311,13 +1325,11 @@ namespace WpfHexaEditor
         /// </summary>
         public void FillWithByte(long startPosition, long length, byte val)
         {
-            if (ByteProvider.CheckIsOpen(_provider))
-                if (startPosition > -1 && length > 0)
-                {
-                    _provider.FillWithByte(startPosition, length, val);
-                    SetScrollMarker(SelectionStart, ScrollMarker.ByteModified, Properties.Resources.FillSelectionAloneString);
-                    RefreshView();
-                }
+            if (!ByteProvider.CheckIsOpen(_provider) || (startPosition <= -1 || length <= 0)) return;
+
+            _provider.FillWithByte(startPosition, length, val);
+            SetScrollMarker(SelectionStart, ScrollMarker.ByteModified, Properties.Resources.FillSelectionAloneString);
+            RefreshView();
         }
 
         /// <summary>
@@ -1331,13 +1343,11 @@ namespace WpfHexaEditor
         /// </summary>
         public void ReplaceByte(long startPosition, long length, byte original, byte replace)
         {
-            if (ByteProvider.CheckIsOpen(_provider))
-                if (startPosition > -1 && length > 0)
-                {
-                    _provider.ReplaceByte(startPosition, length, original, replace);
-                    SetScrollMarker(SelectionStart, ScrollMarker.ByteModified, Properties.Resources.ReplaceWithByteString);
-                    RefreshView();
-                }
+            if (!ByteProvider.CheckIsOpen(_provider) || startPosition <= -1 || length <= 0) return;
+
+            _provider.ReplaceByte(startPosition, length, original, replace);
+            SetScrollMarker(SelectionStart, ScrollMarker.ByteModified, Properties.Resources.ReplaceWithByteString);
+            RefreshView();
         }
 
         /// <summary>
@@ -1353,7 +1363,7 @@ namespace WpfHexaEditor
         /// <summary>
         /// Copy to clipboard with default CopyPasteMode.ASCIIString
         /// </summary>
-        public void CopyToClipboard() => CopyToClipboard(CopyPasteMode.AsciiString);
+        public void CopyToClipboard() => CopyToClipboard(DefaultCopyToClipboardMode);
 
         /// <summary>
         /// Copy to clipboard the current selection with actual change in control
@@ -1364,13 +1374,12 @@ namespace WpfHexaEditor
         /// <summary>
         /// Copy to clipboard
         /// </summary>
-        public void CopyToClipboard(CopyPasteMode copypastemode, long selectionStart, long selectionStop,
-            bool copyChange, TblStream tbl)
+        public void CopyToClipboard(CopyPasteMode copypastemode, long selectionStart, long selectionStop, bool copyChange, TblStream tbl)
         {
             if (!CanCopy()) return;
+            if (!ByteProvider.CheckIsOpen(_provider)) return;
 
-            if (ByteProvider.CheckIsOpen(_provider))
-                _provider.CopyToClipboard(copypastemode, selectionStart, selectionStop, copyChange, tbl);
+            _provider.CopyToClipboard(copypastemode, selectionStart, selectionStop, copyChange, tbl);
         }
 
         /// <summary>
@@ -1391,9 +1400,9 @@ namespace WpfHexaEditor
         public void CopyToStream(Stream output, long selectionStart, long selectionStop, bool copyChange)
         {
             if (!CanCopy()) return;
+            if (!ByteProvider.CheckIsOpen(_provider)) return;
 
-            if (ByteProvider.CheckIsOpen(_provider))
-                _provider.CopyToStream(output, selectionStart, selectionStop, copyChange);
+            _provider.CopyToStream(output, selectionStart, selectionStop, copyChange);
         }
 
         /// <summary>
@@ -1582,8 +1591,9 @@ namespace WpfHexaEditor
         /// </summary>
         public void ClearAllChange()
         {
-            if (ByteProvider.CheckIsOpen(_provider))
-                _provider.ClearUndoChange();
+            if (!ByteProvider.CheckIsOpen(_provider)) return;
+
+            _provider.ClearUndoChange();
         }
 
         /// <summary>
@@ -1593,13 +1603,12 @@ namespace WpfHexaEditor
         {
             UnSelectAll();
 
-            if (ByteProvider.CheckIsOpen(_provider))
-            {
-                for (var i = 0; i < repeat; i++)
-                    _provider.Undo();
+            if (!ByteProvider.CheckIsOpen(_provider)) return;
 
-                RefreshView();
-            }
+            for (var i = 0; i < repeat; i++)
+                _provider.Undo();
+
+            RefreshView();
         }
 
         /// <summary>
@@ -1609,9 +1618,15 @@ namespace WpfHexaEditor
         /// <param name="e"></param>
         private void Provider_Undone(object sender, EventArgs e)
         {
-            if (sender is List<long> bytePosition)
-                foreach (var position in bytePosition)
-                    ClearScrollMarker(position);
+            switch (sender)
+            {
+                case List<long> bytePosition:
+                    foreach (var position in bytePosition)
+                        ClearScrollMarker(position);
+                    break;
+            }
+
+            IsModified = _provider.UndoCount > 0;
         }
 
         /// <summary>
@@ -1630,28 +1645,26 @@ namespace WpfHexaEditor
 
         private void Provider_ChangesSubmited(object sender, EventArgs e)
         {
-            if (sender is ByteProvider bp)
-            {
-                //Refresh filename
-                var filename = bp.FileName;
-                CloseProvider();
-                FileName = filename;
+            if (!(sender is ByteProvider bp)) return;
 
-                ChangesSubmited?.Invoke(this, new EventArgs());
-            }
+            //Refresh filename
+            var filename = bp.FileName;
+            CloseProvider();
+            FileName = filename;
+
+            ChangesSubmited?.Invoke(this, new EventArgs());
         }
 
         private void ProviderStream_ChangesSubmited(object sender, EventArgs e)
         {
             //Refresh stream
-            if (ByteProvider.CheckIsOpen(_provider))
-            {
-                var stream = new MemoryStream(_provider.Stream.ToArray());
-                CloseProvider();
-                OpenStream(stream);
+            if (!ByteProvider.CheckIsOpen(_provider)) return;
 
-                ChangesSubmited?.Invoke(this, new EventArgs());
-            }
+            var stream = new MemoryStream(_provider.Stream.ToArray());
+            CloseProvider();
+            OpenStream(stream);
+
+            ChangesSubmited?.Invoke(this, new EventArgs());
         }
 
         /// <summary>
@@ -1692,11 +1705,10 @@ namespace WpfHexaEditor
 
         private static void Stream_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexEditor ctrl)
-            {
-                ctrl.CloseProvider();
-                ctrl.OpenStream((MemoryStream) e.NewValue);
-            }
+            if (!(d is HexEditor ctrl)) return;
+
+            ctrl.CloseProvider();
+            ctrl.OpenStream((MemoryStream) e.NewValue);
         }
 
         /// <summary>
@@ -1735,8 +1747,9 @@ namespace WpfHexaEditor
         /// </summary>
         public void SubmitChanges()
         {
-            if (ByteProvider.CheckIsOpen(_provider) && !_provider.ReadOnlyMode)
-                _provider.SubmitChanges();
+            if (!ByteProvider.CheckIsOpen(_provider) || _provider.ReadOnlyMode) return;
+
+            _provider.SubmitChanges();
         }
 
         /// <summary>
@@ -1744,8 +1757,9 @@ namespace WpfHexaEditor
         /// </summary>
         public void SubmitChanges(string newfilename, bool overwrite = false)
         {
-            if (ByteProvider.CheckIsOpen(_provider) && !_provider.ReadOnlyMode)
-                _provider.SubmitChanges(newfilename, overwrite);
+            if (!ByteProvider.CheckIsOpen(_provider) || _provider.ReadOnlyMode) return;
+
+            _provider.SubmitChanges(newfilename, overwrite);
         }
 
         /// <summary>
@@ -1911,8 +1925,9 @@ namespace WpfHexaEditor
 
         private void CancelLongProcessButton_Click(object sender, RoutedEventArgs e)
         {
-            if (ByteProvider.CheckIsOpen(_provider))
-                _provider.IsOnLongProcess = false;
+            if (!ByteProvider.CheckIsOpen(_provider)) return;
+
+            _provider.IsOnLongProcess = false;
         }
 
         /// <summary>
@@ -1922,11 +1937,9 @@ namespace WpfHexaEditor
         {
             if (ByteProvider.CheckIsOpen(_provider))
             {
-                if (!_provider.IsOnLongProcess)
-                {
-                    CancelLongProcessButton.Visibility = Visibility.Collapsed;
-                    LongProgressProgressBar.Visibility = Visibility.Collapsed;
-                }
+                if (_provider.IsOnLongProcess) return;
+                CancelLongProcessButton.Visibility = Visibility.Collapsed;
+                LongProgressProgressBar.Visibility = Visibility.Collapsed;
             }
             else
             {
@@ -2448,24 +2461,24 @@ namespace WpfHexaEditor
         /// </summary>
         private void UpdateByteModified()
         {
-            if (ByteProvider.CheckIsOpen(_provider))
+            if (!ByteProvider.CheckIsOpen(_provider)) return;
+
+            var modifiedBytesDictionary = _provider.GetByteModifieds(ByteAction.All);
+
+            TraverseHexAndStringBytes(ctrl =>
             {
-                var modifiedBytesDictionary = _provider.GetByteModifieds(ByteAction.All);
+                if (!modifiedBytesDictionary.TryGetValue(ctrl.BytePositionInFile, out var byteModified)) return;
 
-                TraverseHexAndStringBytes(ctrl =>
-                {
-                    if (modifiedBytesDictionary.TryGetValue(ctrl.BytePositionInFile, out var byteModified))
-                    {
-                        ctrl.InternalChange = true;
-                        ctrl.Byte = byteModified.Byte;
+                ctrl.InternalChange = true;
+                ctrl.Byte = byteModified.Byte;
 
-                        if (byteModified.Action == ByteAction.Modified || byteModified.Action == ByteAction.Deleted)
-                            ctrl.Action = byteModified.Action;
+                if (byteModified.Action == ByteAction.Modified || byteModified.Action == ByteAction.Deleted)
+                    ctrl.Action = byteModified.Action;
 
-                        ctrl.InternalChange = false;
-                    }
-                });
-            }
+                ctrl.InternalChange = false;
+            });
+
+            IsModified = _provider.UndoCount > 0;
         }
 
         /// <summary>

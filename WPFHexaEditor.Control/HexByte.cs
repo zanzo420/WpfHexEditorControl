@@ -517,8 +517,7 @@ namespace WpfHexaEditor
                             case KeyDownLabel.NextPosition:
 
                                 //byte[] byteToAppend = { (byte)key.ToCharArray()[0] };
-                                byte[] byteToAppend = { 0 };
-                                _parent.AppendByte(byteToAppend);
+                                _parent.AppendByte(new byte[] { 0 });
 
                                 MoveNext?.Invoke(this, new EventArgs());
 

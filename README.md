@@ -5,14 +5,19 @@ A fast, fully customisable Wpf user control for editing file or stream as hexade
 
 Can be used in WPF or WinForm application
 
+## You want to know how to say thank ?
+
+Hexeditor control is totaly free and can be used in all project you want like open source and commercial applications. I make it in my free time and a few colaborators help me when thy can... Please hit the ⭐️ button and i will be very happy ;) I accept help contribution...
+
+## Screenshot
 
 Sample with standard ASCII character table
 ![example](Sample11-NOTBL.png?raw=true)
 
-Sample with Thingy character table on SNES Final Fantasy II US
+Sample with custom thingy character table (TBL) on SNES Final Fantasy II US
 ![example](Sample9-TBL.png?raw=true)
 
-## NUGET  Last version : 2017-10-26 (v1.2.9)
+## NUGET  Last version : 2017-12-08 (v1.3.6.2)
 https://www.nuget.org/packages/WPFHexaEditor/
 
 ## Somes features

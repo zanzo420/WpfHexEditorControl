@@ -7,9 +7,9 @@ Can be used in WPF or WinForm application
 
 ## You want to know how to say thank ?
 
-Hexeditor control is totaly free and can be used in all project you want like open source and commercial applications. I make it in my free time and a few colaborators help me when thy can... Please hit the ⭐️ button and i will be very happy ;) I accept help contribution...
+Hexeditor control is totaly free and can be used in all project you want like open source and commercial applications. I make it in my free time and a few colaborators help me when they can... Please hit the ⭐️ button and I will be very happy ;) I accept help contribution...
 
-## Screenshot
+## Screenshots
 
 Sample with standard ASCII character table
 ![example](Sample11-NOTBL.png?raw=true)

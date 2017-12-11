@@ -1455,7 +1455,6 @@ namespace WpfHexaEditor.Core.Bytes
                 var bm = new ByteModified();
 
                 foreach (var at in element.Attributes())
-                {
                     switch (at.Name.ToString())
                     {
                         case "Action":
@@ -1482,7 +1481,6 @@ namespace WpfHexaEditor.Core.Bytes
                             bm.BytePositionInFile = long.Parse(at.Value);
                             break;
                     }
-                }
 
                 #region Add bytemodified to dictionary
                 switch (bm.Action) {

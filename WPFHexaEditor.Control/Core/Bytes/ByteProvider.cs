@@ -227,13 +227,11 @@ namespace WpfHexaEditor.Core.Bytes
             get => IsOpen ? (_stream.Position <= _stream.Length ? _stream.Position : _stream.Length) : -1;
             set
             {
-                if (IsOpen)
-                {
-                    //TODO : ADD VALIDATION
-                    _stream.Position = value;
+                if (!IsOpen) return;
 
-                    PositionChanged?.Invoke(this, new EventArgs());
-                }
+                _stream.Position = value;
+
+                PositionChanged?.Invoke(this, new EventArgs());
             }
         }
 
@@ -408,11 +406,10 @@ namespace WpfHexaEditor.Core.Bytes
 
                         switch (nextByteModified.Value.Action)
                         {
-                            case ByteAction.Added:
-                                //TODO : IMPLEMENTING ADD BYTE
-                                break;
+                            //case ByteAction.Added:
+                            //    //TODO : IMPLEMENTING ADD BYTE
+                            //    break;
                             case ByteAction.Deleted:
-                                //NOTHING to do we dont want to add deleted byte
                                 Position++;
                                 break;
                             case ByteAction.Modified:
@@ -778,9 +775,9 @@ namespace WpfHexaEditor.Core.Bytes
                     case ByteAction.Modified:
                         if (byteModified.IsValid) bufferList.Add(byteModified.Byte.Value);
                         break;
-                    case ByteAction.Deleted: //NOTHING to do we dont want to add deleted byte   
-                    case ByteAction.Added: //TODO : IMPLEMENTING ADD BYTE       
-                        break;
+                    //case ByteAction.Deleted: //NOTHING to do we dont want to add deleted byte   
+                    //case ByteAction.Added: //TODO : IMPLEMENTING ADD BYTE       
+                    //    break;
                 }
 
                 _stream.Position++;
@@ -1406,6 +1403,7 @@ namespace WpfHexaEditor.Core.Bytes
 
         /// <summary>
         /// Serialize current state of provider
+        /// TODO: include bookmark...
         /// </summary>
         public void SaveState(string fileName)
         {
@@ -1413,11 +1411,11 @@ namespace WpfHexaEditor.Core.Bytes
                 new XAttribute("Version", "0.1"),
                 new XElement("ByteModifieds", new XAttribute("Count", _byteModifiedDictionary.Count))));
 
-            var root = doc.Element("WpfHexEditor").Element("ByteModifieds");
+            var bmRoot = doc.Element("WpfHexEditor").Element("ByteModifieds");
 
-            //Create bytemodified documents
+            //Create bytemodified tag
             foreach (var bm in _byteModifiedDictionary)
-                root.Add(new XElement("ByteModified",
+                bmRoot.Add(new XElement("ByteModified",
                     new XAttribute("Action", bm.Value.Action),
                     new XAttribute("HexByte",
                         bm.Value.Byte.HasValue

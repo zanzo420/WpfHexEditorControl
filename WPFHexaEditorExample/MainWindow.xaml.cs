@@ -243,9 +243,7 @@ namespace WPFHexaEditorExample
             var fileDialog = new SaveFileDialog();
 
             if (fileDialog.ShowDialog() != null)
-            {
                 HexEdit.SubmitChanges(fileDialog.FileName, true);
-            }
         }
 
         private void TESTMenuItem_Click(object sender, RoutedEventArgs e)

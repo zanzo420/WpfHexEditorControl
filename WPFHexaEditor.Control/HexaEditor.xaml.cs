@@ -713,7 +713,7 @@ namespace WpfHexaEditor
         public bool IsModified
         {
             get => (bool)GetValue(IsModifiedProperty);
-            set => SetValue(IsModifiedProperty, value);
+            internal set => SetValue(IsModifiedProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for IsModified.  This enables animation, styling, binding, etc...

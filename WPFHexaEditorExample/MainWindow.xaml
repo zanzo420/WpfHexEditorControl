@@ -14,7 +14,6 @@
     Title="Wpf HexEditor control sample"
     Width="900"
     Height="530"
-    Background="WhiteSmoke"
     Closing="Window_Closing"
     Icon="Resources/Icon/Logo-Icon.ico"
     mc:Ignorable="d">
@@ -228,6 +227,7 @@
                 DefaultCopyToClipboardMode="HexaString"
                 DataStringVisual="Hexadecimal" 
                 ForegroundSecondColor="Blue"
+                BorderThickness="1"
                 />
         </DockPanel>
     </Grid>

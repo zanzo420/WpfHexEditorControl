@@ -21,6 +21,7 @@
     MouseWheel="UserControl_MouseWheel"
     mc:Ignorable="d">
 
+    <!--#region Ressources-->
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -29,7 +30,9 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
+    <!--#endregion-->
 
+    <!--#region Build-in Context Menu-->
     <UserControl.ContextMenu>
         <ContextMenu x:Name="CMenu" Visibility="Collapsed">
             <MenuItem
@@ -156,11 +159,14 @@
                 Header="{x:Static p:Resources.SelectAllString}" />
         </ContextMenu>
     </UserControl.ContextMenu>
+    <!--#endregion-->
 
     <Grid
         x:Name="BaseGrid"
         Background="White"
         SizeChanged="Grid_SizeChanged">
+        
+        <!--#region Grid/Column Definitions-->
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
@@ -174,7 +180,9 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+        <!--#endregion-->
 
+        <!--#region Data/Infos StackPanel-->
         <StackPanel
             x:Name="LinesInfoStackPanel"
             Grid.Row="1"
@@ -186,17 +194,6 @@
             Grid.Row="1"
             Grid.Column="1"
             Margin="5,0" />
-
-        <ScrollBar
-            x:Name="VerticalScrollBar"
-            Grid.Row="0"
-            Grid.RowSpan="2"
-            Grid.Column="4"
-            Width="20"
-            HorizontalAlignment="Right"
-            LargeChange="100"
-            SmallChange="1"
-            ValueChanged="VerticalScrollBar_ValueChanged" />
 
         <StackPanel
             x:Name="HexHeaderStackPanel"
@@ -210,7 +207,9 @@
             Grid.Row="1"
             Grid.Column="2"
             Margin="5,0,0,0" />
+        <!--#endregion-->
 
+        <!--#region Statusbar definition-->
         <Grid
             x:Name="StatusBarGrid"
             Grid.Row="2"
@@ -219,13 +218,12 @@
             VerticalAlignment="Top"
             Background="WhiteSmoke"
             Visibility="Visible">
-
+            
             <Separator
                 Height="1"
                 Margin="0,0,0,27"
                 Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HexEditor}}, Path=BorderBrush}" />
-
-            <!--  Statusbar definition  -->
+            
             <StatusBar Height="27">
                 <StatusBarItem Width="90" Padding="0">
                     <StackPanel Orientation="Horizontal">
@@ -293,15 +291,49 @@
             </StatusBar>
         </Grid>
 
-        <ProgressBar
-            x:Name="LongProgressProgressBar"
-            Grid.Row="3"
-            Grid.Column="0"
-            Grid.ColumnSpan="5"
-            Height="3"
-            BorderThickness="0"
-            Maximum="1"
-            Minimum="0" />
+        <Label
+            Grid.Row="2"
+            Grid.RowSpan="2"
+            Grid.Column="2"
+            Grid.ColumnSpan="2"
+            Width="64"
+            Margin="0,1,40,1"
+            HorizontalAlignment="Right"
+            Content="ReadOnly"
+            FontWeight="Bold"
+            Visibility="{Binding (local:HexEditor.ReadOnlyMode), Converter={StaticResource BoolToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
+
+        <Label
+            x:Name="TblLabel"
+            Grid.Row="2"
+            Grid.RowSpan="2"
+            Grid.Column="2"
+            Grid.ColumnSpan="2"
+            Margin="0,1,05,1"
+            HorizontalAlignment="Right"
+            Content="{x:Static p:Resources.TBLString}"
+            FontWeight="Bold"
+            Visibility="Collapsed" />
+        <!--#endregion-->
+
+        <!--#region Scrollbar, marker, and move rectangle-->
+        <ScrollBar
+            x:Name="VerticalScrollBar"
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Grid.Column="4"
+            Width="20"
+            HorizontalAlignment="Right"
+            LargeChange="100"
+            SmallChange="1"
+            ValueChanged="VerticalScrollBar_ValueChanged" />
+
+        <Grid
+            x:Name="MarkerGrid"
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Grid.Column="4"
+            Margin="0,17" />
 
         <Rectangle
             x:Name="BottomRectangle"
@@ -327,7 +359,18 @@
             MouseEnter="TopRectangle_MouseEnter"
             MouseLeave="TopRectangle_MouseLeave"
             Opacity="0" />
+        <!--#endregion-->
 
+        <!--#region Long process-->
+        <ProgressBar
+            x:Name="LongProgressProgressBar"
+            Grid.Row="3"
+            Grid.Column="0"
+            Grid.ColumnSpan="5"
+            Height="3"
+            BorderThickness="0"
+            Maximum="1"
+            Minimum="0" />
 
         <!--  TODO: ADD TEXTBLOCK FOR DETAIL  -->
         <Border
@@ -350,36 +393,7 @@
                 Opacity="0.9"
                 ToolTip="{x:Static p:Resources.CancelLongProcessToolTipString}" />
         </Border>
+        <!--#endregion-->
 
-        <Grid
-            x:Name="MarkerGrid"
-            Grid.Row="0"
-            Grid.RowSpan="2"
-            Grid.Column="4"
-            Margin="0,17" />
-
-        <Label
-            Grid.Row="2"
-            Grid.RowSpan="2"
-            Grid.Column="2"
-            Grid.ColumnSpan="2"
-            Width="64"
-            Margin="0,1,40,1"
-            HorizontalAlignment="Right"
-            Content="ReadOnly"
-            FontWeight="Bold"
-            Visibility="{Binding (local:HexEditor.ReadOnlyMode), Converter={StaticResource BoolToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
-
-        <Label
-            x:Name="TblLabel"
-            Grid.Row="2"
-            Grid.RowSpan="2"
-            Grid.Column="2"
-            Grid.ColumnSpan="2"
-            Margin="0,1,05,1"
-            HorizontalAlignment="Right"
-            Content="{x:Static p:Resources.TBLString}"
-            FontWeight="Bold"
-            Visibility="Collapsed" />
     </Grid>
 </UserControl>

@@ -184,6 +184,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <Resource Include="Resources\EBCDIC.tbl" />
     <None Include="WPFHexaEditor.ruleset" />
   </ItemGroup>
   <ItemGroup>

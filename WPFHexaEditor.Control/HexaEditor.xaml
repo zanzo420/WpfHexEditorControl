@@ -169,7 +169,7 @@
         x:Name="BaseGrid"
         Background="White"
         SizeChanged="Grid_SizeChanged">
-        
+
         <!--#region Grid/Column Definitions-->
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -222,12 +222,12 @@
             VerticalAlignment="Top"
             Background="WhiteSmoke"
             Visibility="Visible">
-            
+
             <Separator
                 Height="1"
                 Margin="0,0,0,27"
                 Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HexEditor}}, Path=BorderBrush}" />
-            
+
             <StatusBar Height="27">
                 <StatusBarItem Width="90" Padding="0">
                     <StackPanel Orientation="Horizontal">
@@ -306,18 +306,6 @@
             Content="ReadOnly"
             FontWeight="Bold"
             Visibility="{Binding (local:HexEditor.ReadOnlyMode), Converter={StaticResource BoolToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
-
-        <Label
-            x:Name="TblLabel"
-            Grid.Row="2"
-            Grid.RowSpan="2"
-            Grid.Column="2"
-            Grid.ColumnSpan="2"
-            Margin="0,1,05,1"
-            HorizontalAlignment="Right"
-            Content="{x:Static p:Resources.TBLString}"
-            FontWeight="Bold"
-            Visibility="Collapsed" />
         <!--#endregion-->
 
         <!--#region Scrollbar, marker, and move rectangle-->
@@ -397,6 +385,17 @@
                 Opacity="0.9"
                 ToolTip="{x:Static p:Resources.CancelLongProcessToolTipString}" />
         </Border>
+        <Label
+            x:Name="TblLabel"
+            Grid.Row="2"
+            Grid.RowSpan="2"
+            Grid.Column="2"
+            Grid.ColumnSpan="2"
+            Margin="0,1,05,1"
+            HorizontalAlignment="Right"
+            Content="{x:Static p:Resources.TBLString}"
+            FontWeight="Bold"
+            Visibility="Collapsed" />
         <!--#endregion-->
 
     </Grid>

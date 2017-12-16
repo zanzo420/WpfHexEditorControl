@@ -152,6 +152,11 @@
                             Header="Load TBL file"
                             IsCheckable="True" />
                         <MenuItem
+                            x:Name="CTableTblDefaultEBCDICButton"
+                            Click="CTableTblDefaultEBCDICButton_Click"
+                            Header="Load Build-in TBL : EBCDIC"
+                            IsCheckable="True" />
+                        <MenuItem
                             x:Name="CTableTblDefaultAsciiButton"
                             Click="CTableTBLDefaultASCIIButton_Click"
                             Header="Load Build-in TBL : ASCII"

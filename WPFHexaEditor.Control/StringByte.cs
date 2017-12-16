@@ -28,7 +28,6 @@ namespace WpfHexaEditor
         private bool _isHighLight;
         private ByteAction _action = ByteAction.Nothing;
         private byte? _byte;
-        private CharacterTableType _typeOfCharacterTable;
         private bool _tblShowMte = true;
 
         #endregion Global variable
@@ -255,16 +254,11 @@ namespace WpfHexaEditor
         /// Type of caracter table are used un hexacontrol.
         /// For now, somes character table can be readonly but will change in future
         /// </summary>
-        public CharacterTableType TypeOfCharacterTable
-        {
-            get => _typeOfCharacterTable;
-            set
-            {
-                _typeOfCharacterTable = value;
-                UpdateLabelFromByte();
-            }
-        }
+        public CharacterTableType TypeOfCharacterTable { get; set; }
 
+        /// <summary>
+        /// Custom character table
+        /// </summary>
         public TblStream TblCharacterTable { get; set; }
 
         #endregion Characters tables

@@ -223,6 +223,74 @@ namespace WpfHexaEditor.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à 0=&lt;NUL&gt;
+        ///1=&lt;SOH&gt;
+        ///2=&lt;STX&gt;
+        ///3=&lt;ETX&gt;
+        ///4=&lt;PF&gt;
+        ///5=&lt;HT&gt;
+        ///6=&lt;LC&gt;
+        ///7=&lt;DEL&gt;
+        ///8=&lt;GE&gt;
+        ///9=&lt;RLF&gt;
+        ///0A=&lt;SMM&gt;
+        ///0B=&lt;VT&gt;
+        ///0C=&lt;FF&gt;
+        ///0D=&lt;CR&gt;
+        ///0E=&lt;SO&gt;
+        ///0F=&lt;SI&gt;
+        ///10=&lt;DLE&gt;
+        ///11=&lt;DC1&gt;
+        ///12=&lt;DC2&gt;
+        ///13=&lt;TM&gt;
+        ///14=&lt;RES&gt;
+        ///15=&lt;NL&gt;
+        ///16=&lt;BS&gt;
+        ///17=&lt;IL&gt;
+        ///18=&lt;CAN&gt;
+        ///19=&lt;EM&gt;
+        ///1A=&lt;CC&gt;
+        ///1B=&lt;CU1&gt;
+        ///1C=&lt;IFS&gt;
+        ///1D=&lt;IGS&gt;
+        ///1E=&lt;IRS&gt;
+        ///1F=&lt;IUS&gt;
+        ///20=&lt;DS&gt;
+        ///21=&lt;SOS&gt;
+        ///22=&lt;FS&gt;
+        ///23=
+        ///24=&lt;BYP&gt;
+        ///25=&lt;LF&gt;
+        ///26=&lt;ETB&gt;
+        ///27=&lt;ESC&gt;
+        ///28=
+        ///29=
+        ///2A=&lt;SM&gt;
+        ///2B=&lt;CU2&gt;
+        ///2C=
+        ///2D=&lt;ENQ&gt;
+        ///2E=&lt;ACK&gt;
+        ///2F=&lt;BEL&gt;
+        ///30=
+        ///31=
+        ///32=&lt;SYN&gt;
+        ///33=
+        ///34=&lt;PN&gt;
+        ///35=&lt;RS&gt;
+        ///36=&lt;UC&gt;
+        ///37=&lt;EOT&gt;
+        ///38=
+        ///39=
+        ///3A=
+        ///3B=&lt; [le reste de la chaîne a été tronqué]&quot;;.
+        /// </summary>
+        public static string EBCDIC {
+            get {
+                return ResourceManager.GetString("EBCDIC", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à &lt;end&gt;.
         /// </summary>
         public static string EndTagString {

@@ -569,7 +569,7 @@ namespace WpfHexaEditor
         /// </summary>
         public void LoadDefaultTbl(DefaultCharacterTableType type = DefaultCharacterTableType.Ascii)
         {
-            _tblCharacterTable = TblStream.CreateDefaultAscii();
+            _tblCharacterTable = TblStream.CreateDefaultTbl(type);
             TblShowMte = false;
 
             TblLabel.Visibility = Visibility.Visible;
@@ -2252,22 +2252,16 @@ namespace WpfHexaEditor
 
                 for (var i = 0; i < BytePerLine; i++)
                 {
-                    if (_tblCharacterTable == null && (ByteSpacerPositioning == ByteSpacerPosition.Both ||
-                                                       ByteSpacerPositioning == ByteSpacerPosition.StringBytePanel))
-                        AddByteSpacer(dataLineStack, i);
-
-                    var sbCtrl = new StringByte(this)
+                    switch (_tblCharacterTable)
                     {
-                        InternalChange = true,
-                        ReadOnlyMode = ReadOnlyMode,
-                        TblCharacterTable = _tblCharacterTable,
-                        TypeOfCharacterTable = TypeOfCharacterTable,
-                        Byte = null,
-                        ByteNext = null,
-                        BytePositionInFile = -1
-                    };
+                        case null when ByteSpacerPositioning == ByteSpacerPosition.Both ||
+                                       ByteSpacerPositioning == ByteSpacerPosition.StringBytePanel:
+                            AddByteSpacer(dataLineStack, i);
+                            break;
+                    }
 
-                    sbCtrl.InternalChange = false;
+                    var sbCtrl = new StringByte(this);
+                    sbCtrl.Clear();
 
                     dataLineStack.Children.Add(sbCtrl);
                 }
@@ -2285,19 +2279,16 @@ namespace WpfHexaEditor
 
                 for (var i = 0; i < BytePerLine; i++)
                 {
-                    if (ByteSpacerPositioning == ByteSpacerPosition.Both ||
-                        ByteSpacerPositioning == ByteSpacerPosition.HexBytePanel)
-                        AddByteSpacer(hexaDataLineStack, i);
-
-                    var byteControl = new HexByte(this)
+                    switch (ByteSpacerPositioning)
                     {
-                        InternalChange = true,
-                        ReadOnlyMode = ReadOnlyMode,
-                        Byte = null,
-                        BytePositionInFile = -1
-                    };
+                        case ByteSpacerPosition.Both:
+                        case ByteSpacerPosition.HexBytePanel:
+                            AddByteSpacer(hexaDataLineStack, i);
+                            break;
+                    }
 
-                    byteControl.InternalChange = false;
+                    var byteControl = new HexByte(this);
+                    byteControl.Clear();
 
                     hexaDataLineStack.Children.Add(byteControl);
                 }
@@ -2376,18 +2367,18 @@ namespace WpfHexaEditor
                 {
                     #region Control need to resize
 
-                    if (_viewBuffer == null)
-                    {
-                        _viewBuffer = new byte[MaxVisibleLine * BytePerLine + 1];
-                        BuildDataLines((int) MaxVisibleLine);
-                    }
-                    else
+                    if (_viewBuffer != null)
                     {
                         if (_viewBuffer.Length < MaxVisibleLine * BytePerLine + 1)
                         {
                             BuildDataLines((int) MaxVisibleLine);
                             _viewBuffer = new byte[MaxVisibleLine * BytePerLine + 1];
                         }
+                    }
+                    else
+                    {
+                        _viewBuffer = new byte[MaxVisibleLine * BytePerLine + 1];
+                        BuildDataLines((int) MaxVisibleLine);
                     }
 
                     #endregion
@@ -2396,14 +2387,12 @@ namespace WpfHexaEditor
                 if (LinesInfoStackPanel.Children.Count == 0)
                     return;
 
-                var firstInfoLabel = LinesInfoStackPanel.Children[0] as FastTextLine;
-                var startPosition = ByteConverters.HexLiteralToLong(firstInfoLabel.Tag.ToString()).position;
-                var sizeReadyToRead = LinesInfoStackPanel.Children.Count * BytePerLine + 1;
+                var startPosition = ByteConverters.HexLiteralToLong((LinesInfoStackPanel.Children[0] as FastTextLine).Tag.ToString()).position;
                 _provider.Position = startPosition;
-                var readSize = _provider.Read(_viewBuffer, 0, sizeReadyToRead);
+                var readSize = _provider.Read(_viewBuffer, 0, LinesInfoStackPanel.Children.Count * BytePerLine + 1);
                 var index = 0;
 
-                #region Hex byte refresh
+                #region HexByte refresh
 
                 TraverseHexBytes(byteControl =>
                 {
@@ -2418,10 +2407,8 @@ namespace WpfHexaEditor
                         byteControl.BytePositionInFile = startPosition + index;
                     }
                     else
-                    {
-                        byteControl.Byte = null;
-                        byteControl.BytePositionInFile = -1;
-                    }
+                        byteControl.Clear();
+
                     byteControl.InternalChange = false;
                     index++;
                 });
@@ -2430,7 +2417,7 @@ namespace WpfHexaEditor
 
                 index = 0;
 
-                #region string byte refresh
+                #region StringByte refresh
 
                 TraverseStringBytes(sbCtrl =>
                 {
@@ -2445,15 +2432,11 @@ namespace WpfHexaEditor
                     {
                         sbCtrl.Byte = _viewBuffer[index];
                         sbCtrl.BytePositionInFile = startPosition + index;
-
                         sbCtrl.ByteNext = index < readSize - 1 ? (byte?) _viewBuffer[index + 1] : null;
                     }
                     else
-                    {
-                        sbCtrl.Byte = null;
-                        sbCtrl.ByteNext = null;
-                        sbCtrl.BytePositionInFile = -1;
-                    }
+                        sbCtrl.Clear();
+
                     sbCtrl.InternalChange = false;
                     index++;
                 });

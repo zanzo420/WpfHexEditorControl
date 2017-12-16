@@ -68,7 +68,7 @@
             <Separator />
             <MenuItem
                 x:Name="CopyHexaCMenu"
-                Click="CopyHexaCMenu_Click"
+                Click="CopyToClipBoardCMenu_Click"
                 Header="{x:Static p:Resources.CopyAsHexadecimalString}">
                 <MenuItem.Icon>
                     <Image Source="/WPFHexaEditor;component/Resources/Icon/Copy-Icon.ico" />
@@ -76,7 +76,7 @@
             </MenuItem>
             <MenuItem
                 x:Name="CopyAsciicMenu"
-                Click="CopyASCIICMenu_Click"
+                Click="CopyToClipBoardCMenu_Click"
                 Header="{x:Static p:Resources.CopyAsASCIIString}">
                 <MenuItem.Icon>
                     <Image Source="/WPFHexaEditor;component/Resources/Icon/Copy-Icon.ico" />
@@ -85,27 +85,31 @@
             <MenuItem x:Name="CopyAsCMenu" Header="{x:Static p:Resources.CopySelectionAsString}">
                 <MenuItem
                     x:Name="CopyCcMenu"
-                    Click="CopyCCMenu_Click"
+                    Click="CopyToClipBoardCMenu_Click"
                     Header="C" />
                 <MenuItem
                     x:Name="CopyCSharpCMenu"
-                    Click="CopyCSharpCMenu_Click"
+                    Click="CopyToClipBoardCMenu_Click"
                     Header="C#" />
                 <MenuItem
                     x:Name="CopyFSharpCMenu"
-                    Click="CopyFSharpCMenu_Click"
+                    Click="CopyToClipBoardCMenu_Click"
                     Header="F#" />
                 <MenuItem
                     x:Name="CopyJavaCMenu"
-                    Click="CopyJavaCMenu_Click"
+                    Click="CopyToClipBoardCMenu_Click"
                     Header="Java" />
                 <MenuItem
                     x:Name="CopyVbNetCMenu"
-                    Click="CopyVBNetCMenu_Click"
+                    Click="CopyToClipBoardCMenu_Click"
                     Header="Visual Basic.Net" />
                 <MenuItem
+                    x:Name="CopyPascalCMenu"
+                    Click="CopyToClipBoardCMenu_Click"
+                    Header="Pascal" />
+                <MenuItem
                     x:Name="CopyTblcMenu"
-                    Click="CopyTBLCMenu_Click"
+                    Click="CopyToClipBoardCMenu_Click"
                     Header="{x:Static p:Resources.CopyAsTBLString}" />
             </MenuItem>
             <Separator />

@@ -3260,23 +3260,40 @@ namespace WpfHexaEditor
 
         private void FindAllCMenu_Click(object sender, RoutedEventArgs e) => FindAll(SelectionByteArray, true);
 
-        private void CopyHexaCMenu_Click(object sender, RoutedEventArgs e) => CopyToClipboard(CopyPasteMode.HexaString);
-
-        private void CopyASCIICMenu_Click(object sender, RoutedEventArgs e) =>
-            CopyToClipboard(CopyPasteMode.AsciiString);
-
-        private void CopyCSharpCMenu_Click(object sender, RoutedEventArgs e) =>
-            CopyToClipboard(CopyPasteMode.CSharpCode);
-
-        private void CopyFSharpCMenu_Click(object sender, RoutedEventArgs e) => CopyToClipboard(CopyPasteMode.FSharp);
-
-        private void CopyVBNetCMenu_Click(object sender, RoutedEventArgs e) => CopyToClipboard(CopyPasteMode.VbNetCode);
-
-        private void CopyCCMenu_Click(object sender, RoutedEventArgs e) => CopyToClipboard(CopyPasteMode.CCode);
-
-        private void CopyJavaCMenu_Click(object sender, RoutedEventArgs e) => CopyToClipboard(CopyPasteMode.JavaCode);
-
-        private void CopyTBLCMenu_Click(object sender, RoutedEventArgs e) => CopyToClipboard(CopyPasteMode.TblString);
+        private void CopyToClipBoardCMenu_Click(object sender, RoutedEventArgs e)
+        {
+            //Copy to clipboard
+            switch ((sender as MenuItem).Name)
+            {
+                case nameof(CopyHexaCMenu):
+                    CopyToClipboard(CopyPasteMode.HexaString);
+                    break;
+                case nameof(CopyAsciicMenu):
+                    CopyToClipboard(CopyPasteMode.AsciiString);
+                    break;
+                case nameof(CopyCSharpCMenu):
+                    CopyToClipboard(CopyPasteMode.CSharpCode);
+                    break;
+                case nameof(CopyFSharpCMenu):
+                    CopyToClipboard(CopyPasteMode.FSharpCode);
+                    break;
+                case nameof(CopyCcMenu):
+                    CopyToClipboard(CopyPasteMode.CCode);
+                    break;
+                case nameof(CopyJavaCMenu):
+                    CopyToClipboard(CopyPasteMode.JavaCode);
+                    break;
+                case nameof(CopyVbNetCMenu):
+                    CopyToClipboard(CopyPasteMode.VbNetCode);
+                    break;
+                case nameof(CopyPascalCMenu):
+                    CopyToClipboard(CopyPasteMode.PascalCode);
+                    break;
+                case nameof(CopyTblcMenu):
+                    CopyToClipboard(CopyPasteMode.TblString);
+                    break;
+            }
+        }
 
         private void DeleteCMenu_Click(object sender, RoutedEventArgs e) => DeleteSelection();
 

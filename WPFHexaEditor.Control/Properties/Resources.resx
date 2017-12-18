@@ -175,6 +175,9 @@
   <data name="EBCDIC" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\EBCDIC.tbl;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;us-ascii</value>
   </data>
+  <data name="EBCDICNoSpecialChar" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\EBCDIC-NoSpecialChar.tbl;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
   <data name="EndTagString" xml:space="preserve">
     <value>&lt;end&gt;</value>
   </data>

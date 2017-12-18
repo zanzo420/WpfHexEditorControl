@@ -293,15 +293,15 @@ namespace WpfHexaEditor.Core.Bytes
         /// Submit change in a new file (Save as...)
         /// TODO: ADD VALIDATION
         /// </summary>
-        public bool SubmitChanges(string newFilename, bool overwrite = false)
+        public bool SubmitChanges(string newFileName, bool overwrite = false)
         {
             _newfilename = string.Empty;
 
-            if (File.Exists(newFilename) && !overwrite)
+            if (File.Exists(newFileName) && !overwrite)
                 return false;
 
             //Save as
-            _newfilename = newFilename;
+            _newfilename = newFileName;
             File.Create(_newfilename).Close();
             SubmitChanges();
             return true;

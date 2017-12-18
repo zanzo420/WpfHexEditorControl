@@ -145,22 +145,27 @@
                             Click="CTableASCIIButton_Click"
                             Header="ASCII"
                             IsCheckable="True"
-                            IsChecked="True" />
+                            />
                         <MenuItem
                             x:Name="CTableTblButton"
                             Click="CTableTBLButton_Click"
                             Header="Load TBL file"
-                            IsCheckable="True" />
+                            />
                         <MenuItem
                             x:Name="CTableTblDefaultEBCDICButton"
                             Click="CTableTblDefaultEBCDICButton_Click"
-                            Header="Load Build-in TBL : EBCDIC"
-                            IsCheckable="True" />
+                            Header="Load Build-in TBL : EBCDIC with special character"
+                            />
+                        <MenuItem
+                            x:Name="CTableTblDefaultEBCDICNoSPButton"
+                            Click="CTableTblDefaultEBCDICNoSPButton_Click"
+                            Header="Load Build-in TBL : EBCDIC no special character"
+                            />
                         <MenuItem
                             x:Name="CTableTblDefaultAsciiButton"
                             Click="CTableTBLDefaultASCIIButton_Click"
                             Header="Load Build-in TBL : ASCII"
-                            IsCheckable="True" />
+                            />
                     </MenuItem>
                 </MenuItem>
                 <MenuItem x:Name="PositionMenu" Header="Position">

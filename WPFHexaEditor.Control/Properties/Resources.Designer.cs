@@ -223,16 +223,16 @@ namespace WpfHexaEditor.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à 0=&lt;NUL&gt;
-        ///1=&lt;SOH&gt;
-        ///2=&lt;STX&gt;
-        ///3=&lt;ETX&gt;
-        ///4=&lt;PF&gt;
-        ///5=&lt;HT&gt;
-        ///6=&lt;LC&gt;
-        ///7=&lt;DEL&gt;
-        ///8=&lt;GE&gt;
-        ///9=&lt;RLF&gt;
+        ///   Recherche une chaîne localisée semblable à 00=&lt;NUL&gt;
+        ///01=&lt;SOH&gt;
+        ///02=&lt;STX&gt;
+        ///03=&lt;ETX&gt;
+        ///04=&lt;PF&gt;
+        ///05=&lt;HT&gt;
+        ///06=&lt;LC&gt;
+        ///07=&lt;DEL&gt;
+        ///08=&lt;GE&gt;
+        ///09=&lt;RLF&gt;
         ///0A=&lt;SMM&gt;
         ///0B=&lt;VT&gt;
         ///0C=&lt;FF&gt;
@@ -258,35 +258,126 @@ namespace WpfHexaEditor.Properties {
         ///20=&lt;DS&gt;
         ///21=&lt;SOS&gt;
         ///22=&lt;FS&gt;
-        ///23=
+        ///23=.
         ///24=&lt;BYP&gt;
         ///25=&lt;LF&gt;
         ///26=&lt;ETB&gt;
         ///27=&lt;ESC&gt;
-        ///28=
-        ///29=
+        ///28=.
+        ///29=.
         ///2A=&lt;SM&gt;
         ///2B=&lt;CU2&gt;
-        ///2C=
+        ///2C=.
         ///2D=&lt;ENQ&gt;
         ///2E=&lt;ACK&gt;
         ///2F=&lt;BEL&gt;
-        ///30=
-        ///31=
+        ///30=.
+        ///31=.
         ///32=&lt;SYN&gt;
-        ///33=
+        ///33=.
         ///34=&lt;PN&gt;
         ///35=&lt;RS&gt;
         ///36=&lt;UC&gt;
         ///37=&lt;EOT&gt;
-        ///38=
-        ///39=
-        ///3A=
-        ///3B=&lt; [le reste de la chaîne a été tronqué]&quot;;.
+        ///38 [le reste de la chaîne a été tronqué]&quot;;.
         /// </summary>
         public static string EBCDIC {
             get {
                 return ResourceManager.GetString("EBCDIC", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à 00=.
+        ///01=.
+        ///02=.
+        ///03=.
+        ///04=.
+        ///05=.
+        ///06=.
+        ///07=.
+        ///08=.
+        ///09=.
+        ///0A=.
+        ///0B=.
+        ///0C=.
+        ///0D=.
+        ///0E=.
+        ///0F=.
+        ///10=.
+        ///11=.
+        ///12=.
+        ///13=.
+        ///14=.
+        ///15=.
+        ///16=.
+        ///17=.
+        ///18=.
+        ///19=.
+        ///1A=.
+        ///1B=.
+        ///1C=.
+        ///1D=.
+        ///1E=.
+        ///1F=.
+        ///20=.
+        ///21=.
+        ///22=.
+        ///23=.
+        ///24=.
+        ///25=.
+        ///26=.
+        ///27=.
+        ///28=.
+        ///29=.
+        ///2A=.
+        ///2B=.
+        ///2C=.
+        ///2D=.
+        ///2E=.
+        ///2F=.
+        ///30=.
+        ///31=.
+        ///32=.
+        ///33=.
+        ///34=.
+        ///35=.
+        ///36=.
+        ///37=.
+        ///38=.
+        ///39=.
+        ///3A=.
+        ///3B=.
+        ///3C=.
+        ///3D=.
+        ///3E=.
+        ///3F=.
+        ///40=.
+        ///41=.
+        ///42=.
+        ///43=.
+        ///44=.
+        ///45=.
+        ///46=.
+        ///47=.
+        ///48=.
+        ///49=.
+        ///4A=¢
+        ///4B=.
+        ///4C=&lt;
+        ///4D=(
+        ///4E=+
+        ///4F=|
+        ///50=&amp;
+        ///51=.
+        ///52=.
+        ///53=.
+        ///54=.
+        ///55 [le reste de la chaîne a été tronqué]&quot;;.
+        /// </summary>
+        public static string EBCDICNoSpecialChar {
+            get {
+                return ResourceManager.GetString("EBCDICNoSpecialChar", resourceCulture);
             }
         }
         

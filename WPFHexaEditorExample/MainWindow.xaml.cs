@@ -232,10 +232,6 @@ namespace WPFHexaEditorExample
 
             HexEdit.TypeOfCharacterTable = CharacterTableType.TblFile;
             HexEdit.LoadDefaultTbl();
-            CTableAsciiButton.IsChecked = false;
-            CTableTblButton.IsChecked = false;
-            CTableTblDefaultAsciiButton.IsChecked = true;
-            CTableTblDefaultEBCDICButton.IsChecked = false;
 
             Application.Current.MainWindow.Cursor = null;
         }
@@ -259,11 +255,17 @@ namespace WPFHexaEditorExample
             Application.Current.MainWindow.Cursor = Cursors.Wait;
 
             HexEdit.TypeOfCharacterTable = CharacterTableType.TblFile;
-            HexEdit.LoadDefaultTbl(DefaultCharacterTableType.EBCDIC);
-            CTableAsciiButton.IsChecked = false;
-            CTableTblButton.IsChecked = false;
-            CTableTblDefaultAsciiButton.IsChecked = false;
-            CTableTblDefaultEBCDICButton.IsChecked = true;
+            HexEdit.LoadDefaultTbl(DefaultCharacterTableType.EbcdicWithSpecialChar);
+
+            Application.Current.MainWindow.Cursor = null;
+        }
+
+        private void CTableTblDefaultEBCDICNoSPButton_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.MainWindow.Cursor = Cursors.Wait;
+
+            HexEdit.TypeOfCharacterTable = CharacterTableType.TblFile;
+            HexEdit.LoadDefaultTbl(DefaultCharacterTableType.EbcdicNoSpecialChar);
 
             Application.Current.MainWindow.Cursor = null;
         }

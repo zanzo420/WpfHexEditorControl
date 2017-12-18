@@ -3373,9 +3373,7 @@ namespace WpfHexaEditor
                 () => (int) MouseWheelSpeed
             );
         }
-
-        private void BottomRectangle_MouseLeave(object sender, MouseEventArgs e) => _mouseOnBottom = false;
-
+        
         private void TopRectangle_MouseEnter(object sender, MouseEventArgs e)
         {
             var curTime = ++_topEnterTimes;
@@ -3388,7 +3386,13 @@ namespace WpfHexaEditor
             );
         }
 
+        private void BottomRectangle_MouseLeave(object sender, MouseEventArgs e) => _mouseOnBottom = false;
+
         private void TopRectangle_MouseLeave(object sender, MouseEventArgs e) => _mouseOnTop = false;
+
+        private void BottomRectangle_MouseDown(object sender, MouseButtonEventArgs e) => _mouseOnBottom = false;
+
+        private void TopRectangle_MouseDown(object sender, MouseButtonEventArgs e) => _mouseOnTop = false;
 
         #endregion Bottom and Top rectangle
 
@@ -3702,7 +3706,7 @@ namespace WpfHexaEditor
             }
             #endregion
         }
-
+        
         #endregion
 
         #region Save/Load control state

@@ -337,6 +337,7 @@
             VerticalAlignment="Bottom"
             Fill="#FFF4F4F5"
             MouseEnter="BottomRectangle_MouseEnter"
+            MouseDown="BottomRectangle_MouseDown"
             MouseLeave="BottomRectangle_MouseLeave"
             Opacity="0" />
 
@@ -349,6 +350,7 @@
             VerticalAlignment="Top"
             Fill="#FFF4F4F5"
             MouseEnter="TopRectangle_MouseEnter"
+            MouseDown="TopRectangle_MouseDown"
             MouseLeave="TopRectangle_MouseLeave"
             Opacity="0" />
         <!--#endregion-->

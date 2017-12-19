@@ -1,9 +1,13 @@
 ![example](Logo/Logo.png?raw=true)
 
-## Wpf HexEditor control       (Developped in C# 7.0 / Framework 4.5)
+## Wpf HexEditor control
+[![NuGet](https://img.shields.io/badge/Nuget-v1.3.6.2-green.svg)](https://www.nuget.org/packages/WPFHexaEditor/)
+
 A fast, fully customisable Wpf user control for editing file or stream as hexadecimal. 
 
 Can be used in WPF or WinForm application
+
+
 
 ## You want to say thank ?
 
@@ -16,10 +20,6 @@ Sample with standard ASCII character table
 
 Sample with custom thingy character table (TBL) on SNES Final Fantasy II US
 ![example](Sample9-TBL.png?raw=true)
-
-## NUGET  Last version : 2017-12-08
-[![NuGet](https://img.shields.io/badge/Nuget-v1.3.6.2-green.svg)](https://www.nuget.org/packages/WPFHexaEditor/)
-
 
 ## Somes features
 - Append byte at end of file (one at time for now... more soon)

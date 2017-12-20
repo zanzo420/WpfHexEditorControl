@@ -49,14 +49,14 @@ Sample with custom thingy character table (TBL) on SNES Final Fantasy II US
 Add a reference to `WPFHexaEditor.Control.dll` from your project, then add the following namespace to your XAML:
 
 ```xaml
-xmlns:Control="clr-namespace:WPFHexaEditor.Control;assembly=WPFHexaEditor.Control"
+xmlns:control="clr-namespace:WpfHexaEditor;assembly=WPFHexaEditor"
 ```
 
 Insert the control like this:
 
 ```xaml
-<Control:HexaEditor/>
-<Control:HexaEditor Width="NaN" Height="NaN"/>
-<Control:HexaEditor Width="Auto" Height="Auto"/>
-<Control:HexaEditor FileName={Binding FileNamePath} Width="Auto" Height="Auto"/>
+<control:HexEditor/>
+<control:HexEditor Width="NaN" Height="NaN"/>
+<control:HexEditor Width="Auto" Height="Auto"/>
+<control:HexEditor FileName={Binding FileNamePath} Width="Auto" Height="Auto"/>
 ```

@@ -3,6 +3,7 @@
 // Author : Derek Tremblay (derektremblay666@gmail.com)
 //////////////////////////////////////////////
 
+using System;
 using System.Globalization;
 using Microsoft.Win32;
 using System.IO;
@@ -12,6 +13,7 @@ using System.Windows.Input;
 using WpfHexaEditor.Core;
 using WpfHexaEditor.Core.Bytes;
 using WpfHexaEditor.Core.CharacterTable;
+using WpfHexaEditor.Core.MethodExtention;
 using WPFHexaEditorExample.Properties;
 
 namespace WPFHexaEditorExample
@@ -248,6 +250,13 @@ namespace WPFHexaEditorExample
         {
             //HexEdit.SaveCurrentState("test.xml");
             //HexEdit.LoadCurrentState("test.xml");
+
+            var rnd = new Random();
+            for (int i = 0; i < 200; i++)
+            {
+                HexEdit.SetPosition(rnd.Next(0, (int)HexEdit.Lenght));
+                Application.Current.DoEvents();
+            }
         }
 
         private void CTableTblDefaultEBCDICButton_Click(object sender, RoutedEventArgs e)

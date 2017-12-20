@@ -1,6 +1,9 @@
 ![example](Logo/Logo.png?raw=true)
 
-## Wpf HexEditor control    [![NuGet](https://img.shields.io/badge/Nuget-v1.3.6.2-green.svg)](https://www.nuget.org/packages/WPFHexaEditor/)
+## Wpf HexEditor control    
+[![NuGet](https://img.shields.io/badge/Nuget-v1.3.6.2-green.svg)](https://www.nuget.org/packages/WPFHexaEditor/)
+[![NetFramework](https://img.shields.io/badge/.Net%20Framework-4.7-green.svg)](https://www.microsoft.com/net/download/windows)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/abbaye/WpfHexEditorControl/blob/master/LICENSE)
 
 A fast, fully customisable Wpf user control for editing file or stream as hexadecimal. 
 

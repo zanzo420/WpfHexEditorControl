@@ -387,7 +387,9 @@ namespace WpfHexaEditor
 
             //Draw text
             var typeface = new Typeface(_parent.FontFamily, _parent.FontStyle, FontWeight, _parent.FontStretch);
-            var ft = new FormattedText(Text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, _parent.FontSize, Foreground);
+            var ft = new FormattedText(Text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface,
+                _parent.FontSize, Foreground, VisualTreeHelper.GetDpi(this).PixelsPerDip);
+
             dc.DrawText(ft, new Point(0, 0));
 
             #region Update width of control 

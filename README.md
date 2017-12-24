@@ -8,9 +8,9 @@ A fast, fully customisable Wpf user control for editing file or stream as hexade
 
 Can be used in WPF or WinForm application
 
-## You want to say thank or just like  ?
+### You want to say thank or just like project  ?
 
-Hexeditor control is totaly free and can be used in all project you want like open source and commercial applications. I make it in my free time and a few colaborators help me when they can... Please hit the ⭐️ button and I will be very happy ;) I accept help contribution...
+Hexeditor control is totaly free and can be used in all project you want like open source and commercial applications. I make it in my free time and a few colaborators help me when they can... Please hit the ⭐️ button or fork and I will be very happy ;) I accept help contribution...
 
 ## Screenshots
 

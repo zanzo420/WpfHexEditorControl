@@ -6,7 +6,9 @@
 
 A fast, fully customisable Wpf user control for editing file or stream as hexadecimal. 
 
-Can be used in WPF or WinForm application
+Can be used in WPF or WinForm application.
+
+Localized in English, French, Russian and Chinese
 
 ### You want to say thank or just like project  ?
 
@@ -26,7 +28,6 @@ Sample use ByteShiftLeft with BytePerLine on TBL for fixed lenght table...
 ## Somes features
 - Shift the first visible byte in the view to the left for adjust view in fixed TBL... 
 - Append byte at end of file
-- Localized in English, French, Russian and Chinese
 - Include HexBox, an Hexadecimal TextBox with spinner
 - Modify and Delete bytes
 - Save changes

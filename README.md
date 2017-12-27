@@ -20,8 +20,12 @@ Sample with standard ASCII character table
 Sample with custom thingy character table (TBL) on SNES Final Fantasy II US
 ![example](Sample9-TBL.png?raw=true)
 
+Sample use ByteShiftLeft with BytePerLine on TBL for fixed lenght table...
+![example](Sample12-FIXEDTBL-BYTESHIFT.png?raw=true)
+
 ## Somes features
-- Append byte at end of file (one at time for now... more soon)
+- Shift the first visible byte in the view to the left for adjust view in fixed TBL... 
+- Append byte at end of file
 - Localized in English, French, Russian and Chinese
 - Include HexBox, an Hexadecimal TextBox with spinner
 - Modify and Delete bytes

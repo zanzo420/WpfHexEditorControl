@@ -144,28 +144,23 @@
                             x:Name="CTableAsciiButton"
                             Click="CTableASCIIButton_Click"
                             Header="ASCII"
-                            IsCheckable="True"
-                            />
+                            IsCheckable="True" />
                         <MenuItem
                             x:Name="CTableTblButton"
                             Click="CTableTBLButton_Click"
-                            Header="Load TBL file"
-                            />
+                            Header="Load TBL file" />
                         <MenuItem
                             x:Name="CTableTblDefaultEbcdicButton"
                             Click="CTableTblDefaultEBCDICButton_Click"
-                            Header="Load Build-in TBL : EBCDIC with special character"
-                            />
+                            Header="Load Build-in TBL : EBCDIC with special character" />
                         <MenuItem
                             x:Name="CTableTblDefaultEbcdicnoSpButton"
                             Click="CTableTblDefaultEBCDICNoSPButton_Click"
-                            Header="Load Build-in TBL : EBCDIC no special character"
-                            />
+                            Header="Load Build-in TBL : EBCDIC no special character" />
                         <MenuItem
                             x:Name="CTableTblDefaultAsciiButton"
                             Click="CTableTBLDefaultASCIIButton_Click"
-                            Header="Load Build-in TBL : ASCII"
-                            />
+                            Header="Load Build-in TBL : ASCII" />
                     </MenuItem>
                 </MenuItem>
                 <MenuItem x:Name="PositionMenu" Header="Position">
@@ -207,7 +202,7 @@
                             IsEnabled="False" />
                     </StackPanel>
                 </MenuItem>
-                
+
                 <MenuItem x:Name="ViewMenu" Header="View">
                     <MenuItem
                         x:Name="ShowHeaderMenu"
@@ -217,7 +212,7 @@
                         IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HeaderVisibility, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                 </MenuItem>
 
-                <MenuItem Header="TEST" Click="TESTMenuItem_Click"/>
+                <MenuItem Click="TESTMenuItem_Click" Header="TEST" />
             </Menu>
 
             <control:HexEditor
@@ -225,20 +220,19 @@
                 Width="Auto"
                 Height="Auto"
                 Margin="2"
-                ApplicationName="Wpf Hexeditor control sample"
-                AllowExtend="False"
                 AllowByteCount="False"
                 AllowDrop="True"
+                AllowExtend="False"
                 AppendNeedConfirmation="True"
+                ApplicationName="Wpf Hexeditor control sample"
+                BorderThickness="1"
                 ByteGrouping="FourByte"
                 ByteSpacerPositioning="HexBytePanel"
                 ByteSpacerVisualStyle="Dash"
                 ByteSpacerWidthTickness="Normal"
+                DataStringVisual="Hexadecimal"
                 DefaultCopyToClipboardMode="HexaString"
-                DataStringVisual="Hexadecimal" 
-                ForegroundSecondColor="Blue"
-                BorderThickness="1"
-                />
+                ForegroundSecondColor="Blue" />
         </DockPanel>
     </Grid>
 </Window>

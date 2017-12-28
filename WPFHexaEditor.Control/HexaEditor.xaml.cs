@@ -87,6 +87,16 @@ namespace WpfHexaEditor
         /// </summary>
         private readonly Caret _caret = new Caret();
 
+        /// <summary>
+        /// For detect redondants call when disposing control
+        ///  </summary>
+        private bool _disposedValue; 
+
+        /// <summary>
+        /// Highlight the header and offset on SelectionStart property
+        /// </summary>
+        private bool _highLightSelectionStart = true;
+
         #endregion Global Class variables
 
         #region Events
@@ -290,6 +300,17 @@ namespace WpfHexaEditor
         public static readonly DependencyProperty HighLightColorProperty =
             DependencyProperty.Register(nameof(HighLightColor), typeof(Brush), typeof(HexEditor),
                 new FrameworkPropertyMetadata(Brushes.Gold, Control_ColorPropertyChanged));
+
+        public Brush ForegroundHighLightOffSetHeaderColor
+        {
+            get => (Brush) GetValue(ForegroundHighLightOffSetHeaderColorProperty);
+            set => SetValue(ForegroundHighLightOffSetHeaderColorProperty, value);
+        }
+
+        // Using a DependencyProperty as the backing store for ForegroundOffSetHeaderColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ForegroundHighLightOffSetHeaderColorProperty =
+            DependencyProperty.Register(nameof(ForegroundHighLightOffSetHeaderColor), typeof(Brush), typeof(HexEditor),
+                new FrameworkPropertyMetadata(Brushes.Black, Control_ForegroundOffSetHeaderColorPropertyChanged));        
 
         public Brush ForegroundOffSetHeaderColor
         {
@@ -1057,6 +1078,8 @@ namespace WpfHexaEditor
                     ctrl.UpdateSelectionLine();
                     ctrl.UpdateVisual();
                     ctrl.UpdateStatusBar();
+                    ctrl.UpdateLinesOffSet();
+                    ctrl.UpdateHeader(true);
                     ctrl.SetScrollMarker(0, ScrollMarker.SelectionStart);
 
                     ctrl.SelectionStartChanged?.Invoke(ctrl, new EventArgs());
@@ -1444,6 +1467,19 @@ namespace WpfHexaEditor
         /// Get the line number of position in parameter
         /// </summary>
         public double GetLineNumber(long position) => position / BytePerLine;
+
+
+        /// <summary>
+        /// Get the column number of the position
+        /// </summary>
+        private int GetColumnNumber(long position)
+        {
+            double line = (double)position / BytePerLine; //GetLineNumber(position);
+            double decPart = line - Math.Truncate(line);
+           
+            return (int)(decPart * BytePerLine);
+        }
+
 
         /// <summary>
         /// Set position in control at position in parameter
@@ -2525,12 +2561,17 @@ namespace WpfHexaEditor
                         ByteSpacerPositioning == ByteSpacerPosition.HexBytePanel)
                         AddByteSpacer(HexHeaderStackPanel, i, true);
 
+                    var hlHeader = HighLightSelectionStart &&
+                                   GetColumnNumber(SelectionStart) == i &&
+                                   SelectionStart > -1;
+
                     //Create control
-                    var lineInfoLabel = new FastTextLine(this)
+                    var headerLabel = new FastTextLine(this)
                     {
                         Height = LineHeight,
                         AutoWidth = false,
-                        Foreground = ForegroundOffSetHeaderColor,
+                        FontWeight = hlHeader ? FontWeights.Bold: FontWeights.Normal,
+                        Foreground = hlHeader ? ForegroundHighLightOffSetHeaderColor : ForegroundOffSetHeaderColor,
                         RenderPoint = new Point(2, 0),
                         ToolTip = $"Column : {i}"
                     };
@@ -2540,19 +2581,19 @@ namespace WpfHexaEditor
                     switch (DataStringVisual)
                     {
                         case DataVisualType.Hexadecimal:
-                            lineInfoLabel.Text = ByteToHex((byte) i);
-                            lineInfoLabel.Width = 20;
+                            headerLabel.Text = ByteToHex((byte) i);
+                            headerLabel.Width = 20;
                             break;
                         case DataVisualType.Decimal:
-                            lineInfoLabel.Text = i.ToString("d3");
-                            lineInfoLabel.Width = 25;
+                            headerLabel.Text = i.ToString("d3");
+                            headerLabel.Width = 25;
                             break;
                     }
 
                     #endregion
 
                     //Add to stackpanel
-                    HexHeaderStackPanel.Children.Add(lineInfoLabel);
+                    HexHeaderStackPanel.Children.Add(headerLabel);
                 }
         }
 
@@ -2563,7 +2604,8 @@ namespace WpfHexaEditor
         {
             var fds = MaxVisibleLine;
 
-            #region If the lines are less than "visible lines" create them;
+            #region If the lines are less than "visible lines" create them
+
             var linesCount = LinesInfoStackPanel.Children.Count;
 
             if (linesCount < fds)
@@ -2585,23 +2627,51 @@ namespace WpfHexaEditor
                     LinesInfoStackPanel.Children.Add(lineInfoLabel);
                 }
             }
+
             #endregion
 
             TraverseLineInfos(ctrl => { ctrl.Text = string.Empty; });
 
-            if (ByteProvider.CheckIsOpen(_provider))
-                for (var i = 0; i < fds; i++)
+            if (!ByteProvider.CheckIsOpen(_provider)) return;
+
+            for (var i = 0; i < fds; i++)
+            {
+                var firstLineByte = ((long) VerticalScrollBar.Value + i) * BytePerLine + ByteShiftLeft;
+                var lineInfoLabel = (FastTextLine) LinesInfoStackPanel.Children[i];
+
+                if (firstLineByte < _provider.Length)
                 {
-                    var firstLineByte = ((long) VerticalScrollBar.Value + i) * BytePerLine + ByteShiftLeft;
-                    var lineInfoLabel = (FastTextLine) LinesInfoStackPanel.Children[i];
+                    #region Set text visual
 
-                    if (firstLineByte < _provider.Length)
+                    var tag = $"0x{LongToHex(firstLineByte).ToUpper()}";
+                    lineInfoLabel.Tag = tag;
+
+                    //////////// TEST
+                    if (HighLightSelectionStart &&
+                        SelectionStart > -1 &&
+                        SelectionStart >= firstLineByte &&
+                        SelectionStart <= firstLineByte + BytePerLine - 1)
                     {
-                        #region Set text visual
+                        lineInfoLabel.FontWeight = FontWeights.Bold;
+                        lineInfoLabel.Foreground = ForegroundHighLightOffSetHeaderColor;
+                        lineInfoLabel.ToolTip = $"{Properties.Resources.FirstByteString} : {SelectionStart}";
 
-                        var tag = $"0x{LongToHex(firstLineByte).ToUpper()}";
+                        switch (OffSetStringVisual)
+                        {
+                            case DataVisualType.Hexadecimal:
+                                lineInfoLabel.Text = lineInfoLabel.Text = $"0x{LongToHex(SelectionStart).ToUpper()}";
+                                break;
+                            case DataVisualType.Decimal:
+                                lineInfoLabel.Text = $"d{SelectionStart:d8}";
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        lineInfoLabel.FontWeight = FontWeights.Normal;
+                        lineInfoLabel.Foreground = ForegroundOffSetHeaderColor;
+                        lineInfoLabel.ToolTip = $"{Properties.Resources.FirstByteString} : {firstLineByte}";
 
-                        lineInfoLabel.Tag = tag;
                         switch (OffSetStringVisual)
                         {
                             case DataVisualType.Hexadecimal:
@@ -2611,12 +2681,11 @@ namespace WpfHexaEditor
                                 lineInfoLabel.Text = $"d{firstLineByte:d8}";
                                 break;
                         }
-
-                        #endregion
-
-                        lineInfoLabel.ToolTip = $"{Properties.Resources.FirstByteString} : {firstLineByte}";
                     }
+
+                    #endregion
                 }
+            }
         }
 
 
@@ -3471,9 +3540,7 @@ namespace WpfHexaEditor
         #endregion ByteCount Property
 
         #region IDisposable Support
-
-        private bool _disposedValue; // for detect redondants call
-
+        
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposedValue)
@@ -3783,10 +3850,22 @@ namespace WpfHexaEditor
 
         #endregion
 
+
         #region Line offset coloring...
-        
-        
-        
+
+        /// <summary>
+        /// High light header and offset on SelectionStart
+        /// </summary>
+        public bool HighLightSelectionStart
+        {
+            get => _highLightSelectionStart;
+            set
+            {
+                _highLightSelectionStart = value;
+                RefreshView();
+            }
+        }
+
         #endregion
     }
 }

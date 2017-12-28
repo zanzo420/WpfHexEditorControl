@@ -19,32 +19,11 @@ namespace WpfHexaEditor
 
             //Default properties
             DataContext = this;
-
-            #region Binding tooltip
-
-            //LoadDictionary("/WPFHexaEditor;component/Resources/Dictionary/ToolTipDictionary.xaml");
-            //var txtBinding = new Binding
-            //{
-            //    Source = FindResource("ByteToolTip"),
-            //    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
-            //    Mode = BindingMode.OneWay
-            //};
-
-            //// Load ressources dictionnary
-            //void LoadDictionary(string url)
-            //{
-            //    var ttRes = new ResourceDictionary { Source = new Uri(url, UriKind.Relative) };
-            //    Resources.MergedDictionaries.Add(ttRes);
-            //}
-
-            //SetBinding(ToolTipProperty, txtBinding);
-
-            #endregion
         }
 
         #endregion Contructor
         
-        #region Private base properties
+        #region Base properties
 
         /// <summary>
         /// Definie the foreground
@@ -126,9 +105,9 @@ namespace WpfHexaEditor
                 dc.DrawRectangle(Background, null, new Rect(0, 0, RenderSize.Width, RenderSize.Height));
 
             //Draw text
-            var typeface = new Typeface(_parent.FontFamily, _parent.FontStyle, FontWeight, _parent.FontStretch);
             var formatedText = new FormattedText(Text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight,
-                typeface, _parent.FontSize, Foreground, VisualTreeHelper.GetDpi(this).PixelsPerDip);
+                new Typeface(_parent.FontFamily, _parent.FontStyle, FontWeight, _parent.FontStretch), _parent.FontSize,
+                Foreground, VisualTreeHelper.GetDpi(this).PixelsPerDip);
 
             dc.DrawText(formatedText, new Point(RenderPoint.X, RenderPoint.Y));
 

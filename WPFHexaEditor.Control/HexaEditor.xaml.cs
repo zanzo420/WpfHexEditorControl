@@ -763,12 +763,12 @@ namespace WpfHexaEditor
         /// <summary>
         /// Obtain the max line for verticalscrollbar
         /// </summary>
-        public long MaxLine => ByteProvider.CheckIsOpen(_provider) ? _provider.Length / BytePerLine : 0;
+        private long MaxLine => ByteProvider.CheckIsOpen(_provider) ? _provider.Length / BytePerLine : 0;
 
         /// <summary>
         /// Get the number of row visible in control
         /// </summary>
-        public int MaxVisibleLine
+        private int MaxVisibleLine
         {
             get
             {
@@ -794,7 +794,7 @@ namespace WpfHexaEditor
         }
 
         public static readonly DependencyProperty SelectionLineProperty =
-            DependencyProperty.Register("SelectionLine", typeof(long), typeof(HexEditor),
+            DependencyProperty.Register(nameof(SelectionLine), typeof(long), typeof(HexEditor),
                 new FrameworkPropertyMetadata(0L));
 
         private void LinesOffSetLabel_MouseMove(object sender, MouseEventArgs e)
@@ -1182,7 +1182,7 @@ namespace WpfHexaEditor
             }
         }
 
-        private void UserControl_MouseWheel(object sender, MouseWheelEventArgs e)
+        private void Control_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             if (e.Delta > 0) //UP
                 VerticalScrollBar.Value -= e.Delta / 120 * (int) MouseWheelSpeed;
@@ -3675,7 +3675,7 @@ namespace WpfHexaEditor
         /// </summary>
         public bool FileDroppingConfirmation { get; set; } = true;
 
-        private void UserControl_Drop(object sender, DragEventArgs e)
+        private void Control_Drop(object sender, DragEventArgs e)
         {
             #region Text Dropping (Will be supported soon)
             //var textDrop = e.Data.GetData(DataFormats.Text);
@@ -3763,6 +3763,9 @@ namespace WpfHexaEditor
 
         #region Reverse bytes selection
 
+        /// <summary>
+        /// Reverse selection of bytes array like this {AA, FF, EE, DC} => {DC, EE, FF, AA}
+        /// </summary>
         public void ReverseSelection()
         {
             if (!ByteProvider.CheckIsOpen(_provider)) return;
@@ -3780,5 +3783,10 @@ namespace WpfHexaEditor
 
         #endregion
 
+        #region Line offset coloring...
+        
+        
+        
+        #endregion
     }
 }

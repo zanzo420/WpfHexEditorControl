@@ -1539,5 +1539,28 @@ namespace WpfHexaEditor.Core.Bytes
             }
         }
         #endregion Serialize (save/load) current state
+
+        #region Reverse bytes selection
+
+        /// <summary>
+        /// Reverse bytes array like this {AA, FF, EE, DC} => {DC, EE, FF, AA}
+        /// </summary>
+        public void Reverse(long selectionStart, long selectionStop)
+        {
+            var data = GetCopyData(selectionStart, selectionStop, true);
+
+            #region Set start position
+
+            var startPosition = (selectionStart != selectionStop
+                ? (selectionStart > selectionStop ? selectionStop : selectionStart)
+                : selectionStart) + data.Length;
+
+            #endregion
+
+            foreach (byte b in data)
+                AddByteModified(b, --startPosition, data.Length);
+        }
+
+        #endregion
     }
 }

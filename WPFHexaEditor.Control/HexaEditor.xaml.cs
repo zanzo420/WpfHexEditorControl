@@ -805,11 +805,10 @@ namespace WpfHexaEditor
 
         private void LinesOffSetLabel_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (sender is FastTextLine line)
-            {
-                SelectionStart = HexLiteralToLong(line.Text).position; // + ByteShiftLeft;
-                SelectionStop = SelectionStart + BytePerLine - 1;
-            }
+            if (!(sender is FastTextLine line)) return;
+
+            SelectionStart = HexLiteralToLong(line.Text).position;
+            SelectionStop = SelectionStart + BytePerLine - 1;
         }
 
         private void Control_EscapeKey(object sender, EventArgs e)
@@ -3210,7 +3209,7 @@ namespace WpfHexaEditor
                     SelectionStop = _rightClickBytePosition;
                 }
 
-                //update ctrl
+                #region Disable ctrl
                 CopyAsCMenu.IsEnabled = false;
                 CopyAsciicMenu.IsEnabled = false;
                 FindAllCMenu.IsEnabled = false;
@@ -3219,6 +3218,7 @@ namespace WpfHexaEditor
                 DeleteCMenu.IsEnabled = false;
                 FillByteCMenu.IsEnabled = false;
                 CopyTblcMenu.IsEnabled = false;
+                #endregion
 
                 if (SelectionLength > 0)
                 {
@@ -3737,6 +3737,7 @@ namespace WpfHexaEditor
         /// <summary>
         /// Shift the first visible byte in the view to the left. 
         /// Very useful for editing fixed-width tables. Use with BytePerLine to create visual tables ...
+        /// The value is the number of byte to shift.
         /// </summary>
         public int ByteShiftLeft
         {
@@ -3757,6 +3758,25 @@ namespace WpfHexaEditor
 
         private static object ByteShiftLeft_CoerceValue(DependencyObject d, object basevalue) => 
             (int) basevalue < 0 ? 0 : basevalue;
+
+        #endregion
+
+        #region Reverse bytes selection
+
+        public void ReverseSelection()
+        {
+            if (!ByteProvider.CheckIsOpen(_provider)) return;
+
+            _provider.Reverse(SelectionStart, SelectionStop);
+
+            RefreshView();
+        }
+
+        #endregion
+
+        #region TBL intellisense-like
+
+        //TODO: to be implemented
 
         #endregion
 

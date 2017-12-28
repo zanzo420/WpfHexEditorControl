@@ -248,11 +248,11 @@ namespace WPFHexaEditorExample
 
         private void TESTMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            //SAVE STATE TEST
+            ///// SAVE STATE TEST
             //HexEdit.SaveCurrentState("test.xml");
             //HexEdit.LoadCurrentState("test.xml");
 
-            //REFRESH RATE TEST
+            ///// REFRESH RATE TEST
             //var rnd = new Random();
             //for (int i = 0; i < 200; i++)
             //{
@@ -260,10 +260,12 @@ namespace WPFHexaEditorExample
             //    Application.Current.DoEvents();
             //}
 
-            //BYTE SHIFTING TEST FOR FIXED LENGHT EDITOR
-            HexEdit.ByteShiftLeft = int.Parse(ByteShiftTextBox.Text);
-            HexEdit.RefreshView(true);
+            ///// BYTE SHIFTING TEST FOR FIXED LENGHT EDITOR
+            //HexEdit.ByteShiftLeft = 9;
+            //HexEdit.RefreshView(true);
             //HexEdit.BytePerLine = 9;
+
+            HexEdit.ReverseSelection();
 
         }
 

@@ -218,7 +218,6 @@
                 </MenuItem>
 
                 <MenuItem Header="TEST" Click="TESTMenuItem_Click"/>
-                <TextBox x:Name="ByteShiftTextBox" Height="23" TextWrapping="Wrap" Text="9" Width="39"/>
             </Menu>
 
             <control:HexEditor

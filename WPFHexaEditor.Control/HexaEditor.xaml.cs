@@ -1847,6 +1847,7 @@ namespace WpfHexaEditor
                 _provider.LongProcessCanceled += Provider_LongProcessProgressCompleted;
                 _provider.FillWithByteCompleted += Provider_FillWithByteCompleted;
                 _provider.ReplaceByteCompleted += Provider_ReplaceByteCompleted;
+                _provider.BytesAppendCompleted += Provider_BytesAppendCompleted;
 
                 UpdateScrollBar();
                 UpdateHeader();
@@ -1902,6 +1903,7 @@ namespace WpfHexaEditor
                 _provider.LongProcessCanceled += Provider_LongProcessProgressCompleted;
                 _provider.FillWithByteCompleted += Provider_FillWithByteCompleted;
                 _provider.ReplaceByteCompleted += Provider_ReplaceByteCompleted;
+                _provider.BytesAppendCompleted += Provider_BytesAppendCompleted;
 
                 UpdateScrollBar();
                 UpdateHeader();
@@ -1967,6 +1969,12 @@ namespace WpfHexaEditor
 
             LongProcessProgressChanged?.Invoke(this, new EventArgs());
         }
+
+        /// <summary>
+        /// Update scrollbar when append are completed
+        /// </summary>
+        private void Provider_BytesAppendCompleted(object sender, EventArgs e) =>
+            VerticalScrollBar.Maximum = MaxLine - 1;
 
         private void Provider_ReplaceByteCompleted(object sender, EventArgs e) =>
             ReplaceByteCompleted?.Invoke(this, new EventArgs());
@@ -2227,7 +2235,6 @@ namespace WpfHexaEditor
             UpdateSelection();
             UpdateHighLight();
             UpdateStatusBar();
-            UpdateVisual();
 
             CheckProviderIsOnProgress();
 

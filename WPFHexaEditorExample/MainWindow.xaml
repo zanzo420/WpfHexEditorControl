@@ -231,9 +231,9 @@
                 ByteSpacerVisualStyle="Dash"
                 ByteSpacerWidthTickness="Normal"
                 DataStringVisual="Hexadecimal"
-                OffSetStringVisual="Hexadecimal"
                 DefaultCopyToClipboardMode="HexaString"
-                ForegroundSecondColor="Blue" />
+                ForegroundSecondColor="Blue"
+                OffSetStringVisual="Hexadecimal" />
         </DockPanel>
     </Grid>
 </Window>

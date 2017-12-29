@@ -1,26 +1,28 @@
 ﻿<Window
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:properties="clr-namespace:WpfHexaEditor.Properties"
-        xmlns:wpfHexaEditor="clr-namespace:WpfHexaEditor"
-        Background="WhiteSmoke"
-        x:Class="WpfHexaEditor.Dialog.FindReplaceWindow"
-        mc:Ignorable="d"
-        Title="FindReplaceWindow" Height="306" Width="554">
+    x:Class="WpfHexaEditor.Dialog.FindReplaceWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:properties="clr-namespace:WpfHexaEditor.Properties"
+    xmlns:wpfHexaEditor="clr-namespace:WpfHexaEditor"
+    Title="FindReplaceWindow"
+    Width="554"
+    Height="306"
+    Background="WhiteSmoke"
+    mc:Ignorable="d">
     <Grid>
 
         <Button
-        x:Name="OkButton"
-        Width="75"
-        Margin="0,0,90,10"
-        HorizontalAlignment="Right"
-        VerticalAlignment="Bottom"
-        Click="OKButton_Click"
-        Content="{x:Static properties:Resources.OkString}"
-        IsDefault="True"
-        TabIndex="2" />
+            x:Name="OkButton"
+            Width="75"
+            Margin="0,0,90,10"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Click="OKButton_Click"
+            Content="{x:Static properties:Resources.OkString}"
+            IsDefault="True"
+            TabIndex="2" />
 
         <Button
             Width="75"
@@ -32,12 +34,15 @@
             IsCancel="True"
             TabIndex="3" />
 
-        <wpfHexaEditor:HexEditor x:Name="FindHexEdit"
-            Height="129" Margin="10,20,10,0" 
-                                 StatusBarVisibility="Collapsed"
-                                 VerticalAlignment="Top" 
-                                 AllowAutoHightLighSelectionByte="False" 
-                                 AllowContextMenu="False" AllowExtend="True" AllowFileDrop="False" AppendNeedConfirmation="False"/>
+        <wpfHexaEditor:HexEditor
+            x:Name="FindHexEdit"
+            Margin="10,20,10,94"
+            AllowAutoHightLighSelectionByte="False"
+            AllowContextMenu="False"
+            AllowExtend="True"
+            AllowFileDrop="False"
+            AppendNeedConfirmation="False"
+            StatusBarVisibility="Collapsed" />
 
     </Grid>
 </Window>

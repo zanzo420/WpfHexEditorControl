@@ -54,6 +54,7 @@ namespace WpfHexaEditor.Core.Bytes
         public event EventHandler DataPasted;
         public event EventHandler FillWithByteCompleted;
         public event EventHandler ReplaceByteCompleted;
+        public event EventHandler BytesAppendCompleted;
 
         #endregion Events
 
@@ -1424,11 +1425,15 @@ namespace WpfHexaEditor.Core.Bytes
         /// </summary>
         public void AppendByte(byte[] bytesToAppend)
         {
+            if (bytesToAppend == null) return;
+
             _stream.Position = _stream.Length;
             _stream.SetLength(Length + bytesToAppend.Length);
 
             foreach (byte b in bytesToAppend)
                 _stream.WriteByte(b);
+
+            BytesAppendCompleted?.Invoke(this, new EventArgs());
         }
 
         /// <summary>
@@ -1441,6 +1446,8 @@ namespace WpfHexaEditor.Core.Bytes
 
             for (var i = 0; i < count; i++)
                 _stream.WriteByte(byteToAppend);
+
+            BytesAppendCompleted?.Invoke(this, new EventArgs());
         }
 
         #endregion Append byte at end of file

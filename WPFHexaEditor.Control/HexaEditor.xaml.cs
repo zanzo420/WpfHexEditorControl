@@ -1556,18 +1556,23 @@ namespace WpfHexaEditor
 
         private static void HeaderVisibility_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexEditor ctrl)
-                switch ((Visibility) e.NewValue)
-                {
-                    case Visibility.Visible:
-                        if (ctrl.HexDataVisibility == Visibility.Visible)
-                            ctrl.HexHeaderStackPanel.Visibility = Visibility.Visible;
-                        break;
+            if (!(d is HexEditor ctrl)) return;
 
-                    case Visibility.Collapsed:
-                        ctrl.HexHeaderStackPanel.Visibility = Visibility.Collapsed;
-                        break;
-                }
+            switch ((Visibility) e.NewValue)
+            {
+                case Visibility.Visible:
+                    if (ctrl.HexDataVisibility == Visibility.Visible)
+                    {
+                        ctrl.HexHeaderStackPanel.Visibility = Visibility.Visible;
+                        ctrl.TopRectangle.Visibility = Visibility.Visible;
+                    }
+                    break;
+
+                case Visibility.Collapsed:
+                    ctrl.HexHeaderStackPanel.Visibility = Visibility.Collapsed;
+                    ctrl.TopRectangle.Visibility = Visibility.Collapsed;
+                    break;
+            }
         }
 
         /// <summary>
@@ -1616,21 +1621,22 @@ namespace WpfHexaEditor
 
         private static void StatusBarVisibility_ValueChange(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexEditor ctrl)
+            if (!(d is HexEditor ctrl)) return;
+
+            switch ((Visibility)e.NewValue)
             {
-                switch ((Visibility)e.NewValue)
-                {
-                    case Visibility.Visible:
-                        ctrl.StatusBarGrid.Visibility = Visibility.Visible;
-                        break;
+                case Visibility.Visible:
+                    ctrl.StatusBarGrid.Visibility = Visibility.Visible;
+                    ctrl.BottomRectangle.Visibility = Visibility.Visible;
+                    break;
 
-                    case Visibility.Collapsed:
-                        ctrl.StatusBarGrid.Visibility = Visibility.Collapsed;
-                        break;
-                }
-
-                ctrl.RefreshView();
+                case Visibility.Collapsed:
+                    ctrl.StatusBarGrid.Visibility = Visibility.Collapsed;
+                    ctrl.BottomRectangle.Visibility = Visibility.Collapsed;
+                    break;
             }
+
+            ctrl.RefreshView();
         }
 
         #endregion Visibility property

@@ -9,19 +9,16 @@ namespace WpfHexaEditor.Dialog
     /// </summary>
     public partial class FindReplaceWindow
     {
+        MemoryStream ms = new MemoryStream(10);
+
         public FindReplaceWindow()
         {
             InitializeComponent();
 
             //TEST
-            MemoryStream ms = new MemoryStream(10);
+
             ms.WriteByte(0);
             FindHexEdit.Stream = ms;
-        }
-
-        private void OKButton_Click(object sender, RoutedEventArgs e)
-        {
-            DialogResult = true;
         }
     }
 }

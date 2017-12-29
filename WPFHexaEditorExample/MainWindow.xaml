@@ -231,6 +231,7 @@
                 ByteSpacerVisualStyle="Dash"
                 ByteSpacerWidthTickness="Normal"
                 DataStringVisual="Hexadecimal"
+                OffSetStringVisual="Hexadecimal"
                 DefaultCopyToClipboardMode="HexaString"
                 ForegroundSecondColor="Blue" />
         </DockPanel>

@@ -72,6 +72,9 @@
     <Compile Include="Core\SerializerHelper.cs" />
     <Compile Include="Core\MethodExtention\StringExtension.cs" />
     <Compile Include="Core\Native\NativeMethods.cs" />
+    <Compile Include="Dialog\FindReplaceWindow.xaml.cs">
+      <DependentUpon>FindReplaceWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialog\GiveByteWindow.xaml.cs">
       <DependentUpon>GiveByteWindow.xaml</DependentUpon>
     </Compile>
@@ -99,6 +102,10 @@
       <DependentUpon>Resources.zh-CN.resx</DependentUpon>
     </Compile>
     <Compile Include="StringByte.cs" />
+    <Page Include="Dialog\FindReplaceWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialog\ReplaceByteWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

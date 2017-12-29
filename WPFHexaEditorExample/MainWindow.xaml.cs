@@ -3,7 +3,6 @@
 // Author : Derek Tremblay (derektremblay666@gmail.com)
 //////////////////////////////////////////////
 
-using System;
 using System.Globalization;
 using Microsoft.Win32;
 using System.IO;
@@ -13,7 +12,7 @@ using System.Windows.Input;
 using WpfHexaEditor.Core;
 using WpfHexaEditor.Core.Bytes;
 using WpfHexaEditor.Core.CharacterTable;
-using WpfHexaEditor.Core.MethodExtention;
+using WpfHexaEditor.Dialog;
 using WPFHexaEditorExample.Properties;
 
 namespace WPFHexaEditorExample
@@ -265,7 +264,11 @@ namespace WPFHexaEditorExample
             //HexEdit.RefreshView(true);
             //HexEdit.BytePerLine = 9;
 
-            HexEdit.ReverseSelection();
+            //HexEdit.ReverseSelection();
+
+            
+            var window = new FindReplaceWindow();
+            window.ShowDialog();
 
         }
 

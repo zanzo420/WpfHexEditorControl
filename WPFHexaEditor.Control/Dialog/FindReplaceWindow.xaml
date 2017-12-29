@@ -19,6 +19,7 @@
             Margin="0,41,14,0"
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
+            Click="FindButton_Click"
             Content="Find next"
             TabIndex="2" />
 
@@ -39,6 +40,7 @@
             VerticalAlignment="Top"
             AllowAutoHightLighSelectionByte="False"
             AllowContextMenu="False"
+            AllowDeleteByte="False"
             AllowExtend="True"
             AllowFileDrop="False"
             AppendNeedConfirmation="False"
@@ -53,7 +55,7 @@
             x:Name="ReplaceButton"
             Width="100"
             Height="28"
-            Margin="0,75,14,0"
+            Margin="0,105,14,0"
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
             Content="Replace"
@@ -63,17 +65,19 @@
             x:Name="ReplaceAllButton"
             Width="100"
             Height="27"
-            Margin="0,110,14,0"
+            Margin="0,138,14,0"
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
+            Click="ReplaceAllButton_Click"
             Content="Replace All"
             TabIndex="2" />
 
         <wpfHexaEditor:HexEditor
-            x:Name="FindHexEdit_Copy"
+            x:Name="ReplaceHexEdit"
             Margin="10,173,129,16"
             AllowAutoHightLighSelectionByte="False"
             AllowContextMenu="False"
+            AllowDeleteByte="False"
             AllowExtend="True"
             AllowFileDrop="False"
             AppendNeedConfirmation="False"
@@ -84,6 +88,17 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             Content="Replace with:" />
+
+        <Button
+            x:Name="FindAllButton"
+            Width="100"
+            Height="27"
+            Margin="0,73,14,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Click="FindAllButton_Click"
+            Content="Find All"
+            TabIndex="2" />
 
     </Grid>
 </Window>

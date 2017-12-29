@@ -774,6 +774,10 @@ namespace WpfHexaEditor
             UpdateStatusBar();
         }
 
+        /// <summary>
+        /// Allow to delete byte on control
+        /// </summary>
+        public bool AllowDeleteByte { get; set; } = true;
 
         private void Control_ByteDeleted(object sender, EventArgs e) => DeleteSelection();
 
@@ -1396,7 +1400,7 @@ namespace WpfHexaEditor
         /// <summary>
         /// Return true if delete method could be invoked.
         /// </summary>
-        public bool CanDelete() => CanCopy() && !ReadOnlyMode;
+        public bool CanDelete() => CanCopy() && !ReadOnlyMode && AllowDeleteByte;
 
         /// <summary>
         /// Copy to clipboard with default CopyPasteMode.ASCIIString

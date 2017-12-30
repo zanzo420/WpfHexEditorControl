@@ -2245,6 +2245,7 @@ namespace WpfHexaEditor
             UpdateSelection();
             UpdateHighLight();
             UpdateStatusBar();
+            UpdateVisual();
 
             CheckProviderIsOnProgress();
 

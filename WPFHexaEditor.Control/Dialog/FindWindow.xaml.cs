@@ -4,7 +4,7 @@ using System.Windows;
 namespace WpfHexaEditor.Dialog
 {
     /// <summary>
-    /// Logique d'interaction pour FindReplaceWindow.xaml
+    /// Logique d'interaction pour FindWindow.xaml
     /// </summary>
     public partial class FindWindow
     {
@@ -23,35 +23,25 @@ namespace WpfHexaEditor.Dialog
             FindHexEdit.Stream = _findMs;
         }
 
-        /// <summary>
-        /// Save the stream before working with
-        /// </summary>
-        private void SaveStream() => FindHexEdit.SubmitChanges();
+        private void FindAllButton_Click(object sender, RoutedEventArgs e) =>
+            _parent?.FindAll(GetAllByteFromHexEditor(), true);
 
-        private void FindAllButton_Click(object sender, RoutedEventArgs e)
+        private byte[] GetAllByteFromHexEditor()
         {
-            SaveStream();
-            _parent?.FindAll(_findMs.ToArray(), true);
+            var cstream = new MemoryStream();
+            FindHexEdit.CopyToStream(cstream, 0, FindHexEdit.Lenght - 1, true);
+            return cstream.ToArray();
         }
 
-        private void FindFirstButton_Click(object sender, RoutedEventArgs e)
-        {
-            SaveStream();
-            _parent?.FindFirst(_findMs.ToArray());
-        }
+        private void FindFirstButton_Click(object sender, RoutedEventArgs e) =>
+            _parent?.FindFirst(GetAllByteFromHexEditor());
 
         private void CloseButton_Click(object sender, RoutedEventArgs e) => Close();
-        
-        private void FindNextButton_Click(object sender, RoutedEventArgs e)
-        {
-            SaveStream();
-            _parent?.FindNext(_findMs.ToArray());
-        }
 
-        private void FindLastButton_Click(object sender, RoutedEventArgs e)
-        {
-            SaveStream();
-            _parent?.FindLast(_findMs.ToArray());
-        }
+        private void FindNextButton_Click(object sender, RoutedEventArgs e) =>
+            _parent?.FindNext(GetAllByteFromHexEditor());
+
+        private void FindLastButton_Click(object sender, RoutedEventArgs e) =>
+            _parent?.FindLast(GetAllByteFromHexEditor());
     }
 }

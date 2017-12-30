@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Windows;
 
 namespace WpfHexaEditor.Dialog
@@ -27,44 +26,25 @@ namespace WpfHexaEditor.Dialog
             ReplaceHexEdit.Stream = _replaceMs;
         }
 
-        /// <summary>
-        /// Save the stream before working with
-        /// </summary>
-        private void SaveStream()
+        private void FindAllButton_Click(object sender, RoutedEventArgs e) =>
+            _parent?.FindAll(GetAllByteFromHexEditor(), true);
+
+        private byte[] GetAllByteFromHexEditor()
         {
-            FindHexEdit.SubmitChanges();
-            ReplaceHexEdit.SubmitChanges();
+            var cstream = new MemoryStream();
+            FindHexEdit.CopyToStream(cstream, 0, FindHexEdit.Lenght - 1, true);
+            return cstream.ToArray();
         }
 
-        private void FindAllButton_Click(object sender, RoutedEventArgs e)
-        {
-            SaveStream();
-            _parent?.FindAll(_findMs.ToArray(), true);
-        }
-
-        private void FindFirstButton_Click(object sender, RoutedEventArgs e)
-        {
-            SaveStream();
-            _parent?.FindFirst(_findMs.ToArray());
-        }
+        private void FindFirstButton_Click(object sender, RoutedEventArgs e) =>
+            _parent?.FindFirst(GetAllByteFromHexEditor());
 
         private void CloseButton_Click(object sender, RoutedEventArgs e) => Close();
 
-        private void FindPreviousButton_Click(object sender, RoutedEventArgs e)
-        {
+        private void FindNextButton_Click(object sender, RoutedEventArgs e) =>
+            _parent?.FindNext(GetAllByteFromHexEditor());
 
-        }
-
-        private void FindNextButton_Click(object sender, RoutedEventArgs e)
-        {
-            SaveStream();
-            _parent?.FindNext(_findMs.ToArray());
-        }
-
-        private void FindLastButton_Click(object sender, RoutedEventArgs e)
-        {
-            SaveStream();
-            _parent?.FindLast(_findMs.ToArray());
-        }
+        private void FindLastButton_Click(object sender, RoutedEventArgs e) =>
+            _parent?.FindLast(GetAllByteFromHexEditor());
     }
 }

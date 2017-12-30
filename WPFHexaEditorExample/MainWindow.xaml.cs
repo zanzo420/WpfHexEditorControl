@@ -268,7 +268,7 @@ namespace WPFHexaEditorExample
 
             
             var window = new FindReplaceWindow(HexEdit);
-            window.ShowDialog();
+            window.Show();
 
         }
 

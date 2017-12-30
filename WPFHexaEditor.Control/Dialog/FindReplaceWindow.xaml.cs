@@ -27,11 +27,6 @@ namespace WpfHexaEditor.Dialog
             ReplaceHexEdit.Stream = _replaceMs;
         }
 
-        private void FindButton_Click(object sender, RoutedEventArgs e)
-        {
-            SaveStream();
-        }
-
         /// <summary>
         /// Save the stream before working with
         /// </summary>
@@ -41,18 +36,35 @@ namespace WpfHexaEditor.Dialog
             ReplaceHexEdit.SubmitChanges();
         }
 
-        private void ReplaceAllButton_Click(object sender, RoutedEventArgs e)
+        private void FindAllButton_Click(object sender, RoutedEventArgs e)
+        {
+            SaveStream();
+            _parent?.FindAll(_findMs.ToArray(), true);
+        }
+
+        private void FindFirstButton_Click(object sender, RoutedEventArgs e)
+        {
+            SaveStream();
+            _parent?.FindFirst(_findMs.ToArray());
+        }
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e) => Close();
+
+        private void FindPreviousButton_Click(object sender, RoutedEventArgs e)
         {
 
         }
 
-        private void FindAllButton_Click(object sender, RoutedEventArgs e)
+        private void FindNextButton_Click(object sender, RoutedEventArgs e)
         {
             SaveStream();
+            _parent?.FindNext(_findMs.ToArray());
+        }
 
-            _parent?.FindAll(_findMs.ToArray(), true);
-
-            Close();            
+        private void FindLastButton_Click(object sender, RoutedEventArgs e)
+        {
+            SaveStream();
+            _parent?.FindLast(_findMs.ToArray());
         }
     }
 }

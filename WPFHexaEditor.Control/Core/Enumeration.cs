@@ -154,7 +154,8 @@ namespace WpfHexaEditor.Core
     {
         HexBytePanel,
         StringBytePanel,
-        Both
+        Both,
+        Nothing
     }
 
     public enum ByteSpacerVisual

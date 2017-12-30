@@ -2306,13 +2306,9 @@ namespace WpfHexaEditor
 
                 for (var i = 0; i < BytePerLine; i++)
                 {
-                    switch (_tblCharacterTable)
-                    {
-                        case null when ByteSpacerPositioning == ByteSpacerPosition.Both ||
-                                       ByteSpacerPositioning == ByteSpacerPosition.StringBytePanel:
-                            AddByteSpacer(dataLineStack, i);
-                            break;
-                    }
+                    if (_tblCharacterTable == null && (ByteSpacerPositioning == ByteSpacerPosition.Both ||
+                                                       ByteSpacerPositioning == ByteSpacerPosition.StringBytePanel))
+                        AddByteSpacer(dataLineStack, i);
 
                     var sbCtrl = new StringByte(this);
                     sbCtrl.Clear();
@@ -2333,13 +2329,9 @@ namespace WpfHexaEditor
 
                 for (var i = 0; i < BytePerLine; i++)
                 {
-                    switch (ByteSpacerPositioning)
-                    {
-                        case ByteSpacerPosition.Both:
-                        case ByteSpacerPosition.HexBytePanel:
-                            AddByteSpacer(hexaDataLineStack, i);
-                            break;
-                    }
+                    if (ByteSpacerPositioning == ByteSpacerPosition.Both ||
+                        ByteSpacerPositioning == ByteSpacerPosition.HexBytePanel)
+                        AddByteSpacer(hexaDataLineStack, i);
 
                     var byteControl = new HexByte(this);
                     byteControl.Clear();
@@ -2833,26 +2825,35 @@ namespace WpfHexaEditor
         /// <summary>
         /// Find first occurence of byte[] in stream. Search start as startPosition.
         /// </summary>
-        public long FindFirst(byte[] data, long startPosition = 0)
+        public long FindFirst(byte[] data, long startPosition = 0, bool highLight = false)
         {
             if (data == null) return -1;
+            if (!ByteProvider.CheckIsOpen(_provider)) return -1;
 
-            if (ByteProvider.CheckIsOpen(_provider))
+            try
             {
-                try
-                {
-                    var position = _provider.FindIndexOf(data, startPosition).First();
-                    SetPosition(position, data.Length);
-                    return position;
-                }
-                catch
-                {
-                    UnSelectAll();
-                    return -1;
-                }
-            }
+                var position = _provider.FindIndexOf(data, startPosition).ToList().First();
+                    
+                SetPosition(position, data.Length);
 
-            return -1;
+                if (!highLight) return position;
+
+                if (!_markedPositionList.ContainsValue(position))
+                    for (var i = position; i < position + data.Length; i++)
+                        _markedPositionList.Add(i, i);
+
+                SetScrollMarker(position, ScrollMarker.SearchHighLight);
+
+                UnSelectAll();
+                UpdateHighLight();
+
+                return position;
+            }
+            catch
+            {
+                UnSelectAll();
+                return -1;
+            }
         }
 
         /// <summary>
@@ -2863,26 +2864,35 @@ namespace WpfHexaEditor
         /// <summary>
         /// Find next occurence of byte[] in stream search start at SelectionStart.
         /// </summary>
-        public long FindNext(byte[] data)
+        public long FindNext(byte[] data, bool highLight = false)
         {
             if (data == null) return -1;
+            if (!ByteProvider.CheckIsOpen(_provider)) return -1;
 
-            if (ByteProvider.CheckIsOpen(_provider))
+            try
             {
-                try
-                {
-                    var position = _provider.FindIndexOf(data, SelectionStart + 1).First();
-                    SetPosition(position, data.Length);
-                    return position;
-                }
-                catch
-                {
-                    UnSelectAll();
-                    return -1;
-                }
-            }
+                var position = _provider.FindIndexOf(data, SelectionStart + 1).ToList().First();
 
-            return -1;
+                SetPosition(position, data.Length);
+
+                if (!highLight) return position;
+
+                if (!_markedPositionList.ContainsValue(position))
+                    for (var i = position; i < position + data.Length; i++)
+                        _markedPositionList.Add(i, i);
+
+                SetScrollMarker(position, ScrollMarker.SearchHighLight);
+
+                UnSelectAll();
+                UpdateHighLight();
+
+                return position;
+            }
+            catch
+            {
+                UnSelectAll();
+                return -1;
+            }
         }
 
         /// <summary>
@@ -2893,26 +2903,35 @@ namespace WpfHexaEditor
         /// <summary>
         /// Find first occurence of byte[] in stream.
         /// </summary>
-        public long FindLast(byte[] data)
+        public long FindLast(byte[] data, bool highLight = false)
         {
             if (data == null) return -1;
+            if (!ByteProvider.CheckIsOpen(_provider)) return -1;
 
-            if (ByteProvider.CheckIsOpen(_provider))
+            try
             {
-                try
-                {
-                    var position = _provider.FindIndexOf(data, SelectionStart + 1).Last();
-                    SetPosition(position, data.Length);
-                    return position;
-                }
-                catch
-                {
-                    UnSelectAll();
-                    return -1;
-                }
-            }
+                var position = _provider.FindIndexOf(data, SelectionStart + 1).ToList().Last();
 
-            return -1;
+                SetPosition(position, data.Length);
+
+                if (!highLight) return position;
+
+                if (!_markedPositionList.ContainsValue(position))
+                    for (var i = position; i < position + data.Length; i++)
+                        _markedPositionList.Add(i, i);
+
+                SetScrollMarker(position, ScrollMarker.SearchHighLight);
+
+                UnSelectAll();
+                UpdateHighLight();
+
+                return position;
+            }
+            catch
+            {
+                UnSelectAll();
+                return -1;
+            }
         }
 
         /// <summary>
@@ -2966,11 +2985,13 @@ namespace WpfHexaEditor
                     SetScrollMarker(position, ScrollMarker.SearchHighLight);
                 }
 
+
                 UnSelectAll();
                 UpdateHighLight();
 
                 return findAll;
             }
+
             return FindAll(data);
         }
 

@@ -22,8 +22,11 @@ Sample with standard ASCII character table
 Sample with custom thingy character table (TBL) on SNES Final Fantasy II US
 ![example](Sample9-TBL.png?raw=true)
 
-Sample use ByteShiftLeft with BytePerLine on TBL for fixed lenght table...
+Sample use ByteShiftLeft and BytePerLine properties with custom TBL for edit fixed lenght table...
 ![example](Sample12-FIXEDTBL-BYTESHIFT.png?raw=true)
+
+Sample use of find dialog... (Replace dialog are under construction)
+![example](Sample13-FindDialog.png?raw=true)
 
 ## Somes features
 - Shift the first visible byte in the view to the left for adjust view in fixed TBL... 
@@ -51,7 +54,7 @@ Sample use ByteShiftLeft with BytePerLine on TBL for fixed lenght table...
 - ...
 
 ## How to use
-Add a reference to `WPFHexaEditor.Control.dll` from your project, then add the following namespace to your XAML:
+Add a reference to `WPFHexaEditor.dll` from your project, then add the following namespace to your XAML:
 
 ```xaml
 xmlns:control="clr-namespace:WpfHexaEditor;assembly=WPFHexaEditor"

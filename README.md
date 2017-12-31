@@ -54,7 +54,7 @@ Sample use of find dialog... (Replace dialog are under construction)
 - ...
 
 ## How to use
-Add a reference to `WPFHexaEditor.Control.dll` from your project, then add the following namespace to your XAML:
+Add a reference to `WPFHexaEditor.dll` from your project, then add the following namespace to your XAML:
 
 ```xaml
 xmlns:control="clr-namespace:WpfHexaEditor;assembly=WPFHexaEditor"

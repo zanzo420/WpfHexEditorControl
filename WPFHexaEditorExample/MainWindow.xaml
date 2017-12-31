@@ -65,7 +65,16 @@
                         x:Name="UndoMenu"
                         Click="UndoMenu_Click"
                         Header="Undo" />
-                    <Separator />
+                    <Separator/>
+                    <MenuItem
+                        x:Name="FindMenu"
+                        Click="FindMenu_Click"
+                        Header="Find..." />
+                    <MenuItem
+                        x:Name="ReplaceMenu"
+                        Click="ReplaceMenu_Click"
+                        Header="Find and replace..." />
+                    <Separator/>
                     <MenuItem
                         x:Name="SetReadOnlyMenu"
                         Click="SetReadOnlyMenu_Click"

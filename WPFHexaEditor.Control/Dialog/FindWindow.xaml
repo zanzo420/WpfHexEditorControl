@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:wpfHexaEditor="clr-namespace:WpfHexaEditor"
-    Title="Find and Replace"
+    Title="Find"
     Width="193"
     Height="190"
     MinHeight="275"
@@ -15,9 +15,8 @@
     Background="WhiteSmoke"
     mc:Ignorable="d" 
     ShowInTaskbar="False" 
-    Topmost="True" 
     WindowStartupLocation="CenterOwner"
-    ResizeMode="CanResizeWithGrip">
+    ResizeMode="CanResizeWithGrip" Icon="/WPFHexaEditor;component/Resources/Icon/Logo-Icon.ico">
 
     <Grid>
 
@@ -94,5 +93,13 @@
             Content="Find Last"
             TabIndex="2" 
             Click="FindLastButton_Click" />
+
+        <Button Content="Clear"
+                HorizontalAlignment="Left" 
+                Height="26" 
+                Margin="79,10,0,0"
+                VerticalAlignment="Top" 
+                Click="ClearButton_Click"
+                Width="61"/>
     </Grid>
 </Window>

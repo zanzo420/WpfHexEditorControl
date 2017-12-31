@@ -8,7 +8,7 @@ namespace WpfHexaEditor.Dialog
     /// </summary>
     public partial class FindWindow
     {
-        private readonly MemoryStream _findMs = new MemoryStream(1);
+        private MemoryStream _findMs = new MemoryStream(1);
         private readonly HexEditor _parent;
 
         public FindWindow(HexEditor parent)
@@ -18,9 +18,7 @@ namespace WpfHexaEditor.Dialog
             //Parent hexeditor for "binding" search
             _parent = parent;
 
-            //Initialize stream and hexeditor
-            _findMs.WriteByte(0);
-            FindHexEdit.Stream = _findMs;
+            InitializeMStream();
         }
 
         private void FindAllButton_Click(object sender, RoutedEventArgs e) =>
@@ -43,5 +41,21 @@ namespace WpfHexaEditor.Dialog
 
         private void FindLastButton_Click(object sender, RoutedEventArgs e) =>
             _parent?.FindLast(GetAllByteFromHexEditor());
+
+        private void ClearButton_Click(object sender, RoutedEventArgs e)
+        {
+            InitializeMStream();
+        }
+
+        /// <summary>
+        /// Initialize stream and hexeditor
+        /// </summary>
+        private void InitializeMStream()
+        {
+            FindHexEdit.CloseProvider();
+            _findMs = new MemoryStream(1);
+            _findMs.WriteByte(0);
+            FindHexEdit.Stream = _findMs;
+        }
     }
 }

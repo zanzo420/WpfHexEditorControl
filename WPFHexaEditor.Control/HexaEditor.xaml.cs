@@ -2974,6 +2974,8 @@ namespace WpfHexaEditor
             {
                 var positions = FindAll(data);
 
+                if (positions == null) return null;
+
                 var findAll = positions as IList<long> ?? positions.ToList();
                 foreach (var position in findAll)
                 {

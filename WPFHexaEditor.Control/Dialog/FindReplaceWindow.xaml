@@ -11,7 +11,14 @@
     MinHeight="340"
     MinWidth="550"
     Background="WhiteSmoke"
-    mc:Ignorable="d" ShowInTaskbar="False" Topmost="True" WindowStartupLocation="CenterOwner" ResizeMode="CanResizeWithGrip" MaxHeight="500" MaxWidth="700">
+    mc:Ignorable="d" 
+    ShowInTaskbar="False" 
+    WindowStartupLocation="CenterOwner" 
+    ResizeMode="CanResizeWithGrip" 
+    MaxHeight="500"
+    MaxWidth="700"
+    Icon="/WPFHexaEditor;component/Resources/Icon/Logo-Icon.ico">
+
     <Grid>
 
         <Button
@@ -27,14 +34,12 @@
 
         <Button
             Width="100"
-            Height="27"
-            Margin="0,272,14,0"
+            Margin="0,0,14,10"
             HorizontalAlignment="Right"
-            VerticalAlignment="Top"
             Content="Close"
             Click="CloseButton_Click"
             IsCancel="True"
-            TabIndex="3" />
+            TabIndex="3" Height="27" VerticalAlignment="Bottom" />
 
         <wpfHexaEditor:HexEditor
             x:Name="FindHexEdit"
@@ -51,7 +56,7 @@
             ByteSpacerPositioning="Nothing"
             VerticalAlignment="Top"
             BytePerLine="8" />
-        
+
         <Label
             Margin="10,10,0,0"
             HorizontalAlignment="Left"
@@ -90,8 +95,7 @@
             AllowFileDrop="False"
             AppendNeedConfirmation="False"
             ByteModifiedColor="White"
-            StatusBarVisibility="Collapsed" 
-            VerticalAlignment="Top"
+            StatusBarVisibility="Collapsed"
             BytePerLine="8" 
             ByteSpacerPositioning="Nothing"/>
 
@@ -134,5 +138,20 @@
             Content="Find Last"
             TabIndex="2" 
             Click="FindLastButton_Click" />
+        <Button Content="Clear"
+            HorizontalAlignment="Left" 
+            Height="26" 
+            Margin="79,10,0,0"
+            VerticalAlignment="Top" 
+            Click="ClearButton_Click"
+            Width="61"/>
+
+        <Button Content="Clear"
+            HorizontalAlignment="Left" 
+            Height="26" 
+            Margin="94,156,0,0"
+            VerticalAlignment="Top" 
+            Click="ClearReplaceButton_Click"
+            Width="61"/>
     </Grid>
 </Window>

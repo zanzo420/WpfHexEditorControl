@@ -31,7 +31,7 @@ namespace WPFHexaEditorExample
 
         public MainWindow()
         {
-            System.Threading.Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en");
+            //System.Threading.Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en");
 
             InitializeComponent();
           
@@ -265,11 +265,6 @@ namespace WPFHexaEditorExample
             //HexEdit.BytePerLine = 9;
 
             //HexEdit.ReverseSelection();
-
-            
-            var window = new FindWindow(HexEdit);
-            window.Show();
-
         }
 
         private void CTableTblDefaultEBCDICButton_Click(object sender, RoutedEventArgs e)
@@ -290,6 +285,24 @@ namespace WPFHexaEditorExample
             HexEdit.LoadDefaultTbl(DefaultCharacterTableType.EbcdicNoSpecialChar);
 
             Application.Current.MainWindow.Cursor = null;
+        }
+
+        private void FindMenu_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new FindWindow(HexEdit)
+            {
+                Owner = this
+            };
+            window.Show();
+        }
+
+        private void ReplaceMenu_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new FindReplaceWindow(HexEdit)
+            {
+                Owner = this
+            };
+            window.Show();
         }
     }
 }

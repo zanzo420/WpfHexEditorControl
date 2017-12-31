@@ -273,7 +273,8 @@ namespace WpfHexaEditor
             {
                 FontWeight = _parent.FontWeight;
                 Background = Brushes.Transparent;
-                Foreground = _parent.GetColumnNumber(BytePositionInFile) % 2 == 0 ? _parent.Foreground : _parent.ForegroundSecondColor;
+                //Foreground = _parent.GetColumnNumber(BytePositionInFile) % 2 == 0 ? _parent.Foreground : _parent.ForegroundSecondColor;
+                Foreground = BytePositionInFile % 2 == 0 ? _parent.Foreground : _parent.ForegroundSecondColor;
             }
 
             UpdateAutoHighLiteSelectionByteVisual();

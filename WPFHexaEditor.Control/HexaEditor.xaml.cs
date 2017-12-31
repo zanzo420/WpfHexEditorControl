@@ -1476,7 +1476,7 @@ namespace WpfHexaEditor
         /// <summary>
         /// Get the column number of the position
         /// </summary>
-        private int GetColumnNumber(long position)
+        internal int GetColumnNumber(long position)
         {
             double line = (double)position / BytePerLine; //GetLineNumber(position);
             double decPart = line - Math.Truncate(line);

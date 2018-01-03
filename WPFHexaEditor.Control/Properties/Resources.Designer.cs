@@ -133,11 +133,29 @@ namespace WpfHexaEditor.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Clear.
+        /// </summary>
+        public static string ClearString {
+            get {
+                return ResourceManager.GetString("ClearString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Click to go to at position..
         /// </summary>
         public static string ClickToGoAtPositionString {
             get {
                 return ResourceManager.GetString("ClickToGoAtPositionString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Close.
+        /// </summary>
+        public static string CloseString {
+            get {
+                return ResourceManager.GetString("CloseString", resourceCulture);
             }
         }
         
@@ -427,6 +445,24 @@ namespace WpfHexaEditor.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Find All.
+        /// </summary>
+        public static string FindAllString {
+            get {
+                return ResourceManager.GetString("FindAllString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Find and Replace.
+        /// </summary>
+        public static string FindAndReplaceString {
+            get {
+                return ResourceManager.GetString("FindAndReplaceString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Byte to search.
         /// </summary>
         public static string FindByteString {
@@ -436,11 +472,56 @@ namespace WpfHexaEditor.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Find First.
+        /// </summary>
+        public static string FindFirstString {
+            get {
+                return ResourceManager.GetString("FindFirstString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Find Last.
+        /// </summary>
+        public static string FindLastString {
+            get {
+                return ResourceManager.GetString("FindLastString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Find Next.
+        /// </summary>
+        public static string FindNextString {
+            get {
+                return ResourceManager.GetString("FindNextString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Find all occurence of selection.
         /// </summary>
         public static string FindSelectionString {
             get {
                 return ResourceManager.GetString("FindSelectionString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Find.
+        /// </summary>
+        public static string FindString {
+            get {
+                return ResourceManager.GetString("FindString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Find what:.
+        /// </summary>
+        public static string FindWhatString {
+            get {
+                return ResourceManager.GetString("FindWhatString", resourceCulture);
             }
         }
         
@@ -562,11 +643,29 @@ namespace WpfHexaEditor.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Replace All.
+        /// </summary>
+        public static string ReplaceAllString {
+            get {
+                return ResourceManager.GetString("ReplaceAllString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Replace by byte.
         /// </summary>
         public static string ReplaceByByteString {
             get {
                 return ResourceManager.GetString("ReplaceByByteString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Replace Next.
+        /// </summary>
+        public static string ReplaceNextString {
+            get {
+                return ResourceManager.GetString("ReplaceNextString", resourceCulture);
             }
         }
         
@@ -580,11 +679,29 @@ namespace WpfHexaEditor.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Replace.
+        /// </summary>
+        public static string ReplaceString {
+            get {
+                return ResourceManager.GetString("ReplaceString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Replace with byte.
         /// </summary>
         public static string ReplaceWithByteString {
             get {
                 return ResourceManager.GetString("ReplaceWithByteString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Replace with:.
+        /// </summary>
+        public static string ReplaceWithString {
+            get {
+                return ResourceManager.GetString("ReplaceWithString", resourceCulture);
             }
         }
         

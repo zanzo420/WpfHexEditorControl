@@ -67,7 +67,7 @@ namespace WpfHexaEditor.Dialog
             ReplaceHexEdit.CloseProvider();
             _replaceMs = new MemoryStream(1);
             _replaceMs.WriteByte(0);
-            ReplaceHexEdit.Stream = _findMs;
+            ReplaceHexEdit.Stream = _replaceMs;
         }
 
     }

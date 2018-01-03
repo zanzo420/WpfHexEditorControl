@@ -1393,6 +1393,18 @@ namespace WpfHexaEditor
         }
 
         /// <summary>
+        /// Get all bytes from file or stream opened
+        /// </summary>
+        public byte[] GetAllBytes()
+        {
+            if (!ByteProvider.CheckIsOpen(_provider)) return null;
+
+            var cstream = new MemoryStream();
+            CopyToStream(cstream, 0, Lenght - 1, true);
+            return cstream.ToArray();
+        }
+
+        /// <summary>
         /// Return true if Copy method could be invoked.
         /// </summary>
         public bool CanCopy() => SelectionLength >= 1 && ByteProvider.CheckIsOpen(_provider);
@@ -1478,7 +1490,7 @@ namespace WpfHexaEditor
         /// </summary>
         internal int GetColumnNumber(long position)
         {
-            var line = (double)position / BytePerLine; //GetLineNumber(position);
+            var line = (double)position / BytePerLine;
             var decPart = line - Math.Truncate(line);
 
             //Debug.Print($"COL : {(int) (decPart * BytePerLine)}");
@@ -2224,7 +2236,7 @@ namespace WpfHexaEditor
         /// Update de SelectionLine property
         /// </summary>
         private void UpdateSelectionLine() =>
-            SelectionLine = ByteProvider.CheckIsOpen(_provider) ? SelectionStart / BytePerLine + 1 : 0;
+            SelectionLine = ByteProvider.CheckIsOpen(_provider) ? (long) GetLineNumber(SelectionStart) : 0;
 
         /// <summary>
         /// Refresh currentview of hexeditor

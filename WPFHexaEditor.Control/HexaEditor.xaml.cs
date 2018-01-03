@@ -1488,17 +1488,8 @@ namespace WpfHexaEditor
         /// <summary>
         /// Get the column number of the position
         /// </summary>
-        internal int GetColumnNumber(long position)
-        {
-            var line = (double)position / BytePerLine;
-            var decPart = line - Math.Truncate(line);
-
-            //Debug.Print($"COL : {(int) (decPart * BytePerLine)}");
-
-            return (int)(decPart * BytePerLine);
-        }
-
-
+        internal int GetColumnNumber(long position) => (int) position % BytePerLine;
+        
         /// <summary>
         /// Set position in control at position in parameter
         /// </summary>

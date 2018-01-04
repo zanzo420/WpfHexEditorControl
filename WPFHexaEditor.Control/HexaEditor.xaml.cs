@@ -1483,8 +1483,7 @@ namespace WpfHexaEditor
         /// Get the line number of position in parameter
         /// </summary>
         public double GetLineNumber(long position) => position / BytePerLine;
-
-
+        
         /// <summary>
         /// Get the column number of the position
         /// </summary>
@@ -2182,18 +2181,27 @@ namespace WpfHexaEditor
                     BytePerLine_CoerceValue));
 
         private static object BytePerLine_CoerceValue(DependencyObject d, object baseValue) => 
-            (int) baseValue < 8 ? 8 : ((int) baseValue > 32 ? 32 : baseValue);
+            (int) baseValue < 1 ? 1 : ((int) baseValue > 64 ? 64 : baseValue);
 
         private static void BytePerLine_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexEditor ctrl && e.NewValue != e.OldValue)
-            {
-                //refresh
-                ctrl.UpdateScrollBar();
-                ctrl.BuildDataLines(ctrl.MaxVisibleLine, true);
-                ctrl.RefreshView(true);
-                ctrl.UpdateHeader(true);
-            }
+            if (!(d is HexEditor ctrl) || e.NewValue == e.OldValue) return;
+
+            //Get previous state
+            var firstPos = ctrl.FirstVisibleBytePosition;
+            var startPos = ctrl.SelectionStart;
+            var stopPos = ctrl.SelectionStop;
+
+            //refresh
+            ctrl.UpdateScrollBar();
+            ctrl.BuildDataLines(ctrl.MaxVisibleLine, true);
+            ctrl.RefreshView(true);
+            ctrl.UpdateHeader(true);
+
+            //Set previous state
+            ctrl.SetPosition(firstPos);
+            ctrl.SelectionStart = startPos;
+            ctrl.SelectionStop = stopPos;
         }
 
         #endregion

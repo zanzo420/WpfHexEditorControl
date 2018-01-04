@@ -3,7 +3,6 @@
 // Author : Derek Tremblay (derektremblay666@gmail.com)
 //////////////////////////////////////////////
 
-using System.Globalization;
 using Microsoft.Win32;
 using System.IO;
 using System.Windows;
@@ -251,13 +250,15 @@ namespace WPFHexaEditorExample
             //HexEdit.SaveCurrentState("test.xml");
             //HexEdit.LoadCurrentState("test.xml");
 
-            ///// REFRESH RATE TEST
+            #region REFRESH RATE TEST
             //var rnd = new Random();
-            //for (int i = 0; i < 200; i++)
+            //for (var i = 0; i < 200; i++)
             //{
-            //    HexEdit.SetPosition(rnd.Next(0, (int)HexEdit.Lenght));
+            //    HexEdit.SetPosition(rnd.Next(0, (int) HexEdit.Lenght));
+            //    //HexEdit.BytePerLine = rnd.Next(1, 16);
             //    Application.Current.DoEvents();
             //}
+            #endregion
 
             ///// BYTE SHIFTING TEST FOR FIXED LENGHT EDITOR
             //HexEdit.ByteShiftLeft = 9;

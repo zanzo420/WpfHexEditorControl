@@ -1378,9 +1378,10 @@ namespace WpfHexaEditor.Core.Bytes
 
                 while (!Eof)
                 {
-                    var buffer = new byte[bufferLenght];
+                    var testLenght = Length - Position;
+                    var buffer = testLenght <= bufferLenght ? new byte[testLenght] : new byte[bufferLenght];
 
-                    Read(buffer, 0, bufferLenght);
+                    Read(buffer, 0, buffer.Length);
 
                     foreach (var b in buffer)
                         storedCnt[b]++;

@@ -28,6 +28,11 @@ Sample use ByteShiftLeft and BytePerLine properties with custom TBL for edit fix
 Sample use of find dialog... (Replace dialog are under construction)
 ![example](Sample13-FindDialog.png?raw=true)
 
+## What is TBL
+The TBL are small plaintext .tbl files that link every hexadecimal value with a character, which proves most useful when reading and changing text data. Wpf HexEditor support .tbl and you can define your custom character table as you want.
+
+![example](TBLExplain.png?raw=true)
+
 ## Somes features
 - Shift the first visible byte in the view to the left for adjust view in fixed TBL... 
 - Append byte at end of file
@@ -39,7 +44,7 @@ Sample use of find dialog... (Replace dialog are under construction)
 - Support Brush for customize background, selection, highlight and more 
 - Support of common key in window like CTRL+C, CTRL+V, CTRL+Z, CTRL+A, ESC...
 - Copy to clipboard as code like C#, VB.Net, C, Java, F# ... 
-- Support TBL character table file insted of default ASCII.
+- Support custome TBL character table file insted of default ASCII.
 - Choose color set of TBL string via dependency property
 - Selection with mouse/keyboard or property
 - Choose the number of byte per line to show 

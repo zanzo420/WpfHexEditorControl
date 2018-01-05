@@ -12,7 +12,7 @@ namespace HexEditUnitTest
         [TestMethod]
         public void GetByteCountTest()
         {
-            var bp = new ByteProvider(@"WPFHexaEditor.pdb");
+            var bp = new ByteProvider(@"C:\Test\TestFile.smc");
 
             var lenght = bp.Length;
 

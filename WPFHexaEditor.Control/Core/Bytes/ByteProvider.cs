@@ -1362,7 +1362,10 @@ namespace WpfHexaEditor.Core.Bytes
         /// COUNT OF 0xff
         /// var cnt = GetByteCount()[0xff]
         /// </example>
-        /// <returns></returns>
+        /// <remarks>
+        /// https://stackoverflow.com/questions/45656378/c-what-is-the-fastest-way-to-count-byte-in-a-file/45656760#45656760
+        /// With help of Georg and David Heffernan on stackoverflow
+        /// </remarks>
         public long[] GetByteCount()
         {
             if (IsOpen)
@@ -1371,26 +1374,22 @@ namespace WpfHexaEditor.Core.Bytes
                 IsOnLongProcess = true;
                 LongProcessStarted?.Invoke(this, new EventArgs());
 
+                const int copyBufferSize = 1024 * 1024;
                 var cancel = false;
-                const int bufferLenght = 1048576; //1mb
+                var buffer = new byte[copyBufferSize];
                 var storedCnt = new long[256];
+                int count;
+
                 Position = 0;
 
-                while (!Eof)
+                while ((count = Read(buffer, 0, copyBufferSize)) > 0)
                 {
-                    var testLenght = Length - Position;
-                    var buffer = testLenght <= bufferLenght ? new byte[testLenght] : new byte[bufferLenght];
-
-                    Read(buffer, 0, buffer.Length);
-
-                    foreach (var b in buffer)
-                        storedCnt[b]++;
-
-                    Position += bufferLenght;
+                    for (var i = 0; i < count; i++)
+                        storedCnt[buffer[i]]++;
 
                     //Do not freeze UI...
                     if (Position % 2000 == 0)
-                        LongProcessProgress = (double) Position / Length;
+                        LongProcessProgress = (double)Position / Length;
 
                     //Break long process if needed
                     if (!IsOnLongProcess)

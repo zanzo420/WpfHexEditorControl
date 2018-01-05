@@ -4,21 +4,21 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:wpfHexaEditor="clr-namespace:WpfHexaEditor"
     xmlns:p="clr-namespace:WpfHexaEditor.Properties"
+    xmlns:wpfHexaEditor="clr-namespace:WpfHexaEditor"
     Title="{x:Static p:Resources.FindAndReplaceString}"
     Width="193"
     Height="340"
-    MinHeight="340"
     MinWidth="550"
-    Background="WhiteSmoke"
-    mc:Ignorable="d" 
-    ShowInTaskbar="False" 
-    WindowStartupLocation="CenterOwner" 
-    ResizeMode="CanResizeWithGrip" 
-    MaxHeight="500"
+    MinHeight="340"
     MaxWidth="700"
-    Icon="/WPFHexaEditor;component/Resources/Icon/Logo-Icon.ico">
+    MaxHeight="500"
+    Background="WhiteSmoke"
+    Icon="/WPFHexaEditor;component/Resources/Icon/Logo-Icon.ico"
+    ResizeMode="CanResizeWithGrip"
+    ShowInTaskbar="False"
+    WindowStartupLocation="CenterOwner"
+    mc:Ignorable="d">
 
     <Grid>
 
@@ -35,19 +35,20 @@
 
         <Button
             Width="100"
+            Height="27"
             Margin="0,0,14,10"
             HorizontalAlignment="Right"
-            Content="{x:Static p:Resources.CloseString}"
+            VerticalAlignment="Bottom"
             Click="CloseButton_Click"
+            Content="{x:Static p:Resources.CloseString}"
             IsCancel="True"
-            TabIndex="10" 
-            Height="27" 
-            VerticalAlignment="Bottom" />
+            TabIndex="10" />
 
         <wpfHexaEditor:HexEditor
             x:Name="FindHexEdit"
+            Height="110"
             Margin="10,41,129,0"
-            Height="110" 
+            VerticalAlignment="Top"
             AllowAutoHightLighSelectionByte="False"
             AllowContextMenu="False"
             AllowDeleteByte="False"
@@ -55,10 +56,9 @@
             AllowFileDrop="False"
             AppendNeedConfirmation="False"
             ByteModifiedColor="White"
-            StatusBarVisibility="Collapsed" 
+            BytePerLine="8"
             ByteSpacerPositioning="Nothing"
-            VerticalAlignment="Top"
-            BytePerLine="8" />
+            StatusBarVisibility="Collapsed" />
 
         <Label
             Margin="10,10,0,0"
@@ -74,8 +74,8 @@
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
             Content="{x:Static p:Resources.ReplaceString}"
-            TabIndex="6" 
-            IsEnabled="False" />
+            IsEnabled="False"
+            TabIndex="6" />
 
         <Button
             x:Name="ReplaceAllButton"
@@ -85,8 +85,8 @@
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
             Content="{x:Static p:Resources.ReplaceAllString}"
-            TabIndex="9" 
-            IsEnabled="False" />
+            IsEnabled="False"
+            TabIndex="9" />
 
         <wpfHexaEditor:HexEditor
             x:Name="ReplaceHexEdit"
@@ -98,17 +98,17 @@
             AllowFileDrop="False"
             AppendNeedConfirmation="False"
             ByteModifiedColor="White"
-            StatusBarVisibility="Collapsed"
-            BytePerLine="8" 
-            ByteSpacerPositioning="Nothing"/>
+            BytePerLine="8"
+            ByteSpacerPositioning="Nothing"
+            StatusBarVisibility="Collapsed" />
 
         <Label
+            Height="26"
             Margin="10,156,0,0"
             HorizontalAlignment="Left"
+            VerticalAlignment="Top"
             Content="{x:Static p:Resources.ReplaceWithString}"
-            IsEnabled="False" 
-            Height="26" 
-            VerticalAlignment="Top" />
+            IsEnabled="False" />
 
         <Button
             x:Name="FindAllButton"
@@ -128,39 +128,40 @@
             Margin="0,41,14,0"
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
+            Click="FindFirstButton_Click"
             Content="{x:Static p:Resources.FindFirstString}"
-            TabIndex="2" 
-            Click="FindFirstButton_Click" />
+            TabIndex="2" />
 
         <Button
-                x:Name="FindLastButton"
-                Width="100"
-                Height="27"
-                Margin="0,105,14,0"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Top"
-                Content="{x:Static p:Resources.FindLastString}"
-                TabIndex="4" 
-                Click="FindLastButton_Click" />
+            x:Name="FindLastButton"
+            Width="100"
+            Height="27"
+            Margin="0,105,14,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Click="FindLastButton_Click"
+            Content="{x:Static p:Resources.FindLastString}"
+            TabIndex="4" />
 
-        <Button Content="{x:Static p:Resources.ClearString}"
-                HorizontalAlignment="Right" 
-                Height="26" 
-                Margin="0,10,129,0"
-                VerticalAlignment="Top" 
-                Click="ClearButton_Click"
-                Width="61"
-                TabIndex="1"
-                />
+        <Button
+            Width="61"
+            Height="26"
+            Margin="0,10,129,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Click="ClearButton_Click"
+            Content="{x:Static p:Resources.ClearString}"
+            TabIndex="1" />
 
-        <Button Content="{x:Static p:Resources.ClearString}"
-            HorizontalAlignment="Right" 
-            Height="26" 
+        <Button
+            Width="61"
+            Height="26"
             Margin="0,156,129,0"
-            VerticalAlignment="Top" 
-            TabIndex="11"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
             Click="ClearReplaceButton_Click"
-            Width="61"/>
+            Content="{x:Static p:Resources.ClearString}"
+            TabIndex="11" />
 
         <Button
             x:Name="ReplaceNextButton"
@@ -170,7 +171,7 @@
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
             Content="{x:Static p:Resources.ReplaceNextString}"
-            TabIndex="7" 
-            IsEnabled="False" />
+            IsEnabled="False"
+            TabIndex="7" />
     </Grid>
 </Window>

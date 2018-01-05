@@ -12,7 +12,7 @@ namespace HexEditUnitTest
         [TestMethod]
         public void GetByteCountTest()
         {
-            var bp = new ByteProvider(@"C:\Test\TestFile.smc");
+            var bp = new ByteProvider(@"C:\TEST\TEST.xls");
 
             var lenght = bp.Length;
 

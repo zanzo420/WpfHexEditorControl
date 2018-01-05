@@ -65,7 +65,7 @@
                         x:Name="UndoMenu"
                         Click="UndoMenu_Click"
                         Header="Undo" />
-                    <Separator/>
+                    <Separator />
                     <MenuItem
                         x:Name="FindMenu"
                         Click="FindMenu_Click"
@@ -74,7 +74,7 @@
                         x:Name="ReplaceMenu"
                         Click="ReplaceMenu_Click"
                         Header="Find and replace..." />
-                    <Separator/>
+                    <Separator />
                     <MenuItem
                         x:Name="SetReadOnlyMenu"
                         Click="SetReadOnlyMenu_Click"
@@ -222,7 +222,10 @@
                 </MenuItem>
 
                 <MenuItem Click="TESTMenuItem_Click" Header="TEST" />
-                <control:HexBox x:Name="HbBsl" Height="23" ToolTip="ByteShiftLeft test"/>
+                <control:HexBox
+                    x:Name="HbBsl"
+                    Height="23"
+                    ToolTip="ByteShiftLeft test" />
             </Menu>
 
             <control:HexEditor

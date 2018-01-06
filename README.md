@@ -1,4 +1,4 @@
-![example](Logo/Logo.png?raw=true)
+![example](Images/Logo.png?raw=true)
   
 [![NuGet](https://img.shields.io/badge/Nuget-v1.3.6.2-green.svg)](https://www.nuget.org/packages/WPFHexaEditor/)
 [![NetFramework](https://img.shields.io/badge/.Net%20Framework-4.7-green.svg)](https://www.microsoft.com/net/download/windows)
@@ -17,43 +17,33 @@ Hexeditor control is totaly free and can be used in all project you want like op
 ## Screenshots
 
 Sample with standard ASCII character table
-![example](Sample11-NOTBL.png?raw=true)
+![example](Images/Sample11-NOTBL.png?raw=true)
 
 Sample with custom thingy character table (TBL) on SNES Final Fantasy II US
-![example](Sample9-TBL.png?raw=true)
+![example](Images/Sample9-TBL.png?raw=true)
 
 Sample use ByteShiftLeft and BytePerLine properties with custom TBL for edit fixed lenght table...
-![example](Sample12-FIXEDTBL-BYTESHIFT.png?raw=true)
+![example](Images/Sample12-FIXEDTBL-BYTESHIFT.png?raw=true)
 
 Sample use of find dialog... (Replace dialog are under construction)
-![example](Sample13-FindDialog.png?raw=true)
+![example](Images/Sample13-FindDialog.png?raw=true)
 
 ## What is TBL
 The TBL are small plaintext .tbl files that link every hexadecimal value with a character, which proves most useful when reading and changing text data. Wpf HexEditor support .tbl and you can define your custom character table as you want.
 
-![example](TBLExplain.png?raw=true)
+![example](Images/TBLExplain.png?raw=true)
 
 ## Somes features
-- Shift the first visible byte in the view to the left for adjust view in fixed TBL... 
 - Append byte at end of file
 - Include HexBox, an Hexadecimal TextBox with spinner
-- Modify and Delete bytes
-- Save changes
 - Fill selection (or another array) with byte.
-- Replace byte by another one.
-- Support Brush for customize background, selection, highlight and more 
 - Support of common key in window like CTRL+C, CTRL+V, CTRL+Z, CTRL+A, ESC...
 - Copy to clipboard as code like C#, VB.Net, C, Java, F# ... 
-- Support custome TBL character table file insted of default ASCII.
-- Choose color set of TBL string via dependency property
-- Selection with mouse/keyboard or property
-- Choose the number of byte per line to show 
-- Unlimited Undo (no redo for now)
-- Move in file with mouse wheel / or keyboard
+- Support custom .TBL character table file insted of default ASCII.
+- Undo (no redo for now)
 - Finds methods (FindFirst, FindNext, FindAll, FindLast, FindSelection) and overload for (string, byte[])
 - Highlight byte with somes find methods
-- Scollbar marker for selection start and byte finded
-- Set Bookmark
+- Bookmark
 - Group byte in block 
 - Show data as hexadecimal or decimal
 - ...

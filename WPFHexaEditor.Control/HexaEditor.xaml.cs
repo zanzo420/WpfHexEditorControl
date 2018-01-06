@@ -1183,11 +1183,14 @@ namespace WpfHexaEditor
 
         private void Control_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            if (e.Delta > 0) //UP
-                VerticalScrollBar.Value -= e.Delta / 120 * (int) MouseWheelSpeed;
+            if (_provider == null || !_provider.IsOnLongProcess)
+            {
+                if (e.Delta > 0) //UP
+                    VerticalScrollBar.Value -= e.Delta / 120 * (int) MouseWheelSpeed;
 
-            if (e.Delta < 0) //Down
-                VerticalScrollBar.Value += e.Delta / 120 * -(int) MouseWheelSpeed;
+                if (e.Delta < 0) //Down
+                    VerticalScrollBar.Value += e.Delta / 120 * -(int) MouseWheelSpeed;
+            }
         }
 
         private void Control_MoveRight(object sender, EventArgs e)

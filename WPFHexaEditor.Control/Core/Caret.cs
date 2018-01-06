@@ -22,7 +22,7 @@ namespace WpfHexaEditor.Core
         private readonly Pen _pen = new Pen(Brushes.Black, 1);
         private int _blinkPeriod = 500;
         private double _caretHeight = 18;
-        private bool _hide = false;
+        private bool _hide;
         #endregion
 
         #region Constructor

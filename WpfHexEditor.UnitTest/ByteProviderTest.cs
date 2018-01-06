@@ -27,7 +27,5 @@ namespace HexEditUnitTest
 
             Assert.AreEqual(lenght, byteCount, "The number of byte need to be equal!");
         }
-        
-
     }
 }

@@ -28,8 +28,10 @@ Sample use ByteShiftLeft and BytePerLine properties with custom TBL for edit fix
 Sample use of find dialog... (Replace dialog are under construction)
 ![example](Images/Sample13-FindDialog.png?raw=true)
 
-## What is TBL
+## What is TBL (custom character table)
 The TBL are small plaintext .tbl files that link every hexadecimal value with a character, which proves most useful when reading and changing text data. Wpf HexEditor support .tbl and you can define your custom character table as you want.
+
+Unicode TBL are supported. For use put value at the right of equal (=) like this (0401=塞西尔) or (42=Д) in you plaintext .tbl file.
 
 ![example](Images/TBLExplain.png?raw=true)
 

@@ -97,6 +97,11 @@ namespace WpfHexaEditor
         /// </summary>
         private bool _highLightSelectionStart = true;
 
+        /// <summary>
+        /// Get is the first color...
+        /// </summary>
+        private FirstColor _firstColor = FirstColor.HexByteData;
+
         #endregion Global Class variables
 
         #region Events
@@ -858,10 +863,7 @@ namespace WpfHexaEditor
             }
             else
             {
-                if (SelectionStart > SelectionStop)
-                    SelectionStart = SelectionStop;
-                else
-                    SelectionStop = SelectionStart;
+                FixSelectionStartStop();
 
                 if (test > -1)
                 {
@@ -895,10 +897,7 @@ namespace WpfHexaEditor
             }
             else
             {
-                if (SelectionStart > SelectionStop)
-                    SelectionStart = SelectionStop;
-                else
-                    SelectionStop = SelectionStart;
+                FixSelectionStartStop();
 
                 if (test < _provider.Length)
                 {
@@ -930,10 +929,7 @@ namespace WpfHexaEditor
             }
             else
             {
-                if (SelectionStart > SelectionStop)
-                    SelectionStart = SelectionStop;
-                else
-                    SelectionStop = SelectionStart;
+                FixSelectionStartStop();
 
                 if (test < _provider.Length)
                 {
@@ -961,10 +957,7 @@ namespace WpfHexaEditor
             }
             else
             {
-                if (SelectionStart > SelectionStop)
-                    SelectionStart = SelectionStop;
-                else
-                    SelectionStop = SelectionStart;
+                FixSelectionStartStop();
 
                 if (test > -1)
                 {
@@ -1109,6 +1102,17 @@ namespace WpfHexaEditor
         }
 
         /// <summary>
+        /// Fix the selection start and stop when needed
+        /// </summary>
+        private void FixSelectionStartStop()
+        {
+            if (SelectionStart > SelectionStop)
+                SelectionStart = SelectionStop;
+            else
+                SelectionStop = SelectionStart;
+        }
+
+        /// <summary>
         /// Reset selection to -1
         /// </summary>
         public void UnSelectAll()
@@ -1206,10 +1210,7 @@ namespace WpfHexaEditor
             }
             else
             {
-                if (SelectionStart > SelectionStop)
-                    SelectionStart = SelectionStop;
-                else
-                    SelectionStop = SelectionStart;
+                FixSelectionStartStop();
 
                 if (test < _provider.Length)
                 {
@@ -1240,10 +1241,7 @@ namespace WpfHexaEditor
             }
             else
             {
-                if (SelectionStart > SelectionStop)
-                    SelectionStart = SelectionStop;
-                else
-                    SelectionStop = SelectionStart;
+                FixSelectionStartStop();
 
                 if (test > -1)
                 {
@@ -1260,20 +1258,7 @@ namespace WpfHexaEditor
 
             SetFocusAtSelectionStart(sender as IByteControl);
         }
-
-        private void SetFocusAtSelectionStart(IByteControl sender)
-        {
-            switch (sender)
-            {
-                case HexByte _:
-                    SetFocusHexDataPanel(SelectionStart);
-                    break;
-                case StringByte _:
-                    SetFocusStringDataPanel(SelectionStart);
-                    break;
-            }
-        }
-
+        
         private void Control_MovePrevious(object sender, EventArgs e)
         {
             UpdateByteModified();
@@ -2235,6 +2220,7 @@ namespace WpfHexaEditor
             UpdateHighLight();
             UpdateStatusBar();
             UpdateVisual();
+            UpdateFocus();
 
             CheckProviderIsOnProgress();
 
@@ -2247,7 +2233,7 @@ namespace WpfHexaEditor
             Debug.Print($"REFRESH TIME: {(DateTime.Now - start).Milliseconds} ms");
 #endif
         }
-
+        
         /// <summary>
         /// Update the selection of byte in hexadecimal panel
         /// </summary>
@@ -2258,10 +2244,12 @@ namespace WpfHexaEditor
                 case FirstColor.HexByteData:
                     TraverseHexBytes(ctrl => { ctrl.FirstSelected = true; });
                     TraverseStringBytes(ctrl => { ctrl.FirstSelected = false; });
+                    _firstColor = FirstColor.HexByteData;
                     break;
                 case FirstColor.StringByteData:
                     TraverseHexBytes(ctrl => { ctrl.FirstSelected = false; });
                     TraverseStringBytes(ctrl => { ctrl.FirstSelected = true; });
+                    _firstColor = FirstColor.StringByteData;
                     break;
             }
         }
@@ -2741,6 +2729,72 @@ namespace WpfHexaEditor
         #endregion First/Last visible byte methods
 
         #region Focus Methods
+
+        /// <summary>
+        /// If selection start get the ibytecontrol
+        /// </summary>
+        private IByteControl GetSelectionStartControl()
+        {
+            var rtn = false;
+            IByteControl bytectrl = null;
+
+            switch (_firstColor)
+            {
+                case FirstColor.HexByteData:
+                    #region Test HexBytes
+                    TraverseHexBytes(ctrl =>
+                    {
+                        if (ctrl.BytePositionInFile == SelectionStart)
+                        {
+                            bytectrl = ctrl;
+                            rtn = true;
+                        }
+                    }, ref rtn);
+                    #endregion
+                    break;
+                case FirstColor.StringByteData:
+                    #region Test StringByte
+                    TraverseStringBytes(ctrl =>
+                    {
+                        if (ctrl.BytePositionInFile == SelectionStart)
+                        {
+                            bytectrl = ctrl;
+                            rtn = true;
+                        }
+                    }, ref rtn);
+                    #endregion
+                    break;
+            }
+
+            return bytectrl;
+        }
+
+        /// <summary>
+        /// Update the focus to selection start
+        /// </summary>
+        private void UpdateFocus()
+        {
+            if (SelectionStartIsVisible)
+                SetFocusAtSelectionStart(GetSelectionStartControl());
+            else
+                Focus();
+        }
+
+        /// <summary>
+        /// Set the focus to the selection start
+        /// </summary>
+        private void SetFocusAtSelectionStart(IByteControl sender)
+        {
+            switch (sender)
+            {
+                case HexByte _:
+                    SetFocusHexDataPanel(SelectionStart);
+                    break;
+                case StringByte _:
+                    SetFocusStringDataPanel(SelectionStart);
+                    break;
+            }
+        }
 
         /// <summary>
         /// Set focus on byte

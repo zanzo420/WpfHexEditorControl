@@ -226,7 +226,7 @@ namespace WpfHexaEditor.Core.Bytes
         /// <summary>
         /// Convert decimal to binary representation
         /// </summary>
-        public static string DecimalToBinary(long decimalNumber)
+        public static string ToBinary(long decimalNumber)
         {
             var result = string.Empty;
 
@@ -239,5 +239,7 @@ namespace WpfHexaEditor.Core.Bytes
 
             return result;
         }
+
+        public static string ToBinary(byte b) => Convert.ToString(b, 2).PadLeft(8, '0');
     }
 }

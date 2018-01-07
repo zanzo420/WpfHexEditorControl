@@ -878,7 +878,7 @@ namespace WpfHexaEditor
             if (sender is HexByte || sender is StringByte)
             {
                 VerticalScrollBar.Value -= visibleLine - 1;
-                SetFocusAtSelectionStart((IByteControl) sender);
+                SetFocusAtSelectionStart();
             }
         }
 
@@ -912,7 +912,7 @@ namespace WpfHexaEditor
             if (sender is HexByte || sender is StringByte)
             {
                 VerticalScrollBar.Value += visibleLine - 1;
-                SetFocusAtSelectionStart((IByteControl) sender);
+                SetFocusAtSelectionStart();
             }
         }
 
@@ -941,7 +941,7 @@ namespace WpfHexaEditor
             if (SelectionStart > LastVisibleBytePosition)
                 VerticalScrollBar.Value++;
 
-            SetFocusAtSelectionStart(sender as IByteControl);
+            SetFocusAtSelectionStart();
         }
 
         private void Control_MoveUp(object sender, EventArgs e)
@@ -969,7 +969,7 @@ namespace WpfHexaEditor
             if (SelectionStart < FirstVisibleBytePosition)
                 VerticalScrollBar.Value--;
 
-            SetFocusAtSelectionStart(sender as IByteControl);
+            SetFocusAtSelectionStart();
         }
 
         private void Control_Click(object sender, EventArgs e)
@@ -1225,7 +1225,7 @@ namespace WpfHexaEditor
             if (SelectionStart > LastVisibleBytePosition)
                 VerticalScrollBar.Value++;
 
-            SetFocusAtSelectionStart(sender as IByteControl);
+            SetFocusAtSelectionStart();
         }
 
         private void Control_MoveLeft(object sender, EventArgs e)
@@ -1256,7 +1256,7 @@ namespace WpfHexaEditor
             if (SelectionStart < FirstVisibleBytePosition)
                 VerticalScrollBar.Value--;
 
-            SetFocusAtSelectionStart(sender as IByteControl);
+            SetFocusAtSelectionStart();
         }
         
         private void Control_MovePrevious(object sender, EventArgs e)
@@ -2731,51 +2731,12 @@ namespace WpfHexaEditor
         #region Focus Methods
 
         /// <summary>
-        /// If selection start get the ibytecontrol
-        /// </summary>
-        private IByteControl GetSelectionStartControl()
-        {
-            var rtn = false;
-            IByteControl bytectrl = null;
-
-            switch (_firstColor)
-            {
-                case FirstColor.HexByteData:
-                    #region Test HexBytes
-                    TraverseHexBytes(ctrl =>
-                    {
-                        if (ctrl.BytePositionInFile == SelectionStart)
-                        {
-                            bytectrl = ctrl;
-                            rtn = true;
-                        }
-                    }, ref rtn);
-                    #endregion
-                    break;
-                case FirstColor.StringByteData:
-                    #region Test StringByte
-                    TraverseStringBytes(ctrl =>
-                    {
-                        if (ctrl.BytePositionInFile == SelectionStart)
-                        {
-                            bytectrl = ctrl;
-                            rtn = true;
-                        }
-                    }, ref rtn);
-                    #endregion
-                    break;
-            }
-
-            return bytectrl;
-        }
-
-        /// <summary>
         /// Update the focus to selection start
         /// </summary>
         private void UpdateFocus()
         {
             if (SelectionStartIsVisible)
-                SetFocusAtSelectionStart(GetSelectionStartControl());
+                SetFocusAtSelectionStart();
             else
                 Focus();
         }
@@ -2783,14 +2744,14 @@ namespace WpfHexaEditor
         /// <summary>
         /// Set the focus to the selection start
         /// </summary>
-        private void SetFocusAtSelectionStart(IByteControl sender)
+        private void SetFocusAtSelectionStart()
         {
-            switch (sender)
+            switch (_firstColor)
             {
-                case HexByte _:
+                case FirstColor.HexByteData:
                     SetFocusHexDataPanel(SelectionStart);
                     break;
-                case StringByte _:
+                case FirstColor.StringByteData:
                     SetFocusStringDataPanel(SelectionStart);
                     break;
             }

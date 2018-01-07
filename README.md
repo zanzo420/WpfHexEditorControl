@@ -19,7 +19,7 @@ Hexeditor control is totaly free and can be used in all project you want like op
 Sample with standard ASCII character table
 ![example](Images/Sample11-NOTBL.png?raw=true)
 
-Sample with custom thingy character table (TBL) on SNES Final Fantasy II US
+Sample with custom character table (TBL) on SNES Final Fantasy II US
 ![example](Images/Sample9-TBL.png?raw=true)
 
 Sample use ByteShiftLeft and BytePerLine properties with custom TBL for edit fixed lenght table...

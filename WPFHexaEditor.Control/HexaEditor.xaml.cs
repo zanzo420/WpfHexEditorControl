@@ -365,7 +365,7 @@ namespace WpfHexaEditor
         // Using a DependencyProperty as the backing store for ForegroundSecond.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ForegroundSecondColorProperty =
             DependencyProperty.Register(nameof(ForegroundSecondColor), typeof(Brush), typeof(HexEditor),
-                new FrameworkPropertyMetadata(Brushes.Black, Control_ColorPropertyChanged));
+                new FrameworkPropertyMetadata(Brushes.Blue, Control_ColorPropertyChanged));
 
 
         public Brush ForegroundContrast

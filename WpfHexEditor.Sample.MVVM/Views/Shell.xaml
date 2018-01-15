@@ -7,6 +7,7 @@
         xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
         xmlns:local="clr-namespace:WpfHexEditor.Sample.MVVM"
         xmlns:properties="clr-namespace:WpfHexEditor.Sample.MVVM.Properties"
+        xmlns:hexcore="clr-namespace:WpfHexaEditor.Core;assembly=WPFHexaEditor"
         xmlns:prism="http://prismlibrary.com/"
         xmlns:control="clr-namespace:WpfHexaEditor;assembly=WPFHexaEditor"
         xmlns:viewmodels="clr-namespace:WpfHexEditor.Sample.MVVM.ViewModels"
@@ -64,7 +65,7 @@
                 <MenuItem Header="Edit">
                     <MenuItem
                         x:Name="UndoMenu"
-                        Command="{Binding UnDoCommand}"
+                        Command="{Binding UndoCommand}"
                         Header="Undo" />
                     <Separator />
                     <MenuItem
@@ -76,12 +77,12 @@
                     <Separator />
                     <MenuItem
                         x:Name="CopyHexaMenu"
-                        Command="{Binding CopyHexCommand}"
-                        Header="Copy hexadecimal string" />
+                        Command="{Binding CopyToClipBoardCommand}"
+                        Header="Copy hexadecimal string" CommandParameter="{x:Static hexcore:CopyPasteMode.HexaString}" />
                     <MenuItem
                         x:Name="CopyStringMenu"
-                        Command="{Binding CopyStringCommand}"
-                        Header="Copy ASCII string" />
+                        Command="{Binding CopyToClipBoardCommand}"
+                        Header="Copy ASCII string"  CommandParameter="{x:Static hexcore:CopyPasteMode.AsciiString}" />
                     <MenuItem
                         x:Name="DeleteSelectionMenu"
                         Command="{Binding DeleteSelectionCommand}"

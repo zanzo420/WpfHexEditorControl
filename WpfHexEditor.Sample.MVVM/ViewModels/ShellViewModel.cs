@@ -5,10 +5,14 @@ using Prism.Mvvm;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
+using WpfHexaEditor.Core;
 using WpfHexaEditor.Core.Interfaces;
 
 namespace WpfHexEditor.Sample.MVVM.ViewModels {
     public class ShellViewModel : BindableBase {
+        public IFileEditable FileEditor { get; set; }
+
+        #region File_Menu
         private DelegateCommand _openFileCommand;
         public DelegateCommand OpenFileCommand => _openFileCommand ??
             (_openFileCommand = new DelegateCommand(
@@ -27,7 +31,7 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
                 },
                 () => FileEditor != null
             ));
-        
+
         private DelegateCommand _submitChangesCommand;
         public DelegateCommand SubmitChangesCommand => _submitChangesCommand ??
             (_submitChangesCommand = new DelegateCommand(
@@ -65,9 +69,39 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
             ));
         public InteractionRequest<Notification> ExitRequest { get; } = new InteractionRequest<Notification>();
 
+        #endregion
+
+        #region Edit_Menu
+
+        private DelegateCommand _setReadOnlyCommand;
+        public DelegateCommand SetReadOnlyCommand {
+            get {
+
+            }
+        }
+
+        private DelegateCommand _undoCommand;
+        public DelegateCommand UndoCommand => _undoCommand ?? (_undoCommand = new DelegateCommand(
+            () => {
+                FileEditor?.Undo();
+            }
+        ));
+
+        private DelegateCommand<CopyPasteMode?> _copyToClipBoardCommand;
+        public DelegateCommand<CopyPasteMode?> CopyToClipBoardCommand => 
+            _copyToClipBoardCommand ?? 
+            (_copyToClipBoardCommand = new DelegateCommand<CopyPasteMode?>(
+                mode => {
+                    if(mode != null) {
+                        FileEditor?.CopyToClipboard(mode.Value);
+                    }
+                }
+            ));
 
 
-        public IFileEditable FileEditor { get; set; }
+        #endregion
+        
+
     }
 
     

@@ -11,6 +11,8 @@ namespace WpfHexaEditor.Core.Interfaces {
         void SubmitChanges(string newfilename, bool overwrite = false);
         void SubmitChanges();
 
-        
+        void Undo(int repeat = 1);
+        bool ReadOnlyMode { get; set; }
+        void CopyToClipboard(CopyPasteMode copypastemode);
     }
 }

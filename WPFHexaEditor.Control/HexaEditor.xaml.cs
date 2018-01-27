@@ -3466,19 +3466,19 @@ namespace WpfHexaEditor
                 {
                     Dispatcher.Invoke(() =>
                     {
-                        if (Mouse.LeftButton == MouseButtonState.Pressed)
-                        {
-                            VerticalScrollBar.Value += distance();
+                        if (Mouse.LeftButton != MouseButtonState.Pressed) return;
 
-                            //Selection stop
-                            if (_mouseOnBottom)
-                                SelectionStop = LastVisibleBytePosition;
-                            else if (_mouseOnTop)
-                                SelectionStop = FirstVisibleBytePosition;
-                        }
+                        VerticalScrollBar.Value += distance();
+
+                        //Selection stop
+                        if (_mouseOnBottom)
+                            SelectionStop = LastVisibleBytePosition;
+                        else if (_mouseOnTop)
+                            SelectionStop = FirstVisibleBytePosition;
 
                         //Give the control to dispatcher for do events
                         Application.Current.DoEvents();
+
                     });
                 }
             });
@@ -3569,13 +3569,12 @@ namespace WpfHexaEditor
 
         private static void AllowByteCount_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is HexEditor ctrl)
-            {
-                if (e.NewValue != e.OldValue)
-                    ctrl.UpdateByteCount();
+            if (!(d is HexEditor ctrl)) return;
 
-                ctrl.UpdateStatusBar();
-            }
+            if (e.NewValue != e.OldValue)
+                ctrl.UpdateByteCount();
+
+            ctrl.UpdateStatusBar();
         }
 
         /// <summary>
@@ -3585,8 +3584,8 @@ namespace WpfHexaEditor
         {
             _bytecount = null;
 
-            if (ByteProvider.CheckIsOpen(_provider))
-                if (AllowByteCount) _bytecount = _provider.GetByteCount();
+            if (ByteProvider.CheckIsOpen(_provider) && AllowByteCount)
+                _bytecount = _provider.GetByteCount();
         }
 
         #endregion ByteCount Property
@@ -3595,19 +3594,18 @@ namespace WpfHexaEditor
         
         protected virtual void Dispose(bool disposing)
         {
-            if (!_disposedValue)
-            {
-                //Dispose managed object
-                if (disposing)
-                {
-                    _provider?.Dispose();
-                    _tblCharacterTable?.Dispose();
-                    _viewBuffer = null;
-                    _markedPositionList = null;
-                }
+            if (_disposedValue) return;
 
-                _disposedValue = true;
+            //Dispose managed object
+            if (disposing)
+            {
+                _provider?.Dispose();
+                _tblCharacterTable?.Dispose();
+                _viewBuffer = null;
+                _markedPositionList = null;
             }
+
+            _disposedValue = true;
         }
 
         public void Dispose() => Dispose(true);
@@ -3671,53 +3669,52 @@ namespace WpfHexaEditor
         /// </summary>
         private void AddByteSpacer(StackPanel stack, int colomn, bool forceEmpty = false)
         {
-            if (colomn % (int) ByteGrouping == 0 && colomn > 0)
-            {
-                if (!forceEmpty)
-                    switch (ByteSpacerVisualStyle)
-                    {
-                        case ByteSpacerVisual.Empty:
-                            stack.Children.Add(new TextBlock {Width = (int) ByteSpacerWidthTickness});
-                            break;
-                        case ByteSpacerVisual.Line:
+            if (colomn % (int) ByteGrouping != 0 || colomn <= 0) return;
 
-                            #region Line
+            if (!forceEmpty)
+                switch (ByteSpacerVisualStyle)
+                {
+                    case ByteSpacerVisual.Empty:
+                        stack.Children.Add(new TextBlock {Width = (int) ByteSpacerWidthTickness});
+                        break;
+                    case ByteSpacerVisual.Line:
 
-                            stack.Children.Add(new Line
-                            {
-                                Y2 = LineHeight,
-                                X1 = (int) ByteSpacerWidthTickness / 2D,
-                                X2 = (int) ByteSpacerWidthTickness / 2D,
-                                Stroke = BorderBrush,
-                                StrokeThickness = 1,
-                                Width = (int) ByteSpacerWidthTickness
-                            });
+                        #region Line
 
-                            #endregion
+                        stack.Children.Add(new Line
+                        {
+                            Y2 = LineHeight,
+                            X1 = (int) ByteSpacerWidthTickness / 2D,
+                            X2 = (int) ByteSpacerWidthTickness / 2D,
+                            Stroke = BorderBrush,
+                            StrokeThickness = 1,
+                            Width = (int) ByteSpacerWidthTickness
+                        });
 
-                            break;
-                        case ByteSpacerVisual.Dash:
+                        #endregion
 
-                            #region LineDash
+                        break;
+                    case ByteSpacerVisual.Dash:
 
-                            stack.Children.Add(new Line
-                            {
-                                Y2 = LineHeight - 1,
-                                X1 = (int) ByteSpacerWidthTickness / 2D,
-                                X2 = (int) ByteSpacerWidthTickness / 2D,
-                                Stroke = BorderBrush,
-                                StrokeDashArray = new DoubleCollection(new double[] {2}),
-                                StrokeThickness = 1,
-                                Width = (int) ByteSpacerWidthTickness
-                            });
+                        #region LineDash
 
-                            #endregion
+                        stack.Children.Add(new Line
+                        {
+                            Y2 = LineHeight - 1,
+                            X1 = (int) ByteSpacerWidthTickness / 2D,
+                            X2 = (int) ByteSpacerWidthTickness / 2D,
+                            Stroke = BorderBrush,
+                            StrokeDashArray = new DoubleCollection(new double[] {2}),
+                            StrokeThickness = 1,
+                            Width = (int) ByteSpacerWidthTickness
+                        });
 
-                            break;
-                    }
-                else
-                    stack.Children.Add(new TextBlock {Width = (int) ByteSpacerWidthTickness});
-            }
+                        #endregion
+
+                        break;
+                }
+            else
+                stack.Children.Add(new TextBlock {Width = (int) ByteSpacerWidthTickness});
         }
 
         #endregion IByteControl grouping
@@ -3775,7 +3772,7 @@ namespace WpfHexaEditor
 
         #endregion
 
-        #region Text drop support
+        #region Drag and drop support
 
         /// <summary>
         /// Allow the control to catch the file dropping 
@@ -3896,7 +3893,7 @@ namespace WpfHexaEditor
 
         #endregion
 
-        #region TBL intellisense-like
+        #region TBL intellisense-like support
 
         //TODO: to be implemented
 

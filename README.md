@@ -14,7 +14,7 @@ Localized in English, French, Russian and Chinese
 
 ### You want to say thank or just like project  ?
 
-Hexeditor control is totaly free and can be used in all project you want like open source and commercial applications. I make it in my free time and a few colaborators help me when they can... Please hit the ⭐️ button or fork and I will be very happy ;) I accept help contribution...
+Hexeditor control is totaly free and can be used in all project you want like open source and commercial applications. I make it in my free time and a few colaborators help me when they can... Please hit the ⭐️ button or fork and I will be very happy ;) I accept help contribution... I also accept voluntary donations via PayPal if you want to encourage my work.
 
 ## Screenshots
 

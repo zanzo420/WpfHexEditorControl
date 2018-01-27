@@ -3243,7 +3243,9 @@ namespace WpfHexaEditor
         {
             TraverseScrollMarker(ctrl =>
             {
-                if (ctrl.Tag is BookMark bm)
+                if (!(ctrl.Tag is BookMark bm)) return;
+
+                try
                 {
                     ctrl.Margin = new Thickness
                     (
@@ -3253,6 +3255,10 @@ namespace WpfHexaEditor
                         0,
                         0
                     );
+                }
+                catch
+                {
+                    ctrl.Margin = new Thickness(0);
                 }
             });
         }

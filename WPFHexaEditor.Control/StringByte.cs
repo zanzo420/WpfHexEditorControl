@@ -1,5 +1,5 @@
 ﻿//////////////////////////////////////////////
-// Apache 2.0  - 2016-2017
+// Apache 2.0  - 2016-2018
 // Author : Derek Tremblay (derektremblay666@gmail.com)
 // Contributor: Janus Tida
 //////////////////////////////////////////////
@@ -7,9 +7,7 @@
 using System;
 using System.Globalization;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using WpfHexaEditor.Core;
@@ -19,53 +17,20 @@ using WpfHexaEditor.Core.Interfaces;
 
 namespace WpfHexaEditor
 {
-    internal class StringByte : FrameworkElement, IByteControl
+    internal class StringByte : BaseByte, IByteControl
     {
         #region Global class variables
 
-        private readonly HexEditor _parent;
-        private bool _isSelected;
-        private bool _isHighLight;
-        private ByteAction _action = ByteAction.Nothing;
-        private byte? _byte;
         private bool _tblShowMte = true;
 
         #endregion Global variable
 
-        #region Events
-
-        public event EventHandler Click;
-        public event EventHandler RightClick;
-        public event EventHandler MouseSelection;
-        public event EventHandler ByteModified;
-        public event EventHandler MoveNext;
-        public event EventHandler MovePrevious;
-        public event EventHandler MoveRight;
-        public event EventHandler MoveLeft;
-        public event EventHandler MoveUp;
-        public event EventHandler MoveDown;
-        public event EventHandler MovePageDown;
-        public event EventHandler MovePageUp;
-        public event EventHandler ByteDeleted;
-        public event EventHandler EscapeKey;
-        public event EventHandler CtrlzKey;
-        public event EventHandler CtrlvKey;
-        public event EventHandler CtrlcKey;
-        public event EventHandler CtrlaKey;
-
-        #endregion Events
-
         #region Contructor
 
-        public StringByte(HexEditor parent)
+        public StringByte(HexEditor parent) : base(parent)
         {
-            //Parent hexeditor
-            _parent = parent ?? throw new ArgumentNullException(nameof(parent));
-
             //Default properties
             Width = 10;
-            Focusable = true;
-            DataContext = this;
 
             #region Binding tooltip
 
@@ -80,7 +45,7 @@ namespace WpfHexaEditor
             // Load ressources dictionnary
             void LoadDictionary(string url)
             {
-                var ttRes = new ResourceDictionary {Source = new Uri(url, UriKind.Relative)};
+                var ttRes = new ResourceDictionary { Source = new Uri(url, UriKind.Relative) };
                 Resources.MergedDictionaries.Add(ttRes);
             }
 
@@ -93,147 +58,11 @@ namespace WpfHexaEditor
         #region Properties
 
         /// <summary>
-        /// Position in file
-        /// </summary>
-        public long BytePositionInFile { get; set; } = -1L;
-
-        /// <summary>
-        /// Used for selection coloring
-        /// </summary>
-        public bool FirstSelected { get; set; }
-
-        /// <summary>
-        /// Byte used for this instance
-        /// </summary>
-        public byte? Byte
-        {
-            get => _byte;
-            set
-            {
-                _byte = value;
-
-                if (Action != ByteAction.Nothing && InternalChange == false)
-                    ByteModified?.Invoke(this, new EventArgs());
-
-                UpdateLabelFromByte();
-            }
-        }
-
-        /// <summary>
         /// Next Byte of this instance (used for TBL/MTE decoding)
         /// </summary>
         public byte? ByteNext { get; set; }
 
-        /// <summary>
-        /// Get or set if control as selected
-        /// </summary>        
-        public bool IsSelected
-        {
-            get => _isSelected;
-            set
-            {
-                if (value == _isSelected) return;
-
-                _isSelected = value;
-                UpdateVisual();
-            }
-        }
-
-        /// <summary>
-        /// Get of Set if control as marked as highlighted
-        /// </summary>        
-        public bool IsHighLight
-        {
-            get => _isHighLight;
-            set
-            {
-                if (value == _isHighLight) return;
-
-                _isHighLight = value;
-                UpdateVisual();
-            }
-        }
-
-        /// <summary>
-        /// Get or set if control as in read only mode
-        /// </summary>
-        public bool ReadOnlyMode { get; set; }
-
-        /// <summary>
-        /// Used to prevent StringByte event occur when we dont want!
-        /// </summary>
-        public bool InternalChange { get; set; }
-
-        /// <summary>
-        /// Action with this byte
-        /// </summary>
-        public ByteAction Action
-        {
-            get => _action;
-            set
-            {
-                _action = value != ByteAction.All ? value : ByteAction.Nothing;
-
-                UpdateVisual();
-            }
-        }
-
         #endregion Properties
-        
-        #region Private base properties
-
-        /// <summary>
-        /// Definie the foreground
-        /// </summary>
-        private static readonly DependencyProperty ForegroundProperty =
-            TextElement.ForegroundProperty.AddOwner(
-                typeof(StringByte));
-
-        private Brush Foreground
-        {
-            get => (Brush)GetValue(ForegroundProperty);
-            set => SetValue(ForegroundProperty, value);
-        }
-
-        private static readonly DependencyProperty BackgroundProperty =
-            TextElement.BackgroundProperty.AddOwner(typeof(StringByte),
-                new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender));
-
-        /// <summary>
-        /// Defines the background
-        /// </summary>
-        private Brush Background
-        {
-            get => (Brush)GetValue(BackgroundProperty);
-            set => SetValue(BackgroundProperty, value);
-        }
-
-        private static readonly DependencyProperty TextProperty =
-            DependencyProperty.Register(nameof(Text), typeof(string), typeof(StringByte),
-                new FrameworkPropertyMetadata(string.Empty,
-                    FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure));
-
-        /// <summary>
-        /// Text to be displayed representation of Byte
-        /// </summary>
-        private string Text
-        {
-            get => (string)GetValue(TextProperty);
-            set => SetValue(TextProperty, value);
-        }
-
-        private static readonly DependencyProperty FontWeightProperty = TextElement.FontWeightProperty.AddOwner(typeof(StringByte));
-
-        /// <summary>
-        /// The FontWeight property specifies the weight of the font.
-        /// </summary>
-        private FontWeight FontWeight
-        {
-            get => (FontWeight)GetValue(FontWeightProperty);
-            set => SetValue(FontWeightProperty, value);
-        }
-
-        #endregion Base properties
 
         #region Characters tables
 
@@ -268,7 +97,7 @@ namespace WpfHexaEditor
         /// <summary>
         /// Update control label from byte property
         /// </summary>
-        private void UpdateLabelFromByte()
+        public override void UpdateLabelFromByte()
         {
             if (Byte != null)
             {
@@ -304,11 +133,11 @@ namespace WpfHexaEditor
             else
                 Text = string.Empty;
         }
-        
+
         /// <summary>
         /// Update Background,foreground and font property
         /// </summary>
-        public void UpdateVisual()
+        public override void UpdateVisual()
         {
             //FontFamily = _parent.FontFamily;
 
@@ -374,6 +203,8 @@ namespace WpfHexaEditor
             }
 
             UpdateAutoHighLiteSelectionByteVisual();
+
+            InvalidateVisual();
         }
 
         /// <summary>
@@ -406,27 +237,13 @@ namespace WpfHexaEditor
             #endregion
         }
 
-        private void UpdateAutoHighLiteSelectionByteVisual()
-        {
-            //Auto highlite selectionbyte
-            if (_parent.AllowAutoHightLighSelectionByte && _parent.SelectionByte != null &&
-                Byte == _parent.SelectionByte && !IsSelected)
-                Background = _parent.AutoHighLiteSelectionByteBrush;
-        }
-
         /// <summary>
         /// Clear control
         /// </summary>
-        public void Clear()
+        public override void Clear()
         {
-            InternalChange = true;
-            BytePositionInFile = -1;
-            Byte = null;
-            Action = ByteAction.Nothing;
-            IsHighLight = false;
-            IsSelected = false;
+            base.Clear();
             ByteNext = null;
-            InternalChange = false;
         }
 
         #endregion Methods
@@ -437,110 +254,7 @@ namespace WpfHexaEditor
         {
             if (Byte == null) return;
 
-            #region Key validation and launch event if needed
-
-            if (KeyValidator.IsIgnoredKey(e.Key))
-            {
-                e.Handled = true;
-                return;
-            }
-            if (KeyValidator.IsUpKey(e.Key))
-            {
-                e.Handled = true;
-                MoveUp?.Invoke(this, new EventArgs());
-
-                return;
-            }
-            if (KeyValidator.IsDownKey(e.Key))
-            {
-                e.Handled = true;
-                MoveDown?.Invoke(this, new EventArgs());
-
-                return;
-            }
-            if (KeyValidator.IsLeftKey(e.Key))
-            {
-                e.Handled = true;
-                MoveLeft?.Invoke(this, new EventArgs());
-
-                return;
-            }
-            if (KeyValidator.IsRightKey(e.Key))
-            {
-                e.Handled = true;
-                MoveRight?.Invoke(this, new EventArgs());
-
-                return;
-            }
-            if (KeyValidator.IsPageDownKey(e.Key))
-            {
-                e.Handled = true;
-                MovePageDown?.Invoke(this, new EventArgs());
-
-                return;
-            }
-            if (KeyValidator.IsPageUpKey(e.Key))
-            {
-                e.Handled = true;
-                MovePageUp?.Invoke(this, new EventArgs());
-
-                return;
-            }
-            if (KeyValidator.IsDeleteKey(e.Key))
-            {
-                if (!ReadOnlyMode)
-                {
-                    e.Handled = true;
-                    ByteDeleted?.Invoke(this, new EventArgs());
-
-                    return;
-                }
-            }
-            else if (KeyValidator.IsBackspaceKey(e.Key))
-            {
-                if (!ReadOnlyMode)
-                {
-                    e.Handled = true;
-                    ByteDeleted?.Invoke(this, new EventArgs());
-
-                    if (BytePositionInFile > 0)
-                        MovePrevious?.Invoke(this, new EventArgs());
-
-                    return;
-                }
-            }
-            else if (KeyValidator.IsEscapeKey(e.Key))
-            {
-                e.Handled = true;
-                EscapeKey?.Invoke(this, new EventArgs());
-                return;
-            }
-            else if (KeyValidator.IsCtrlZKey(e.Key))
-            {
-                e.Handled = true;
-                CtrlzKey?.Invoke(this, new EventArgs());
-                return;
-            }
-            else if (KeyValidator.IsCtrlVKey(e.Key))
-            {
-                e.Handled = true;
-                CtrlvKey?.Invoke(this, new EventArgs());
-                return;
-            }
-            else if (KeyValidator.IsCtrlCKey(e.Key))
-            {
-                e.Handled = true;
-                CtrlcKey?.Invoke(this, new EventArgs());
-                return;
-            }
-            else if (KeyValidator.IsCtrlAKey(e.Key))
-            {
-                e.Handled = true;
-                CtrlaKey?.Invoke(this, new EventArgs());
-                return;
-            }
-
-            #endregion
+            if (KeyValidation(e)) return;
 
             //MODIFY ASCII...
             if (!ReadOnlyMode)
@@ -577,7 +291,7 @@ namespace WpfHexaEditor
                 }
 
                 //Move focus event
-                if (MoveNext != null && isok)
+                if (isok)
                 {
                     Action = ByteAction.Modified;
                     Byte = ByteConverters.CharToByte(Text[0]);
@@ -585,62 +299,15 @@ namespace WpfHexaEditor
                     //Insert byte at end of file
                     if (_parent.Lenght == BytePositionInFile + 1)
                     {
-                        byte[] byteToAppend = {0};
+                        byte[] byteToAppend = { 0 };
                         _parent.AppendByte(byteToAppend);
                     }
 
-                    MoveNext(this, new EventArgs());
+                    OnMoveNext(new EventArgs());
                 }
             }
 
             base.OnKeyDown(e);
-        }
-
-        protected override void OnMouseEnter(MouseEventArgs e)
-        {
-            if (Byte != null && Action != ByteAction.Modified && Action != ByteAction.Deleted &&
-                Action != ByteAction.Added && !IsSelected && !IsHighLight)
-                Background = _parent.MouseOverColor;
-
-            UpdateAutoHighLiteSelectionByteVisual();
-
-            if (e.LeftButton == MouseButtonState.Pressed)
-                MouseSelection?.Invoke(this, e);
-
-            base.OnMouseEnter(e);
-        }
-
-        protected override void OnMouseLeave(MouseEventArgs e)
-        {
-            if (Byte != null && Action != ByteAction.Modified && Action != ByteAction.Deleted &&
-                Action != ByteAction.Added && !IsSelected && !IsHighLight)
-                Background = Brushes.Transparent;
-
-            UpdateAutoHighLiteSelectionByteVisual();
-
-            base.OnMouseLeave(e);
-        }
-
-        protected override void OnMouseDown(MouseButtonEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                Focus();
-                Click?.Invoke(this, e);
-            }
-
-            if (e.RightButton == MouseButtonState.Pressed)
-                RightClick?.Invoke(this, e);
-
-            base.OnMouseDown(e);
-        }
-
-        protected override void OnToolTipOpening(ToolTipEventArgs e)
-        {
-            if (Byte == null)
-                e.Handled = true;
-
-            base.OnToolTipOpening(e);
         }
 
         #endregion Events delegate

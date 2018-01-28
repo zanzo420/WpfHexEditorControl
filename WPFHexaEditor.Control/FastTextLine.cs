@@ -1,4 +1,9 @@
-﻿using System;
+﻿//////////////////////////////////////////////
+// Apache 2.0  - 2016-2018
+// Author : Derek Tremblay (derektremblay666@gmail.com)
+//////////////////////////////////////////////
+
+using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Documents;

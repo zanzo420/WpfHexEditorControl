@@ -10,7 +10,7 @@ A fast, fully customisable Wpf user control for editing file or stream as hexade
 
 Can be used in WPF or WinForm application.
 
-Localized in English, French, Russian and Chinese
+Localized in English, French, Russian, Polish and Chinese
 
 ### You want to say thank or just like project  ?
 

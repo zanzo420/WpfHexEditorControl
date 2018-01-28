@@ -1,21 +1,28 @@
 ﻿//////////////////////////////////////////////
 // Apache 2.0  - 2016-2018
 // Base author  : Derek Tremblay (derektremblay666@gmail.com)
-// Contributor  : emes30  
-// Notice       :The idea to make a base class with common bytecontrol code if taken from emes30 fork (https://github.com/emes30/WpfHexEditorControl)
+// Contributor  : emes30
+// Notice       : The idea to make a base class with common bytecontrol code if taken 
+//                from emes30 fork (https://github.com/emes30/WpfHexEditorControl)
 //////////////////////////////////////////////
 
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using WpfHexaEditor.Core;
+using WpfHexaEditor.Core.Interfaces;
 
 namespace WpfHexaEditor
 {
-    abstract class BaseByte : FrameworkElement
+
+    /// <summary>
+    /// Base class for bytecontrol
+    /// </summary>
+    abstract class BaseByte : FrameworkElement, IByteControl
     {
         #region Global class variables
 
@@ -56,7 +63,28 @@ namespace WpfHexaEditor
         {
             //Parent hexeditor
             _parent = parent ?? throw new ArgumentNullException(nameof(parent));
+            
+            #region Binding tooltip
 
+            LoadDictionary("/WPFHexaEditor;component/Resources/Dictionary/ToolTipDictionary.xaml");
+            var txtBinding = new Binding
+            {
+                Source = FindResource("ByteToolTip"),
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+                Mode = BindingMode.OneWay
+            };
+
+            // Load ressources dictionnary
+            void LoadDictionary(string url)
+            {
+                var ttRes = new ResourceDictionary { Source = new Uri(url, UriKind.Relative) };
+                Resources.MergedDictionaries.Add(ttRes);
+            }
+
+            SetBinding(ToolTipProperty, txtBinding);
+
+            #endregion
+            
             //Default properties
             DataContext = this;
             Focusable = true;
@@ -129,7 +157,7 @@ namespace WpfHexaEditor
                 if (Action != ByteAction.Nothing && InternalChange == false)
                     ByteModified?.Invoke(this, new EventArgs());
 
-                UpdateLabelFromByte();
+                UpdateTextRenderFromByte();
             }
         }
 
@@ -259,7 +287,10 @@ namespace WpfHexaEditor
                 Background = _parent.AutoHighLiteSelectionByteBrush;
         }
 
-        public abstract void UpdateLabelFromByte();
+        /// <summary>
+        /// Update the render of text derived bytecontrol from byte property
+        /// </summary>
+        public abstract void UpdateTextRenderFromByte();
 
         /// <summary>
         /// Clear control
@@ -327,10 +358,7 @@ namespace WpfHexaEditor
             base.OnToolTipOpening(e);
         }
 
-        protected void OnMoveNext(EventArgs e)
-        {
-            MoveNext?.Invoke(this, e);
-        }
+        protected void OnMoveNext(EventArgs e) => MoveNext?.Invoke(this, e);
 
         protected bool KeyValidation(KeyEventArgs e)
         {

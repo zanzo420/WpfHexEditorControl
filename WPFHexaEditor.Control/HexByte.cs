@@ -7,17 +7,15 @@
 using System;
 using System.Globalization;
 using System.Windows;
-using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using WpfHexaEditor.Core;
 using WpfHexaEditor.Core.Bytes;
-using WpfHexaEditor.Core.Interfaces;
 using WpfHexaEditor.Core.MethodExtention;
 
 namespace WpfHexaEditor
 {
-    internal class HexByte : BaseByte, IByteControl
+    internal class HexByte : BaseByte
     {
         #region Global class variables
 
@@ -29,27 +27,6 @@ namespace WpfHexaEditor
 
         public HexByte(HexEditor parent) : base(parent)
         {
-            #region Binding tooltip
-
-            LoadDictionary("/WPFHexaEditor;component/Resources/Dictionary/ToolTipDictionary.xaml");
-            var txtBinding = new Binding
-            {
-                Source = FindResource("ByteToolTip"),
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
-                Mode = BindingMode.OneWay
-            };
-
-            // Load ressources dictionnary
-            void LoadDictionary(string url)
-            {
-                var ttRes = new ResourceDictionary { Source = new Uri(url, UriKind.Relative) };
-                Resources.MergedDictionaries.Add(ttRes);
-            }
-
-            SetBinding(ToolTipProperty, txtBinding);
-
-            #endregion
-
             //Update width
             UpdateDataVisualWidth();
         }
@@ -76,7 +53,10 @@ namespace WpfHexaEditor
             dc.DrawText(formatedText, new Point(2, 0));
         }
 
-        public override void UpdateLabelFromByte()
+        /// <summary>
+        /// Update the render of text derived bytecontrol from byte property
+        /// </summary>
+        public override void UpdateTextRenderFromByte()
         {
             if (Byte != null)
             {

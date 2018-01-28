@@ -3,7 +3,6 @@
 // Author : Derek Tremblay (derektremblay666@gmail.com)
 //////////////////////////////////////////////
 
-using System;
 using Microsoft.Win32;
 using System.IO;
 using System.Windows;
@@ -12,7 +11,6 @@ using System.Windows.Input;
 using WpfHexaEditor.Core;
 using WpfHexaEditor.Core.Bytes;
 using WpfHexaEditor.Core.CharacterTable;
-using WpfHexaEditor.Core.MethodExtention;
 using WpfHexaEditor.Dialog;
 using WPFHexaEditorExample.Properties;
 

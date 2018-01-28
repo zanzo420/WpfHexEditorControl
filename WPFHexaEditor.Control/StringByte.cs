@@ -7,17 +7,15 @@
 using System;
 using System.Globalization;
 using System.Windows;
-using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using WpfHexaEditor.Core;
 using WpfHexaEditor.Core.Bytes;
 using WpfHexaEditor.Core.CharacterTable;
-using WpfHexaEditor.Core.Interfaces;
 
 namespace WpfHexaEditor
 {
-    internal class StringByte : BaseByte, IByteControl
+    internal class StringByte : BaseByte
     {
         #region Global class variables
 
@@ -31,27 +29,6 @@ namespace WpfHexaEditor
         {
             //Default properties
             Width = 10;
-
-            #region Binding tooltip
-
-            LoadDictionary("/WPFHexaEditor;component/Resources/Dictionary/ToolTipDictionary.xaml");
-            var txtBinding = new Binding
-            {
-                Source = FindResource("ByteToolTip"),
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
-                Mode = BindingMode.OneWay
-            };
-
-            // Load ressources dictionnary
-            void LoadDictionary(string url)
-            {
-                var ttRes = new ResourceDictionary { Source = new Uri(url, UriKind.Relative) };
-                Resources.MergedDictionaries.Add(ttRes);
-            }
-
-            SetBinding(ToolTipProperty, txtBinding);
-
-            #endregion
         }
         #endregion Contructor
 
@@ -75,7 +52,7 @@ namespace WpfHexaEditor
             set
             {
                 _tblShowMte = value;
-                UpdateLabelFromByte();
+                UpdateTextRenderFromByte();
             }
         }
 
@@ -95,9 +72,9 @@ namespace WpfHexaEditor
         #region Methods
 
         /// <summary>
-        /// Update control label from byte property
+        /// Update the render of text derived bytecontrol from byte property
         /// </summary>
-        public override void UpdateLabelFromByte()
+        public override void UpdateTextRenderFromByte()
         {
             if (Byte != null)
             {
@@ -139,8 +116,6 @@ namespace WpfHexaEditor
         /// </summary>
         public override void UpdateVisual()
         {
-            //FontFamily = _parent.FontFamily;
-
             if (IsSelected)
             {
                 FontWeight = _parent.FontWeight;

@@ -508,7 +508,7 @@ namespace WpfHexaEditor
             ctrl.TraverseHexBytes(hctrl =>
             {
                 hctrl.UpdateDataVisualWidth();
-                hctrl.UpdateLabelFromByte();
+                hctrl.UpdateTextRenderFromByte();
             });
         }
 

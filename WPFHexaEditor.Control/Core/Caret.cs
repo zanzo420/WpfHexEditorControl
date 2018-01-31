@@ -19,9 +19,10 @@ namespace WpfHexaEditor.Core
         #region Global class variables
         private Timer _timer;
         private Point _position;
-        private Pen _pen = new Pen(Brushes.Black, 1);
+        private readonly Pen _pen = new Pen(Brushes.Black, 1);
         private int _blinkPeriod = 500;
         private double _caretHeight = 18;
+        private bool _hide;
         #endregion
 
         #region Constructor
@@ -120,7 +121,7 @@ namespace WpfHexaEditor.Core
         /// <summary>
         /// Properties return true if caret is visible
         /// </summary>
-        public bool IsVisibleCaret => Left >= 0 && Top > 0;
+        public bool IsVisibleCaret => Left >= 0 && Top > 0 && _hide == false;
 
         /// <summary>
         /// Blick period in millisecond
@@ -144,14 +145,14 @@ namespace WpfHexaEditor.Core
         /// <summary>
         /// Hide the caret
         /// </summary>
-        public void Hide() => MoveCaret(new Point(-200, -200));  //TODO: MAKE BETTER THAN THAT ;) ...
+        public void Hide() => _hide = true;
 
         /// <summary>
         /// Method delegate for blink the caret
         /// </summary>
         private void BlinkCaret(Object state) => Dispatcher?.Invoke(() =>
         {
-            Visible = !Visible;
+            Visible = !Visible && !_hide;
         });
 
         /// <summary>
@@ -162,17 +163,14 @@ namespace WpfHexaEditor.Core
         /// <summary>
         /// Move the caret over the position defined by point parameter
         /// </summary>
-        public void MoveCaret(Point point)
-        {
-            Left = point.X;
-            Top = point.Y;
-        }
+        public void MoveCaret(Point point) => MoveCaret(point.X, point.Y);
 
         /// <summary>
         /// Move the caret over the position defined by point parameter
         /// </summary>
         public void MoveCaret(double x, double y)
         {
+            _hide = false;
             Left = x;
             Top = y;
         }
@@ -184,6 +182,8 @@ namespace WpfHexaEditor.Core
         public void Start()
         {
             InitializeTimer();
+
+            _hide = false;
 
             OnPropertyChanged(nameof(IsEnable));
         }
@@ -212,9 +212,7 @@ namespace WpfHexaEditor.Core
         public event PropertyChangedEventHandler PropertyChanged;
 
         //[NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

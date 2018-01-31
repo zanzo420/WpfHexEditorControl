@@ -30,7 +30,7 @@ namespace WpfHexaEditor.Core
         /// </summary>
         public static T Deserialize<T>(string xmlText)
         {
-            if (string.IsNullOrWhiteSpace(xmlText)) return default(T);
+            if (string.IsNullOrWhiteSpace(xmlText)) return default;
 
             using (var stringReader = new StringReader(xmlText))
             {

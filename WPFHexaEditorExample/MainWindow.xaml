@@ -1,5 +1,5 @@
 ﻿<!--
-    Apache 2.0  - 2016-2017
+    Apache 2.0  - 2016-2018
     Author : Derek Tremblay (derektremblay666@gmail.com)
 -->
 
@@ -14,7 +14,6 @@
     Title="Wpf HexEditor control sample"
     Width="900"
     Height="530"
-    Background="WhiteSmoke"
     Closing="Window_Closing"
     Icon="Resources/Icon/Logo-Icon.ico"
     mc:Ignorable="d">
@@ -66,6 +65,15 @@
                         x:Name="UndoMenu"
                         Click="UndoMenu_Click"
                         Header="Undo" />
+                    <Separator />
+                    <MenuItem
+                        x:Name="FindMenu"
+                        Click="FindMenu_Click"
+                        Header="Find..." />
+                    <MenuItem
+                        x:Name="ReplaceMenu"
+                        Click="ReplaceMenu_Click"
+                        Header="Find and replace..." />
                     <Separator />
                     <MenuItem
                         x:Name="SetReadOnlyMenu"
@@ -140,23 +148,28 @@
                                 IsEnabled="False" />
                         </StackPanel>
                     </MenuItem>
-                    <MenuItem Header="CharacterTable">
+                    <MenuItem Header="Character table">
                         <MenuItem
                             x:Name="CTableAsciiButton"
                             Click="CTableASCIIButton_Click"
                             Header="ASCII"
-                            IsCheckable="True"
-                            IsChecked="True" />
+                            IsCheckable="True" />
                         <MenuItem
                             x:Name="CTableTblButton"
                             Click="CTableTBLButton_Click"
-                            Header="Load TBL file"
-                            IsCheckable="True" />
+                            Header="Load TBL file" />
+                        <MenuItem
+                            x:Name="CTableTblDefaultEbcdicButton"
+                            Click="CTableTblDefaultEBCDICButton_Click"
+                            Header="Load Build-in TBL : EBCDIC with special character" />
+                        <MenuItem
+                            x:Name="CTableTblDefaultEbcdicnoSpButton"
+                            Click="CTableTblDefaultEBCDICNoSPButton_Click"
+                            Header="Load Build-in TBL : EBCDIC no special character" />
                         <MenuItem
                             x:Name="CTableTblDefaultAsciiButton"
                             Click="CTableTBLDefaultASCIIButton_Click"
-                            Header="Load Build-in TBL : ASCII"
-                            IsCheckable="True" />
+                            Header="Load Build-in TBL : ASCII" />
                     </MenuItem>
                 </MenuItem>
                 <MenuItem x:Name="PositionMenu" Header="Position">
@@ -198,6 +211,7 @@
                             IsEnabled="False" />
                     </StackPanel>
                 </MenuItem>
+
                 <MenuItem x:Name="ViewMenu" Header="View">
                     <MenuItem
                         x:Name="ShowHeaderMenu"
@@ -206,10 +220,12 @@
                         IsCheckable="True"
                         IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HeaderVisibility, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                 </MenuItem>
-                <MenuItem
-                    Click="MenuItem_Click"
-                    Header="TEST"
-                    Visibility="Visible" />
+
+                <MenuItem Click="TESTMenuItem_Click" Header="TEST" />
+                <control:HexBox
+                    x:Name="HbBsl"
+                    Height="23"
+                    ToolTip="ByteShiftLeft test" />
             </Menu>
 
             <control:HexEditor
@@ -218,13 +234,20 @@
                 Height="Auto"
                 Margin="2"
                 AllowByteCount="False"
-                AllowAppend="True"
-                AppendNeedConfirmation="False"
+                AllowDrop="True"
+                AllowExtend="False"
+                AppendNeedConfirmation="True"
+                ApplicationName="Wpf Hexeditor control sample"
+                BorderThickness="1"
                 ByteGrouping="FourByte"
+                ByteShiftLeft="{Binding LongValue, ElementName=HbBsl, UpdateSourceTrigger=PropertyChanged}"
                 ByteSpacerPositioning="HexBytePanel"
                 ByteSpacerVisualStyle="Dash"
                 ByteSpacerWidthTickness="Normal"
-                DataStringVisual="Hexadecimal"/>
+                DataStringVisual="Hexadecimal"
+                DefaultCopyToClipboardMode="HexaString"
+                ForegroundSecondColor="Blue"
+                OffSetStringVisual="Hexadecimal" />
         </DockPanel>
     </Grid>
 </Window>

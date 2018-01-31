@@ -1,17 +1,13 @@
 ﻿//////////////////////////////////////////////
-// Apache 2.0  - 2016-2017
+// Apache 2.0  - 2016-2018
 // Author : Derek Tremblay (derektremblay666@gmail.com)
 //////////////////////////////////////////////
 
-using System;
-using System.Collections.Generic;
-using System.Xml.Serialization;
 using WpfHexaEditor.Core.Interfaces;
 
 namespace WpfHexaEditor.Core.Bytes
 {
-    [Serializable]
-    public class ByteModified : IByteModified, IEquatable<ByteModified>
+    public class ByteModified : IByteModified
     {
         #region Constructor
 
@@ -40,25 +36,21 @@ namespace WpfHexaEditor.Core.Bytes
         /// <summary>
         /// Byte mofidied
         /// </summary>
-        [XmlElement("Byte")]
         public byte? Byte { get; set; }
 
         /// <summary>
         /// Action have made in this byte
         /// </summary>
-        [XmlElement("Action")]
         public ByteAction Action { get; set; } = ByteAction.Nothing;
 
         /// <summary>
         /// Get of Set te position in file
         /// </summary>
-        [XmlElement("BytePositionInFile")]
         public long BytePositionInFile { get; set; } = -1;
 
         /// <summary>
         /// Number of byte to undo when this byte is reach
         /// </summary>
-        [XmlIgnore]
         public long UndoLenght { get; set; } = 1;
 
         #endregion properties
@@ -105,31 +97,6 @@ namespace WpfHexaEditor.Core.Bytes
         public static bool CheckIsValid(ByteModified byteModified) => byteModified != null && byteModified.IsValid;
 
         #endregion Methods
-
-        #region IEquatable implementation
-
-        public override bool Equals(object obj) => Equals(obj as ByteModified);
-
-        public bool Equals(ByteModified other) => other != null &&
-                                                  EqualityComparer<byte?>.Default.Equals(Byte, other.Byte) &&
-                                                  Action == other.Action &&
-                                                  BytePositionInFile == other.BytePositionInFile;
-
-        public override int GetHashCode()
-        {
-            var hashCode = 576086707;
-            hashCode = hashCode * -1521134295 + EqualityComparer<byte?>.Default.GetHashCode(Byte);
-            hashCode = hashCode * -1521134295 + Action.GetHashCode();
-            hashCode = hashCode * -1521134295 + BytePositionInFile.GetHashCode();
-            return hashCode;
-        }
-
-        public static bool operator ==(ByteModified modified1, ByteModified modified2) =>
-            EqualityComparer<ByteModified>.Default.Equals(modified1, modified2);
-
-        public static bool operator !=(ByteModified modified1, ByteModified modified2) => !(modified1 == modified2);
-
-        #endregion IEquatable implementation
-
+        
     }
 }

@@ -5,10 +5,8 @@
 //////////////////////////////////////////////
 
 using System;
-using System.Globalization;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
 using WpfHexaEditor.Core;
 using WpfHexaEditor.Core.Bytes;
 using WpfHexaEditor.Core.MethodExtention;
@@ -34,24 +32,6 @@ namespace WpfHexaEditor
         #endregion Contructor
 
         #region Methods
-
-
-        /// <summary>
-        /// Render the control
-        /// </summary>
-        protected override void OnRender(DrawingContext dc)
-        {
-            //Draw background
-            if (Background != null)
-                dc.DrawRectangle(Background, null, new Rect(0, 0, RenderSize.Width, RenderSize.Height));
-
-            //Draw text
-            var typeface = new Typeface(_parent.FontFamily, _parent.FontStyle, FontWeight, _parent.FontStretch);
-            var formatedText = new FormattedText(Text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight,
-                typeface, _parent.FontSize, Foreground, VisualTreeHelper.GetDpi(this).PixelsPerDip);
-
-            dc.DrawText(formatedText, new Point(2, 0));
-        }
 
         /// <summary>
         /// Update the render of text derived bytecontrol from byte property

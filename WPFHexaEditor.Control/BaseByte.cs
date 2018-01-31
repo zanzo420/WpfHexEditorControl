@@ -7,6 +7,7 @@
 //////////////////////////////////////////////
 
 using System;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -175,6 +176,8 @@ namespace WpfHexaEditor
             }
         }
 
+        protected FormattedText TextFormatted { get; private set; }
+
         #endregion
 
         #region Private base properties
@@ -308,6 +311,26 @@ namespace WpfHexaEditor
         #endregion
 
         #region Events delegate
+
+        /// <summary>
+        /// Render the control
+        /// </summary>
+        protected override void OnRender(DrawingContext dc)
+        {
+            //Draw background
+            if (Background != null)
+                dc.DrawRectangle(Background, null, new Rect(0, 0, RenderSize.Width, RenderSize.Height));
+
+            //Draw text
+            var typeface = new Typeface(_parent.FontFamily, _parent.FontStyle, FontWeight, _parent.FontStretch);
+            var formattedText = new FormattedText(Text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight,
+                typeface, _parent.FontSize, Foreground, VisualTreeHelper.GetDpi(this).PixelsPerDip);
+
+            dc.DrawText(formattedText, new Point(2, 0));
+
+            //Update properties
+            TextFormatted = formattedText;
+        }
 
         protected override void OnMouseEnter(MouseEventArgs e)
         {

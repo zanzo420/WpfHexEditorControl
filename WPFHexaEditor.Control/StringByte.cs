@@ -5,7 +5,6 @@
 //////////////////////////////////////////////
 
 using System;
-using System.Globalization;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -27,9 +26,9 @@ namespace WpfHexaEditor
 
         public StringByte(HexEditor parent) : base(parent)
         {
-            //Default properties
-            Width = 10;
+
         }
+
         #endregion Contructor
 
         #region Properties
@@ -187,17 +186,8 @@ namespace WpfHexaEditor
         /// </summary>
         protected override void OnRender(DrawingContext dc)
         {
-            //Draw background
-            if (Background != null)
-                dc.DrawRectangle(Background, null, new Rect(0, 0, RenderSize.Width, RenderSize.Height));
-
-            //Draw text
-            var typeface = new Typeface(_parent.FontFamily, _parent.FontStyle, FontWeight, _parent.FontStretch);
-            var ft = new FormattedText(Text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface,
-                _parent.FontSize, Foreground, VisualTreeHelper.GetDpi(this).PixelsPerDip);
-
-            dc.DrawText(ft, new Point(0, 0));
-
+            base.OnRender(dc);
+            
             #region Update width of control 
             //It's 8-10 time more fastest to update width on render for TBL string
             switch (TypeOfCharacterTable)
@@ -206,7 +196,7 @@ namespace WpfHexaEditor
                     Width = 12;
                     break;
                 case CharacterTableType.TblFile:
-                    Width = ft.Width > 12 ? ft.Width : 12;
+                    Width = TextFormatted?.Width > 12 ? TextFormatted.Width : 12;
                     break;
             }
             #endregion

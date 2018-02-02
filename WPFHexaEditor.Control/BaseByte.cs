@@ -381,6 +381,12 @@ namespace WpfHexaEditor
             base.OnToolTipOpening(e);
         }
 
+        protected override void OnLostFocus(RoutedEventArgs e)
+        {
+            _parent.HideCaret();
+            base.OnLostFocus(e);
+        }
+
         protected void OnMoveNext(EventArgs e) => MoveNext?.Invoke(this, e);
 
         protected bool KeyValidation(KeyEventArgs e)

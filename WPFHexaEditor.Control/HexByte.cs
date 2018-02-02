@@ -166,13 +166,7 @@ namespace WpfHexaEditor
         #endregion Events delegate
 
         #region Caret events/methods
-
-        protected override void OnLostFocus(RoutedEventArgs e)
-        {
-            _parent.HideCaret();
-            base.OnLostFocus(e);
-        }
-
+        
         protected override void OnGotFocus(RoutedEventArgs e)
         {
             _keyDownLabel = KeyDownLabel.FirstChar;

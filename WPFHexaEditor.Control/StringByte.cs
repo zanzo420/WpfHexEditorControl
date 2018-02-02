@@ -90,11 +90,8 @@ namespace WpfHexaEditor
                             var content = "#";
 
                             if (TblShowMte && ByteNext.HasValue)
-                            {
-                                var mte = ByteConverters.ByteToHex(Byte.Value) +
-                                          ByteConverters.ByteToHex(ByteNext.Value);
-                                content = TblCharacterTable.FindMatch(mte, true);
-                            }
+                                content = TblCharacterTable.FindMatch(ByteConverters.ByteToHex(Byte.Value) +
+                                                                      ByteConverters.ByteToHex(ByteNext.Value), true);
 
                             if (content == "#")
                                 content = TblCharacterTable.FindMatch(ByteConverters.ByteToHex(Byte.Value), true);
@@ -278,12 +275,6 @@ namespace WpfHexaEditor
         #endregion Events delegate
 
         #region Caret events
-
-        protected override void OnLostFocus(RoutedEventArgs e)
-        {
-            _parent.HideCaret();
-            base.OnLostFocus(e);
-        }
 
         protected override void OnGotFocus(RoutedEventArgs e)
         {

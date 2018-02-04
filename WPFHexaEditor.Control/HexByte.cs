@@ -183,11 +183,13 @@ namespace WpfHexaEditor
                 _parent.HideCaret();
             else
             {
+                //TODO: clear size and use BaseByte.TextFormatted property...
                 var size = Text[1].ToString()
                     .GetScreenSize(_parent.FontFamily, _parent.FontSize, _parent.FontStyle, FontWeight,
                         _parent.FontStretch);
 
-                //_parent.SetCaretSize(Width / 2, size.Height);
+                _parent.SetCaretSize(Width / 2, size.Height);
+                _parent.SetCaretMode(CaretMode.Overwrite);
 
                 switch (_keyDownLabel)
                 {
@@ -199,7 +201,14 @@ namespace WpfHexaEditor
                         break;
                     case KeyDownLabel.NextPosition:
                         if (_parent.Lenght == BytePositionInFile + 1)
-                            _parent.MoveCaret(TransformToAncestor(_parent).Transform(new Point(size.Width * 2, 0)));
+                            if (_parent.AllowExtend)
+                            {
+                                _parent.SetCaretMode(CaretMode.Insert);
+                                _parent.MoveCaret(TransformToAncestor(_parent).Transform(new Point(size.Width * 2, 0)));
+                            }
+                            else
+                                _parent.HideCaret();
+
                         break;
                 }
             }

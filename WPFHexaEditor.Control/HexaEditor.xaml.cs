@@ -3740,6 +3740,14 @@ namespace WpfHexaEditor
 
         public bool IsCaretVisible => _caret.IsVisibleCaret;
 
+        internal void SetCaretSize(double width, double height)
+        {
+            _caret.CaretWidth = width;
+            _caret.CaretHeight = height;
+        }
+
+        internal void SetCaretMode(CaretMode mode) => _caret.CaretMode = mode;
+
         #endregion
 
         #region Append/expend bytes to end of file
@@ -3915,5 +3923,6 @@ namespace WpfHexaEditor
         }
 
         #endregion
+
     }
 }

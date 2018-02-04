@@ -282,11 +282,14 @@ namespace WpfHexaEditor
             InvalidateVisual();
         }
 
+        /// <summary>
+        /// Auto highlite SelectionByte
+        /// </summary>
         protected void UpdateAutoHighLiteSelectionByteVisual()
         {
-            //Auto highlite selectionbyte
-            if (_parent.AllowAutoHightLighSelectionByte && _parent.SelectionByte != null &&
-                Byte == _parent.SelectionByte && !IsSelected)
+            if (_parent.AllowAutoHightLighSelectionByte && 
+                _parent.SelectionByte != null && Byte == _parent.SelectionByte && 
+                !IsSelected)
                 Background = _parent.AutoHighLiteSelectionByteBrush;
         }
 

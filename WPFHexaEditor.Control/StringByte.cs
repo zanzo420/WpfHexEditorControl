@@ -278,6 +278,10 @@ namespace WpfHexaEditor
 
         protected override void OnGotFocus(RoutedEventArgs e)
         {
+            //TODO: complete caret implemention ....
+
+            _parent.SetCaretMode(CaretMode.Overwrite);
+
             if (ReadOnlyMode || Byte == null)
                 _parent.HideCaret();
             else

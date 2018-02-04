@@ -27,7 +27,7 @@ namespace WpfHexaEditor.Core.CharacterTable
         #region Constructeurs
 
         /// <summary>
-        /// Constructeur permétant de chargé le fichier DTE
+        /// Constructeur permétant de charg?le fichier DTE
         /// </summary>
         /// <param name="fileName"></param>
         public TblStream(string fileName)
@@ -45,7 +45,7 @@ namespace WpfHexaEditor.Core.CharacterTable
         }
 
         /// <summary>
-        /// Constructeur permétant de chargé le fichier DTE
+        /// Constructeur permétant de charg?le fichier DTE
         /// </summary>
         public TblStream()
         {
@@ -71,7 +71,7 @@ namespace WpfHexaEditor.Core.CharacterTable
         #region Méthodes
 
         /// <summary>
-        /// Trouver une entré dans la table de jeu qui corestpond a la valeur hexa
+        /// Trouver une entr?dans la table de jeu qui corestpond a la valeur hexa
         /// </summary>
         /// <param name="hex">Valeur hexa a rechercher dans la TBL</param>
         /// <param name="showSpecialValue">Afficher les valeurs de fin de block et de ligne</param>
@@ -121,7 +121,7 @@ namespace WpfHexaEditor.Core.CharacterTable
         }
 
         /// <summary>
-        /// Chargé la chaine dans l'objet
+        /// Charg?la chaine dans l'objet
         /// </summary>
         private void Load(string tblString)
         {
@@ -215,7 +215,7 @@ namespace WpfHexaEditor.Core.CharacterTable
         }
 
         /// <summary>
-        /// Chargé le fichier dans l'objet
+        /// Charg?le fichier dans l'objet
         /// </summary>
         private void Load()
         {
@@ -248,7 +248,7 @@ namespace WpfHexaEditor.Core.CharacterTable
         /// <summary>
         /// Enregistrer dans le fichier
         /// </summary>
-        /// <returns>Retourne vrai si le fichier à été bien enregistré</returns>
+        /// <returns>Retourne vrai si le fichier ?ét?bien enregistr?/returns>
         public bool Save()
         {
             //ouverture du fichier
@@ -322,37 +322,37 @@ namespace WpfHexaEditor.Core.CharacterTable
         public List<BookMark> BookMarks { get; set; } = new List<BookMark>();
 
         /// <summary>
-        /// Obtenir le total d'entré DTE dans la Table
+        /// Obtenir le total d'entr?DTE dans la Table
         /// </summary>
         public int TotalDte => _dteList.Count(l => l.Value.Type == DteType.DualTitleEncoding);
 
         /// <summary>
-        /// Obtenir le total d'entré MTE dans la Table
+        /// Obtenir le total d'entr?MTE dans la Table
         /// </summary>
         public int TotalMte => _dteList.Count(l => l.Value.Type == DteType.MultipleTitleEncoding);
 
         /// <summary>
-        /// Obtenir le total d'entré ASCII dans la Table
+        /// Obtenir le total d'entr?ASCII dans la Table
         /// </summary>
         public int TotalAscii => _dteList.Count(l => l.Value.Type == DteType.Ascii);
 
         /// <summary>
-        /// Obtenir le total d'entré Invalide dans la Table
+        /// Obtenir le total d'entr?Invalide dans la Table
         /// </summary>
         public int TotalInvalid => _dteList.Count(l => l.Value.Type == DteType.Invalid);
 
         /// <summary>
-        /// Obtenir le total d'entré Japonais dans la Table
+        /// Obtenir le total d'entr?Japonais dans la Table
         /// </summary>
         public int TotalJaponais => _dteList.Count(l => l.Value.Type == DteType.Japonais);
 
         /// <summary>
-        /// Obtenir le total d'entré Fin de ligne dans la Table
+        /// Obtenir le total d'entr?Fin de ligne dans la Table
         /// </summary>
         public int TotalEndLine => _dteList.Count(l => l.Value.Type == DteType.EndLine);
 
         /// <summary>
-        /// Obtenir le total d'entré Fin de Block dans la Table
+        /// Obtenir le total d'entr?Fin de Block dans la Table
         /// </summary>
         public int TotalEndBlock => _dteList.Count(l => l.Value.Type == DteType.EndBlock);
 
@@ -436,7 +436,7 @@ namespace WpfHexaEditor.Core.CharacterTable
             }
         }
 
-        // Ce code est ajouté pour implémenter correctement le modèle supprimable.
+        // Ce code est ajout?pour implémenter correctement le modèle supprimable.
         public void Dispose()
         {
             // Ne modifiez pas ce code. Placez le code de nettoyage dans Dispose(bool disposing) ci-dessus.

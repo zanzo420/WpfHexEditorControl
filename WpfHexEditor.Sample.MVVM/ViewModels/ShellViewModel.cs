@@ -74,11 +74,12 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
         #region Edit_Menu
 
         private DelegateCommand _setReadOnlyCommand;
-        public DelegateCommand SetReadOnlyCommand {
-            get {
+        public DelegateCommand SetReadOnlyCommand =>
+            _setReadOnlyCommand ?? (_setReadOnlyCommand = new DelegateCommand(
+                () => {
 
-            }
-        }
+                }
+            ));
 
         private DelegateCommand _undoCommand;
         public DelegateCommand UndoCommand => _undoCommand ?? (_undoCommand = new DelegateCommand(

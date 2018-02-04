@@ -69,11 +69,13 @@
     <Compile Include="Core\Converters\BoolInverterConverter.cs" />
     <Compile Include="Core\Converters\HexToLongStringConverter.cs" />
     <Compile Include="Core\Interfaces\IByteControl.cs" />
+    <Compile Include="Core\Interfaces\IDataLayer.cs" />
     <Compile Include="Core\Interfaces\IFileEditable.cs" />
     <Compile Include="Core\MethodExtention\DoubleExtension.cs" />
     <Compile Include="Core\SerializerHelper.cs" />
     <Compile Include="Core\MethodExtention\StringExtension.cs" />
     <Compile Include="Core\Native\NativeMethods.cs" />
+    <Compile Include="DataLayerBase.cs" />
     <Compile Include="Dialog\FindWindow.xaml.cs">
       <DependentUpon>FindWindow.xaml</DependentUpon>
     </Compile>
@@ -85,6 +87,9 @@
     </Compile>
     <Compile Include="Dialog\ReplaceByteWindow.xaml.cs">
       <DependentUpon>ReplaceByteWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DrawedHexEditor.xaml.cs">
+      <DependentUpon>DrawedHexEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="FastTextLine.cs" />
     <Compile Include="HexBox.xaml.cs">
@@ -130,6 +135,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Dialog\GiveByteWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DrawedHexEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

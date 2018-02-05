@@ -4,9 +4,242 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WpfHexaEditor"
+             xmlns:cvts="clr-namespace:WpfHexaEditor.Core.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-            
+    <Grid
+        x:Name="BaseGrid"
+        Background="White">
+
+        <!--#region Grid/Column Definitions-->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="10*" />
+            <ColumnDefinition Width="20" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="287*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <!--#endregion-->
+
+        <!--#region Data/Infos StackPanel-->
+        <StackPanel
+            x:Name="LinesInfoStackPanel"
+            Grid.Row="1"
+            Margin="2,0,0,0"
+            HorizontalAlignment="Left" />
+        <local:HexDataLayer
+            x:Name="HexDataLayer"
+            Grid.Row="1"
+            Grid.Column="1"
+            Margin="5,0" />
+        
+        <StackPanel
+            x:Name="HexHeaderStackPanel"
+            Grid.Row="0"
+            Grid.Column="1"
+            Margin="5,0"
+            Orientation="Horizontal" />
+        <local:StringDataLayer
+            x:Name="StringDataLayer"
+            Grid.Row="1"
+            Grid.Column="2"
+            Margin="5,0,0,0"
+            />
+        <!--#endregion-->
+
+        <!--#region Statusbar definition-->
+        <Grid
+            x:Name="StatusBarGrid"
+            Grid.Row="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="5"
+            VerticalAlignment="Top"
+            Background="WhiteSmoke"
+            Visibility="Visible">
+
+            <Separator
+                Height="1"
+                Margin="0,0,0,27"
+                Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HexEditor}}, Path=BorderBrush}" />
+
+            <StatusBar Height="27">
+                <StatusBarItem Width="90" Padding="0">
+                    <StackPanel Orientation="Horizontal">
+                        <Label
+                            Padding="5,5,0,5"
+                            Content="{DynamicResource LineStatusBarTagString}"
+                            FontWeight="Bold" />
+                        <Label Content="{Binding SelectionLine, UpdateSourceTrigger=PropertyChanged, Converter={x:Static cvts:LongToHexStringConverter.StaticInstance}}">
+                            <Label.ToolTip>
+                                <StackPanel Orientation="Horizontal">
+                                    <Label Content="Line :" FontWeight="Bold" />
+                                    <Label Content="{Binding SelectionLine, UpdateSourceTrigger=PropertyChanged}" />
+                                    <Label Content="{Binding SelectionLine, UpdateSourceTrigger=PropertyChanged, Converter={x:Static cvts:LongToHexStringConverter.StaticInstance}}" />
+                                </StackPanel>
+                            </Label.ToolTip>
+                        </Label>
+                    </StackPanel>
+                </StatusBarItem>
+                <Separator />
+                <StatusBarItem Width="125" Padding="0">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock
+                            Padding="5,5,0,5"
+                            Text="{DynamicResource  PositionString}"
+                            FontWeight="Bold" />
+                        <TextBlock Text="{Binding SelectionStart, UpdateSourceTrigger=PropertyChanged,  Converter={x:Static cvts:LongToHexStringConverter.StaticInstance}}">
+                            <TextBlock.ToolTip>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{DynamicResource  PositionString}" FontWeight="Bold" />
+                                    <TextBlock Text="{Binding SelectionStart, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Text="{Binding SelectionStart, UpdateSourceTrigger=PropertyChanged,  Converter={x:Static cvts:LongToHexStringConverter.StaticInstance}}" />
+                                </StackPanel>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
+                    </StackPanel>
+                </StatusBarItem>
+                <Separator />
+                <StatusBarItem Width="125" Padding="0">
+                    <StackPanel Orientation="Horizontal">
+                        <Label
+                            Padding="5,5,0,5"
+                            Content="{DynamicResource  LenghtString}"
+                            FontWeight="Bold" />
+                        <Label x:Name="FileLengthKbLabel" ContentStringFormat="N0" />
+                    </StackPanel>
+                </StatusBarItem>
+                <Separator />
+                <StatusBarItem
+                    x:Name="ByteCountPanel"
+                    Padding="0"
+                    Visibility="Collapsed">
+                    <StackPanel Orientation="Horizontal">
+                        <Label
+                            Padding="5,5,0,5"
+                            Content="{DynamicResource  CountOfString}"
+                            FontWeight="Bold" />
+                        <Label x:Name="CountOfByteLabel" ToolTip="Byte at position start" />
+                        <Label Padding="0,5" Content=":" />
+                        <Label
+                            x:Name="CountOfByteSumLabel"
+                            ContentStringFormat="N0"
+                            ToolTip="Count of Byte at position start" />
+                    </StackPanel>
+                </StatusBarItem>
+            </StatusBar>
+        </Grid>
+
+        <Label
+            Grid.Row="2"
+            Grid.RowSpan="2"
+            Grid.Column="2"
+            Grid.ColumnSpan="2"
+            Width="64"
+            Margin="0,1,40,1"
+            HorizontalAlignment="Right"
+            Content="ReadOnly"
+            FontWeight="Bold"
+            Visibility="{Binding ReadOnlyMode, Converter={x:Static cvts:BooleanToVisibilityConverter.StaticInstance}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
+        <!--#endregion-->
+
+        <!--#region Scrollbar, marker, and move rectangle-->
+        <ScrollBar
+            x:Name="VerticalScrollBar"
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Grid.Column="4"
+            Width="20"
+            HorizontalAlignment="Right"
+            LargeChange="100"
+            SmallChange="1"
+            ValueChanged="VerticalScrollBar_ValueChanged" />
+
+        <Grid
+            x:Name="MarkerGrid"
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Grid.Column="4"
+            Margin="0,17" />
+
+        <Rectangle
+            x:Name="BottomRectangle"
+            Grid.Row="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="4"
+            Height="10"
+            VerticalAlignment="Bottom"
+            Fill="#FFF4F4F5"
+            MouseDown="BottomRectangle_MouseDown"
+            MouseEnter="BottomRectangle_MouseEnter"
+            MouseLeave="BottomRectangle_MouseLeave"
+            Opacity="0" />
+
+        <Rectangle
+            x:Name="TopRectangle"
+            Grid.Row="0"
+            Grid.Column="0"
+            Grid.ColumnSpan="4"
+            Height="10"
+            VerticalAlignment="Top"
+            Fill="#FFF4F4F5"
+            MouseDown="TopRectangle_MouseDown"
+            MouseEnter="TopRectangle_MouseEnter"
+            MouseLeave="TopRectangle_MouseLeave"
+            Opacity="0" />
+        <!--#endregion-->
+
+        <!--#region Long process-->
+        <ProgressBar
+            x:Name="LongProgressProgressBar"
+            Grid.Row="3"
+            Grid.Column="0"
+            Grid.ColumnSpan="5"
+            Height="3"
+            BorderThickness="0"
+            Maximum="1"
+            Minimum="0" />
+
+        <!--  TODO: ADD TEXTBLOCK FOR DETAIL  -->
+        <Border
+            x:Name="CancelLongProcessButton"
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="4"
+            Width="120"
+            Height="50"
+            BorderBrush="Gray"
+            BorderThickness="2"
+            CornerRadius="4">
+            <Button
+                VerticalContentAlignment="Center"
+                BorderThickness="0"
+                Click="CancelLongProcessButton_Click"
+                Content="{DynamicResource  CancelLongProcessString}"
+                FontWeight="Bold"
+                Opacity="0.9"
+                ToolTip="{DynamicResource  CancelLongProcessToolTipString}" />
+        </Border>
+        <Label
+            x:Name="TblLabel"
+            Grid.Row="2"
+            Grid.RowSpan="2"
+            Grid.Column="2"
+            Grid.ColumnSpan="2"
+            Margin="0,1,05,1"
+            HorizontalAlignment="Right"
+            Content="{DynamicResource  TBLString}"
+            FontWeight="Bold"
+            Visibility="Collapsed" />
+        <!--#endregion-->
+
     </Grid>
+    
+    
 </UserControl>

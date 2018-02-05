@@ -10,9 +10,13 @@
         xmlns:hexcore="clr-namespace:WpfHexaEditor.Core;assembly=WPFHexaEditor"
         xmlns:prism="http://prismlibrary.com/"
         xmlns:control="clr-namespace:WpfHexaEditor;assembly=WPFHexaEditor"
-        xmlns:viewmodels="clr-namespace:WpfHexEditor.Sample.MVVM.ViewModels"
         prism:ViewModelLocator.AutoWireViewModel="True" x:Name="Window"
         Title="Wpf HexEditor control sample MVVM" Height="350" Width="525">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="ContentRendered">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid>
         <DockPanel>
             <Menu DockPanel.Dock="Top">
@@ -223,21 +227,21 @@
                     Visibility="Visible" />
             </Menu>
 
-            <control:HexEditor
+            <control:DrawedHexEditor
                 Stream="{Binding Stream}"
                 x:Name="HexEdit"
                 Width="Auto"
                 Height="Auto"
                 Margin="2"
-                AllowByteCount="False"
+               >
+                <!--AllowByteCount="False"
                 AppendNeedConfirmation="False"
                 ByteGrouping="FourByte"
                 ByteSpacerPositioning="HexBytePanel"
                 ByteSpacerVisualStyle="Dash"
                 ByteSpacerWidthTickness="Normal"
-                DataStringVisual="Hexadecimal" >
-                
-            </control:HexEditor>
+                DataStringVisual="Hexadecimal"-->
+            </control:DrawedHexEditor>
         </DockPanel>
     </Grid>
     

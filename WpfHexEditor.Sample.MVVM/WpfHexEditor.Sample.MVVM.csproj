@@ -73,6 +73,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Languages\en_US\WpfHexEditor.Sample.MVVM.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Shell.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -117,6 +121,7 @@
   <ItemGroup>
     <Folder Include="Global\" />
     <Folder Include="Helpers\" />
+    <Folder Include="Languages\zh_CN\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WPFHexaEditor.Control\WpfHexaEditor.csproj">

@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="BaseByte.cs" />
     <Compile Include="Core\Caret.cs" />
+    <Compile Include="Core\GenericStaticInstance.cs" />
     <Compile Include="Core\Interfaces\IByteModified.cs" />
     <Compile Include="Core\CharacterTable\DTE.cs" />
     <Compile Include="Core\CharacterTable\Enum.cs" />

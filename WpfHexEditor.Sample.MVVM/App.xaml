@@ -4,6 +4,10 @@
              xmlns:local="clr-namespace:WpfHexEditor.Sample.MVVM"
              StartupUri="Views/Shell.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/WpfHexEditor.Sample.MVVM;component/Languages/en_US/WpfHexEditor.Sample.MVVM.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

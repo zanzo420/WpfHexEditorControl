@@ -23,7 +23,7 @@ namespace WpfHexEditor.Sample.MVVM.Views {
         public Shell() {
             InitializeComponent();
 
-            (this.DataContext as ShellViewModel).FileEditor = HexEdit;
+            //(this.DataContext as ShellViewModel).FileEditor = HexEdit;
         }
     }
 }

@@ -10,33 +10,58 @@ using WpfHexaEditor.Core.Interfaces;
 
 namespace WpfHexEditor.Sample.MVVM.ViewModels {
     public class ShellViewModel : BindableBase {
-        public IFileEditable FileEditor { get; set; }
+        public ShellViewModel() {
+            
+        }
+
+
+        private DelegateCommand _loadedCommand;
+        public DelegateCommand LoadedCommand => _loadedCommand ??
+            (_loadedCommand = new DelegateCommand(
+                () => {
+                    Stream = File.OpenRead("D://s.exe");
+                }
+            ));
+
+
+        private Stream _stream;
+        public Stream Stream {
+            get => _stream;
+            set => SetProperty(ref _stream, value);
+        }
+
 
         #region File_Menu
         private DelegateCommand _openFileCommand;
         public DelegateCommand OpenFileCommand => _openFileCommand ??
             (_openFileCommand = new DelegateCommand(
                 () => {
+                    
                     var fileDialog = new OpenFileDialog();
 
                     if (fileDialog.ShowDialog() != null) {
+
+                        if (Stream != null) {
+                            Stream.Close();
+                            Stream = null;
+                        }
+
                         if (File.Exists(fileDialog.FileName)) {
                             Application.Current.MainWindow.Cursor = Cursors.Wait;
 
-                            FileEditor.FileName = fileDialog.FileName;
+                            Stream = File.Open(fileDialog.FileName, FileMode.Open, FileAccess.ReadWrite);
 
                             Application.Current.MainWindow.Cursor = null;
                         }
                     }
-                },
-                () => FileEditor != null
+                }
             ));
 
         private DelegateCommand _submitChangesCommand;
         public DelegateCommand SubmitChangesCommand => _submitChangesCommand ??
             (_submitChangesCommand = new DelegateCommand(
                 () => {
-                    FileEditor?.SubmitChanges();
+                    //FileEditor?.SubmitChanges();
                 }
             ));
 
@@ -47,7 +72,7 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
                     var fileDialog = new SaveFileDialog();
 
                     if (fileDialog.ShowDialog() != null) {
-                        FileEditor.SubmitChanges(fileDialog.FileName, true);
+                        //FileEditor.SubmitChanges(fileDialog.FileName, true);
                     }
                 }
             ));
@@ -56,7 +81,7 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
         public DelegateCommand CloseCommand => _closeCommand ??
             (_closeCommand = new DelegateCommand(
                 () => {
-                    FileEditor?.CloseProvider();
+                    //FileEditor?.CloseProvider();
                 }
             ));
 
@@ -84,7 +109,7 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
         private DelegateCommand _undoCommand;
         public DelegateCommand UndoCommand => _undoCommand ?? (_undoCommand = new DelegateCommand(
             () => {
-                FileEditor?.Undo();
+                //FileEditor?.Undo();
             }
         ));
 
@@ -94,7 +119,7 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
             (_copyToClipBoardCommand = new DelegateCommand<CopyPasteMode?>(
                 mode => {
                     if(mode != null) {
-                        FileEditor?.CopyToClipboard(mode.Value);
+                        //FileEditor?.CopyToClipboard(mode.Value);
                     }
                 }
             ));

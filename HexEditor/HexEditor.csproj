@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Shell.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Include="Shell.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Shell.xaml.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>Shell.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

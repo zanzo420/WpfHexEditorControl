@@ -226,6 +226,7 @@
                     Header="TEST"
                     Visibility="Visible" />
             </Menu>
+
             <control:DrawedHexEditor
                 Stream="{Binding Stream}"
                 x:Name="HexEdit"

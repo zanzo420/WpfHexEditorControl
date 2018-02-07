@@ -8,7 +8,7 @@
         Title="MainWindow" Height="350" Width="525" FontFamily="Lucida Console">
     <Grid>
         
-        <local:TestRender Margin="20" />
+        <local:TestOffsetsInfoLayer/>
         
     </Grid>
 </Window>

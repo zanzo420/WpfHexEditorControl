@@ -10,6 +10,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)BaseByte.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CellOffsetsInfoLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StringDataLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HexDataLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\BookMark.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Bytes\ByteConverters.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Bytes\ByteModified.cs" />
@@ -25,6 +28,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\Converters\LongToHexStringConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Enumeration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\GenericStaticInstance.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Interfaces\IOffsetsInfoLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Interfaces\IByteControl.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Interfaces\IByteModified.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Interfaces\IDataLayer.cs" />
@@ -39,6 +43,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\SerializerHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataLayerBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FastTextLine.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FontControlBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HexByte.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StringByte.cs" />
   </ItemGroup>

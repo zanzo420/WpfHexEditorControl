@@ -4,20 +4,38 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace WpfHexaEditor.Core.Interfaces {
+    public interface ICellsLayer {
+        Thickness CellMargin { get; set; }
+        Thickness CellPadding { get; set; }
+        Size CellSize { get; }
+    }
+
+    public interface IFontControl {
+        double FontSize { get; set; }
+        FontFamily FontFamily { get; set; }
+        FontWeight FontWeight { get; set; }
+        Brush Foreground { get; set; }
+        //How big a char text will be,this value will be caculated internally.
+        Size CharSize { get; }
+    }
+
     public interface IDataLayer {
         byte[] Data { get; set; }
         IEnumerable<(int index, int length ,Brush background)> BackgroundBlocks { get; set; }
         IEnumerable<(int index, int length ,Brush foreground)> ForegroundBlocks { get; set; }
 
-        Brush DefaultForeground { get; }
-        double FontSize { get; set; }
+        //int ColumnGroupCount { get; set; }
+        //double GroupMargin { get; set; }
 
+        Brush Foreground { get; }
+        
         int BytePerLine { get; set; }
         int AvailableRowsCount { get; }
-        
-        Size CellSize { get; }
     }
+
+
 }

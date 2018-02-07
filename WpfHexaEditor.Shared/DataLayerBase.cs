@@ -12,7 +12,9 @@ using WpfHexaEditor.Core.Bytes;
 using WpfHexaEditor.Core.Interfaces;
 
 namespace WpfHexaEditor {
-    public abstract class DataLayerBase : FrameworkElement,IDataLayer {
+    
+
+    public abstract class DataLayerBase : FontControlBase , IDataLayer , ICellsLayer{
         public byte[] Data {
             get { return (byte[])GetValue(DataProperty); }
             set { SetValue(DataProperty, value); }
@@ -27,24 +29,8 @@ namespace WpfHexaEditor {
                 new FrameworkPropertyMetadata(
                     null,
                     FrameworkPropertyMetadataOptions.AffectsRender
-                    //Data_PropertyChanged
                 )
             );
-
-        //private static void Data_PropertyChanged(DependencyObject d,
-        //    DependencyPropertyChangedEventArgs e) {
-        //    if(!(d is DataLayerBase ctrl)){
-        //        return;
-        //    }
-            
-        //    if(e.OldValue is INotifyCollectionChanged oldCollection) {
-        //        oldCollection.CollectionChanged -= ctrl.RefreshRender;
-        //    }
-
-        //    if(e.NewValue is INotifyCollectionChanged newCollection) {
-        //        newCollection.CollectionChanged += ctrl.RefreshRender;
-        //    }
-        //}
 
         private void RefreshRender(object sender, NotifyCollectionChangedEventArgs e) => this.InvalidateVisual();
 
@@ -76,52 +62,7 @@ namespace WpfHexaEditor {
                     FrameworkPropertyMetadataOptions.AffectsRender
                 ));
 
-
-        public Brush DefaultForeground {
-            get { return (Brush)GetValue(DefaultForegroundProperty); }
-            set { SetValue(DefaultForegroundProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for DefaultForeground.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty DefaultForegroundProperty =
-            DependencyProperty.Register(nameof(DefaultForeground), typeof(Brush),
-                typeof(DataLayerBase),
-                new FrameworkPropertyMetadata(
-                    Brushes.Black,
-                    FrameworkPropertyMetadataOptions.AffectsRender
-                ));
-
-
-        public double FontSize {
-            get { return (double)GetValue(FontSizeProperty); }
-            set { SetValue(FontSizeProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for FontSize.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty FontSizeProperty =
-            DependencyProperty.Register(nameof(FontSize), typeof(double), typeof(DataLayerBase),
-                new FrameworkPropertyMetadata(
-                    12.0D,
-                    FrameworkPropertyMetadataOptions.AffectsRender
-                ));
-
-
-
-        public FontFamily FontFamily {
-            get { return (FontFamily)GetValue(FontFamilyProperty); }
-            set { SetValue(FontFamilyProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for FontFamily.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty FontFamilyProperty =
-            DependencyProperty.Register(nameof(FontFamily), typeof(FontFamily), typeof(DataLayerBase),
-                new FrameworkPropertyMetadata(
-                    new FontFamily("Microsoft YaHei"),
-                    FrameworkPropertyMetadataOptions.AffectsRender
-                ));
-
-
-
+        
         public int BytePerLine {
             get { return (int)GetValue(BytePerLineProperty); }
             set { SetValue(BytePerLineProperty, value); }
@@ -134,28 +75,9 @@ namespace WpfHexaEditor {
                     16,
                     FrameworkPropertyMetadataOptions.AffectsRender
                 ));
-        
-        protected double cellMargin = 6;
-        protected double lineMargin = 6;
-        //Get the width of every char text;
-        protected double chSquareSize {
-            get {
-                //Cuz "D" may hold the "widest" size;
-                var typeface = new Typeface(FontFamily, new FontStyle(), new FontWeight(), new FontStretch());
-#if NET451
-                var measureText = new FormattedText(
-                                "D", System.Globalization.CultureInfo.CurrentCulture,
-                                FlowDirection.LeftToRight, typeface, FontSize, Brushes.Black);
-#endif
-#if NET47
-                var measureText = new FormattedText(
-                            "D", System.Globalization.CultureInfo.CurrentCulture,
-                            FlowDirection.LeftToRight, typeface, FontSize, Brushes.Black, VisualTreeHelper.GetDpi(this).PixelsPerDip);
-#endif
 
-                return measureText.Width;
-            }
-        }
+        public Thickness CellPadding { get; set; } = new Thickness(2);
+        public Thickness CellMargin { get; set; } = new Thickness(2);
 
         public int AvailableRowsCount => (int)(this.ActualHeight / CellSize.Height);
 
@@ -174,25 +96,16 @@ namespace WpfHexaEditor {
                         background,
                         null,
                         new Rect {
-                            X = col * CellSize.Width,
-                            Y = row * CellSize.Height + 1,
-                            Height = CellSize.Height - 2,
-                            Width = CellSize.Width
+                            X = col * (CellMargin.Right + CellMargin.Left + CellSize.Width),
+                            Y = row * (CellMargin.Top + CellMargin.Bottom + CellSize.Height),
+                            Height = CellSize.Height,
+                            Width = CellSize.Width + 0.25
                         }
                     );
                 }
             }
         }
-
-#if NET47
-        protected double PixelPerDip => (_pixelPerDip ?? (_pixelPerDip = VisualTreeHelper.GetDpi(this).PixelsPerDip)).Value;
-        private double? _pixelPerDip;         
-#endif
-
-
-        protected Typeface TypeFace => _typeface??(_typeface = new Typeface(FontFamily, new FontStyle(), new FontWeight(), new FontStretch()));
-        private Typeface _typeface;
-
+        
         protected virtual void DrawText(DrawingContext drawingContext) {
             if (Data == null) {
                 return;
@@ -204,7 +117,7 @@ namespace WpfHexaEditor {
                 var col = index % BytePerLine;
                 var row = index / BytePerLine;
                 
-                Brush foreground = DefaultForeground;
+                Brush foreground = Foreground;
                 if (ForegroundBlocks != null) {
                     foreach (var tuple in ForegroundBlocks) {
                         if (tuple.index <= index && tuple.index + tuple.length >= index) {
@@ -214,10 +127,12 @@ namespace WpfHexaEditor {
                     }
                 }
 
-                DrawByte(drawingContext, bt, foreground, new Point(
-                        CellSize.Width * col ,
-                        CellSize.Height * row + lineMargin - 2.5
-                ));
+                DrawByte(drawingContext, bt, foreground, 
+                    new Point(
+                        (CellMargin.Right + CellMargin.Left + CellSize.Width) * col + CellPadding.Left ,
+                        (CellMargin.Top + CellMargin.Bottom + CellSize.Height) * row + CellPadding.Top
+                    )
+                );
 
                 index++;
             }
@@ -231,69 +146,13 @@ namespace WpfHexaEditor {
         }
 
         protected override Size MeasureOverride(Size availableSize) {
-            availableSize.Width = CellSize.Width * BytePerLine;
+            availableSize = base.MeasureOverride(availableSize);
+            availableSize.Width = (CellSize.Width + CellMargin.Left + CellMargin.Right) * BytePerLine;
             if (double.IsInfinity(availableSize.Height)) {
-                availableSize.Height = 512;
+                availableSize.Height = 0;
             }
             return availableSize;
-            //return base.MeasureOverride(availableSize);
         }
     }
-
-    public class HexDataLayer : DataLayerBase {
-        public override Size CellSize => 
-            (_cellSize ?? (_cellSize = new Size(cellMargin + 2 * chSquareSize, chSquareSize + lineMargin * 2))).Value;
-        private Size? _cellSize;
-
-        protected override void DrawByte(DrawingContext drawingContext, byte bt, Brush foreground, Point startPoint) {
-            var chs = ByteConverters.ByteToHexCharArray(bt);
-            for (int chIndex = 0; chIndex < 2; chIndex++) {
-#if NET451
-                var text = new FormattedText(
-                    chs[chIndex].ToString(), CultureInfo.CurrentCulture,
-                    FlowDirection.LeftToRight, TypeFace, FontSize,
-                    foreground);
-                startPoint.X += chSquareSize * chIndex;
-                drawingContext.DrawText(text,
-                    startPoint
-                );
-
-#endif
-#if NET47
-                var text = new FormattedText(
-                    chs[chIndex].ToString(), CultureInfo.CurrentCulture,
-                    FlowDirection.LeftToRight, TypeFace, FontSize,
-                    foreground,PixelPerDip);
-                startPoint.X += chSquareSize * chIndex;
-                drawingContext.DrawText(text,
-                    startPoint
-                );                                            
-#endif
-
-            }
-        }
-    }
-
-    public class StringDataLayer : DataLayerBase {
-        public override Size CellSize =>
-            (_cellSize ?? (_cellSize = new Size(cellMargin + chSquareSize, chSquareSize + lineMargin * 2))).Value;
-        private Size? _cellSize;
-        protected override void DrawByte(DrawingContext drawingContext, byte bt , Brush foreground, Point startPoint) {
-            var ch = ByteConverters.ByteToChar(bt);
-#if NET451
-            var text = new FormattedText(ch.ToString(), CultureInfo.CurrentCulture,
-                FlowDirection.LeftToRight, TypeFace, FontSize,
-                foreground);
-            drawingContext.DrawText(text, startPoint);
-#endif
-
-#if NET47
-            var text = new FormattedText(ch.ToString(), CultureInfo.CurrentCulture,
-                FlowDirection.LeftToRight, TypeFace, FontSize,
-                foreground, PixelPerDip);
-            drawingContext.DrawText(text, startPoint);    
-#endif
-
-        }
-    }
+    
 }

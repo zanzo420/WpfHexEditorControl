@@ -19,7 +19,7 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
         public DelegateCommand LoadedCommand => _loadedCommand ??
             (_loadedCommand = new DelegateCommand(
                 () => {
-                    //Stream = File.OpenRead("D://s.exe");
+                    Stream = File.OpenRead("D://s.exe");
                 }
             ));
 

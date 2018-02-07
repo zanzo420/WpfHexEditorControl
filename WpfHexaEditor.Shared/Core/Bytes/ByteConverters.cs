@@ -21,20 +21,48 @@ namespace WpfHexaEditor.Core.Bytes
         public static string LongToHex(long val, int saveBits = -1)
         {
             if (saveBits == -1)
-                return val.ToString(ConstantReadOnly.HexLineInfoStringFormat, CultureInfo.InvariantCulture);
+                return val.ToString(ConstantReadOnly.HexStringFormat, CultureInfo.InvariantCulture);
 
-            var sb = new StringBuilder();
-
-            while (val % 16 != 0)
-            {
-                sb.Append(ByteToHexChar((int) (val % 16)));
+            var chs = new char[saveBits];
+            for (int i = 1; i <= saveBits; i++) {
+                chs[saveBits - i] = ByteToHexChar((int)(val - (((val >> 4) << 4))));
                 val /= 16;
             }
-            while (sb.Length < saveBits)
-                sb.Insert(0, 0);
 
-            return sb.ToString();
+            return new string(chs);
         }
+        
+        public static string LongToString(long val, int saveBits = -1) {
+            if (saveBits == -1)
+                return val.ToString();
+
+            //Char[] with fixed size is always
+            var chs = new char[saveBits];
+            for (int i = 1; i <= saveBits; i++) {
+                chs[saveBits - i] = (char)(val % 10 + 48);
+                val /= 10;
+            }
+            return new string(chs);
+        }
+
+        public static int GetDecimalBits(long val) {
+            var bits = 0;
+            while(val != 0) {
+                bits++;
+                val /= 10;
+            }
+            return bits;
+        }
+
+        public static int GetHexBits(long val) {
+            var bits = 0;
+            while(val != 0) {
+                bits++;
+                val /= 16;
+            }
+            return bits;
+        }
+
 
         /// <summary>
         /// Convert Byte to Char (can be used as visible text)

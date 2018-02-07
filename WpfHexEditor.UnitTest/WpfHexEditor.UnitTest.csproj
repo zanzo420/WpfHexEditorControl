@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ByteProviderTest.cs" />
+    <Compile Include="Core\Bytes\ByteConvertersTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CaretTest.cs" />
   </ItemGroup>
@@ -60,9 +61,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WPFHexaEditor.Control\WpfHexaEditor.csproj">
+    <ProjectReference Include="..\WPFHexaEditor\WpfHexaEditor.NET47.csproj">
       <Project>{cf6ac02d-02fa-4ee9-a507-bd94f489972e}</Project>
-      <Name>WpfHexaEditor</Name>
+      <Name>WpfHexaEditor.NET47</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

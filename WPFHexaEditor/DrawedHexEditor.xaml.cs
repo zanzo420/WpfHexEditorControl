@@ -26,10 +26,22 @@ namespace WpfHexaEditor {
         #region DevBranch
         public DrawedHexEditor() {
             InitializeComponent();
+            //HexDataLayer.CellPadding = new Thickness(2, 0, 2, 0);
+            //HexDataLayer.CellMargin =  new Thickness(0, 2, 0, 2);
+            //HexDataLayer.CellPadding = new Thickness(0, 2, 0, 2);
+            //StringDataLayer.CellMargin = new Thickness(0, 2, 0, 2);
+            //StringDataLayer.CellPadding = new Thickness(0, 2, 0, 2);
 
-            HexDataLayer.FontSize = 8;
-            StringDataLayer.FontSize = 8;
-            
+            HexDataLayer.FontFamily = new FontFamily("Courier New");
+            StringDataLayer.FontFamily = new FontFamily("Courier New");
+            HexDataLayer.FontSize = 13;
+            StringDataLayer.FontSize = 13;
+
+            LinesOffsetInfoLayer.FontSize = 13;
+            ColumnsOffsetInfoLayer.FontSize = 13;
+            ColumnsOffsetInfoLayer.FontFamily = new FontFamily("Courier New");
+            LinesOffsetInfoLayer.FontFamily = new FontFamily("Courier New");
+            ColumnsOffsetInfoLayer.DataVisualType = Core.DataVisualType.Decimal;
         }
         
         /// <summary>
@@ -48,6 +60,8 @@ namespace WpfHexaEditor {
             get => (Stream)GetValue(StreamProperty);
             set => SetValue(StreamProperty, value);
         }
+        //To avoid endless looping of ScrollBar_ValueChanged and Position_PropertyChanged.
+        private bool scrollBarValueUpdating = false;
 
         // Using a DependencyProperty as the backing store for Stream.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty StreamProperty =
@@ -57,49 +71,65 @@ namespace WpfHexaEditor {
 
         private static void Stream_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
             if (!(d is DrawedHexEditor ctrl)) return;
-            if (e.NewValue is Stream stream) {
-                ctrl.OpenStream(stream);
+
+            //Close Old Stream,See the stream won't be closed actually;
+            if (e.OldValue is Stream stream) {
+
+            }
+
+            //Open New Stream;
+            if (e.NewValue is Stream newStream && newStream.CanRead) {
+                ctrl.UpdateScrollBar();
+                ctrl.UpdateColumnHeaders();
+                ctrl.UpdateColumnHeaders();
+                //Position PropertyChangedCallBack will update the view;
+                ctrl.Position = 0;
+                //UnSelectAll();
+
+                //UpdateTblBookMark();
+                //UpdateSelectionColor(FirstColor.HexByteData);
+
+                ////Update count of byte
+                //UpdateByteCount();
+
+                ////Debug
+                //Debug.Print("STREAM OPENED");
             }
 
         }
-
         
+        #region These methods won't be invoked everytime scrolling.but only when stream is opened or closed.
+
         /// <summary>
-        /// Open file name
+        /// Update vertical scrollbar with file info
         /// </summary>
-        private void OpenStream(Stream stream) {
-            if (!stream.CanRead) return;
-            Position = 0;
+        private void UpdateScrollBar() {
+            VerticalScrollBar.Visibility = Visibility.Collapsed;
 
-            //    _provider.ReadOnlyChanged += Provider_ReadOnlyChanged;
-            //    _provider.DataCopiedToClipboard += Provider_DataCopied;
-            //    _provider.ChangesSubmited += ProviderStream_ChangesSubmited;
-            //    _provider.Undone += Provider_Undone;
-            //    _provider.LongProcessChanged += Provider_LongProcessProgressChanged;
-            //    _provider.LongProcessStarted += Provider_LongProcessProgressStarted;
-            //    _provider.LongProcessCompleted += Provider_LongProcessProgressCompleted;
-            //    _provider.LongProcessCanceled += Provider_LongProcessProgressCompleted;
-            //    _provider.FillWithByteCompleted += Provider_FillWithByteCompleted;
-            //    _provider.ReplaceByteCompleted += Provider_ReplaceByteCompleted;
-            //    _provider.BytesAppendCompleted += Provider_BytesAppendCompleted;
-
-            UpdateScrollBar();
-            UpdateHeader();
-            
-            RefreshView();
-
-            //UnSelectAll();
-
-            //UpdateTblBookMark();
-            //UpdateSelectionColor(FirstColor.HexByteData);
-
-            ////Update count of byte
-            //UpdateByteCount();
-
-            ////Debug
-            //Debug.Print("STREAM OPENED");
+            if (Stream != null) {
+                VerticalScrollBar.Visibility = Visibility.Visible;
+                VerticalScrollBar.SmallChange = 1;
+                //VerticalScrollBar.LargeChange = ScrollLargeChange;
+                VerticalScrollBar.Maximum = MaxLine - 1;
+            }
         }
 
+        /// <summary>
+        /// Update the position info panel at top of the control
+        /// </summary>
+        private void UpdateColumnHeaders() {
+            ColumnsOffsetInfoLayer.StartStepIndex = 0;
+            ColumnsOffsetInfoLayer.StepsCount = 16;
+        }
+
+        /// <summary>
+        /// Update the position info panel at left of the control,see this won't change the content of the OffsetLines;
+        /// </summary>
+        private void UpdateOffsetLinesInfo() {
+            LinesOffsetInfoLayer.StepLength = BytePerLine;
+        }
+
+        #endregion
         public long Position {
             get { return (long)GetValue(PositionProperty); }
             set { SetValue(PositionProperty, value); }
@@ -134,74 +164,7 @@ namespace WpfHexaEditor {
 #endif
         }
 
-        //To avoid endless looping of ScrollBar_ValueChanged and Position_PropertyChanged.
-        private bool scrollBarValueUpdating = false;
-
-        
-
-        /// <summary>
-        /// Update vertical scrollbar with file info
-        /// </summary>
-        private void UpdateScrollBar() {
-            VerticalScrollBar.Visibility = Visibility.Collapsed;
-
-            if (Stream != null) {
-                VerticalScrollBar.Visibility = Visibility.Visible;
-                VerticalScrollBar.SmallChange = 1;
-                //VerticalScrollBar.LargeChange = ScrollLargeChange;
-                VerticalScrollBar.Maximum = MaxLine - 1;
-            }
-        }
-
-        
-
-        /// <summary>
-        /// Update the position info panel at left of the control
-        /// </summary>
-        private void UpdateHeader() {
-            //Clear before refresh
-            HexHeaderStackPanel.Children.Clear();
-
-            if (Stream == null) return;
-
-            //for (var i = HexHeaderStackPanel.Children.Count; i < BytePerLine; i++) {
-            //    if (ByteSpacerPositioning == ByteSpacerPosition.Both ||
-            //        ByteSpacerPositioning == ByteSpacerPosition.HexBytePanel)
-            //        AddByteSpacer(HexHeaderStackPanel, i, true);
-
-            //    var hlHeader = HighLightSelectionStart &&
-            //                   GetColumnNumber(SelectionStart) == i &&
-            //                   SelectionStart > -1;
-
-            //    //Create control
-            //    var headerLabel = new FastTextLine(this) {
-            //        Height = LineHeight,
-            //        AutoWidth = false,
-            //        FontWeight = hlHeader ? FontWeights.Bold : FontWeights.Normal,
-            //        Foreground = hlHeader ? ForegroundHighLightOffSetHeaderColor : ForegroundOffSetHeaderColor,
-            //        RenderPoint = new Point(2, 0),
-            //        ToolTip = $"Column : {i}"
-            //    };
-
-            //    #region Set text visual of header
-
-            //    switch (DataStringVisual) {
-            //        case DataVisualType.Hexadecimal:
-            //            headerLabel.Text = ByteToHex((byte)i);
-            //            headerLabel.Width = 20;
-            //            break;
-            //        case DataVisualType.Decimal:
-            //            headerLabel.Text = i.ToString("d3");
-            //            headerLabel.Width = 25;
-            //            break;
-            //    }
-
-            //    #endregion
-
-            //    //Add to stackpanel
-            //    HexHeaderStackPanel.Children.Add(headerLabel);
-            //}
-        }
+       
 
 #if DEBUG
         private Stopwatch watch = new Stopwatch();
@@ -213,12 +176,8 @@ namespace WpfHexaEditor {
         /// <param name="controlResize"></param>
         /// <param name="refreshData"></param>
         public void RefreshView() {
-
-
-            //UpdateLinesOffSet();
+            UpdateOffsetLinesContent();
             
-            UpdateViewers();
-
             //Update visual of byte control
             //UpdateByteModified();
             //UpdateSelection();
@@ -234,19 +193,23 @@ namespace WpfHexaEditor {
             //    UpdateHeader(true);
             //}
 
+            UpdateData();
         }
 
-        
+        #region  These methods will be invoked every time scrolling the content(scroll or position changed)(Refreshview calling);
+        ///<see cref="RefreshView"/>
 
         /// <summary>
         /// Update the data and string stackpanels yo current view;
         /// </summary>
-        private void UpdateViewers() {
+        private void UpdateData() {
             if (!(Stream?.CanRead??false)) {
+                HexDataLayer.Data = null;
+                StringDataLayer.Data = null;
                 return;
             }
 
-            Stream.Position = Position;
+            Stream.Position = Position / BytePerLine * BytePerLine;
             var bufferlength = (int)Math.Min(HexDataLayer.AvailableRowsCount * BytePerLine,Stream.Length - Stream.Position);
             if (_viewBuffer == null || _viewBuffer.Length != bufferlength) {
                 _viewBuffer = new byte[bufferlength];
@@ -260,77 +223,21 @@ namespace WpfHexaEditor {
          
             HexDataLayer.Data = _realViewBuffer;
             StringDataLayer.Data = _realViewBuffer;
-
-            //#region Control need to resize
-            //    if (_viewBuffer != null) {
-            //        if (_viewBuffer.Length < bufferlength) {
-            //            BuildDataLines(MaxVisibleLine);
-            //            _viewBuffer = new byte[bufferlength];
-            //        }
-            //    }
-            //    else {
-            //        _viewBuffer = new byte[bufferlength];
-            //        BuildDataLines(MaxVisibleLine);
-            //    }
-
-            //#endregion
-
-
-            //if (LinesInfoStackPanel.Children.Count == 0) return;
-
-            //var startPosition = HexLiteralToLong((LinesInfoStackPanel.Children[0] as FastTextLine).Tag.ToString()).position;
-            //_provider.Position = startPosition;
-            //var readSize = _provider.Read(_viewBuffer, 0, bufferlength);
-            //var index = 0;
-
-            //#region HexByte refresh
-
-            //TraverseHexBytes(byteControl => {
-            //    byteControl.Action = ByteAction.Nothing;
-            //    byteControl.ReadOnlyMode = ReadOnlyMode;
-
-            //    byteControl.InternalChange = true;
-
-            //    if (index < readSize && _priLevel == curLevel) {
-            //        byteControl.Byte = _viewBuffer[index];
-            //        byteControl.BytePositionInFile = startPosition + index;
-            //    }
-            //    else
-            //        byteControl.Clear();
-
-            //    byteControl.InternalChange = false;
-            //    index++;
-            //});
-
-            //#endregion
-
-            //index = 0;
-
-            //#region StringByte refresh
-
-            //TraverseStringBytes(sbCtrl => {
-            //    sbCtrl.Action = ByteAction.Nothing;
-            //    sbCtrl.ReadOnlyMode = ReadOnlyMode;
-
-            //    sbCtrl.InternalChange = true;
-            //    sbCtrl.TblCharacterTable = _tblCharacterTable;
-            //    sbCtrl.TypeOfCharacterTable = TypeOfCharacterTable;
-
-            //    if (index < readSize) {
-            //        sbCtrl.Byte = _viewBuffer[index];
-            //        sbCtrl.BytePositionInFile = startPosition + index;
-            //        sbCtrl.ByteNext = index < readSize - 1 ? (byte?)_viewBuffer[index + 1] : null;
-            //    }
-            //    else
-            //        sbCtrl.Clear();
-
-            //    sbCtrl.InternalChange = false;
-            //    index++;
-            //});
-
-            //#endregion
-
         }
+
+        private void UpdateOffsetLinesContent() {
+            if(Stream == null) {
+                LinesOffsetInfoLayer.StartStepIndex = 0;
+                LinesOffsetInfoLayer.StepsCount = 0;
+            }
+            
+            LinesOffsetInfoLayer.StartStepIndex = Position / BytePerLine * BytePerLine;
+            LinesOffsetInfoLayer.StepsCount = 
+                (int)Math.Min(HexDataLayer.AvailableRowsCount ,
+                (Stream.Length - Position) / BytePerLine + ((Stream.Length - Position) % BytePerLine > 0?1:0));
+        }
+
+        #endregion
 
         /// <summary>
         /// Obtain the max line for verticalscrollbar
@@ -343,14 +250,6 @@ namespace WpfHexaEditor {
             }
 
             scrollBarValueUpdating = true;
-            //var datas = new List<byte>();
-            //for (int i = 0; i < 16; i++) {
-            //    for (byte j = 16; j < 32; j++) {
-            //        datas.Add(j);
-            //    }
-            //}
-            //HexDataLayer.Data = datas.ToArray();
-            //StringDataLayer.Data = datas.ToArray();
             Position = (long)e.NewValue * BytePerLine;
             scrollBarValueUpdating = false;
         }
@@ -404,6 +303,9 @@ namespace WpfHexaEditor {
             if (!(d is DrawedHexEditor ctrl) || e.NewValue == e.OldValue) return;
             ctrl.HexDataLayer.BytePerLine = (int)e.NewValue;
             ctrl.StringDataLayer.BytePerLine = (int)e.NewValue;
+
+            ctrl.UpdateColumnHeaders();
+            ctrl.RefreshView();
         }
 
         #endregion

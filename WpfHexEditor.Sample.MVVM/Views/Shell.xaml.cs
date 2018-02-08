@@ -21,6 +21,7 @@ namespace WpfHexEditor.Sample.MVVM.Views {
     /// </summary>
     public partial class Shell : Window {
         public Shell() {
+            this.WindowState = WindowState.Maximized;
             InitializeComponent();
 
             //(this.DataContext as ShellViewModel).FileEditor = HexEdit;

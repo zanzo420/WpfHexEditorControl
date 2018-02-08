@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WpfHexaEditor"
              xmlns:cvts="clr-namespace:WpfHexaEditor.Core.Converters"
-             mc:Ignorable="d" 
+             mc:Ignorable="d" MouseWheel="Control_MouseWheel"
              d:DesignHeight="300" d:DesignWidth="1000">
     <Grid
         x:Name="BaseGrid"
@@ -34,7 +34,7 @@
             Margin="2,0,0,0" SavedBits="8"
             x:Name="LinesOffsetInfoLayer"
             />
-        <local:HexDataLayer
+        <local:HexDataLayer 
             x:Name="HexDataLayer"
             Grid.Row="1"
             Grid.Column="1"
@@ -43,7 +43,7 @@
         <local:CellOffsetsInfoLayer
             x:Name="ColumnsOffsetInfoLayer"
             Orientation="Horizontal"
-            Grid.Row="0"
+            Grid.Row="0" 
             Grid.Column="1"
             Margin="5,0" />
         <local:StringDataLayer
@@ -207,26 +207,20 @@
             Minimum="0" />
 
         <!--  TODO: ADD TEXTBLOCK FOR DETAIL  -->
-        <Border
-            x:Name="CancelLongProcessButton"
-            Grid.Row="0"
+        
+        <Button Visibility="Hidden"
+                    Grid.Row="0"
             Grid.RowSpan="2"
             Grid.Column="0"
             Grid.ColumnSpan="4"
-            Width="120"
-            Height="50"
-            BorderBrush="Gray"
-            BorderThickness="2"
-            CornerRadius="4">
-            <Button
                 VerticalContentAlignment="Center"
-                BorderThickness="0"
+                BorderThickness="1"
                 Click="CancelLongProcessButton_Click"
                 Content="{DynamicResource  CancelLongProcessString}"
                 FontWeight="Bold"
                 Opacity="0.9"
                 ToolTip="{DynamicResource  CancelLongProcessToolTipString}" />
-        </Border>
+        
         <Label
             x:Name="TblLabel"
             Grid.Row="2"

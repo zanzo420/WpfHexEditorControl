@@ -7,14 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 using WpfHexaEditor.Core.Bytes;
 using WpfHexaEditor.Core.Interfaces;
 
 namespace WpfHexaEditor {
-    
-
-    public abstract class DataLayerBase : FontControlBase , IDataLayer , ICellsLayer{
+    public abstract class DataLayerBase : FontControlBase, IDataLayer, ICellsLayer {
         public byte[] Data {
             get { return (byte[])GetValue(DataProperty); }
             set { SetValue(DataProperty, value); }
@@ -23,14 +22,25 @@ namespace WpfHexaEditor {
         // Using a DependencyProperty as the backing store for DataProperty.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty DataProperty =
             DependencyProperty.Register(
-                nameof(Data), 
-                typeof(byte[]), 
+                nameof(Data),
+                typeof(byte[]),
                 typeof(DataLayerBase),
                 new FrameworkPropertyMetadata(
                     null,
-                    FrameworkPropertyMetadataOptions.AffectsRender
+                    FrameworkPropertyMetadataOptions.AffectsRender,
+                    DataProperty_Changed
                 )
             );
+
+        private static void DataProperty_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+            if(!(d is DataLayerBase ctrl)) {
+                return;
+            }
+
+            if(e.NewValue is byte[] newData && ((ctrl._drawedRects?.Length??0) < newData.Length)) {
+                ctrl._drawedRects = new(int index, Brush background)[newData.Length];
+            }
+        }
 
         private void RefreshRender(object sender, NotifyCollectionChangedEventArgs e) => this.InvalidateVisual();
 
@@ -41,13 +51,13 @@ namespace WpfHexaEditor {
 
         // Using a DependencyProperty as the backing store for ForegroundBlocks.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ForegroundBlocksProperty =
-            DependencyProperty.Register(nameof(ForegroundBlocks),typeof(IEnumerable<(int index, int length, Brush foreground)>),
+            DependencyProperty.Register(nameof(ForegroundBlocks), typeof(IEnumerable<(int index, int length, Brush foreground)>),
                 typeof(DataLayerBase),
                 new FrameworkPropertyMetadata(
                     null,
                     FrameworkPropertyMetadataOptions.AffectsRender
                 ));
-        
+
         public IEnumerable<(int index, int length, Brush background)> BackgroundBlocks {
             get { return (IEnumerable<(int index, int length, Brush foreground)>)GetValue(BackgroundBlocksProperty); }
             set { SetValue(BackgroundBlocksProperty, value); }
@@ -62,7 +72,7 @@ namespace WpfHexaEditor {
                     FrameworkPropertyMetadataOptions.AffectsRender
                 ));
 
-        
+
         public int BytePerLine {
             get { return (int)GetValue(BytePerLineProperty); }
             set { SetValue(BytePerLineProperty, value); }
@@ -82,41 +92,70 @@ namespace WpfHexaEditor {
         public int AvailableRowsCount => (int)(this.ActualHeight / CellSize.Height);
 
         public abstract Size CellSize { get; }
-        
+
+        private (int index, Brush background)[] _drawedRects;
+
         protected virtual void DrawBackgrounds(DrawingContext drawingContext) {
             if (BackgroundBlocks == null) {
                 return;
             }
 
+            if(_drawedRects == null) {
+                return;
+            }
+
+            if(Data == null) {
+                return;
+            }
+
+            for (int i = 0; i < Data.Length; i++) {
+                _drawedRects[i].background = Brushes.Transparent;
+            }
+            
+#if DEBUG
+            //double lastY = 0;
+#endif
             foreach (var (index, length, background) in BackgroundBlocks) {
                 for (int i = 0; i < length; i++) {
-                    var col = (index + i) % BytePerLine;
-                    var row = (index + i) / BytePerLine;
-                    drawingContext.DrawRectangle(
-                        background,
-                        null,
-                        new Rect {
-                            X = col * (CellMargin.Right + CellMargin.Left + CellSize.Width),
-                            Y = row * (CellMargin.Top + CellMargin.Bottom + CellSize.Height),
-                            Height = CellSize.Height,
-                            Width = CellSize.Width + 0.25
-                        }
-                    );
+                    _drawedRects[index + i].background = background;
+#if DEBUG
+                    //if(this is HexDataLayer && lastY != rect.Y) {
+                    //    lastY = rect.Y;
+                    //    System.Diagnostics.Debug.WriteLine(rect.Y);
+                    //}
+#endif
                 }
             }
+
+            for (int i = 0; i < Data.Length; i++) {
+                var col = i % BytePerLine;
+                var row = i / BytePerLine;
+
+                drawingContext.DrawRectangle(
+                    _drawedRects[i].background,
+                    null,
+                    new Rect {
+                        X = col * (CellMargin.Right + CellMargin.Left + CellSize.Width) + CellMargin.Left,
+                        Y = row * (CellMargin.Top + CellMargin.Bottom + CellSize.Height) + CellMargin.Top,
+                        Height = CellSize.Height,
+                        Width = CellSize.Width
+                    }
+                );
+            }
+           
         }
-        
+
         protected virtual void DrawText(DrawingContext drawingContext) {
             if (Data == null) {
                 return;
             }
 
-            
+
             var index = 0;
             foreach (var bt in Data) {
                 var col = index % BytePerLine;
                 var row = index / BytePerLine;
-                
+
                 Brush foreground = Foreground;
                 if (ForegroundBlocks != null) {
                     foreach (var tuple in ForegroundBlocks) {
@@ -127,10 +166,10 @@ namespace WpfHexaEditor {
                     }
                 }
 
-                DrawByte(drawingContext, bt, foreground, 
+                DrawByte(drawingContext, bt, foreground,
                     new Point(
-                        (CellMargin.Right + CellMargin.Left + CellSize.Width) * col + CellPadding.Left ,
-                        (CellMargin.Top + CellMargin.Bottom + CellSize.Height) * row + CellPadding.Top
+                        (CellMargin.Right + CellMargin.Left + CellSize.Width) * col + CellPadding.Left + CellMargin.Left,
+                        (CellMargin.Top + CellMargin.Bottom + CellSize.Height) * row + CellPadding.Top + CellMargin.Top
                     )
                 );
 
@@ -138,7 +177,7 @@ namespace WpfHexaEditor {
             }
 
         }
-        protected abstract void DrawByte(DrawingContext drawingContext,byte bt,Brush foreground,Point startPoint);
+        protected abstract void DrawByte(DrawingContext drawingContext, byte bt, Brush foreground, Point startPoint);
         protected override void OnRender(DrawingContext drawingContext) {
             base.OnRender(drawingContext);
             DrawBackgrounds(drawingContext);
@@ -151,7 +190,65 @@ namespace WpfHexaEditor {
             if (double.IsInfinity(availableSize.Height)) {
                 availableSize.Height = 0;
             }
+            
             return availableSize;
+        }
+
+        public event EventHandler<(int cellIndex,MouseButtonEventArgs e)> MouseLeftDownOnCell;
+        public event EventHandler<(int cellIndex,MouseButtonEventArgs e)> MouseLeftUpOnCell;
+        public event EventHandler<(int cellIndex,MouseEventArgs e)> MouseMoveOnCell;
+        public event EventHandler<(int cellIndex, MouseButtonEventArgs e)> MouseRightDownOnCell;
+        
+        private int? GetIndexFromMouse(MouseEventArgs e) {
+            if (Data == null) {
+                return null;
+            }
+
+            var location = e.GetPosition(this);
+            var col = (int)(location.X / (CellMargin.Left + CellMargin.Right + CellSize.Width));
+            var row = (int)(location.Y / (CellMargin.Top + CellMargin.Bottom + CellSize.Height));
+            if (row * BytePerLine + col < Data.Length) {
+                return row * BytePerLine + col;
+            }
+            return null;
+        }
+
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e) {
+            base.OnPreviewMouseLeftButtonDown(e);
+       
+            if (Data == null) {
+                return;
+            }
+
+            var index = GetIndexFromMouse(e);
+            if(index != null) {
+                MouseLeftDownOnCell?.Invoke(this,(index.Value,e));
+            }
+        }
+
+        protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e) {
+            base.OnMouseLeftButtonUp(e);
+            base.OnMouseUp(e);
+            var index = GetIndexFromMouse(e);
+            if(index != null) {
+                MouseLeftUpOnCell?.Invoke(this, (index.Value, e));
+            }
+        }
+
+        protected override void OnMouseMove(MouseEventArgs e) {
+            base.OnMouseMove(e);
+            var index = GetIndexFromMouse(e);
+            if(index != null) {
+                MouseMoveOnCell?.Invoke(this, (index.Value, e));
+            }
+        }
+
+        protected override void OnMouseRightButtonDown(MouseButtonEventArgs e) {
+            base.OnMouseRightButtonDown(e);
+            var index = GetIndexFromMouse(e);
+            if(index != null) {
+                MouseRightDownOnCell?.Invoke(this, (index.Value, e));
+            }
         }
     }
     

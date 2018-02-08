@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using WpfHexaEditor.Core;
 using WpfHexaEditor.Core.Bytes;
@@ -94,6 +95,7 @@ namespace WpfHexaEditor
             }
 
             void DrawSteps(Func<int,Point> getOffsetLocation) {
+                
                 for (int i = 0; i < StepsCount; i++) {
                     DrawOneStep(
                         i * StepLength + StartStepIndex,
@@ -105,19 +107,31 @@ namespace WpfHexaEditor
             if(Orientation == Orientation.Horizontal) {
                 DrawSteps(step => 
                     new Point(
-                            (CellMargin.Left + CellMargin.Right + CellSize.Width) * step + CellMargin.Left,
-                            CellMargin.Top
+                            (CellMargin.Left + CellMargin.Right + CellSize.Width) * step + CellMargin.Left + CellPadding.Left,
+                            CellMargin.Top + CellPadding.Top
                     )
                 );
                 
             }
             else {
-                DrawSteps(step =>
-                    new Point(
-                            CellMargin.Left,
-                            (CellMargin.Top + CellMargin.Bottom + CellSize.Height) * step + CellMargin.Top
-                      )
-                );
+#if DEBUG
+                //double lastY = 0;
+#endif
+                DrawSteps(step => new Point(
+                            CellMargin.Left + CellPadding.Left,
+                            (CellMargin.Top + CellMargin.Bottom + CellSize.Height) * step + CellMargin.Top + CellPadding.Top));
+                      
+                {
+                    
+                    
+#if DEBUG
+                    //if(lastY != pot.Y) {
+                    //    lastY = pot.Y;
+                    //    System.Diagnostics.Debug.WriteLine(lastY);
+                    //}
+#endif
+                    //return pot;
+                }
             
             }
         }
@@ -141,6 +155,11 @@ namespace WpfHexaEditor
             return availableSize;
         }
 
+
+        public event EventHandler<(int cellIndex, MouseButtonEventArgs e)> MouseLeftDownOnCell;
+        public event EventHandler<(int cellIndex, MouseButtonEventArgs e)> MouseLeftUpOnCell;
+        public event EventHandler<(int cellIndex, MouseEventArgs e)> MouseMoveOnCell;
+        public event EventHandler<(int cellIndex, MouseButtonEventArgs e)> MouseRightDownOnCell;
     }
     
 }

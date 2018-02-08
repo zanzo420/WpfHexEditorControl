@@ -10,8 +10,8 @@ namespace WpfHexaEditor
 {
     public class HexDataLayer : DataLayerBase {
         public override Size CellSize => new Size(
-                CellPadding.Top + CellPadding.Bottom + 2 * CharSize.Width,
-                CharSize.Height + CellPadding.Left + CellPadding.Right);
+                2 * CharSize.Width + CellPadding.Left + CellPadding.Right,
+            CellPadding.Top + CellPadding.Bottom + CharSize.Height);
 
         protected override void DrawByte(DrawingContext drawingContext, byte bt, Brush foreground, Point startPoint) {
             var chs = ByteConverters.ByteToHexCharArray(bt);

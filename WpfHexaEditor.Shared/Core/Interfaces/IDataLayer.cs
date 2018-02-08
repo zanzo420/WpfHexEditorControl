@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace WpfHexaEditor.Core.Interfaces {
@@ -12,6 +13,11 @@ namespace WpfHexaEditor.Core.Interfaces {
         Thickness CellMargin { get; set; }
         Thickness CellPadding { get; set; }
         Size CellSize { get; }
+
+        event EventHandler<(int cellIndex, MouseButtonEventArgs e)> MouseLeftDownOnCell;
+        event EventHandler<(int cellIndex, MouseButtonEventArgs e)> MouseLeftUpOnCell;
+        event EventHandler<(int cellIndex, MouseEventArgs e)> MouseMoveOnCell;
+        event EventHandler<(int cellIndex, MouseButtonEventArgs e)> MouseRightDownOnCell;
     }
 
     public interface IFontControl {

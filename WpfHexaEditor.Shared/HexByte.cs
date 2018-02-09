@@ -5,10 +5,8 @@
 //////////////////////////////////////////////
 
 using System;
-using System.Globalization;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
 using WpfHexaEditor.Core;
 using WpfHexaEditor.Core.Bytes;
 using WpfHexaEditor.Core.MethodExtention;
@@ -34,33 +32,6 @@ namespace WpfHexaEditor
         #endregion Contructor
 
         #region Methods
-
-
-        /// <summary>
-        /// Render the control
-        /// </summary>
-        protected override void OnRender(DrawingContext dc)
-        {
-            //Draw background
-            if (Background != null)
-                dc.DrawRectangle(Background, null, new Rect(0, 0, RenderSize.Width, RenderSize.Height));
-
-#if NET451
-            var typeface = new Typeface(_parent.FontFamily, _parent.FontStyle, FontWeight, _parent.FontStretch);
-            var formatedText = new FormattedText(Text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight,
-                typeface, _parent.FontSize, Foreground);
-#endif
-#if NET47
-            //Draw text
-            var typeface = new Typeface(_parent.FontFamily, _parent.FontStyle, FontWeight, _parent.FontStretch);
-            var formatedText = new FormattedText(Text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight,
-                typeface, _parent.FontSize, Foreground, VisualTreeHelper.GetDpi(this).PixelsPerDip);                 
-                       
-#endif
-
-
-            dc.DrawText(formatedText, new Point(2, 0));
-        }
 
         /// <summary>
         /// Update the render of text derived bytecontrol from byte property
@@ -195,13 +166,7 @@ namespace WpfHexaEditor
         #endregion Events delegate
 
         #region Caret events/methods
-
-        protected override void OnLostFocus(RoutedEventArgs e)
-        {
-            _parent.HideCaret();
-            base.OnLostFocus(e);
-        }
-
+        
         protected override void OnGotFocus(RoutedEventArgs e)
         {
             _keyDownLabel = KeyDownLabel.FirstChar;
@@ -218,11 +183,13 @@ namespace WpfHexaEditor
                 _parent.HideCaret();
             else
             {
+                //TODO: clear size and use BaseByte.TextFormatted property...
                 var size = Text[1].ToString()
                     .GetScreenSize(_parent.FontFamily, _parent.FontSize, _parent.FontStyle, FontWeight,
                         _parent.FontStretch);
 
-                //_parent.SetCaretSize(Width / 2, size.Height);
+                _parent.SetCaretSize(Width / 2, size.Height);
+                _parent.SetCaretMode(CaretMode.Overwrite);
 
                 switch (_keyDownLabel)
                 {
@@ -234,7 +201,14 @@ namespace WpfHexaEditor
                         break;
                     case KeyDownLabel.NextPosition:
                         if (_parent.Lenght == BytePositionInFile + 1)
-                            _parent.MoveCaret(TransformToAncestor(_parent).Transform(new Point(size.Width * 2, 0)));
+                            if (_parent.AllowExtend)
+                            {
+                                _parent.SetCaretMode(CaretMode.Insert);
+                                _parent.MoveCaret(TransformToAncestor(_parent).Transform(new Point(size.Width * 2, 0)));
+                            }
+                            else
+                                _parent.HideCaret();
+
                         break;
                 }
             }

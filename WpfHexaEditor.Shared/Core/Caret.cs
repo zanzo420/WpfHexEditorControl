@@ -3,6 +3,7 @@
 // Part of Wpf HexEditor control : https://github.com/abbaye/WPFHexEditorControl
 // Reference : https://www.codeproject.com/Tips/431000/Caret-for-WPF-User-Controls
 // Reference license : The Code Project Open License (CPOL) 1.02
+// Contributor : emes30
 //////////////////////////////////////////////
 
 using System;
@@ -14,21 +15,35 @@ using System.Threading;
 
 namespace WpfHexaEditor.Core
 {
+    /// <summary>
+    /// Use mode of the caret
+    /// </summary>
+    public enum CaretMode
+    {
+        Insert,
+        Overwrite
+    }
+
     public sealed class Caret : FrameworkElement, INotifyPropertyChanged
     {
         #region Global class variables
         private Timer _timer;
         private Point _position;
         private readonly Pen _pen = new Pen(Brushes.Black, 1);
+        private readonly Brush _brush = new SolidColorBrush(Colors.Black);
         private int _blinkPeriod = 500;
         private double _caretHeight = 18;
+        private double _caretWidth = 9;
         private bool _hide;
+        private CaretMode _caretMode = CaretMode.Overwrite;
         #endregion
 
         #region Constructor
         public Caret()
         {
             _pen.Freeze();
+            _brush.Opacity = .5;
+            IsHitTestVisible = false;
             InitializeTimer();
             Hide();
         }
@@ -37,12 +52,15 @@ namespace WpfHexaEditor.Core
         {
             _pen.Brush = brush;
             _pen.Freeze();
+            _brush.Opacity = .5;
+            IsHitTestVisible = false;
             InitializeTimer();
             Hide();
         }
         #endregion
 
         #region Properties
+
         private static readonly DependencyProperty VisibleProperty =
             DependencyProperty.Register(nameof(Visible), typeof(bool),
                 typeof(Caret), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.AffectsRender));
@@ -69,11 +87,29 @@ namespace WpfHexaEditor.Core
             get => _caretHeight;
             set
             {
+                if (_caretHeight == value) return;
+
                 _caretHeight = value;
 
-                InitializeTimer();
+                //InitializeTimer();
 
                 OnPropertyChanged(nameof(CaretHeight));
+            }
+        }
+
+        /// <summary>
+        /// Width of the caret
+        /// </summary>
+        public double CaretWidth
+        {
+            get => _caretWidth;
+            set
+            {
+                if (_caretHeight == value) return;
+
+                _caretWidth = value;
+
+                OnPropertyChanged(nameof(CaretWidth));
             }
         }
 
@@ -88,7 +124,7 @@ namespace WpfHexaEditor.Core
         public double Left
         {
             get => _position.X;
-            set
+            private set
             {
                 if (_position.X == value) return;
 
@@ -106,7 +142,7 @@ namespace WpfHexaEditor.Core
         public double Top
         {
             get => _position.Y;
-            set
+            private set
             {
                 if (_position.Y == value) return;
 
@@ -135,6 +171,22 @@ namespace WpfHexaEditor.Core
                 InitializeTimer();
 
                 OnPropertyChanged(nameof(BlinkPeriod));
+            }
+        }
+
+        /// <summary>
+        /// Caret display mode. Line for Insert, Block for Overwrite
+        /// </summary>
+        public CaretMode CaretMode
+        {
+            get => _caretMode;
+            set
+            {
+                if (_caretMode == value) return;
+
+                _caretMode = value;
+
+                OnPropertyChanged(nameof(CaretMode));
             }
         }
 
@@ -205,7 +257,15 @@ namespace WpfHexaEditor.Core
         protected override void OnRender(DrawingContext dc)
         {
             if (Visible)
-                dc.DrawLine(_pen, _position, new Point(Left, _position.Y + CaretHeight));
+                switch (_caretMode)
+                {
+                    case CaretMode.Insert:
+                        dc.DrawLine(_pen, _position, new Point(Left, _position.Y + CaretHeight));
+                        break;
+                    case CaretMode.Overwrite:
+                        dc.DrawRectangle(_brush, _pen, new Rect(Left, _position.Y, _caretWidth, CaretHeight));
+                        break;
+                }
         }
         #endregion
 

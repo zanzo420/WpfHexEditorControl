@@ -27,20 +27,16 @@ namespace WpfHexaEditor {
                 typeof(DataLayerBase),
                 new FrameworkPropertyMetadata(
                     null,
-                    FrameworkPropertyMetadataOptions.AffectsRender,
-                    DataProperty_Changed
+                    FrameworkPropertyMetadataOptions.AffectsRender
+                    //DataProperty_Changed
                 )
             );
 
-        private static void DataProperty_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-            if(!(d is DataLayerBase ctrl)) {
-                return;
-            }
-
-            if(e.NewValue is byte[] newData && ((ctrl._drawedRects?.Length??0) < newData.Length)) {
-                ctrl._drawedRects = new(int index, Brush background)[newData.Length];
-            }
-        }
+        //private static void DataProperty_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+        //    if(!(d is DataLayerBase ctrl)) {
+        //        return;
+        //    }
+        //}
 
         private void RefreshRender(object sender, NotifyCollectionChangedEventArgs e) => this.InvalidateVisual();
 
@@ -94,13 +90,27 @@ namespace WpfHexaEditor {
         public abstract Size CellSize { get; }
 
         private (int index, Brush background)[] _drawedRects;
+        private (int index, Brush background)[] DrawedRects {
+            get {
+                if(Data == null) {
+                    return null;
+                }
+
+                if(_drawedRects == null || _drawedRects.Length < Data.Length) {
+                    _drawedRects = new(int index, Brush background)[Data.Length];
+                }
+
+                return _drawedRects;
+            }
+        }
+
 
         protected virtual void DrawBackgrounds(DrawingContext drawingContext) {
             if (BackgroundBlocks == null) {
                 return;
             }
 
-            if(_drawedRects == null) {
+            if(DrawedRects == null) {
                 return;
             }
 
@@ -109,7 +119,7 @@ namespace WpfHexaEditor {
             }
 
             for (int i = 0; i < Data.Length; i++) {
-                _drawedRects[i].background = Brushes.Transparent;
+                DrawedRects[i].background = Brushes.Transparent;
             }
             
 #if DEBUG
@@ -117,7 +127,7 @@ namespace WpfHexaEditor {
 #endif
             foreach (var (index, length, background) in BackgroundBlocks) {
                 for (int i = 0; i < length; i++) {
-                    _drawedRects[index + i].background = background;
+                    DrawedRects[index + i].background = background;
 #if DEBUG
                     //if(this is HexDataLayer && lastY != rect.Y) {
                     //    lastY = rect.Y;
@@ -132,7 +142,7 @@ namespace WpfHexaEditor {
                 var row = i / BytePerLine;
 
                 drawingContext.DrawRectangle(
-                    _drawedRects[i].background,
+                    DrawedRects[i].background,
                     null,
                     new Rect {
                         X = col * (CellMargin.Right + CellMargin.Left + CellSize.Width) + CellMargin.Left,

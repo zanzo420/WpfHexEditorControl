@@ -76,9 +76,17 @@ namespace WpfHexaEditor {
         //we're gonna switch from one to another while refreshing.
         private byte[] _realViewBuffer;
 
-        private int MaxVisibleLength => 
-            (int) Math.Min(HexDataLayer.AvailableRowsCount* BytePerLine,
-                Stream.Length - Position / BytePerLine* BytePerLine);
+        private int MaxVisibleLength {
+            get {
+                if(Stream == null) {
+                    return 0;
+                }
+
+                return (int)Math.Min(HexDataLayer.AvailableRowsCount * BytePerLine,
+                Stream.Length - Position / BytePerLine * BytePerLine);
+            }
+        }
+            
 
         /// <summary>
         /// Obtain the max line for verticalscrollbar
@@ -95,6 +103,7 @@ namespace WpfHexaEditor {
         private bool _scrollBarValueUpdating = false;
         //Remember the position in which the mouse last clicked.
         private long? _lastMouseDownPosition;
+
         #region EventSubscriber handlers;
         private void Control_MouseWheel(object sender, MouseWheelEventArgs e) {
             if(Stream != null) {
@@ -105,16 +114,16 @@ namespace WpfHexaEditor {
                     VerticalScrollBar.Value += e.Delta / 120 * -(int)MouseWheelSpeed;
             }
         }
-
-
+        
         private void DataLayer_MouseLeftDownOnCell(object sender, (int cellIndex, MouseButtonEventArgs e) arg) {
-            if(arg.cellIndex < MaxVisibleLength) {
-                _lastMouseDownPosition = Position / BytePerLine * BytePerLine + arg.cellIndex;
-                FocusPosition = _lastMouseDownPosition.Value;
+            if(arg.cellIndex >= MaxVisibleLength) {
+                return;
             }
+
+            _lastMouseDownPosition = Position / BytePerLine * BytePerLine + arg.cellIndex;
+            FocusPosition = _lastMouseDownPosition.Value;
         }
-
-
+        
         private void DataLayer_MouseRightDownOnCell(object sender, (int cellIndex, MouseButtonEventArgs e) arg) {
             
         }
@@ -132,10 +141,7 @@ namespace WpfHexaEditor {
             if (_lastMouseDownPosition == null) {
                 return;
             }
-            else {
-
-            }
-
+            
             var cellPosition = Position / BytePerLine * BytePerLine + arg.cellIndex;
             if (_lastMouseDownPosition.Value == cellPosition) {
                 return;
@@ -147,7 +153,7 @@ namespace WpfHexaEditor {
         }
 
         private void DataLayer_MouseLeftUpOnCell(object sender, (int cellIndex, MouseButtonEventArgs e) arg) {
-            
+            _lastMouseDownPosition = null;
         }
 
         #endregion
@@ -157,11 +163,12 @@ namespace WpfHexaEditor {
             //These methods won't be invoked everytime scrolling.but only when stream is opened or closed.
             ctrl.UpdateInfoes();
 
-            //Position PropertyChangedCallBack will update the view;
+            //Position PropertyChangedCallBack will update the content;
             ctrl.Position = 0;
 
-            //UnSelectAll();
-
+            ctrl.SelectionStart = -1;
+            ctrl.SelectionLength = 0;
+            
             //UpdateTblBookMark();
             //UpdateSelectionColor(FirstColor.HexByteData);
 
@@ -250,37 +257,26 @@ namespace WpfHexaEditor {
 
         public long Position {
             get { return (long)GetValue(PositionProperty); }
-            set { SetValue(PositionProperty, value); }
+            set {
+                SetValue(PositionProperty, value);
+#if DEBUG
+                watch.Restart();
+#endif
+                UpdateContent();
+#if DEBUG
+                watch.Stop();
+                Debug.Print($"REFRESH TIME: {watch.ElapsedMilliseconds} ms");
+#endif
+            }
+        
         }
 
         // Using a DependencyProperty as the backing store for Position.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty PositionProperty =
             DependencyProperty.Register(nameof(Position), typeof(long), typeof(DrawedHexEditor),
-                new FrameworkPropertyMetadata(-1L, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
-                    PositionProperty_Changed));
+                new FrameworkPropertyMetadata(-1L, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-        private static void PositionProperty_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-            if(!(d is DrawedHexEditor ctrl)) {
-                return;
-            }
-
-            var newPosition = (long)e.NewValue;
-
-            if (!ctrl._scrollBarValueUpdating) {
-                ctrl._scrollBarValueUpdating = true;
-                ctrl.VerticalScrollBar.Value = ctrl.Position / ctrl.BytePerLine;
-                ctrl._scrollBarValueUpdating = false;
-            }
-#if DEBUG
-            ctrl.watch.Restart();
-#endif
-            ctrl.UpdateContent();
-            
-#if DEBUG
-            ctrl.watch.Stop();
-            Debug.Print($"REFRESH TIME: {ctrl.watch.ElapsedMilliseconds} ms");
-#endif
-        }
+        
         
         public IEnumerable<(long index,long length,Brush background)> CustomBackgroundBlocks {
             get { return (IEnumerable<(long index,long length,Brush background)>)GetValue(CustomBackgroundBlocksProperty); }
@@ -319,7 +315,7 @@ namespace WpfHexaEditor {
         /// <param name="refreshData"></param>
         public void UpdateContent() {
             UpdateOffsetLinesContent();
-            
+            UpdateScrollBarContent();
             //Update visual of byte control
             //UpdateByteModified();
             
@@ -379,10 +375,17 @@ namespace WpfHexaEditor {
             
             LinesOffsetInfoLayer.StartStepIndex = Position / BytePerLine * BytePerLine;
             LinesOffsetInfoLayer.StepsCount = 
-                (int)Math.Min(HexDataLayer.AvailableRowsCount ,
-                (Stream.Length - Position) / BytePerLine + ((Stream.Length - Position) % BytePerLine > 0?1:0));
+                (int)Math.Min(HexDataLayer.AvailableRowsCount , 
+                MaxVisibleLength / BytePerLine + (MaxVisibleLength % BytePerLine != 0?1:0 ));
         }
 
+        private void UpdateScrollBarContent() {
+            if (!_scrollBarValueUpdating) {
+                _scrollBarValueUpdating = true;
+                VerticalScrollBar.Value = Position / BytePerLine;
+                _scrollBarValueUpdating = false;
+            }
+        }
         #region Data Backgrounds
         private void UpdateBackgroundBlocks() {
             //ClearBackgroundBlocks;
@@ -431,6 +434,10 @@ namespace WpfHexaEditor {
             }
         }
         #endregion
+
+        private void UpdateForegroundBlocks() {
+
+        }
 
         #endregion
 

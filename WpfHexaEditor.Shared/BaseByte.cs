@@ -326,8 +326,14 @@ namespace WpfHexaEditor
 
             //Draw text
             var typeface = new Typeface(_parent.FontFamily, _parent.FontStyle, FontWeight, _parent.FontStretch);
+#if NET47
             var formattedText = new FormattedText(Text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight,
                 typeface, _parent.FontSize, Foreground, VisualTreeHelper.GetDpi(this).PixelsPerDip);
+#endif
+#if NET451
+               var formattedText = new FormattedText(Text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight,
+                typeface, _parent.FontSize, Foreground);
+#endif
 
             dc.DrawText(formattedText, new Point(2, 0));
 
@@ -394,7 +400,7 @@ namespace WpfHexaEditor
 
         protected bool KeyValidation(KeyEventArgs e)
         {
-            #region Key validation and launch event if needed
+#region Key validation and launch event if needed
 
             if (KeyValidator.IsUpKey(e.Key))
             {
@@ -489,10 +495,10 @@ namespace WpfHexaEditor
             }
 
             return false;
-            #endregion
+#endregion
         }
     }
-    #endregion
+#endregion
 
 }
 

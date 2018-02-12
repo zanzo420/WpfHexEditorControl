@@ -2,9 +2,13 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib"
                     xmlns:local="clr-namespace:WpfHexEditor.Sample.MVVM.Languages.en_US">
+    <sys:String x:Key="FileMenuText">File</sys:String>
+    
     <sys:String x:Key="AppendByteConfirmationString" xml:space="preserve">
     You have reached the end of file. Do you want append one byte ? This operation cannot be canceled if you continue.
   </sys:String>
+    <sys:String x:Key="SetAsStartPosition">Set as start</sys:String>
+    <sys:String x:Key="SetAsEndPosition">Set as end</sys:String>
     <sys:String x:Key="BookmarksString" xml:space="preserve">
     Bookmarks
   </sys:String>

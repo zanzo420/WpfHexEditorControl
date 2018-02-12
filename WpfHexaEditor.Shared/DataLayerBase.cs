@@ -244,7 +244,7 @@ namespace WpfHexaEditor {
                 MouseLeftUpOnCell?.Invoke(this, (index.Value, e));
             }
         }
-
+        
         protected override void OnMouseMove(MouseEventArgs e) {
             base.OnMouseMove(e);
             var index = GetIndexFromMouse(e);

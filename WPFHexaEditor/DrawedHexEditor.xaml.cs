@@ -32,23 +32,7 @@ namespace WpfHexaEditor {
             this.FontSize = 8;
             this.FontFamily = new FontFamily("Courier New");
             this.DataVisualType = DataVisualType.Decimal;
-
-            CellMargion = new Thickness(0,1,0,1);
-            CellPadding = new Thickness(2);
-            var customBacks = new List<(long index, long length, Brush background)> {
-                (0L,4L,Brushes.Yellow),
-                (4L,4L,Brushes.Red),
-                (8L,16L,Brushes.Brown)
-            };
-            for (int i = 0; i < 200; i++) {
-                customBacks.Add((24 + i, 1, Brushes.Chocolate));
-            }
-            CustomBackgroundBlocks = customBacks;
-            //SelectionStart = 0;
-            //SelectionLength = 1048576;
-
-            InitilizeEvents();
-            
+            InitilizeEvents(); 
         }
 
         //Cuz xaml designer's didn't support valuetuple,events subscribing will be executed in code-behind.
@@ -86,7 +70,24 @@ namespace WpfHexaEditor {
                 Stream.Length - Position / BytePerLine * BytePerLine);
             }
         }
-            
+
+        protected override void OnContextMenuOpening(ContextMenuEventArgs e) {
+            base.OnContextMenuOpening(e);
+            contextMenuShowing = true;
+        }
+
+        private bool contextMenuShowing;
+        protected override void OnContextMenuClosing(ContextMenuEventArgs e) {
+            base.OnContextMenuClosing(e);
+            contextMenuShowing = false;
+#if DEBUG
+            ss++;
+#endif
+        }
+
+#if DEBUG
+        private long ss = 0;
+#endif
 
         /// <summary>
         /// Obtain the max line for verticalscrollbar
@@ -120,12 +121,32 @@ namespace WpfHexaEditor {
                 return;
             }
 
-            _lastMouseDownPosition = Position / BytePerLine * BytePerLine + arg.cellIndex;
+            var clickPosition = Position / BytePerLine * BytePerLine + arg.cellIndex;
+            if (Keyboard.Modifiers == ModifierKeys.Shift) {
+                long oldStart = -1;
+
+                if(SelectionStart != -1) {
+                    oldStart = SelectionStart;    
+                }
+                if(FocusPosition != -1) {
+                    oldStart = FocusPosition;
+                }
+
+                if(oldStart != -1) {
+                    SelectionStart = Math.Min(oldStart, clickPosition);
+                    SelectionLength = Math.Abs(oldStart - clickPosition) + 1;
+                }
+            }
+
+            _lastMouseDownPosition = clickPosition;
+            
             FocusPosition = _lastMouseDownPosition.Value;
         }
         
         private void DataLayer_MouseRightDownOnCell(object sender, (int cellIndex, MouseButtonEventArgs e) arg) {
-            
+
+
+            DataLayer_MouseLeftDownOnCell(sender, arg);
         }
 
         private void DataLayer_MouseMoveOnCell(object sender, (int cellIndex, MouseEventArgs e) arg) {
@@ -133,6 +154,9 @@ namespace WpfHexaEditor {
                 return;
             }
 
+            if (contextMenuShowing) {
+                return;
+            }
 #if DEBUG
             //arg.cellIndex = 15;
             //_lastMouseDownPosition = 0;
@@ -157,28 +181,7 @@ namespace WpfHexaEditor {
         }
 
         #endregion
-       
-        private static void Stream_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-            if (!(d is DrawedHexEditor ctrl)) return;
-            //These methods won't be invoked everytime scrolling.but only when stream is opened or closed.
-            ctrl.UpdateInfoes();
 
-            //Position PropertyChangedCallBack will update the content;
-            ctrl.Position = 0;
-
-            ctrl.SelectionStart = -1;
-            ctrl.SelectionLength = 0;
-            
-            //UpdateTblBookMark();
-            //UpdateSelectionColor(FirstColor.HexByteData);
-
-            ////Update count of byte
-            //UpdateByteCount();
-
-            ////Debug
-            //Debug.Print("STREAM OPENED");
-
-        }
 
         /// <summary>
         /// This method won't be while scrolling,but only when stream is opened or closed,byteperline changed(UpdateInfo);
@@ -187,6 +190,18 @@ namespace WpfHexaEditor {
             UpdateScrollBarInfo();
             UpdateColumnHeaderInfo();
             UpdateOffsetLinesInfo();
+
+            //Position PropertyChangedCallBack will update the content;
+            Position = 0;
+
+            //Restore/Update Focus Position;
+            if(FocusPosition >= (Stream?.Length ?? 0)) {
+                FocusPosition = -1;
+            }
+
+            //RestoreSelection;
+            SelectionStart = -1;
+            SelectionLength = 0;
         }
 
         #region These methods won't be invoked everytime scrolling.but only when stream is opened or closed,byteperline changed(UpdateInfo).
@@ -277,7 +292,6 @@ namespace WpfHexaEditor {
                 new FrameworkPropertyMetadata(-1L, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         
-        
         public IEnumerable<(long index,long length,Brush background)> CustomBackgroundBlocks {
             get { return (IEnumerable<(long index,long length,Brush background)>)GetValue(CustomBackgroundBlocksProperty); }
             set { SetValue(CustomBackgroundBlocksProperty, value); }
@@ -289,24 +303,51 @@ namespace WpfHexaEditor {
                 typeof(IEnumerable<(long index,long length,Brush background)>), 
                 typeof(DrawedHexEditor),
                 new PropertyMetadata(null));
+        
 
-        public Thickness CellMargion {
+        public Thickness CellMargin {
+            get { return (Thickness)GetValue(CellMarginProperty); }
             set {
-                HexDataLayer.CellMargin = value;
-                StringDataLayer.CellMargin = value;
-                LinesOffsetInfoLayer.CellMargin   = new Thickness(0, value.Top, 0, value.Bottom);
-                ColumnsOffsetInfoLayer.CellMargin = new Thickness(value.Left, 0, value.Right, 0);
+                SetValue(CellMarginProperty, value);
             }
         }
 
+        // Using a DependencyProperty as the backing store for CellMargion.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty CellMarginProperty =
+            DependencyProperty.Register(nameof(CellMargin), typeof(Thickness), typeof(DrawedHexEditor), 
+                new PropertyMetadata(new Thickness(0), CellMargionProperty_Changed));
+        
+        private static void CellMargionProperty_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+            if (!(d is DrawedHexEditor ctrl)) return;
+
+            var newVal = (Thickness)e.NewValue;
+            ctrl.HexDataLayer.CellMargin = newVal;
+            ctrl.StringDataLayer.CellMargin = newVal;
+            ctrl.LinesOffsetInfoLayer.CellMargin = new Thickness(0, newVal.Top, 0, newVal.Bottom);
+            ctrl.ColumnsOffsetInfoLayer.CellMargin = new Thickness(newVal.Left, 0, newVal.Right, 0);
+        }
+        
         public Thickness CellPadding {
-            set {
-                HexDataLayer.CellPadding = value;
-                StringDataLayer.CellPadding = value;
-                LinesOffsetInfoLayer.CellPadding = new Thickness(0, value.Top, 0, value.Bottom);
-                ColumnsOffsetInfoLayer.CellPadding = new Thickness(value.Left, 0, value.Right, 0);
-            }
+            get { return (Thickness)GetValue(CellPaddingProperty); }
+            set { SetValue(CellPaddingProperty, value); }
         }
+
+        // Using a DependencyProperty as the backing store for MyProperty.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty CellPaddingProperty =
+            DependencyProperty.Register(nameof(CellPadding), typeof(Thickness), typeof(DrawedHexEditor),
+                new PropertyMetadata(new Thickness(0), CellPaddingProperty_Changed));
+
+        private static void CellPaddingProperty_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+            if (!(d is DrawedHexEditor ctrl)) return;
+
+            var newVal = (Thickness)e.NewValue;
+            ctrl.HexDataLayer.CellPadding = newVal;
+            ctrl.StringDataLayer.CellPadding = newVal;
+            ctrl.LinesOffsetInfoLayer.CellPadding = new Thickness(0, newVal.Top, 0, newVal.Bottom);
+            ctrl.ColumnsOffsetInfoLayer.CellPadding = new Thickness(newVal.Left, 0, newVal.Right, 0);
+        }
+
+        /**/
         
         /// <summary>
         /// Refresh currentview of hexeditor
@@ -519,7 +560,8 @@ namespace WpfHexaEditor {
         // Using a DependencyProperty as the backing store for SelectionStart.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty SelectionStartProperty =
             DependencyProperty.Register(nameof(SelectionStart), typeof(long), typeof(DrawedHexEditor),
-                new FrameworkPropertyMetadata(-1L, SelectionStart_PropertyChanged));
+                new FrameworkPropertyMetadata(-1L,FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+                    SelectionStart_PropertyChanged));
 
         private static void SelectionStart_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
             if(!(d is DrawedHexEditor ctrl)) {
@@ -537,7 +579,9 @@ namespace WpfHexaEditor {
 
         // Using a DependencyProperty as the backing store for SelectionLength.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty SelectionLengthProperty =
-            DependencyProperty.Register(nameof(SelectionLength), typeof(long), typeof(DrawedHexEditor), new PropertyMetadata(0L, SelectionLengthProperty_Changed));
+            DependencyProperty.Register(nameof(SelectionLength), typeof(long), typeof(DrawedHexEditor),
+                new FrameworkPropertyMetadata(0L,FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+                    SelectionLengthProperty_Changed));
 
         private static void SelectionLengthProperty_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e) {
             if(!(d is DrawedHexEditor ctrl)) {
@@ -555,7 +599,8 @@ namespace WpfHexaEditor {
         // Using a DependencyProperty as the backing store for FocusPosition.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty FocusPositionProperty =
             DependencyProperty.Register(nameof(FocusPosition), typeof(long), typeof(DrawedHexEditor),
-                new PropertyMetadata(-1L, FocusPositionProperty_Changed));
+                new FrameworkPropertyMetadata(-1L,FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+                    FocusPositionProperty_Changed));
 
         private static void FocusPositionProperty_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e) {
             if(!(d is DrawedHexEditor ctrl)) {
@@ -585,7 +630,7 @@ namespace WpfHexaEditor {
 
         // Using a DependencyProperty as the backing store for SelectionBrush.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty SelectionBrushProperty =
-            DependencyProperty.Register(nameof(SelectionBrush), typeof(Brush), typeof(DrawingBrush), new PropertyMetadata(Brushes.Red));
+            DependencyProperty.Register(nameof(SelectionBrush), typeof(Brush), typeof(DrawedHexEditor), new PropertyMetadata(Brushes.Red));
 
 
         public MouseWheelSpeed MouseWheelSpeed {
@@ -611,6 +656,11 @@ namespace WpfHexaEditor {
                 new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits,
                     Stream_PropertyChanged));
 
+        private static void Stream_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+            if (!(d is DrawedHexEditor ctrl)) return;
+            //These methods won't be invoked everytime scrolling.but only when stream is opened or closed.
+            ctrl.UpdateInfoes();
+        }
 
         #endregion
 

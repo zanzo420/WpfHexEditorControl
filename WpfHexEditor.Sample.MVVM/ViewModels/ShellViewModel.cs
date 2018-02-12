@@ -2,17 +2,66 @@
 using Prism.Commands;
 using Prism.Interactivity.InteractionRequest;
 using Prism.Mvvm;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using WpfHexaEditor.Core;
 using WpfHexaEditor.Core.Interfaces;
 
 namespace WpfHexEditor.Sample.MVVM.ViewModels {
     public class ShellViewModel : BindableBase {
         public ShellViewModel() {
-            
+#if DEBUG
+            var customBacks = new List<(long index, long length, Brush background)> {
+
+                (0L,4L,Brushes.Yellow),
+
+                (4L,4L,Brushes.Red),
+
+                (8L,16L,Brushes.Brown)
+
+            };
+
+            for (int i = 0; i < 200; i++) {
+
+                customBacks.Add((24 + i, 1, Brushes.Chocolate));
+
+            }
+
+            CustomBackgroundBlocks = customBacks;
+#endif
         }
+
+
+        private long _selectionStart;
+        public long SelectionStart {
+            get => _selectionStart;
+            set => SetProperty(ref _selectionStart, value);
+        }
+
+        
+        private long _focusPosition;
+        public long FocusPosition {
+            get => _focusPosition;
+            set => SetProperty(ref _focusPosition, value);
+        }
+
+
+        private long _selectionLength;
+        public long SelectionLength {
+            get => _selectionLength;
+            set => SetProperty(ref _selectionLength, value);
+        }
+        
+        private IEnumerable<(long index, long length, Brush background)> _customBackgroundBlocks;
+        public IEnumerable<(long index, long length, Brush background)> CustomBackgroundBlocks {
+            get => _customBackgroundBlocks;
+            set => SetProperty(ref _customBackgroundBlocks, value);
+        }
+        
 
 
         private DelegateCommand _loadedCommand;
@@ -126,7 +175,67 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
 
 
         #endregion
-        
+
+
+        //Set the focused position char as Selection Start
+        private DelegateCommand _setAsStartCommand;
+        public DelegateCommand SetAsStartCommand => _setAsStartCommand ??
+            (_setAsStartCommand = new DelegateCommand(
+                () => {
+                    if(Stream == null) {
+                        return;
+                    }
+
+                    //Check if FocusPosition is valid;
+                    if(FocusPosition == -1) {
+                        return;
+                    }
+                    if(FocusPosition >= (Stream?.Length ?? 0)) {
+                        return;
+                    }
+                    
+                    if (SelectionStart != -1 && SelectionLength != 0
+                    && SelectionStart + SelectionLength - 1 > FocusPosition) {
+                        SelectionLength = SelectionStart + SelectionLength - FocusPosition;
+                    }
+                    else {
+                        SelectionLength = 1;
+                    }
+
+                    SelectionStart = FocusPosition;
+
+                }
+            ));
+
+
+        //Set the focused position char as Selection End
+        private DelegateCommand _setAsEndCommand;
+        public DelegateCommand SetAsEndCommand => _setAsEndCommand ??
+            (_setAsEndCommand = new DelegateCommand(
+                () => {
+                    if (Stream == null) {
+                        return;
+                    }
+
+                    //Check if FocusPosition is valid;
+                    if (FocusPosition == -1) {
+                        return;
+                    }
+                    if (FocusPosition >= (Stream?.Length ?? 0)) {
+                        return;
+                    }
+
+                    
+                    if (SelectionStart != -1 && SelectionLength != 0
+                    && SelectionStart < FocusPosition) {
+                        SelectionLength = FocusPosition - SelectionStart + 1;
+                    }
+                    else {
+                        SelectionStart = FocusPosition;
+                        SelectionLength = 1;
+                    }
+                }
+            ));
 
     }
 

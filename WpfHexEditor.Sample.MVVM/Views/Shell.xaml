@@ -8,7 +8,7 @@
         xmlns:properties="clr-namespace:WpfHexEditor.Sample.MVVM.Properties"
         xmlns:hexcore="clr-namespace:WpfHexaEditor.Core;assembly=WPFHexaEditor"
         xmlns:prism="http://prismlibrary.com/"
-        xmlns:control="clr-namespace:WpfHexaEditor;assembly=WPFHexaEditor"
+        xmlns:hex="clr-namespace:WpfHexaEditor;assembly=WPFHexaEditor"
         prism:ViewModelLocator.AutoWireViewModel="True" x:Name="Window"
         Title="Wpf HexEditor control sample MVVM" Height="350" Width="525">
     <!--xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"-->
@@ -22,7 +22,7 @@
             <Menu DockPanel.Dock="Top">
                 <MenuItem
                     Height="26"
-                    Header="File"
+                    Header="{DynamicResource FileMenuText}"
                     RenderTransformOrigin="0.656,0.769">
                     <MenuItem
                         x:Name="OpenMenu"
@@ -220,27 +220,32 @@
                         IsCheckable="True"
                         IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HeaderVisibility, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                 </MenuItem>
-                <!--Command="MenuItem_Click"-->
-                <MenuItem
-                    
-                    Header="TEST"
-                    Visibility="Visible" />
+                
             </Menu>
-            <control:DrawedHexEditor
+            <hex:DrawedHexEditor 
+                CellMargin="0,1"
+                CellPadding="2"
+                FocusPosition="{Binding FocusPosition}"
                 Stream="{Binding Stream}"
+                SelectionStart="{Binding SelectionStart}"
+                SelectionLength="{Binding SelectionLength}"
                 x:Name="HexEdit"
-                Width="Auto"
-                Height="Auto"
-                Margin="2"
-               >
-                <!--AllowByteCount="False"
+                Margin="2">
+                <UserControl.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="{DynamicResource SetAsStartPosition}" Command="{Binding SetAsStartCommand}"/>
+                        <MenuItem Header="{DynamicResource SetAsEndPosition}" Command="{Binding SetAsEndCommand}"/>
+                    </ContextMenu>
+                </UserControl.ContextMenu>
+            </hex:DrawedHexEditor>
+            <!--AllowByteCount="False"
                 AppendNeedConfirmation="False"
                 ByteGrouping="FourByte"
                 ByteSpacerPositioning="HexBytePanel"
                 ByteSpacerVisualStyle="Dash"
                 ByteSpacerWidthTickness="Normal"
                 DataStringVisual="Hexadecimal"-->
-            </control:DrawedHexEditor>
+            
         </DockPanel>
     </Grid>
     

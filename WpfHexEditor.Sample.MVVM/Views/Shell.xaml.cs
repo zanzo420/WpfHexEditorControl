@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WpfHexaEditor;
 using WpfHexEditor.Sample.MVVM.ViewModels;
 
 namespace WpfHexEditor.Sample.MVVM.Views {
@@ -24,6 +25,9 @@ namespace WpfHexEditor.Sample.MVVM.Views {
             this.WindowState = WindowState.Maximized;
             InitializeComponent();
 
+            //Cuz xaml designer doesn't support generic type;We have to set the some bindings(valuetuple) in codebehind :(;
+            HexEdit.SetBinding(DrawedHexEditor.CustomBackgroundBlocksProperty, new Binding(nameof(HexEdit.CustomBackgroundBlocks)));
+            //CustomBackgroundBlocks = "{Binding CustomBackgroundBlocks}"
             //(this.DataContext as ShellViewModel).FileEditor = HexEdit;
         }
     }

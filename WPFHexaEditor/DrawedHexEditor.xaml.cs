@@ -59,6 +59,8 @@ namespace WpfHexaEditor {
         //To avoid resigning buffer everytime and to notify the UI to rerender,
         //we're gonna switch from one to another while refreshing.
         private byte[] _realViewBuffer;
+        //To avoid wrong mousemove event;
+        private bool contextMenuShowing;
 
         private int MaxVisibleLength {
             get {
@@ -75,8 +77,7 @@ namespace WpfHexaEditor {
             base.OnContextMenuOpening(e);
             contextMenuShowing = true;
         }
-
-        private bool contextMenuShowing;
+        
         protected override void OnContextMenuClosing(ContextMenuEventArgs e) {
             base.OnContextMenuClosing(e);
             contextMenuShowing = false;

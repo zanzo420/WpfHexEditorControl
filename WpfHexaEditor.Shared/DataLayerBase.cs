@@ -85,7 +85,8 @@ namespace WpfHexaEditor {
         public Thickness CellPadding { get; set; } = new Thickness(2);
         public Thickness CellMargin { get; set; } = new Thickness(2);
 
-        public int AvailableRowsCount => (int)(this.ActualHeight / CellSize.Height);
+        public int AvailableRowsCount => 
+            (int)(this.ActualHeight / (CellSize.Height + CellMargin.Top + CellMargin.Bottom));
 
         public abstract Size CellSize { get; }
 
@@ -195,7 +196,7 @@ namespace WpfHexaEditor {
         }
 
         protected override Size MeasureOverride(Size availableSize) {
-            availableSize = base.MeasureOverride(availableSize);
+            //availableSize = base.MeasureOverride(availableSize);
             availableSize.Width = (CellSize.Width + CellMargin.Left + CellMargin.Right) * BytePerLine;
             if (double.IsInfinity(availableSize.Height)) {
                 availableSize.Height = 0;
@@ -260,6 +261,8 @@ namespace WpfHexaEditor {
                 MouseRightDownOnCell?.Invoke(this, (index.Value, e));
             }
         }
+
+        
     }
     
 }

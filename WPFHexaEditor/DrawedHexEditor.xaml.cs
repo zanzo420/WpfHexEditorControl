@@ -118,6 +118,7 @@ namespace WpfHexaEditor {
         }
         
         private void DataLayer_MouseLeftDownOnCell(object sender, (int cellIndex, MouseButtonEventArgs e) arg) {
+            
             if(arg.cellIndex >= MaxVisibleLength) {
                 return;
             }
@@ -181,6 +182,148 @@ namespace WpfHexaEditor {
             _lastMouseDownPosition = null;
         }
 
+        protected override void OnKeyDown(KeyEventArgs e) {
+            if (Stream == null) {
+                return;
+            }
+
+            if (FocusPosition == -1) {
+                return;
+            }
+
+            if (KeyValidator.IsArrowKey(e.Key)) {
+                OnArrowKeyDown(e);
+                e.Handled = true;
+            }
+            
+        }
+        
+        //Deal with operation while arrow key is pressed.
+        private void OnArrowKeyDown(KeyEventArgs e) {
+            if(e == null) {
+                throw new ArgumentNullException(nameof(e));
+            }
+
+            if (!KeyValidator.IsArrowKey(e.Key)) {
+                throw new ArgumentException($"The key '{e.Key}' is not a arrow key.");
+            }
+
+            if(Stream == null) {
+                return;
+            }
+
+            if(FocusPosition == -1) {
+                return;
+            }
+            
+            //Update Selection if shift key is pressed;
+            if (Keyboard.Modifiers == ModifierKeys.Shift) {
+                long vectorEnd = -1;
+                switch (e.Key) {
+                    case Key.Left:
+                        if (FocusPosition > 0) {
+                            vectorEnd = FocusPosition - 1;
+                        }
+                        break;
+                    case Key.Up:
+                        if(FocusPosition >= BytePerLine) {
+                            vectorEnd = FocusPosition - BytePerLine;
+                        }
+                        break;
+                    case Key.Right:
+                        if (FocusPosition + 1 < Stream.Length) {
+                            vectorEnd = FocusPosition + 1;
+                        }
+                        break;
+                    case Key.Down:
+                        if (FocusPosition + BytePerLine < Stream.Length) {
+                            vectorEnd = FocusPosition + BytePerLine;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+                if(vectorEnd != -1) {
+                    //BackWard;
+                    if(vectorEnd < FocusPosition) {
+                        if (FocusPosition == SelectionStart) {
+                            SelectionLength += SelectionStart - vectorEnd;
+                            SelectionStart = vectorEnd;
+                        }
+                        else if(FocusPosition == SelectionStart + SelectionLength - 1
+                            && SelectionLength >= FocusPosition - vectorEnd + 1){
+                            SelectionLength -= FocusPosition - vectorEnd;
+                        }
+                        else {
+                            SelectionStart = vectorEnd;
+                            SelectionLength = FocusPosition - vectorEnd + 1;
+                        }
+                    }
+                    //Forward;
+                    else if(vectorEnd > FocusPosition) {
+                        if(FocusPosition == SelectionStart + SelectionLength - 1) {
+                            SelectionLength += vectorEnd - FocusPosition;
+                        }
+                        else if(FocusPosition == SelectionStart 
+                            && SelectionLength >= vectorEnd - FocusPosition + 1) {
+                            SelectionLength -= vectorEnd - SelectionStart;
+                            SelectionStart = vectorEnd;
+                        }
+                        else {
+                            SelectionStart = FocusPosition;
+                            SelectionLength = vectorEnd - FocusPosition + 1;
+                        }
+                    }
+                    else {
+                        
+                    }
+                }
+                
+            }
+
+            //Updte FocusSelection;
+            switch (e.Key)
+            {
+                case Key.Left:
+                    if (FocusPosition > 0)
+                    {
+                        FocusPosition--;
+                    }
+                    break;
+                case Key.Up:
+                    if (FocusPosition >= BytePerLine)
+                    {
+                        FocusPosition -= BytePerLine;
+                    }
+                    break;
+                case Key.Right:
+                    if (FocusPosition + 1 < Stream.Length)
+                    {
+                        FocusPosition++;
+                    }
+                    break;
+                case Key.Down:
+                    if (FocusPosition + BytePerLine < Stream.Length)
+                    {
+                        FocusPosition += BytePerLine;
+                    }
+                    break;
+                default:
+                    return;
+            }
+
+            //Update scrolling(if needed);
+            var firstVisiblePosition = Position / BytePerLine * BytePerLine;
+            var lastVisiblePosition = firstVisiblePosition + MaxVisibleLength - 1;
+            if (FocusPosition < firstVisiblePosition) {
+                Position -= BytePerLine;
+            }
+            else if (FocusPosition > lastVisiblePosition) {
+                Position += BytePerLine;
+            }
+            
+        }
         #endregion
 
 
@@ -609,6 +752,10 @@ namespace WpfHexaEditor {
             }
 
             ctrl.UpdateBackgroundBlocks();
+            if((long)e.NewValue != -1) {
+                ctrl.Focusable = true;
+                ctrl.Focus();
+            }
         }
 
 
@@ -631,7 +778,7 @@ namespace WpfHexaEditor {
 
         // Using a DependencyProperty as the backing store for SelectionBrush.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty SelectionBrushProperty =
-            DependencyProperty.Register(nameof(SelectionBrush), typeof(Brush), typeof(DrawedHexEditor), new PropertyMetadata(Brushes.Red));
+            DependencyProperty.Register(nameof(SelectionBrush), typeof(Brush), typeof(DrawedHexEditor), new PropertyMetadata(new SolidColorBrush(Color.FromRgb(0xe0,0xe0,0xff))));
 
 
         public MouseWheelSpeed MouseWheelSpeed {

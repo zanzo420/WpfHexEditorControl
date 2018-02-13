@@ -54,6 +54,7 @@ namespace HexEditUnitTest.Core.Bytes {
 
         [TestMethod]
         public void GetHexBitsTest() {
+            
             Assert.AreEqual(ByteConverters.GetHexBits(0x1), 1);
             Assert.AreEqual(ByteConverters.GetHexBits(0xf), 1);
             Assert.AreEqual(ByteConverters.GetHexBits(0x10), 2);

@@ -13,7 +13,26 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <hex:HexDataLayer x:Name="hd"/>
+        <hex:HexDataLayer x:Name="hd" DataContext="1" hex:ToolTipExtension.AutoShow="False">
+            <hex:ToolTipExtension.OperatableToolTip>
+                <Border Background="Transparent">
+                    <ListBox MaxHeight="90" x:Name="lb" >
+                        <ListBoxItem>Item1</ListBoxItem>
+                        <ListBoxItem>Item2</ListBoxItem>
+                        <ListBoxItem>Item3</ListBoxItem>
+                        <ListBoxItem>Item3</ListBoxItem>
+                        <ListBoxItem>Item3</ListBoxItem>
+                        <ListBoxItem>Item3</ListBoxItem>
+                        <ListBoxItem>Item3</ListBoxItem>
+                        <ListBox.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="31231" />
+                            </ContextMenu>
+                        </ListBox.ContextMenu>
+                    </ListBox>
+                </Border>
+            </hex:ToolTipExtension.OperatableToolTip>
+        </hex:HexDataLayer>
         <hex:StringDataLayer x:Name="sd" Grid.Column="1"/>
         <Button Grid.Column="2" Click="Button_Click" />
     </Grid>

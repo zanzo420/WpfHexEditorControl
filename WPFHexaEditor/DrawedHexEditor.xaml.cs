@@ -48,6 +48,8 @@ namespace WpfHexaEditor {
 
             initialCellsLayer(HexDataLayer);
             initialCellsLayer(StringDataLayer);
+
+            InitializeTooltipEvents();
         }
 
         /// <summary>
@@ -82,12 +84,12 @@ namespace WpfHexaEditor {
             base.OnContextMenuClosing(e);
             contextMenuShowing = false;
 #if DEBUG
-            ss++;
+            //ss++;
 #endif
         }
 
 #if DEBUG
-        private long ss = 0;
+        //private long ss = 0;
 #endif
 
         /// <summary>
@@ -159,6 +161,7 @@ namespace WpfHexaEditor {
             if (contextMenuShowing) {
                 return;
             }
+            
 #if DEBUG
             //arg.cellIndex = 15;
             //_lastMouseDownPosition = 0;
@@ -758,7 +761,7 @@ namespace WpfHexaEditor {
             }
         }
 
-
+        
 
         public Brush FocusBrush {
             get { return (Brush)GetValue(FocusBrushProperty); }
@@ -814,4 +817,111 @@ namespace WpfHexaEditor {
 
     }
 
+    //Tooltip being worked;...
+    public partial class DrawedHexEditor{
+        private void InitializeTooltipEvents() {
+            HexDataLayer.MouseMoveOnCell += Datalayer_MouseMoveOnCell;
+            StringDataLayer.MouseMoveOnCell += Datalayer_MouseMoveOnCell;
+        }
+
+        private long mouseOverLevel = 0;
+        private void Datalayer_MouseMoveOnCell(object sender, (int cellIndex, MouseEventArgs e) arg) {
+            var index = arg.cellIndex;
+            if(!(sender is DataLayerBase dataLayer)) {
+                return;
+            }
+
+            if (contextMenuShowing) {
+                return;
+            }
+
+            var popPoint = dataLayer.GetCellLocation(index);
+            if (popPoint == null) {
+                return;
+            }
+            var pointValue = popPoint.Value;
+            if (Mouse.LeftButton == MouseButtonState.Pressed) {
+                return;
+            }
+
+            HoverPosition = Position / BytePerLine * BytePerLine + arg.cellIndex;
+            
+            if (ToolTipExtension.GetOperatableToolTip(dataLayer) == null) {
+                return;
+            }
+
+            dataLayer.SetToolTipOpen(false);
+            var thisLevel = mouseOverLevel++;
+            
+            //Delay is designed to improve the experience;
+            ThreadPool.QueueUserWorkItem(cb => {
+                Thread.Sleep(500);
+                if(mouseOverLevel > thisLevel + 1) {
+                    return;
+                }
+
+                this.Dispatcher.Invoke(() => {
+                    if (Mouse.LeftButton == MouseButtonState.Pressed) {
+                        return;
+                    }
+                    dataLayer.SetToolTipOpen(true, new Point {
+                        X = pointValue.X + dataLayer.CellMargin.Left + dataLayer.CharSize.Width + dataLayer.CellPadding.Left,
+                        Y = pointValue.Y + dataLayer.CharSize.Height + dataLayer.CellPadding.Top + dataLayer.CellMargin.Top
+                    });
+                });
+            });
+        }
+
+
+
+        public FrameworkElement HexDataToolTip {
+            get { return (FrameworkElement)GetValue(HexDataToolTipProperty); }
+            set { SetValue(HexDataToolTipProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for HexDataToolTip.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty HexDataToolTipProperty =
+            DependencyProperty.Register(nameof(HexDataToolTip), typeof(FrameworkElement), typeof(DrawedHexEditor), 
+                new PropertyMetadata(null,
+                    HexDataToolTip_PropertyChanged));
+
+        private static void HexDataToolTip_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+            if(!(d is DrawedHexEditor ctrl)) {
+                return;
+            }
+            if(e.NewValue is FrameworkElement newElem) {
+                ToolTipExtension.SetOperatableToolTip(ctrl.HexDataLayer, newElem);
+            }
+        }
+
+        public FrameworkElement StringDataToolTip {
+            get { return (FrameworkElement)GetValue(HexDataToolTipProperty); }
+            set { SetValue(HexDataToolTipProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for HexDataToolTip.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty StringDataToolTipProperty =
+            DependencyProperty.Register(nameof(StringDataToolTip), typeof(FrameworkElement), typeof(DrawedHexEditor),
+                new PropertyMetadata(null,
+                    StringDataToolTip_PropertyChanged));
+
+        private static void StringDataToolTip_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+            if (!(d is DrawedHexEditor ctrl)) {
+                return;
+            }
+            if (e.NewValue is FrameworkElement newElem) {
+                ToolTipExtension.SetOperatableToolTip(ctrl.StringDataLayer, newElem);
+            }
+        }
+
+        public long HoverPosition {
+            get { return (long)GetValue(HoverPositionProperty); }
+            set { SetValue(HoverPositionProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for HoverPosition.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty HoverPositionProperty =
+            DependencyProperty.Register(nameof(HoverPosition), typeof(long), typeof(DrawedHexEditor),
+                new FrameworkPropertyMetadata(-1L, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+    }
 }

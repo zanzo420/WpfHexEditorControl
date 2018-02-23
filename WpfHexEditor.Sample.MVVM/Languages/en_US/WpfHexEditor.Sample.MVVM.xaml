@@ -187,6 +187,24 @@
     Value
   </sys:String>
     <sys:String x:Key="WritingErrorExeptionString" xml:space="preserve">
-    An error is occurs when writing.
-  </sys:String>
+        An error is occurs when writing.
+    </sys:String>
+    
+    <sys:String x:Key="CopyValue">
+        Copy Value
+    </sys:String>
+    <sys:String x:Key="CopyKey">
+        Copy Key
+    </sys:String>
+    <sys:String x:Key="CopyExpression">
+        Copy Expression
+    </sys:String>
+    
+    
+    <sys:String x:Key="OffsetTag">
+        Offset
+    </sys:String>
+    <sys:String x:Key="ValueTag">
+        Value
+    </sys:String>
 </ResourceDictionary>

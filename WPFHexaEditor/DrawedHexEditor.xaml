@@ -17,8 +17,8 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="10*" />
-            <ColumnDefinition Width="20" />
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="30" />
@@ -28,20 +28,19 @@
         <!--#endregion-->
 
         <!--#region Data/Infos StackPanel-->
-        <local:CellOffsetsInfoLayer
-            Orientation="Vertical"
+        <local:CellStepsLayer        Orientation="Vertical"
             Grid.Row="1"
             Margin="2,0,0,0" SavedBits="8"
             x:Name="LinesOffsetInfoLayer"
             />
+
         <local:HexDataLayer 
             x:Name="HexDataLayer"
             Grid.Row="1"
             Grid.Column="1"
-            Margin="5,0" />
-        
-        <local:CellOffsetsInfoLayer
-            x:Name="ColumnsOffsetInfoLayer"
+            Margin="5,0" local:ToolTipExtension.AutoShow="False"  >
+        </local:HexDataLayer>
+        <local:CellStepsLayer        x:Name="ColumnsOffsetInfoLayer"
             Orientation="Horizontal"
             Grid.Row="0" 
             Grid.Column="1"
@@ -51,22 +50,52 @@
             Grid.Row="1"
             Grid.Column="2"
             Margin="5,0,0,0"
-            />
-        <!--#endregion-->
-
+            local:ToolTipExtension.AutoShow="False"
+            >
+        </local:StringDataLayer>
         
-
+        <!--<local:OperatableToolTip x:Name="ToolTipBorder" PlacementTarget="{Binding ElementName=HexDataLayer}"
+                                 Grid.ColumnSpan="2" Grid.Row="1" Grid.Column="1">
+            <Border Background="Blue" >
+                <ListBox MaxHeight="90" x:Name="lb" >
+                    
+                    <ListBoxItem>Item1</ListBoxItem>
+                    <ListBoxItem>Item2</ListBoxItem>
+                    <ListBoxItem>Item3</ListBoxItem>
+                    <ListBoxItem>Item1</ListBoxItem>
+                    <ListBoxItem>Item2</ListBoxItem>
+                    <ListBoxItem>Item3</ListBoxItem>
+                    <ListBoxItem>Item1</ListBoxItem>
+                    <ListBoxItem>Item2</ListBoxItem>
+                    <ListBoxItem>Item3</ListBoxItem>
+                    <ListBox.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="31231" />
+                        </ContextMenu>
+                    </ListBox.ContextMenu>
+                </ListBox>
+            </Border>
+            
+        </local:OperatableToolTip>-->
+        <!--<Border x:Name="ToolTipBorder" VerticalAlignment="Top" HorizontalAlignment="Left" 
+                Grid.Row="1" Visibility="Hidden" Grid.ColumnSpan="2" Padding="6" Background="Transparent"
+            Grid.Column="1">
+            
+            
+        </Border>-->
+        <!--#endregion-->
         <!--#region Scrollbar, marker, and move rectangle-->
         <ScrollBar
             x:Name="VerticalScrollBar"
-            Grid.Row="0"
-            Grid.RowSpan="2"
-            Grid.Column="4"
+            Grid.RowSpan="2" Grid.Row="0"
+            Grid.ColumnSpan="5"
             Width="20"
             HorizontalAlignment="Right"
             LargeChange="100"
             SmallChange="1"
             ValueChanged="VerticalScrollBar_ValueChanged" />
+        
+        
 
         <Grid
             x:Name="MarkerGrid"
@@ -104,7 +133,7 @@
 
 
         <!--  TODO: ADD TEXTBLOCK FOR DETAIL  -->
-        
+
         <Label
             x:Name="TblLabel"
             Grid.Row="2"
@@ -119,6 +148,6 @@
         <!--#endregion-->
 
     </Grid>
-    
-    
+
+
 </UserControl>

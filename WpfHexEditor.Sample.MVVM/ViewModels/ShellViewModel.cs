@@ -76,7 +76,7 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
             (_loadedCommand = new DelegateCommand(
                 () => {
 #if DEBUG
-                    Stream = File.OpenRead("E://FeiQ.1060559168.exe");
+                    //Stream = File.OpenRead("E://FeiQ.1060559168.exe");
 #endif
                 }
             ));

@@ -24,7 +24,7 @@ namespace WpfHexEditor.Sample.MVVM.Views {
         public Shell() {
             this.WindowState = WindowState.Maximized;
             InitializeComponent();
-
+            
             //Cuz xaml designer doesn't support generic type;We have to set the some bindings(valuetuple) in codebehind :(;
             HexEdit.SetBinding(DrawedHexEditor.CustomBackgroundBlocksProperty, new Binding(nameof(HexEdit.CustomBackgroundBlocks)));
             //CustomBackgroundBlocks = "{Binding CustomBackgroundBlocks}"

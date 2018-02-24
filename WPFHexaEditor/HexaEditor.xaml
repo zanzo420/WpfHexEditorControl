@@ -269,7 +269,7 @@
                     <StackPanel Orientation="Horizontal">
                         <Label
                             Padding="5,5,0,5"
-                            Content="{x:Static p:Resources.LenghtString}"
+                            Content="{x:Static p:Resources.LengthString}"
                             FontWeight="Bold" />
                         <Label x:Name="FileLengthKbLabel" ContentStringFormat="N0" />
                     </StackPanel>

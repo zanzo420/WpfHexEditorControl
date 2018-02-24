@@ -228,7 +228,7 @@
   <data name="KBTagString" xml:space="preserve">
     <value>Kb</value>
   </data>
-  <data name="LenghtString" xml:space="preserve">
+  <data name="LengthString" xml:space="preserve">
     <value>Длинна</value>
   </data>
   <data name="LineStatusBarTagString" xml:space="preserve">

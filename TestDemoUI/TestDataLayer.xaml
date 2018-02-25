@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TestDemoUI"
+<<<<<<< HEAD:TestDemoUI/TestDataLayer.xaml
              xmlns:hex="clr-namespace:WpfHexaEditor;assembly=WPFHexaEditor"
              mc:Ignorable="d" Width="1000"
              d:DesignHeight="300" d:DesignWidth="300">
@@ -35,5 +36,11 @@
         </hex:HexDataLayer>
         <hex:StringDataLayer x:Name="sd" Grid.Column="1"/>
         <Button Grid.Column="2" Click="Button_Click" />
+=======
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+           
+>>>>>>> parent of 3effabd... HexDataLayer and StringDataLayer Added.:TestDemoUI/TestRender.xaml
     </Grid>
 </UserControl>

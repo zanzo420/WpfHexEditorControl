@@ -14,7 +14,7 @@ namespace WpfHexaEditor
 {
 
     //To show Stream Offsets(left of HexEditor) and Column Index(top of HexEditor);
-    public class CellOffsetsInfoLayer : FontControlBase, ICellsLayer, IOffsetsInfoLayer {
+    public class CellStepsLayer : FontControlBase, ICellsLayer, IOffsetsInfoLayer {
         public Thickness CellMargin { get; set; } = new Thickness(2);
         public Thickness CellPadding { get; set; } = new Thickness(2);
         //If datavisualtype is Hex,"ox" should be calculated.
@@ -32,7 +32,7 @@ namespace WpfHexaEditor
 
         // Using a DependencyProperty as the backing store for Orientation.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty OrientationProperty =
-            DependencyProperty.Register(nameof(Orientation), typeof(Orientation), typeof(CellOffsetsInfoLayer),
+            DependencyProperty.Register(nameof(Orientation), typeof(Orientation), typeof(CellStepsLayer),
                 new FrameworkPropertyMetadata(Orientation.Vertical, FrameworkPropertyMetadataOptions.AffectsRender));
         
         public long StartStepIndex {
@@ -42,8 +42,8 @@ namespace WpfHexaEditor
 
         // Using a DependencyProperty as the backing store for StartOffset.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty StartStepIndexProperty =
-            DependencyProperty.Register(nameof(StartStepIndex), typeof(long), typeof(CellOffsetsInfoLayer),
-                new FrameworkPropertyMetadata(0L,FrameworkPropertyMetadataOptions.AffectsRender));
+            DependencyProperty.Register(nameof(StartStepIndex), typeof(long), typeof(CellStepsLayer),
+                new FrameworkPropertyMetadata(-1L,FrameworkPropertyMetadataOptions.AffectsRender));
         
         public int StepsCount {
             get { return (int)GetValue(StepsProperty); }
@@ -54,7 +54,7 @@ namespace WpfHexaEditor
 
         // Using a DependencyProperty as the backing store for EndOffset.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty StepsProperty =
-            DependencyProperty.Register(nameof(StepsCount), typeof(int), typeof(CellOffsetsInfoLayer),
+            DependencyProperty.Register(nameof(StepsCount), typeof(int), typeof(CellStepsLayer),
                 new FrameworkPropertyMetadata(0, FrameworkPropertyMetadataOptions.AffectsRender));
 
 
@@ -66,7 +66,7 @@ namespace WpfHexaEditor
 
         // Using a DependencyProperty as the backing store for StepLength.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty StepLengthProperty =
-            DependencyProperty.Register(nameof(StepLength), typeof(int), typeof(CellOffsetsInfoLayer), new PropertyMetadata(1));
+            DependencyProperty.Register(nameof(StepLength), typeof(int), typeof(CellStepsLayer), new PropertyMetadata(1));
 
         protected override void OnRender(DrawingContext drawingContext) {
             base.OnRender(drawingContext);
@@ -155,11 +155,101 @@ namespace WpfHexaEditor
             return availableSize;
         }
 
+        private int? GetIndexFromLocation(Point location) {
+            if (StartStepIndex == -1) {
+                return null;
+            }
 
+            if (Orientation == Orientation.Horizontal) {
+                if (!(location.Y > 0 && location.Y < CellMargin.Bottom + CellMargin.Top + CellSize.Height)) {
+                    return null;
+                }
+
+                var col = (int)(location.X / (CellSize.Width + CellMargin.Left + CellMargin.Right));
+                if (col >= StepsCount) {
+                    return null;
+                }
+
+                return col;
+            }
+            else {
+                if (!(location.X > 0 && location.X < CellMargin.Left + CellMargin.Right + CellSize.Width)) {
+                    return null;
+                }
+
+                var row = (int)(location.Y / (CellSize.Width + CellMargin.Top + CellMargin.Bottom));
+                if(row >= StepsCount) {
+                    return null;
+                }
+                return row;
+            }
+        }
+
+        private int? GetIndexFromMouse(MouseEventArgs e) {
+            if(e == null) {
+                return null;
+            }
+
+            return GetIndexFromLocation(e.GetPosition(this));
+        }
+        
         public event EventHandler<(int cellIndex, MouseButtonEventArgs e)> MouseLeftDownOnCell;
         public event EventHandler<(int cellIndex, MouseButtonEventArgs e)> MouseLeftUpOnCell;
         public event EventHandler<(int cellIndex, MouseEventArgs e)> MouseMoveOnCell;
         public event EventHandler<(int cellIndex, MouseButtonEventArgs e)> MouseRightDownOnCell;
+
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e) {
+            base.OnMouseLeftButtonDown(e);
+            if (e.Handled) {
+                return;
+            }
+
+            var index = GetIndexFromMouse(e);
+            if(index != null) {
+                MouseLeftDownOnCell?.Invoke(this, (index.Value, e));
+            }
+        }
+
+        protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e) {
+            base.OnMouseLeftButtonUp(e);
+            if (e.Handled) {
+                return;
+            }
+
+            var index = GetIndexFromMouse(e);
+            if (index != null) {
+                MouseLeftUpOnCell?.Invoke(this, (index.Value, e));
+            }
+        }
+
+        protected override void OnMouseMove(MouseEventArgs e) {
+            base.OnMouseMove(e);
+            if (e.Handled) {
+                return;
+            }
+
+            var index = GetIndexFromMouse(e);
+            if (index != null) {
+                MouseMoveOnCell?.Invoke(this, (index.Value, e));
+            }
+
+        }
+
+        protected override void OnMouseRightButtonDown(MouseButtonEventArgs e) {
+            base.OnMouseRightButtonDown(e);
+            if (e.Handled) {
+                return;
+            }
+
+            var index = GetIndexFromMouse(e);
+            if (index != null) {
+                MouseRightDownOnCell?.Invoke(this, (index.Value, e));
+            }
+        }
+
+        public Point? GetCellLocation(int index) {
+            throw new NotImplementedException();
+        }
     }
     
 }

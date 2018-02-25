@@ -27,16 +27,17 @@ namespace WpfHexaEditor {
                 typeof(DataLayerBase),
                 new FrameworkPropertyMetadata(
                     null,
-                    FrameworkPropertyMetadataOptions.AffectsRender
-                    //DataProperty_Changed
+                    FrameworkPropertyMetadataOptions.AffectsRender,
+                    DataProperty_Changed
                 )
             );
 
-        //private static void DataProperty_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-        //    if(!(d is DataLayerBase ctrl)) {
-        //        return;
-        //    }
-        //}
+        private static void DataProperty_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+            if (!(d is DataLayerBase ctrl)) {
+                return;
+            }
+            ctrl.InitializeMouseState();
+        }
 
         private void RefreshRender(object sender, NotifyCollectionChangedEventArgs e) => this.InvalidateVisual();
 
@@ -85,7 +86,8 @@ namespace WpfHexaEditor {
         public Thickness CellPadding { get; set; } = new Thickness(2);
         public Thickness CellMargin { get; set; } = new Thickness(2);
 
-        public int AvailableRowsCount => (int)(this.ActualHeight / CellSize.Height);
+        public int AvailableRowsCount => 
+            (int)(this.ActualHeight / (CellSize.Height + CellMargin.Top + CellMargin.Bottom));
 
         public abstract Size CellSize { get; }
 
@@ -103,6 +105,19 @@ namespace WpfHexaEditor {
                 return _drawedRects;
             }
         }
+
+
+
+
+        public Brush Background {
+            get { return (Brush)GetValue(BackgroundProperty); }
+            set { SetValue(BackgroundProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Background.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty BackgroundProperty =
+            DependencyProperty.Register(nameof(Background), typeof(Brush), typeof(DataLayerBase), 
+                new FrameworkPropertyMetadata(Brushes.Transparent ,FrameworkPropertyMetadataOptions.AffectsRender));
 
 
         protected virtual void DrawBackgrounds(DrawingContext drawingContext) {
@@ -136,11 +151,17 @@ namespace WpfHexaEditor {
 #endif
                 }
             }
+            
+            drawingContext.DrawRectangle(Background, null, new Rect {
+                Width = this.ActualWidth,Height = ActualHeight
+            });
 
             for (int i = 0; i < Data.Length; i++) {
                 var col = i % BytePerLine;
                 var row = i / BytePerLine;
-
+                if(DrawedRects[i].background == Background) {
+                    continue;
+                }
                 drawingContext.DrawRectangle(
                     DrawedRects[i].background,
                     null,
@@ -195,7 +216,7 @@ namespace WpfHexaEditor {
         }
 
         protected override Size MeasureOverride(Size availableSize) {
-            availableSize = base.MeasureOverride(availableSize);
+            //availableSize = base.MeasureOverride(availableSize);
             availableSize.Width = (CellSize.Width + CellMargin.Left + CellMargin.Right) * BytePerLine;
             if (double.IsInfinity(availableSize.Height)) {
                 availableSize.Height = 0;
@@ -204,28 +225,40 @@ namespace WpfHexaEditor {
             return availableSize;
         }
 
-        public event EventHandler<(int cellIndex,MouseButtonEventArgs e)> MouseLeftDownOnCell;
-        public event EventHandler<(int cellIndex,MouseButtonEventArgs e)> MouseLeftUpOnCell;
-        public event EventHandler<(int cellIndex,MouseEventArgs e)> MouseMoveOnCell;
+        public event EventHandler<(int cellIndex, MouseButtonEventArgs e)> MouseLeftDownOnCell;
+        public event EventHandler<(int cellIndex, MouseButtonEventArgs e)> MouseLeftUpOnCell;
+        public event EventHandler<(int cellIndex, MouseEventArgs e)> MouseMoveOnCell;
         public event EventHandler<(int cellIndex, MouseButtonEventArgs e)> MouseRightDownOnCell;
-        
-        private int? GetIndexFromMouse(MouseEventArgs e) {
-            if (Data == null) {
+
+        private int? GetIndexFromLocation(Point location) {
+            if(Data == null) {
                 return null;
             }
 
-            var location = e.GetPosition(this);
             var col = (int)(location.X / (CellMargin.Left + CellMargin.Right + CellSize.Width));
             var row = (int)(location.Y / (CellMargin.Top + CellMargin.Bottom + CellSize.Height));
             if (row * BytePerLine + col < Data.Length) {
                 return row * BytePerLine + col;
             }
+
             return null;
         }
 
+        private int? GetIndexFromMouse(MouseEventArgs e) {
+            if(e == null) {
+                throw new ArgumentNullException(nameof(e));
+            }
+
+            return GetIndexFromLocation(e.GetPosition(this));
+        }
+
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e) {
-            base.OnPreviewMouseLeftButtonDown(e);
-       
+            base.OnMouseLeftButtonDown(e);
+
+            if (e.Handled) {
+                return;
+            }
+
             if (Data == null) {
                 return;
             }
@@ -238,7 +271,10 @@ namespace WpfHexaEditor {
 
         protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e) {
             base.OnMouseLeftButtonUp(e);
-            base.OnMouseUp(e);
+            if (e.Handled) {
+                return;
+            }
+
             var index = GetIndexFromMouse(e);
             if(index != null) {
                 MouseLeftUpOnCell?.Invoke(this, (index.Value, e));
@@ -247,18 +283,53 @@ namespace WpfHexaEditor {
         
         protected override void OnMouseMove(MouseEventArgs e) {
             base.OnMouseMove(e);
+            if (e.Handled) {
+                return;
+            }
+
             var index = GetIndexFromMouse(e);
-            if(index != null) {
+            if (index != null) {
+                if (index == lastMouseMoveIndex) {
+                    return;
+                }
+                lastMouseMoveIndex = index;
                 MouseMoveOnCell?.Invoke(this, (index.Value, e));
             }
         }
 
         protected override void OnMouseRightButtonDown(MouseButtonEventArgs e) {
             base.OnMouseRightButtonDown(e);
+            if (e.Handled) {
+                return;
+            }
+
             var index = GetIndexFromMouse(e);
             if(index != null) {
                 MouseRightDownOnCell?.Invoke(this, (index.Value, e));
             }
+        }
+
+        private int? lastMouseMoveIndex;
+        
+
+        private void InitializeMouseState() {
+            lastMouseMoveIndex = null;
+        }
+
+        public Point? GetCellLocation(int index){
+            if(Data == null)
+            {
+                return null;
+            }
+            
+            if(index > Data.Length) {
+                throw new IndexOutOfRangeException($"{nameof(index)} is larger than elements.");
+            }
+
+            var col = index % BytePerLine;
+            var row = index / BytePerLine;
+
+            return new Point((CellSize.Width + CellMargin.Left + CellMargin.Right) * col, (CellSize.Height + CellMargin.Top + CellMargin.Bottom) * row);
         }
     }
     

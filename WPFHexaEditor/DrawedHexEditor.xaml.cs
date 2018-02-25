@@ -48,6 +48,8 @@ namespace WpfHexaEditor {
 
             initialCellsLayer(HexDataLayer);
             initialCellsLayer(StringDataLayer);
+
+            InitializeTooltipEvents();
         }
 
         /// <summary>
@@ -59,6 +61,8 @@ namespace WpfHexaEditor {
         //To avoid resigning buffer everytime and to notify the UI to rerender,
         //we're gonna switch from one to another while refreshing.
         private byte[] _realViewBuffer;
+        //To avoid wrong mousemove event;
+        private bool contextMenuShowing;
 
         private int MaxVisibleLength {
             get {
@@ -75,18 +79,17 @@ namespace WpfHexaEditor {
             base.OnContextMenuOpening(e);
             contextMenuShowing = true;
         }
-
-        private bool contextMenuShowing;
+        
         protected override void OnContextMenuClosing(ContextMenuEventArgs e) {
             base.OnContextMenuClosing(e);
             contextMenuShowing = false;
 #if DEBUG
-            ss++;
+            //ss++;
 #endif
         }
 
 #if DEBUG
-        private long ss = 0;
+        //private long ss = 0;
 #endif
 
         /// <summary>
@@ -117,6 +120,7 @@ namespace WpfHexaEditor {
         }
         
         private void DataLayer_MouseLeftDownOnCell(object sender, (int cellIndex, MouseButtonEventArgs e) arg) {
+            
             if(arg.cellIndex >= MaxVisibleLength) {
                 return;
             }
@@ -157,6 +161,7 @@ namespace WpfHexaEditor {
             if (contextMenuShowing) {
                 return;
             }
+            
 #if DEBUG
             //arg.cellIndex = 15;
             //_lastMouseDownPosition = 0;
@@ -180,6 +185,148 @@ namespace WpfHexaEditor {
             _lastMouseDownPosition = null;
         }
 
+        protected override void OnKeyDown(KeyEventArgs e) {
+            if (Stream == null) {
+                return;
+            }
+
+            if (FocusPosition == -1) {
+                return;
+            }
+
+            if (KeyValidator.IsArrowKey(e.Key)) {
+                OnArrowKeyDown(e);
+                e.Handled = true;
+            }
+            
+        }
+        
+        //Deal with operation while arrow key is pressed.
+        private void OnArrowKeyDown(KeyEventArgs e) {
+            if(e == null) {
+                throw new ArgumentNullException(nameof(e));
+            }
+
+            if (!KeyValidator.IsArrowKey(e.Key)) {
+                throw new ArgumentException($"The key '{e.Key}' is not a arrow key.");
+            }
+
+            if(Stream == null) {
+                return;
+            }
+
+            if(FocusPosition == -1) {
+                return;
+            }
+            
+            //Update Selection if shift key is pressed;
+            if (Keyboard.Modifiers == ModifierKeys.Shift) {
+                long vectorEnd = -1;
+                switch (e.Key) {
+                    case Key.Left:
+                        if (FocusPosition > 0) {
+                            vectorEnd = FocusPosition - 1;
+                        }
+                        break;
+                    case Key.Up:
+                        if(FocusPosition >= BytePerLine) {
+                            vectorEnd = FocusPosition - BytePerLine;
+                        }
+                        break;
+                    case Key.Right:
+                        if (FocusPosition + 1 < Stream.Length) {
+                            vectorEnd = FocusPosition + 1;
+                        }
+                        break;
+                    case Key.Down:
+                        if (FocusPosition + BytePerLine < Stream.Length) {
+                            vectorEnd = FocusPosition + BytePerLine;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+                if(vectorEnd != -1) {
+                    //BackWard;
+                    if(vectorEnd < FocusPosition) {
+                        if (FocusPosition == SelectionStart) {
+                            SelectionLength += SelectionStart - vectorEnd;
+                            SelectionStart = vectorEnd;
+                        }
+                        else if(FocusPosition == SelectionStart + SelectionLength - 1
+                            && SelectionLength >= FocusPosition - vectorEnd + 1){
+                            SelectionLength -= FocusPosition - vectorEnd;
+                        }
+                        else {
+                            SelectionStart = vectorEnd;
+                            SelectionLength = FocusPosition - vectorEnd + 1;
+                        }
+                    }
+                    //Forward;
+                    else if(vectorEnd > FocusPosition) {
+                        if(FocusPosition == SelectionStart + SelectionLength - 1) {
+                            SelectionLength += vectorEnd - FocusPosition;
+                        }
+                        else if(FocusPosition == SelectionStart 
+                            && SelectionLength >= vectorEnd - FocusPosition + 1) {
+                            SelectionLength -= vectorEnd - SelectionStart;
+                            SelectionStart = vectorEnd;
+                        }
+                        else {
+                            SelectionStart = FocusPosition;
+                            SelectionLength = vectorEnd - FocusPosition + 1;
+                        }
+                    }
+                    else {
+                        
+                    }
+                }
+                
+            }
+
+            //Updte FocusSelection;
+            switch (e.Key)
+            {
+                case Key.Left:
+                    if (FocusPosition > 0)
+                    {
+                        FocusPosition--;
+                    }
+                    break;
+                case Key.Up:
+                    if (FocusPosition >= BytePerLine)
+                    {
+                        FocusPosition -= BytePerLine;
+                    }
+                    break;
+                case Key.Right:
+                    if (FocusPosition + 1 < Stream.Length)
+                    {
+                        FocusPosition++;
+                    }
+                    break;
+                case Key.Down:
+                    if (FocusPosition + BytePerLine < Stream.Length)
+                    {
+                        FocusPosition += BytePerLine;
+                    }
+                    break;
+                default:
+                    return;
+            }
+
+            //Update scrolling(if needed);
+            var firstVisiblePosition = Position / BytePerLine * BytePerLine;
+            var lastVisiblePosition = firstVisiblePosition + MaxVisibleLength - 1;
+            if (FocusPosition < firstVisiblePosition) {
+                Position -= BytePerLine;
+            }
+            else if (FocusPosition > lastVisiblePosition) {
+                Position += BytePerLine;
+            }
+            
+        }
         #endregion
 
 
@@ -608,9 +755,13 @@ namespace WpfHexaEditor {
             }
 
             ctrl.UpdateBackgroundBlocks();
+            if((long)e.NewValue != -1) {
+                ctrl.Focusable = true;
+                ctrl.Focus();
+            }
         }
 
-
+        
 
         public Brush FocusBrush {
             get { return (Brush)GetValue(FocusBrushProperty); }
@@ -630,7 +781,7 @@ namespace WpfHexaEditor {
 
         // Using a DependencyProperty as the backing store for SelectionBrush.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty SelectionBrushProperty =
-            DependencyProperty.Register(nameof(SelectionBrush), typeof(Brush), typeof(DrawedHexEditor), new PropertyMetadata(Brushes.Red));
+            DependencyProperty.Register(nameof(SelectionBrush), typeof(Brush), typeof(DrawedHexEditor), new PropertyMetadata(new SolidColorBrush(Color.FromRgb(0xe0,0xe0,0xff))));
 
 
         public MouseWheelSpeed MouseWheelSpeed {
@@ -666,4 +817,111 @@ namespace WpfHexaEditor {
 
     }
 
+    //Tooltip being worked;...
+    public partial class DrawedHexEditor{
+        private void InitializeTooltipEvents() {
+            HexDataLayer.MouseMoveOnCell += Datalayer_MouseMoveOnCell;
+            StringDataLayer.MouseMoveOnCell += Datalayer_MouseMoveOnCell;
+        }
+
+        private long mouseOverLevel = 0;
+        private void Datalayer_MouseMoveOnCell(object sender, (int cellIndex, MouseEventArgs e) arg) {
+            var index = arg.cellIndex;
+            if(!(sender is DataLayerBase dataLayer)) {
+                return;
+            }
+
+            if (contextMenuShowing) {
+                return;
+            }
+
+            var popPoint = dataLayer.GetCellLocation(index);
+            if (popPoint == null) {
+                return;
+            }
+            var pointValue = popPoint.Value;
+            if (Mouse.LeftButton == MouseButtonState.Pressed) {
+                return;
+            }
+
+            HoverPosition = Position / BytePerLine * BytePerLine + arg.cellIndex;
+            
+            if (ToolTipExtension.GetOperatableToolTip(dataLayer) == null) {
+                return;
+            }
+
+            dataLayer.SetToolTipOpen(false);
+            var thisLevel = mouseOverLevel++;
+            
+            //Delay is designed to improve the experience;
+            ThreadPool.QueueUserWorkItem(cb => {
+                Thread.Sleep(500);
+                if(mouseOverLevel > thisLevel + 1) {
+                    return;
+                }
+
+                this.Dispatcher.Invoke(() => {
+                    if (Mouse.LeftButton == MouseButtonState.Pressed) {
+                        return;
+                    }
+                    dataLayer.SetToolTipOpen(true, new Point {
+                        X = pointValue.X + dataLayer.CellMargin.Left + dataLayer.CharSize.Width + dataLayer.CellPadding.Left,
+                        Y = pointValue.Y + dataLayer.CharSize.Height + dataLayer.CellPadding.Top + dataLayer.CellMargin.Top
+                    });
+                });
+            });
+        }
+
+
+
+        public FrameworkElement HexDataToolTip {
+            get { return (FrameworkElement)GetValue(HexDataToolTipProperty); }
+            set { SetValue(HexDataToolTipProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for HexDataToolTip.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty HexDataToolTipProperty =
+            DependencyProperty.Register(nameof(HexDataToolTip), typeof(FrameworkElement), typeof(DrawedHexEditor), 
+                new PropertyMetadata(null,
+                    HexDataToolTip_PropertyChanged));
+
+        private static void HexDataToolTip_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+            if(!(d is DrawedHexEditor ctrl)) {
+                return;
+            }
+            if(e.NewValue is FrameworkElement newElem) {
+                ToolTipExtension.SetOperatableToolTip(ctrl.HexDataLayer, newElem);
+            }
+        }
+
+        public FrameworkElement StringDataToolTip {
+            get { return (FrameworkElement)GetValue(HexDataToolTipProperty); }
+            set { SetValue(HexDataToolTipProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for HexDataToolTip.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty StringDataToolTipProperty =
+            DependencyProperty.Register(nameof(StringDataToolTip), typeof(FrameworkElement), typeof(DrawedHexEditor),
+                new PropertyMetadata(null,
+                    StringDataToolTip_PropertyChanged));
+
+        private static void StringDataToolTip_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+            if (!(d is DrawedHexEditor ctrl)) {
+                return;
+            }
+            if (e.NewValue is FrameworkElement newElem) {
+                ToolTipExtension.SetOperatableToolTip(ctrl.StringDataLayer, newElem);
+            }
+        }
+
+        public long HoverPosition {
+            get { return (long)GetValue(HoverPositionProperty); }
+            set { SetValue(HoverPositionProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for HoverPosition.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty HoverPositionProperty =
+            DependencyProperty.Register(nameof(HoverPosition), typeof(long), typeof(DrawedHexEditor),
+                new FrameworkPropertyMetadata(-1L, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+    }
 }

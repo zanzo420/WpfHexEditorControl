@@ -18,6 +18,8 @@ namespace WpfHexaEditor.Core.Interfaces {
         event EventHandler<(int cellIndex, MouseButtonEventArgs e)> MouseLeftUpOnCell;
         event EventHandler<(int cellIndex, MouseEventArgs e)> MouseMoveOnCell;
         event EventHandler<(int cellIndex, MouseButtonEventArgs e)> MouseRightDownOnCell;
+
+        Point? GetCellLocation(int index);
     }
 
     public interface IFontControl {
@@ -33,7 +35,7 @@ namespace WpfHexaEditor.Core.Interfaces {
         byte[] Data { get; set; }
         IEnumerable<(int index, int length ,Brush background)> BackgroundBlocks { get; set; }
         IEnumerable<(int index, int length ,Brush foreground)> ForegroundBlocks { get; set; }
-
+        
         //int ColumnGroupCount { get; set; }
         //double GroupMargin { get; set; }
 

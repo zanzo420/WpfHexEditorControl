@@ -16,7 +16,7 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <hex:CellOffsetsInfoLayer Orientation="Horizontal" x:Name="infoHoriLayer" Grid.Column="1"/>
-        <hex:CellOffsetsInfoLayer Orientation="Vertical"  SavedBits="12" x:Name="infoVerLayer" Grid.Row="1" />
+        <hex:CellStepsLayer Orientation="Horizontal" x:Name="infoHoriLayer" Grid.Column="1"/>
+        <hex:CellStepsLayer Orientation="Vertical"  SavedBits="12" x:Name="infoVerLayer" Grid.Row="1" />
     </Grid>
 </UserControl>

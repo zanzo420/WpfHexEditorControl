@@ -12,7 +12,7 @@ namespace WpfHexaEditor
         public override Size CellSize => new Size(
                 2 * CharSize.Width + CellPadding.Left + CellPadding.Right,
             CellPadding.Top + CellPadding.Bottom + CharSize.Height);
-
+        
         protected override void DrawByte(DrawingContext drawingContext, byte bt, Brush foreground, Point startPoint) {
             var chs = ByteConverters.ByteToHexCharArray(bt);
             for (int chIndex = 0; chIndex < 2; chIndex++) {
@@ -40,6 +40,7 @@ namespace WpfHexaEditor
 
             }
         }
+
 
     }
 }

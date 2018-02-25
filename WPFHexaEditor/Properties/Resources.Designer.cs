@@ -553,11 +553,11 @@ namespace WpfHexaEditor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Lenght.
+        ///   Looks up a localized string similar to Length.
         /// </summary>
-        public static string LenghtString {
+        public static string LengthString {
             get {
-                return ResourceManager.GetString("LenghtString", resourceCulture);
+                return ResourceManager.GetString("LengthString", resourceCulture);
             }
         }
         

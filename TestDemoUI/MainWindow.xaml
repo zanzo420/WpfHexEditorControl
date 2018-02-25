@@ -5,10 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TestDemoUI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525" FontFamily="Lucida Console">
+        Title="MainWindow" Height="350" Width="525">
     <Grid>
+<<<<<<< HEAD
         
         <local:TestDataLayer/>
+=======
+        <local:TestRender Margin="20"/>
+>>>>>>> parent of 3effabd... HexDataLayer and StringDataLayer Added.
         
     </Grid>
 </Window>

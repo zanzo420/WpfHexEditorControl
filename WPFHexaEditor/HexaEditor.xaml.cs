@@ -179,7 +179,7 @@ namespace WpfHexaEditor
             InitializeCaret();
             RefreshView(true);
 
-            DataContext = this;
+            StatusBarGrid.DataContext = this;
         }
 
         #endregion Contructor

@@ -18,25 +18,7 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
     public partial class ShellViewModel : BindableBase {
         public ShellViewModel() {
             InitializeToolTips();
-#if DEBUG
-            //var customBacks = new List<(long index, long length, Brush background)> {
 
-            //    (0L,4L,Brushes.Yellow),
-
-            //    (4L,4L,Brushes.Red),
-
-            //    (8L,16L,Brushes.Brown)
-
-            //};
-
-            //for (int i = 0; i < 200; i++) {
-
-            //    customBacks.Add((24 + i, 1, Brushes.Chocolate));
-
-            //}
-
-            //CustomBackgroundBlocks = customBacks;
-#endif
 
         }
 
@@ -63,11 +45,7 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
         }
         
         
-        private IEnumerable<(long index, long length, Brush background)> _customBackgroundBlocks;
-        public IEnumerable<(long index, long length, Brush background)> CustomBackgroundBlocks {
-            get => _customBackgroundBlocks;
-            set => SetProperty(ref _customBackgroundBlocks, value);
-        }
+        public ObservableCollection<(long index, long length, Brush background)> CustomBackgroundBlocks { get; set; } = new ObservableCollection<(long index, long length, Brush background)>();
         
 
 
@@ -77,6 +55,34 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
                 () => {
 #if DEBUG
                     //Stream = File.OpenRead("E://FeiQ.1060559168.exe");
+#endif
+                }
+            ));
+
+
+
+        private DelegateCommand _testCommand;
+        public DelegateCommand TestCommand => _testCommand ??
+            (_testCommand = new DelegateCommand(
+                () => {
+#if DEBUG
+            //        var customBacks = new ObservableCollection<(long index, long length, Brush background)> {
+
+            //    (0L,4L,Brushes.Yellow),
+
+            //    (4L,4L,Brushes.Red),
+
+            //    (8L,16L,Brushes.Brown)
+
+            //};
+
+                    for (int i = 0; i < 200; i++) {
+
+                        CustomBackgroundBlocks.Add((24 + i, 1, Brushes.Chocolate));
+
+                    }
+
+                    //CustomBackgroundBlocks = customBacks;
 #endif
                 }
             ));
@@ -317,6 +323,26 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
                 },
                 () => SelectedToolTipItem != null
             )).ObservesProperty(() => SelectedToolTipItem);
+
+    }
+
+    public class Shell2ViewModel:BindableBase {
+        public Shell2ViewModel() {
+            RandStream();
+        }
+        private void RandStream() {
+            var rand = new Random();
+            var bts = new byte[4096];
+            rand.NextBytes(bts);
+
+            Stream = new MemoryStream(bts);
+        }
+        private MemoryStream _stream;
+        public MemoryStream Stream {
+            get => _stream;
+            set => SetProperty(ref _stream, value);
+        }
+
 
     }
 }

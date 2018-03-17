@@ -75,6 +75,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModels\Shell2ViewModel.cs" />
     <Compile Include="Views\Shell2.xaml.cs">
       <DependentUpon>Shell2.xaml</DependentUpon>
     </Compile>

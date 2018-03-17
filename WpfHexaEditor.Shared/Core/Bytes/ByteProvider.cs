@@ -76,7 +76,7 @@ namespace WpfHexaEditor.Core.Bytes
         /// Constuct new ByteProvider with stream
         /// </summary>
         /// <param name="stream"></param>
-        public ByteProvider(MemoryStream stream) => Stream = stream;
+        public ByteProvider(Stream stream) => Stream = stream;
 
         #endregion Constructors
 
@@ -101,7 +101,7 @@ namespace WpfHexaEditor.Core.Bytes
 
         /// <summary>
         /// Set or Get the file with the control will show hex
-        /// </summary>
+        /// </summary>                               
         public string FileName
         {
             get => _fileName;
@@ -116,9 +116,9 @@ namespace WpfHexaEditor.Core.Bytes
         /// <summary>
         /// Get or set a MemoryStream for use with byteProvider
         /// </summary>
-        public MemoryStream Stream
+        public Stream Stream
         {
-            get => (MemoryStream) _stream;
+            get => (Stream) _stream;
             set
             {
                 var readonlymode = _readOnlyMode;

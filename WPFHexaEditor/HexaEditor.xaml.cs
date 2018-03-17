@@ -1686,10 +1686,9 @@ namespace WpfHexaEditor
         {
             //Refresh stream
             if (!ByteProvider.CheckIsOpen(_provider)) return;
-
-            var stream = new MemoryStream(_provider.Stream.ToArray());
+            
             CloseProvider();
-            OpenStream(stream);
+            OpenStream(this.Stream);
 
             ChangesSubmited?.Invoke(this, new EventArgs());
         }
@@ -1697,6 +1696,7 @@ namespace WpfHexaEditor
         /// <summary>
         /// Set or Get the file with the control will show hex
         /// </summary>
+        [Obsolete("This property will be removed in next version,Please use new 'Stream' Property")]
         public string FileName
         {
             get => (string) GetValue(FileNameProperty);
@@ -1704,6 +1704,7 @@ namespace WpfHexaEditor
         }
 
         // Using a DependencyProperty as the backing store for FileName.  This enables animation, styling, binding, etc...
+        [Obsolete("This property will be removed in next version,Please use new 'Stream' Property")]
         public static readonly DependencyProperty FileNameProperty =
             DependencyProperty.Register(nameof(FileName), typeof(string), typeof(HexEditor),
                 new FrameworkPropertyMetadata(string.Empty,
@@ -1718,15 +1719,15 @@ namespace WpfHexaEditor
         /// <summary>
         /// Set the MemoryStream are used by ByteProvider
         /// </summary>
-        public MemoryStream Stream
+        public Stream Stream
         {
-            get => (MemoryStream) GetValue(StreamProperty);
+            get => (Stream) GetValue(StreamProperty);
             set => SetValue(StreamProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for Stream.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty StreamProperty =
-            DependencyProperty.Register(nameof(Stream), typeof(MemoryStream), typeof(HexEditor),
+            DependencyProperty.Register(nameof(Stream), typeof(Stream), typeof(HexEditor),
                 new FrameworkPropertyMetadata(null,
                     Stream_PropertyChanged));
 
@@ -1735,7 +1736,7 @@ namespace WpfHexaEditor
             if (!(d is HexEditor ctrl)) return;
 
             ctrl.CloseProvider();
-            ctrl.OpenStream((MemoryStream) e.NewValue);
+            ctrl.OpenStream((Stream) e.NewValue);
         }
 
         /// <summary>
@@ -1795,67 +1796,43 @@ namespace WpfHexaEditor
         /// <param name="filename"></param>
         private void OpenFile(string filename)
         {
-            if (string.IsNullOrEmpty(FileName))
+            if (string.IsNullOrEmpty(filename))
             {
                 CloseProvider();
                 return;
             }
 
-            if (File.Exists(filename))
-            {
+            
+            if (File.Exists(filename)) {
                 CloseProvider();
 
-                _provider = new ByteProvider(filename);
+                var readOnlyMode = false;
 
-                if (_provider.IsEmpty)
-                {
-                    CloseProvider();
-                    return;
+                try {
+                    Stream = File.Open(filename, FileMode.Open, FileAccess.ReadWrite, FileShare.Read);
+                    OpenStream(Stream);
+                }
+                catch {
+                    if (MessageBox.Show("The file is locked. Do you want to open it in read-only mode?", string.Empty,
+                            MessageBoxButton.YesNo) == MessageBoxResult.Yes) {
+                        Stream = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+
+                        readOnlyMode = true;
+                    }
                 }
 
-                _provider.ReadOnlyChanged += Provider_ReadOnlyChanged;
-                _provider.DataCopiedToClipboard += Provider_DataCopied;
-                _provider.ChangesSubmited += Provider_ChangesSubmited;
-                _provider.Undone += Provider_Undone;
-                _provider.LongProcessChanged += Provider_LongProcessProgressChanged;
-                _provider.LongProcessStarted += Provider_LongProcessProgressStarted;
-                _provider.LongProcessCompleted += Provider_LongProcessProgressCompleted;
-                _provider.LongProcessCanceled += Provider_LongProcessProgressCompleted;
-                _provider.FillWithByteCompleted += Provider_FillWithByteCompleted;
-                _provider.ReplaceByteCompleted += Provider_ReplaceByteCompleted;
-                _provider.BytesAppendCompleted += Provider_BytesAppendCompleted;
-
-                UpdateScrollBar();
-                UpdateHeader();
-
-                //Load file with ASCII character table;
-                var previousTable = TypeOfCharacterTable;
-                TypeOfCharacterTable = CharacterTableType.Ascii;
-
-                RefreshView(true);
-
-                //Replace previous character table
-                TypeOfCharacterTable = previousTable;
-
-                UnSelectAll();
-
-                UpdateTblBookMark();
-                UpdateSelectionColor(FirstColor.HexByteData);
-
-                //Update count of byte on file open
-                UpdateByteCount();
-
-                //Debug
-                Debug.Print("FILE OPENED");
+                if (readOnlyMode)
+                    ReadOnlyMode = true;
             }
-            else
+            else {
                 throw new FileNotFoundException();
+            }
         }
 
         /// <summary>
         /// Open file name
         /// </summary>
-        private void OpenStream(MemoryStream stream)
+        private void OpenStream(Stream stream)
         {
             if (!stream.CanRead) return;
 

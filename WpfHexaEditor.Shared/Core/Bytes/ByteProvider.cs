@@ -85,6 +85,7 @@ namespace WpfHexaEditor.Core.Bytes
         /// <summary>
         /// Get the type of stream are opened in byteprovider.
         /// </summary>
+        [Obsolete("The ByteProviderStreamType is lowly extensible in sight of variety of stream source,and will be removed in next release.")]
         public ByteProviderStreamType StreamType { get; internal set; } = ByteProviderStreamType.Nothing;
 
         /// <summary>
@@ -102,12 +103,14 @@ namespace WpfHexaEditor.Core.Bytes
         /// <summary>
         /// Set or Get the file with the control will show hex
         /// </summary>                               
+        [Obsolete("The FileName will be removed in next release.")]
         public string FileName
         {
             get => _fileName;
 
             set
             {
+                
                 _fileName = value;
                 OpenFile();
             }
@@ -118,7 +121,7 @@ namespace WpfHexaEditor.Core.Bytes
         /// </summary>
         public Stream Stream
         {
-            get => (Stream) _stream;
+            get => _stream;
             set
             {
                 var readonlymode = _readOnlyMode;
@@ -313,85 +316,118 @@ namespace WpfHexaEditor.Core.Bytes
         /// </summary>
         public void SubmitChanges()
         {
-            if (CanWrite)
-            {
-                var cancel = false;
+            if (!CanWrite) {
+                throw new InvalidOperationException($"Cannot write to stream while {nameof(CanWrite)} is set to false.");
+            }
 
-                //Launch event at process started
-                IsOnLongProcess = true;
-                LongProcessStarted?.Invoke(this, new EventArgs());
+            if (!Stream.CanWrite) {
+                throw new InvalidOperationException($"Cannot write to stream while {nameof(Stream)}.{nameof(CanWrite)} is set to false.");
+            }
 
-                //Set percent of progress to zero and create and iterator for help mesure progress
-                LongProcessProgress = 0;
-                int i;
+            var cancel = false;
 
-                //Create appropriate temp stream for new file.
-                var newStream = Length < ConstantReadOnly.Largefilelength
-                    ? (Stream) new MemoryStream()
-                    : File.Open(Path.GetTempFileName(), FileMode.Open, FileAccess.ReadWrite);
+            //Launch event at process started
+            IsOnLongProcess = true;
+            LongProcessStarted?.Invoke(this, new EventArgs());
 
-                //Fast change only nothing byte deleted or added
-                if (!GetByteModifieds(ByteAction.Deleted).Any() && !GetByteModifieds(ByteAction.Added).Any() &&
-                    !File.Exists(_newfilename))
-                {
-                    var bytemodifiedList = GetByteModifieds(ByteAction.Modified);
-                    double countChange = bytemodifiedList.Count;
-                    i = 0;
+            //Set percent of progress to zero and create and iterator for help mesure progress
+            LongProcessProgress = 0;
+            int i;
 
-                    #region Fast save. only save byteaction=modified
+            //Create appropriate temp stream for new file.
+            var newStream = Length < ConstantReadOnly.Largefilelength
+                ? (Stream)new MemoryStream()
+                : File.Open(Path.GetTempFileName(), FileMode.Open, FileAccess.ReadWrite);
 
-                    foreach (var bm in bytemodifiedList)
-                        if (bm.Value.IsValid)
-                        {
-                            //Set percent of progress
-                            LongProcessProgress = i++ / countChange;
+            //Fast change only nothing byte deleted or added
+            if (!GetByteModifieds(ByteAction.Deleted).Any() && !GetByteModifieds(ByteAction.Added).Any() &&
+                !File.Exists(_newfilename)) {
+                var bytemodifiedList = GetByteModifieds(ByteAction.Modified);
+                double countChange = bytemodifiedList.Count;
+                i = 0;
 
-                            //Break process?
-                            if (!IsOnLongProcess)
-                            {
-                                cancel = true;
-                                break;
-                            }
+                #region Fast save. only save byteaction=modified
 
-                            _stream.Position = bm.Key;
-                            _stream.WriteByte(bm.Value.Byte.Value);
-                        }
-
-                    #endregion
-                }
-                else
-                {
-                    byte[] buffer;
-                    long bufferlength;
-                    var sortedBm = GetByteModifieds(ByteAction.All).OrderBy(b => b.Key).ToList();
-                    double countChange = sortedBm.Count;
-                    i = 0;
-
-                    //Set position
-                    Position = 0;
-
-                    //Start update and rewrite file.
-                    foreach (var nextByteModified in sortedBm)
-                    {
+                foreach (var bm in bytemodifiedList)
+                    if (bm.Value.IsValid) {
                         //Set percent of progress
                         LongProcessProgress = i++ / countChange;
 
                         //Break process?
-                        if (!IsOnLongProcess)
+                        if (!IsOnLongProcess) {
+                            cancel = true;
                             break;
+                        }
 
-                        //Reset buffer
-                        buffer = new byte[ConstantReadOnly.Copyblocksize];
+                        _stream.Position = bm.Key;
+                        _stream.WriteByte(bm.Value.Byte.Value);
+                    }
 
-                        #region start read/write / use little block for optimize memory
+                #endregion
+            }
+            else {
+                byte[] buffer;
+                long bufferlength;
+                var sortedBm = GetByteModifieds(ByteAction.All).OrderBy(b => b.Key).ToList();
+                double countChange = sortedBm.Count;
+                i = 0;
 
-                        while (Position != nextByteModified.Key)
-                        {
-                            bufferlength = nextByteModified.Key - Position;
+                //Set position
+                Position = 0;
 
-                            //TEMPS
-                            if (bufferlength < 0)
-                                bufferlength = 1;
+                //Start update and rewrite file.
+                foreach (var nextByteModified in sortedBm) {
+                    //Set percent of progress
+                    LongProcessProgress = i++ / countChange;
+
+                    //Break process?
+                    if (!IsOnLongProcess)
+                        break;
+
+                    //Reset buffer
+                    buffer = new byte[ConstantReadOnly.Copyblocksize];
+
+                    #region start read/write / use little block for optimize memory
+
+                    while (Position != nextByteModified.Key) {
+                        bufferlength = nextByteModified.Key - Position;
+
+                        //TEMPS
+                        if (bufferlength < 0)
+                            bufferlength = 1;
+
+                        //EOF
+                        if (bufferlength < ConstantReadOnly.Copyblocksize)
+                            buffer = new byte[bufferlength];
+
+                        _stream.Read(buffer, 0, buffer.Length);
+                        newStream.Write(buffer, 0, buffer.Length);
+                    }
+
+                    #endregion
+
+                    #region Apply ByteAction!
+
+                    switch (nextByteModified.Value.Action) {
+                        //case ByteAction.Added:
+                        //    //TODO : IMPLEMENTING ADD BYTE
+                        //    break;
+                        case ByteAction.Deleted:
+                            Position++;
+                            break;
+                        case ByteAction.Modified:
+                            Position++;
+                            newStream.WriteByte(nextByteModified.Value.Byte.Value);
+                            break;
+                    }
+
+                    #endregion
+
+                    #region Read/Write the last section of file
+
+                    if (nextByteModified.Key == sortedBm.Last().Key) {
+                        while (!Eof) {
+                            bufferlength = _stream.Length - Position;
 
                             //EOF
                             if (bufferlength < ConstantReadOnly.Copyblocksize)
@@ -400,108 +436,68 @@ namespace WpfHexaEditor.Core.Bytes
                             _stream.Read(buffer, 0, buffer.Length);
                             newStream.Write(buffer, 0, buffer.Length);
                         }
-
-                        #endregion
-
-                        #region Apply ByteAction!
-
-                        switch (nextByteModified.Value.Action)
-                        {
-                            //case ByteAction.Added:
-                            //    //TODO : IMPLEMENTING ADD BYTE
-                            //    break;
-                            case ByteAction.Deleted:
-                                Position++;
-                                break;
-                            case ByteAction.Modified:
-                                Position++;
-                                newStream.WriteByte(nextByteModified.Value.Byte.Value);
-                                break;
-                        }
-
-                        #endregion
-
-                        #region Read/Write the last section of file
-
-                        if (nextByteModified.Key == sortedBm.Last().Key)
-                        {
-                            while (!Eof)
-                            {
-                                bufferlength = _stream.Length - Position;
-
-                                //EOF
-                                if (bufferlength < ConstantReadOnly.Copyblocksize)
-                                    buffer = new byte[bufferlength];
-
-                                _stream.Read(buffer, 0, buffer.Length);
-                                newStream.Write(buffer, 0, buffer.Length);
-                            }
-                        }
-
-                        #endregion
-                    }
-
-                    #region Set stream to new file (save as)
-
-                    var refreshByteProvider = false;
-                    if (File.Exists(_newfilename))
-                    {
-                        _stream = File.Open(_newfilename, FileMode.Open, FileAccess.ReadWrite, FileShare.Read);
-                        _stream.SetLength(newStream.Length);
-                        refreshByteProvider = true;
                     }
 
                     #endregion
-
-                    #region Write new data to current stream
-
-                    Position = 0;
-                    newStream.Position = 0;
-                    buffer = new byte[ConstantReadOnly.Copyblocksize];
-
-                    while (!Eof)
-                    {
-                        //Set percent of progress
-                        LongProcessProgress = Position / (double) Length;
-
-                        //Break process?
-                        if (!IsOnLongProcess)
-                        {
-                            cancel = true;
-                            break;
-                        }
-
-                        bufferlength = _stream.Length - Position;
-
-                        //EOF
-                        if (bufferlength < ConstantReadOnly.Copyblocksize)
-                            buffer = new byte[bufferlength];
-
-                        newStream.Read(buffer, 0, buffer.Length);
-                        _stream.Write(buffer, 0, buffer.Length);
-                    }
-                    _stream.SetLength(newStream.Length);
-
-                    #endregion
-
-                    //dispose resource
-                    newStream.Close();
-
-                    if (refreshByteProvider)
-                        FileName = _newfilename;
                 }
 
-                //Launch event at process completed
-                if (cancel)
-                    LongProcessCanceled?.Invoke(this, new EventArgs());
-                else
-                    LongProcessCompleted?.Invoke(this, new EventArgs());
+                #region Set stream to new file (save as)
 
-                //Launch event
-                ChangesSubmited?.Invoke(this, new EventArgs());
+                var refreshByteProvider = false;
+                if (File.Exists(_newfilename)) {
+                    _stream = File.Open(_newfilename, FileMode.Open, FileAccess.ReadWrite, FileShare.Read);
+                    _stream.SetLength(newStream.Length);
+                    refreshByteProvider = true;
+                }
+
+                #endregion
+
+                #region Write new data to current stream
+
+                Position = 0;
+                newStream.Position = 0;
+                buffer = new byte[ConstantReadOnly.Copyblocksize];
+
+                while (!Eof) {
+                    //Set percent of progress
+                    LongProcessProgress = Position / (double)Length;
+
+                    //Break process?
+                    if (!IsOnLongProcess) {
+                        cancel = true;
+                        break;
+                    }
+
+                    bufferlength = _stream.Length - Position;
+
+                    //EOF
+                    if (bufferlength < ConstantReadOnly.Copyblocksize)
+                        buffer = new byte[bufferlength];
+
+                    newStream.Read(buffer, 0, buffer.Length);
+                    _stream.Write(buffer, 0, buffer.Length);
+                }
+                _stream.SetLength(newStream.Length);
+
+                #endregion
+
+                //dispose resource
+                newStream.Close();
+
+                if (refreshByteProvider)
+                    FileName = _newfilename;
             }
+
+            //Launch event at process completed
+            if (cancel)
+                LongProcessCanceled?.Invoke(this, new EventArgs());
             else
-                throw new Exception("Cannot write to file.");
+                LongProcessCompleted?.Invoke(this, new EventArgs());
+
+            //Launch event
+            ChangesSubmited?.Invoke(this, new EventArgs());
+
+
         }
 
         #endregion SubmitChanges to file/stream

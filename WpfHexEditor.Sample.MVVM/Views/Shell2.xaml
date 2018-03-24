@@ -9,8 +9,9 @@
         xmlns:properties="clr-namespace:WpfHexEditor.Sample.MVVM.Properties"
         xmlns:prism="http://prismlibrary.com/" prism:ViewModelLocator.AutoWireViewModel="True"
         xmlns:local="clr-namespace:WpfHexEditor.Sample.MVVM.Views"
+        WindowState="Maximized"
         mc:Ignorable="d"
-        Title="Shell2" Height="300" Width="300">
+        Title="WpfHexaEditor-HexaEditor" Height="300" Width="300">
     <!--xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"-->
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="ContentRendered">

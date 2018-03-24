@@ -684,7 +684,7 @@ namespace WpfHexaEditor {
         }
 
         public static readonly DependencyProperty BytePerLineProperty =
-            DependencyProperty.Register("BytePerLine", typeof(int), typeof(HexEditor),
+            DependencyProperty.Register(nameof(BytePerLine), typeof(int), typeof(DrawedHexEditor),
                 new PropertyMetadata(16,BytePerLine_PropertyChanged));
 
         private static void BytePerLine_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {

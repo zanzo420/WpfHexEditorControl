@@ -134,12 +134,12 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="HexaEditor.xaml">
+    <Page Include="HexEditor.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="HexaEditor.xaml.cs">
-      <DependentUpon>HexaEditor.xaml</DependentUpon>
+    <Compile Include="HexEditor.xaml.cs">
+      <DependentUpon>HexEditor.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Resources\Dictionary\BrushesDictionary.xaml">

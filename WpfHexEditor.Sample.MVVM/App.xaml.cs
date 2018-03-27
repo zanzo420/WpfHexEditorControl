@@ -21,7 +21,13 @@ namespace WpfHexEditor.Sample.MVVM {
         }
         protected override void OnStartup(StartupEventArgs e) {
             base.OnStartup(e);
-            //new BootStrapper().Run()
+            try {
+                new BootStrapper().Run();
+            }
+            catch(Exception ex) {
+
+            }
+            
         }
     }
 }

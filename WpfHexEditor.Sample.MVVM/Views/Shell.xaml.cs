@@ -14,21 +14,26 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WpfHexaEditor;
+using WpfHexEditor.Sample.MVVM.Contracts;
 using WpfHexEditor.Sample.MVVM.ViewModels;
 
 namespace WpfHexEditor.Sample.MVVM.Views {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class Shell : Window {
+    [Export(typeof(IShell))]
+    public partial class Shell : Window,IShell {
         public Shell() {
-            this.WindowState = WindowState.Maximized;
             InitializeComponent();
             
-            //Cuz xaml designer doesn't support generic type;We have to set the some bindings(valuetuple) in codebehind :(;
+            //Cuz xaml designer doesn't support generic type binding;We have to set the some bindings(valuetuple) in codebehind :(;
             HexEdit.SetBinding(DrawedHexEditor.CustomBackgroundBlocksProperty, new Binding(nameof(HexEdit.CustomBackgroundBlocks)));
             //CustomBackgroundBlocks = "{Binding CustomBackgroundBlocks}"
             //(this.DataContext as ShellViewModel).FileEditor = HexEdit;
         }
+
+       
+
+      
     }
 }

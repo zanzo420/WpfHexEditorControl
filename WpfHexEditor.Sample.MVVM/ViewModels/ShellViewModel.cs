@@ -5,16 +5,19 @@ using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.Composition;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using WpfHexaEditor.Core;
 using WpfHexaEditor.Core.Interfaces;
+using WpfHexEditor.Sample.MVVM.Contracts;
 using WpfHexEditor.Sample.MVVM.Helpers;
 using WpfHexEditor.Sample.MVVM.Models;
 
 namespace WpfHexEditor.Sample.MVVM.ViewModels {
+    [Export]
     public partial class ShellViewModel : BindableBase {
         public ShellViewModel() {
             InitializeToolTips();
@@ -100,26 +103,29 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
         public DelegateCommand OpenFileCommand => _openFileCommand ??
             (_openFileCommand = new DelegateCommand(
                 () => {
-                    
-                    var fileDialog = new OpenFileDialog();
-
-                    if (fileDialog.ShowDialog() != null) {
-
-                        if (Stream != null) {
-                            Stream.Close();
-                            Stream = null;
-                        }
-
-                        if (File.Exists(fileDialog.FileName)) {
-                            Application.Current.MainWindow.Cursor = Cursors.Wait;
-
-                            Stream = File.Open(fileDialog.FileName, FileMode.Open, FileAccess.ReadWrite);
-
-                            Application.Current.MainWindow.Cursor = null;
-                        }
+                    var fileName = DialogService.Current?.OpenFile();
+                    if (!string.IsNullOrEmpty(fileName)) {
+                        return;
                     }
+
+                    OpenFile(fileName);
                 }
             ));
+
+        private void OpenFile(string fileName) {
+            if (Stream != null) {
+                Stream.Close();
+                Stream = null;
+            }
+
+            if (File.Exists(fileName)) {
+                Application.Current.MainWindow.Cursor = Cursors.Wait;
+
+                Stream = File.Open(fileName, FileMode.Open, FileAccess.ReadWrite);
+
+                Application.Current.MainWindow.Cursor = null;
+            }
+        }
 
         private DelegateCommand _submitChangesCommand;
         public DelegateCommand SubmitChangesCommand => _submitChangesCommand ??
@@ -251,7 +257,39 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
                 }
             ));
 
-        
+
+        /// <summary>
+        /// DragEventArg is not test-friendly,what we care is Data (IDataObject-typed) prop,
+        /// That's why we set the command as IDataObject generic-typed;
+        /// </summary>
+        private DelegateCommand<IDataObject> _dropCommand;
+        public DelegateCommand<IDataObject> DropCommand => _dropCommand ??
+            (_dropCommand = new DelegateCommand<IDataObject>(
+                dataObject => {
+                    if(Stream != null) {
+                        Stream.Dispose();
+                    }
+
+                    if(dataObject == null) {
+                        return;
+                    }
+
+                    try {
+                        string[] files = (string[])dataObject.GetData(DataFormats.FileDrop);
+                        if(files.Length == 0) {
+                            return;
+                        }
+                        OpenFile(files[0]);
+                    }
+                    catch(Exception ex) {
+
+                    }
+                    //arg.Data.GetData()
+                }
+            ));
+
+
+
     }
 
     /// <summary>

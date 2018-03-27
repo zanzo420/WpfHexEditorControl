@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:WpfHexEditor.Sample.MVVM"
         xmlns:properties="clr-namespace:WpfHexEditor.Sample.MVVM.Properties"
         xmlns:hexcore="clr-namespace:WpfHexaEditor.Core;assembly=WPFHexaEditor"
-        xmlns:prism="http://prismlibrary.com/" 
+        xmlns:prism="http://prismlibrary.com/"  WindowState="Maximized"
         xmlns:hex="clr-namespace:WpfHexaEditor;assembly=WPFHexaEditor"
         x:Name="Window" prism:ViewModelLocator.AutoWireViewModel="True"
         Title="WpfHexEditor-DrawedHexEditor" Height="350" Width="525">
@@ -225,8 +225,8 @@
                 </MenuItem>
             </Menu>
             <Grid >
-                <hex:DrawedHexEditor 
-                CellMargin="0,1"
+                <hex:DrawedHexEditor AllowDrop="True" 
+                CellMargin="0,1" 
                 CellPadding="2"
                 FocusPosition="{Binding FocusPosition}"
                 HoverPosition="{Binding HoverPosition}"
@@ -235,6 +235,11 @@
                 SelectionLength="{Binding SelectionLength}"
                 x:Name="HexEdit"
                 Margin="2">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Drop">
+                            <prism:InvokeCommandAction Command="{Binding DropCommand}" TriggerParameterPath="Data"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                     <hex:DrawedHexEditor.Resources>
                         <DataTemplate x:Key="DataToolTipTemplate">
                             <StackPanel Orientation="Horizontal">

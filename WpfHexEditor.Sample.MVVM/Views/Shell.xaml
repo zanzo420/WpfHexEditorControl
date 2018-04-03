@@ -221,20 +221,25 @@
                         IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HeaderVisibility, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                 </MenuItem>
                 <MenuItem Header="Test" Command="{Binding TestCommand}">
-                    
+
                 </MenuItem>
             </Menu>
             <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="59*"/>
+                    <ColumnDefinition Width="114*"/>
+                </Grid.ColumnDefinitions>
                 <hex:DrawedHexEditor AllowDrop="True" 
                 CellMargin="0,1" 
                 CellPadding="2"
                 FocusPosition="{Binding FocusPosition}"
                 HoverPosition="{Binding HoverPosition}"
+                Position="{Binding Position}"
                 Stream="{Binding Stream}"
                 SelectionStart="{Binding SelectionStart}"
                 SelectionLength="{Binding SelectionLength}"
                 x:Name="HexEdit"
-                Margin="2">
+                Margin="2,2,2.4,2.2" Grid.ColumnSpan="2">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Drop">
                             <prism:InvokeCommandAction Command="{Binding DropCommand}" TriggerParameterPath="Data"/>
@@ -253,7 +258,7 @@
                             <MenuItem Header="{DynamicResource CopyValue}" Command="{Binding CopyValueCommand}"/>
                             <MenuItem Header="{DynamicResource CopyExpression}" Command="{Binding CopyExpressionCommand}"/>
                         </ContextMenu>
-                    
+
                     </hex:DrawedHexEditor.Resources>
                     <hex:DrawedHexEditor.HexDataToolTip>
                         <ListBox ItemsSource="{Binding DataToolTips}" FontSize="14" 
@@ -272,10 +277,10 @@
                         </ContextMenu>
                     </UserControl.ContextMenu>
                 </hex:DrawedHexEditor>
-                
+
             </Grid>
-            
-           
+
+
             <!--AllowByteCount="False"
                 AppendNeedConfirmation="False"
                 ByteGrouping="FourByte"
@@ -283,8 +288,8 @@
                 ByteSpacerVisualStyle="Dash"
                 ByteSpacerWidthTickness="Normal"
                 DataStringVisual="Hexadecimal"-->
-            
+
         </DockPanel>
     </Grid>
-    
+
 </Window>

@@ -46,8 +46,15 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
             get => _selectionLength;
             set => SetProperty(ref _selectionLength, value);
         }
-        
-        
+
+
+        private long _position;
+        public long Position {
+            get => _position;
+            set => SetProperty(ref _position, value);
+        }
+
+
         public ObservableCollection<(long index, long length, Brush background)> CustomBackgroundBlocks { get; set; } = new ObservableCollection<(long index, long length, Brush background)>();
         
 
@@ -69,6 +76,10 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
             (_testCommand = new DelegateCommand(
                 () => {
 #if DEBUG
+                   if(Stream == null) {
+                        return;
+                   }
+                    Position = 512;
             //        var customBacks = new ObservableCollection<(long index, long length, Brush background)> {
 
             //    (0L,4L,Brushes.Yellow),
@@ -104,7 +115,7 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
             (_openFileCommand = new DelegateCommand(
                 () => {
                     var fileName = DialogService.Current?.OpenFile();
-                    if (!string.IsNullOrEmpty(fileName)) {
+                    if (string.IsNullOrEmpty(fileName)) {
                         return;
                     }
 
@@ -289,6 +300,7 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
             ));
 
 
+        
 
     }
 

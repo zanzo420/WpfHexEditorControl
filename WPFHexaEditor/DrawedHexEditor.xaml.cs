@@ -428,16 +428,16 @@ namespace WpfHexaEditor {
                 new FrameworkPropertyMetadata(-1L, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,PositionProperty_Changed));
 
         private static void PositionProperty_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e) { 
-            if(!(d is DrawedHexEditor editor)) {
+            if(!(d is DrawedHexEditor ctrl)) {
                 return;
             }
 #if DEBUG
-            editor.watch.Restart();
+            ctrl.watch.Restart();
 #endif
-            editor.UpdateContent();
+            ctrl.UpdateContent();
 #if DEBUG
-            editor.watch.Stop();
-            Debug.Print($"REFRESH TIME: {editor.watch.ElapsedMilliseconds} ms");
+            ctrl.watch.Stop();
+            Debug.Print($"REFRESH TIME: {ctrl.watch.ElapsedMilliseconds} ms");
 #endif
             
         }
@@ -812,8 +812,11 @@ namespace WpfHexaEditor {
 
         private static void Stream_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
             if (!(d is DrawedHexEditor ctrl)) return;
-            //These methods won't be invoked everytime scrolling.but only when stream is opened or closed.
+            //This methods won't be invoked everytime scrolling.but only when stream is opened or closed.
             ctrl.UpdateInfoes();
+
+
+            ctrl.UpdateContent();
         }
 
         #endregion

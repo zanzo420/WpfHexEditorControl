@@ -525,11 +525,12 @@ namespace WpfHexaEditor {
             UpdateBackgroundBlocks();
 
             UpdateDataContent();
+
+            UpdateBlockLineContent();
         }
-
-        
-
+    
         #region  These methods will be invoked every time scrolling the content(scroll or position changed)(Refreshview calling);
+
         ///<see cref="UpdateContent"/>
         /// <summary>
         /// Update the hex and string layer you current view;
@@ -568,6 +569,11 @@ namespace WpfHexaEditor {
             LinesOffsetInfoLayer.StepsCount = 
                 (int)Math.Min(HexDataLayer.AvailableRowsCount , 
                 MaxVisibleLength / BytePerLine + (MaxVisibleLength % BytePerLine != 0?1:0 ));
+        }
+
+        private void UpdateBlockLineContent() {
+            var offSetLineCount = (BlockSize - Position / BytePerLine * BytePerLine) % BlockSize;
+            
         }
 
         private void UpdateScrollBarContent() {
@@ -820,6 +826,29 @@ namespace WpfHexaEditor {
         }
 
         #endregion
+
+
+        /// <summary>
+        /// This property will get the control of drawing "sector line";
+        /// </summary>
+        public int BlockSize {
+            get { return (int)GetValue(BlockSizeProperty); }
+            set { SetValue(BlockSizeProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for BlockSize.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty BlockSizeProperty =
+            DependencyProperty.Register(nameof(BlockSize), typeof(int), typeof(DrawedHexEditor),
+                new PropertyMetadata(512, BlockSize_PropertyChanged));
+
+        private static void BlockSize_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+            if(!(d is DrawedHexEditor ctrl)) {
+                return;
+            }
+
+
+        }
+
 
     }
 

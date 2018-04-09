@@ -32,6 +32,8 @@ namespace WpfHexaEditor {
                 )
             );
 
+        
+
         private static void DataProperty_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e) {
             if (!(d is DataLayerBase ctrl)) {
                 return;
@@ -209,6 +211,7 @@ namespace WpfHexaEditor {
 
         }
         protected abstract void DrawByte(DrawingContext drawingContext, byte bt, Brush foreground, Point startPoint);
+        
         protected override void OnRender(DrawingContext drawingContext) {
             base.OnRender(drawingContext);
             DrawBackgrounds(drawingContext);
@@ -331,6 +334,13 @@ namespace WpfHexaEditor {
 
             return new Point((CellSize.Width + CellMargin.Left + CellMargin.Right) * col, (CellSize.Height + CellMargin.Top + CellMargin.Bottom) * row);
         }
+
+
+
+        
+        
+
+
     }
     
 }

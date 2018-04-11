@@ -11,7 +11,7 @@
 
     <Grid>
 
-        <local:TestDataLayer/>
+        <local:TestForegrounds/>
         
     </Grid>
 </Window>

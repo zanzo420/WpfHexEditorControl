@@ -64,16 +64,16 @@ namespace WpfHexaEditor {
         //To avoid wrong mousemove event;
         private bool contextMenuShowing;
 
-        private int MaxVisibleLength {
-            get {
-                if(Stream == null) {
-                    return 0;
-                }
-
-                return (int)Math.Min(HexDataLayer.AvailableRowsCount * BytePerLine,
-                Stream.Length - Position / BytePerLine * BytePerLine);
+        private int GetMaxVisibleLength() {
+            if (Stream == null) {
+                return 0;
             }
+
+            return (int)Math.Min(HexDataLayer.AvailableRowsCount * BytePerLine,
+            Stream.Length - Position / BytePerLine * BytePerLine);
         }
+
+        private long GetFirstVisiblePosition() => Position / BytePerLine* BytePerLine;
 
         protected override void OnContextMenuOpening(ContextMenuEventArgs e) {
             base.OnContextMenuOpening(e);
@@ -121,7 +121,7 @@ namespace WpfHexaEditor {
         
         private void DataLayer_MouseLeftDownOnCell(object sender, (int cellIndex, MouseButtonEventArgs e) arg) {
             
-            if(arg.cellIndex >= MaxVisibleLength) {
+            if(arg.cellIndex >= GetMaxVisibleLength()) {
                 return;
             }
 
@@ -318,7 +318,7 @@ namespace WpfHexaEditor {
 
             //Update scrolling(if needed);
             var firstVisiblePosition = Position / BytePerLine * BytePerLine;
-            var lastVisiblePosition = firstVisiblePosition + MaxVisibleLength - 1;
+            var lastVisiblePosition = firstVisiblePosition + GetMaxVisibleLength() - 1;
             if (FocusPosition < firstVisiblePosition) {
                 Position -= BytePerLine;
             }
@@ -544,15 +544,15 @@ namespace WpfHexaEditor {
 
             Stream.Position = Position / BytePerLine * BytePerLine;
             
-            if (_viewBuffer == null || _viewBuffer.Length != MaxVisibleLength) {
-                _viewBuffer = new byte[MaxVisibleLength];
+            if (_viewBuffer == null || _viewBuffer.Length != GetMaxVisibleLength()) {
+                _viewBuffer = new byte[GetMaxVisibleLength()];
             }
-            if (_viewBuffer2 == null || _viewBuffer2.Length != MaxVisibleLength) {
-                _viewBuffer2 = new byte[MaxVisibleLength];
+            if (_viewBuffer2 == null || _viewBuffer2.Length != GetMaxVisibleLength()) {
+                _viewBuffer2 = new byte[GetMaxVisibleLength()];
             }
             _realViewBuffer = _realViewBuffer == _viewBuffer ? _viewBuffer2 : _viewBuffer;
             
-            Stream.Read(_realViewBuffer, 0, MaxVisibleLength);
+            Stream.Read(_realViewBuffer, 0, GetMaxVisibleLength());
          
             HexDataLayer.Data = _realViewBuffer;
             StringDataLayer.Data = _realViewBuffer;
@@ -568,7 +568,7 @@ namespace WpfHexaEditor {
             LinesOffsetInfoLayer.StartStepIndex = Position / BytePerLine * BytePerLine;
             LinesOffsetInfoLayer.StepsCount = 
                 (int)Math.Min(HexDataLayer.AvailableRowsCount , 
-                MaxVisibleLength / BytePerLine + (MaxVisibleLength % BytePerLine != 0?1:0 ));
+                GetMaxVisibleLength() / BytePerLine + (GetMaxVisibleLength() % BytePerLine != 0?1:0 ));
         }
 
         private void UpdateBlockLineContent() {
@@ -603,16 +603,18 @@ namespace WpfHexaEditor {
             if (Stream == null) {
                 return;
             }
-            
-            //Check whether Selection is in sight;
-            if (!(index + length >= Position && index < Position + MaxVisibleLength)) {
+
+            var firstVisiblePosition = GetFirstVisiblePosition();
+            //Check whether BackgroundBlock is in sight;
+            if (!(index + length >= firstVisiblePosition && 
+                index < firstVisiblePosition + GetMaxVisibleLength())) {
                 return;
             }
 
-            var maxIndex = Math.Max(index, Position);
-            var minEnd = Math.Min(index + length, Position + MaxVisibleLength);
+            var maxIndex = Math.Max(index, firstVisiblePosition);
+            var minEnd = Math.Min(index + length, firstVisiblePosition + GetMaxVisibleLength());
 
-            dataBackgroundBlocks.Add(((int)(maxIndex - Position), (int)(minEnd - maxIndex), background));
+            dataBackgroundBlocks.Add(((int)(maxIndex - firstVisiblePosition), (int)(minEnd - maxIndex), background));
         }
        
         private void AddSelectionBackgroundBlocks() => AddBackgroundBlock(SelectionStart, SelectionLength, SelectionBrush);

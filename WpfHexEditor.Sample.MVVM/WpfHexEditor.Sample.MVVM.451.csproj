@@ -75,41 +75,51 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="App\DialogService.cs" />
+    <Compile Include="App\DialogServiceImpl.cs" />
     <Compile Include="Common\PracticeServiceProviderAdapter.cs" />
     <Compile Include="BootStrapper.cs" />
     <Compile Include="Dummy.cs" />
-    <Compile Include="ViewModels\Shell2ViewModel.cs" />
-    <Compile Include="Views\Shell2.xaml.cs">
+    <Compile Include="Shell\Constants.cs" />
+    <Compile Include="Shell\ViewModels\Shell2ViewModel.cs" />
+    <Compile Include="Shell\ViewModels\ShellViewModel.cs" />
+    <Compile Include="Shell\Views\Shell.xaml.cs">
+      <DependentUpon>Shell.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Shell\Views\Shell2.xaml.cs">
       <DependentUpon>Shell2.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ToolTip\ToolTipDataItem.cs" />
+    <Compile Include="ToolTip\ToolTipItemFactoryImpl.cs" />
+    <Compile Include="ToolTip\ToolTipObjectItem.cs" />
+    <Compile Include="ToolTip\ViewModel\ToolTipDataItemViewModel.cs" />
+    <Compile Include="ToolTip\Views\ToolTipDataItem.xaml.cs">
+      <DependentUpon>ToolTipDataItem.xaml</DependentUpon>
     </Compile>
     <Page Include="Languages\en_US\WpfHexEditor.Sample.MVVM.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Shell.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Helpers\AppHelper.cs" />
-    <Compile Include="Models\ToolTipItemModel.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\ShellViewModel.cs" />
-    <Compile Include="Views\Shell.xaml.cs">
-      <DependentUpon>Shell.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="Views\Shell2.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Shell\Views\Shell.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Shell\Views\Shell2.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ToolTip\Views\ToolTipDataItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -136,6 +146,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Languages\zh_CN\" />
+    <Folder Include="Shell\Models\" />
+    <Folder Include="ToolTip\Models\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Icon\0x-Icon.ico" />

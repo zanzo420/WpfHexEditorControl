@@ -258,42 +258,6 @@
 
                     </hex:DrawedHexEditor.Resources>
                     <hex:DrawedHexEditor.HexDataToolTip>
-                        <!--<StackPanel Background="NavajoWhite">
-                            <StackPanel Orientation="Horizontal" >
-                                <TextBlock
-                    Width="120"
-                    Text="{DynamicResource ValueString}"
-                    FontWeight="Bold" />
-                                <TextBlock
-                    Width="50"
-                    Text="{DynamicResource ByteString}"
-                    FontWeight="Bold" />
-                                <TextBlock Width="70" Text="{Binding HoverByte}" />
-                                <TextBlock Text="{DynamicResource HexString}" FontWeight="Bold" />
-                                <TextBlock Text="{Binding HoverByte, Converter={x:Static cvts:LongToHexStringConverter.StaticInstance}, UpdateSourceTrigger=PropertyChanged}" />
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock
-                    Width="120"
-                    Text="{DynamicResource PositionString}"
-                    FontWeight="Bold" />
-                                <Label
-                    Width="50"
-                    Content="{DynamicResource LongString}"
-                    FontWeight="Bold" />
-                                <Label Width="70" Content="{Binding BytePositionInFile, UpdateSourceTrigger=PropertyChanged}" />
-                                <Label Content="{DynamicResource HexString}" FontWeight="Bold" />
-                                <Label Content="{Binding BytePositionInFile, Converter={x:Static cvts:LongToHexStringConverter.StaticInstance}, UpdateSourceTrigger=PropertyChanged}" />
-                            </StackPanel>
-                            <Separator />
-                            <StackPanel Orientation="Horizontal">
-                                <Label
-                    Width="120"
-                    Content="{DynamicResource ByteActionString}"
-                    FontWeight="Bold" />
-                                <Label Content="{Binding Action, UpdateSourceTrigger=PropertyChanged}" />
-                            </StackPanel>
-                        </StackPanel>-->
                         <ListBox ItemsSource="{Binding DataToolTips}" FontSize="14" 
                                  ContextMenu="{StaticResource DataLayerContextMenu}"
                                     ItemTemplate="{StaticResource DataToolTipTemplate}" 
@@ -301,7 +265,10 @@
                                   />
                     </hex:DrawedHexEditor.HexDataToolTip>
                     <hex:DrawedHexEditor.StringDataToolTip>
-                        <ListBox ItemsSource="{Binding DataToolTips}" FontSize="14" SelectedItem="{Binding SelectedToolTipItem}" ItemTemplate="{StaticResource DataToolTipTemplate}" ContextMenu="{StaticResource DataLayerContextMenu}"/>
+                        <ListBox ItemsSource="{Binding DataToolTips}" 
+                                 FontSize="14" SelectedItem="{Binding SelectedToolTipItem}"
+                                 ItemTemplate="{StaticResource DataToolTipTemplate}" 
+                                 ContextMenu="{StaticResource DataLayerContextMenu}"/>
                     </hex:DrawedHexEditor.StringDataToolTip>
                     <UserControl.ContextMenu>
                         <ContextMenu>

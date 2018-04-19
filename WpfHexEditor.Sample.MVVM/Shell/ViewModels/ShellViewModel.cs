@@ -9,12 +9,18 @@ using System.ComponentModel.Composition;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
 using WpfHexaEditor.Core;
 using WpfHexEditor.Sample.MVVM.Contracts.App;
 using WpfHexaEditor.Core.Interfaces;
 using WpfHexEditor.Sample.MVVM.Helpers;
-using WpfHexEditor.Sample.MVVM.Models;
+using WpfHexEditor.Sample.MVVM.Contracts.ToolTip;
+using WpfHexEditor.Sample.MVVM.Shell;
+
+#if DEBUG
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+#endif
 
 namespace WpfHexEditor.Sample.MVVM.ViewModels {
     [Export]
@@ -64,7 +70,7 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
             (_loadedCommand = new DelegateCommand(
                 () => {
 #if DEBUG
-                    Stream = File.OpenRead("E://FeiQ.1060559168.exe");
+                    //Stream = File.OpenRead("E://FeiQ.1060559168.exe");
 #endif
                 }
             ));
@@ -294,7 +300,7 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
                         OpenFile(files[0]);
                     }
                     catch(Exception ex) {
-
+                        LoggerService.Current.WriteCallerLine(ex.Message);
                     }
                     //arg.Data.GetData()
                 }
@@ -310,15 +316,33 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
     /// </summary>
     public partial class ShellViewModel{
         private void InitializeToolTips() {
-            _positionToolTip.KeyName = AppHelper.FindResourceString("OffsetTag");
-            _valToolTip.KeyName = AppHelper.FindResourceString("ValueTag");
+            _positionToolTip = ToolTipItemFactory.CreateIToolTipDataItem();
+            _valToolTip = ToolTipItemFactory.CreateIToolTipDataItem();
+            
+            _positionToolTip.KeyName = AppHelper.FindResourceString(Constants.ToolTipTag_Offset);
+            _valToolTip.KeyName = AppHelper.FindResourceString(Constants.ToolTipTag_Value);
 
-            DataToolTips.Add(_positionToolTip);
-            DataToolTips.Add(_valToolTip);
+#if DEBUG
+            
+            //Test DataToolTips;
+            CustomDataToolTipItems.Add((0, 8, "Test Key", "Test Value"));
+            CustomBackgroundBlocks.Add((0, 8, Brushes.Chocolate));
+
+            //Test ObjectToolTips;
+            var testObjectDataToolTip = ToolTipItemFactory.CreateToolTipObjectItem();
+            testObjectDataToolTip.UIObject = new Image {
+                Source = new BitmapImage(new Uri("pack://application:,,,/WpfHexEditor.Sample.MVVM;component/Resources/Icon/17101371.jpg"))
+            };
+            //testObjectDataToolTip.UIObject = new TextBlock {
+            //    Text = "Test ToolTip"
+            //};
+            CustomObjectToolTipItems.Add((8, 8, testObjectDataToolTip));
+            CustomBackgroundBlocks.Add((8, 8, Brushes.Blue));
+#endif
         }
 
-        private ToolTipItemDataModel _valToolTip = new ToolTipItemDataModel();
-        private ToolTipItemDataModel _positionToolTip = new ToolTipItemDataModel();
+        private IToolTipDataItem _valToolTip;
+        private IToolTipDataItem _positionToolTip;
 
         private long _hoverPosition;
         public long HoverPosition {
@@ -326,15 +350,7 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
             set {
                 SetProperty(ref _hoverPosition, value);
                 RaisePropertyChanged(nameof(HoverByte));
-                if (Stream?.CanRead ?? false) {
-                    if(_hoverPosition >= Stream.Length) {
-                        return;
-                    }
-                    Stream.Position = _hoverPosition;
-                    _positionToolTip.Value = value.ToString();
-                    _valToolTip.Value = Stream.ReadByte().ToString();
-                }
-                
+                UpdateToolTipItems();
             }
         }
         
@@ -348,10 +364,10 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
             }
         }
 
-        public ObservableCollection<ToolTipItemDataModel> DataToolTips { get; set; } = new ObservableCollection<ToolTipItemDataModel>();
+        public ObservableCollection<IToolTipItem> DataToolTips { get; set; } = new ObservableCollection<IToolTipItem>();
         
-        private ToolTipItemDataModel _selectedToolTipItem;
-        public ToolTipItemDataModel SelectedToolTipItem {
+        private IToolTipItem _selectedToolTipItem;
+        public IToolTipItem SelectedToolTipItem {
             get => _selectedToolTipItem;
             set => SetProperty(ref _selectedToolTipItem, value);
         }
@@ -360,7 +376,10 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
         public DelegateCommand CopyKeyCommand => _copyKeyCommand ??
             (_copyKeyCommand = new DelegateCommand(
                 () => {
-                    Clipboard.SetText(SelectedToolTipItem.KeyName);
+                    if(!(SelectedToolTipItem is IToolTipDataItem dataItem)) {
+                        return;
+                    }
+                    Clipboard.SetText(dataItem.KeyName);
                 },
                 () => SelectedToolTipItem != null
             )).ObservesProperty(() => SelectedToolTipItem);
@@ -370,7 +389,10 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
         public DelegateCommand CopyValueCommand => _copyValueCommand ??
             (_copyValueCommand = new DelegateCommand(
                 () => {
-                    Clipboard.SetText(SelectedToolTipItem.Value);
+                    if (!(SelectedToolTipItem is IToolTipDataItem dataItem)) {
+                        return;
+                    }
+                    Clipboard.SetText(dataItem.Value);
                 },
                 () => SelectedToolTipItem != null
             )).ObservesProperty(() => SelectedToolTipItem);
@@ -379,12 +401,73 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
         public DelegateCommand CopyExpressionCommand => _copyExpressionCommand ??
             (_copyExpressionCommand = new DelegateCommand(
                 () => {
-                    Clipboard.SetText($"{SelectedToolTipItem.KeyName}:{SelectedToolTipItem.Value}");
+                    if (!(SelectedToolTipItem is IToolTipDataItem dataItem)) {
+                        return;
+                    }
+                    Clipboard.SetText($"{dataItem.KeyName}:{dataItem.Value}");
                 },
                 () => SelectedToolTipItem != null
             )).ObservesProperty(() => SelectedToolTipItem);
 
-        //public ObservableCollection<(long position,long size,ToolTipItemDataModel toolTipItem)>
+        /// <summary>
+        /// These properties make the tool tip more extensible;
+        /// </summary>
+        public ICollection<(long position, long size, string key, string value)> CustomDataToolTipItems = new List<(long position, long size, string key, string value)>();
+        public ICollection<(long position, long size, IToolTipObjectItem toolTipObjectItem)> CustomObjectToolTipItems = new List<(long position, long size, IToolTipObjectItem toolTipObjectItem)>();
+
+        /// <summary>
+        /// This is for better performance,reducing frequency of the building IToolTipDataItem;
+        /// </summary>
+        private List<IToolTipDataItem> _cachedToolTipDataItems = new List<IToolTipDataItem>();
+        private void UpdateToolTipItems() {
+            if (!(Stream?.CanRead ?? false)) {
+                return;
+            }
+
+            if (HoverPosition >= Stream.Length) {
+                return;
+            }
+
+            DataToolTips.Clear();
+
+            Stream.Position = HoverPosition;
+            _positionToolTip.Value = HoverPosition.ToString();
+            _valToolTip.Value = Stream.ReadByte().ToString();
+
+            DataToolTips.Add(_positionToolTip);
+            DataToolTips.Add(_valToolTip);
+
+            if (_cachedToolTipDataItems.Count < CustomDataToolTipItems.Count) {
+                var sub = CustomDataToolTipItems.Count - _cachedToolTipDataItems.Count;
+                for (int i = 0; i < sub; i++) {
+                    _cachedToolTipDataItems.Add(ToolTipItemFactory.CreateIToolTipDataItem());
+                }
+            }
+
+
+            //Update  Custom ToolDataTips;
+            var dataToolTipIndex = 0;
+            foreach ((long position, long size, string key, string value) in CustomDataToolTipItems) {
+                if(!(HoverPosition >= position && HoverPosition < size + position)) {
+                    continue;
+                }
+
+                var tooltipDataItem = _cachedToolTipDataItems[dataToolTipIndex];
+                tooltipDataItem.KeyName = key;
+                tooltipDataItem.Value = value;
+                DataToolTips.Add(tooltipDataItem);
+
+                dataToolTipIndex++;
+            }
+            
+            foreach ((long position, long size, IToolTipObjectItem toolTipObjectItem) in CustomObjectToolTipItems) {
+                if (!(HoverPosition >= position && HoverPosition < size + position)) {
+                    continue;
+                }
+
+                DataToolTips.Add(toolTipObjectItem);
+            }
+        }
     }
 
     

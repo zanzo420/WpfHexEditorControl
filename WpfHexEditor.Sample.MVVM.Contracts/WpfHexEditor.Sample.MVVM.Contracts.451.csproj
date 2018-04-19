@@ -47,9 +47,10 @@
     <Compile Include="Common\IUIObjectProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shell\IShell.cs" />
+    <Compile Include="ToolTip\IToolTipDataItem.cs" />
+    <Compile Include="ToolTip\IToolTipItem.cs" />
     <Compile Include="ToolTip\IToolTipItemFactory.cs" />
     <Compile Include="ToolTip\IToolTipObjectItem.cs" />
-    <Compile Include="ToolTip\IToolTipTextItem.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

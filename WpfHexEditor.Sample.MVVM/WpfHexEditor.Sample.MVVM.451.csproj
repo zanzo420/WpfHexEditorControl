@@ -174,5 +174,8 @@
       <Name>WpfHexEditor.Sample.MVVM.Contracts.451</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icon\17101371.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

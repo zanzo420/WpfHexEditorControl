@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WpfHexEditor.Sample.MVVM.Contracts.Common;
+﻿using WpfHexEditor.Sample.MVVM.Contracts.Common;
 
-namespace WpfHexEditor.Sample.MVVM.Contracts.ToolTip { 
+namespace WpfHexEditor.Sample.MVVM.Contracts.ToolTip {
     public interface IToolTipItemFactory {
         IToolTipDataItem CreateToolTipDataItem();
         IToolTipObjectItem CreateToolTipObjectItem();

@@ -11,7 +11,6 @@ using System.Windows;
 using System.Windows.Input;
 using WpfHexaEditor.Core;
 using WpfHexEditor.Sample.MVVM.Contracts.App;
-using WpfHexaEditor.Core.Interfaces;
 using WpfHexEditor.Sample.MVVM.Helpers;
 using WpfHexEditor.Sample.MVVM.Contracts.ToolTip;
 using WpfHexEditor.Sample.MVVM.Shell;
@@ -305,10 +304,7 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
                     //arg.Data.GetData()
                 }
             ));
-
-
         
-
     }
 
     /// <summary>

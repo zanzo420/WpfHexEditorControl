@@ -1,12 +1,7 @@
 ﻿using Microsoft.Practices.ServiceLocation;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WpfHexEditor.Sample.MVVM.Contracts;
 using WpfHexEditor.Sample.MVVM.Contracts.App;
-using WpfHexEditor.Sample.MVVM.Contracts.Common;
 
 namespace WpfHexEditor.Sample.MVVM.Common {
     /// <summary>

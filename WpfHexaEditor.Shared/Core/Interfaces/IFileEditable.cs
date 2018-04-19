@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WpfHexaEditor.Core.Interfaces {
+﻿namespace WpfHexaEditor.Core.Interfaces {
     public interface IFileEditable {
         string FileName { get; set; }
         void CloseProvider();

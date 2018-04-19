@@ -1,20 +1,14 @@
 ﻿using Microsoft.Practices.ServiceLocation;
 using Prism.Mef;
 using Prism.Modularity;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.Composition.Hosting;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using WpfHexEditor.Sample.MVVM.Common;
-using WpfHexEditor.Sample.MVVM.Contracts;
 using WpfHexEditor.Sample.MVVM.Contracts.Common;
 using WpfHexEditor.Sample.MVVM.Contracts.Shell;
 
 namespace WpfHexEditor.Sample.MVVM {
-   
+
     public class BootStrapper : MefBootstrapper {
         protected override void ConfigureAggregateCatalog() {
             base.ConfigureAggregateCatalog();

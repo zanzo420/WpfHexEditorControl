@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WpfHexEditor.Sample.MVVM {
+﻿namespace WpfHexEditor.Sample.MVVM {
     class Dummy {
     }
 }

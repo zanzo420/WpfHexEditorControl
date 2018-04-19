@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
-namespace WpfHexaEditor.Core.Interfaces
-{
+namespace WpfHexaEditor.Core.Interfaces {
     public interface IOffsetsInfoLayer {
         Orientation Orientation { get; set; }
         long StartStepIndex { get; set; }

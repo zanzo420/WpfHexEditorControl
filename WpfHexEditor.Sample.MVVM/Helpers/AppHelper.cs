@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 
-namespace WpfHexEditor.Sample.MVVM.Helpers
-{
+namespace WpfHexEditor.Sample.MVVM.Helpers {
     public static class AppHelper
     {
         public static string FindResourceString(string keyName) {

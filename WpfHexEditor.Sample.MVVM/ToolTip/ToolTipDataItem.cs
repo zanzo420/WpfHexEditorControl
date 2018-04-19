@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WpfHexEditor.Sample.MVVM.Contracts.ToolTip;
+﻿using WpfHexEditor.Sample.MVVM.Contracts.ToolTip;
 using WpfHexEditor.Sample.MVVM.ToolTip.Models;
 
 namespace WpfHexEditor.Sample.MVVM.ToolTip {

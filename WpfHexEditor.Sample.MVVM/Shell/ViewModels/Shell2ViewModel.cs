@@ -1,12 +1,4 @@
-﻿using Prism.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WpfHexEditor.Sample.MVVM.ViewModels {
+﻿namespace WpfHexEditor.Sample.MVVM.ViewModels {
     public class Shell2ViewModel : ShellViewModel {
         //public Shell2ViewModel() {
         //    RandStream();

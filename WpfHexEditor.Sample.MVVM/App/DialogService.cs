@@ -6,8 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WpfHexEditor.Sample.MVVM.Contracts;
+using WpfHexEditor.Sample.MVVM.Contracts.App;
 
-namespace WpfHexEditor.Sample.MVVM.Common {
+namespace WpfHexEditor.Sample.MVVM.App {
     [Export(typeof(IDialogService))]
     public class DialogService : IDialogService {
         public string OpenFile() {

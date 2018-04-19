@@ -73,13 +73,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BootStrapper.cs" />
-    <Compile Include="Common\DialogService.cs" />
-    <Compile Include="Common\PracticeServiceProvider.cs" />
-    <Compile Include="Contracts\IDialogService.cs" />
-    <Compile Include="Contracts\ILoggerService.cs" />
-    <Compile Include="Contracts\IShell.cs" />
-    <Compile Include="Contracts\ServiceProvider.cs" />
+    <Compile Include="App\DialogService.cs" />
+    <Compile Include="Common\PracticeServiceProviderAdapter.cs" />
     <Compile Include="Dummy.cs" />
+    <Compile Include="ViewModels\Shell2ViewModel.cs" />
     <Compile Include="Views\Shell2.xaml.cs">
       <DependentUpon>Shell2.xaml</DependentUpon>
     </Compile>
@@ -135,7 +132,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Global\" />
     <Folder Include="Languages\zh_CN\" />
   </ItemGroup>
   <ItemGroup>
@@ -157,6 +153,10 @@
     <ProjectReference Include="..\WPFHexaEditor\WpfHexaEditor.NET47.csproj">
       <Project>{CF6AC02D-02FA-4EE9-A507-BD94F489972E}</Project>
       <Name>WpfHexaEditor.NET47</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WpfHexEditor.Sample.MVVM.Contracts\WpfHexEditor.Sample.MVVM.Contracts.47.csproj">
+      <Project>{c6df9247-2b94-4c90-9353-fd395ddc87f6}</Project>
+      <Name>WpfHexEditor.Sample.MVVM.Contracts.47</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

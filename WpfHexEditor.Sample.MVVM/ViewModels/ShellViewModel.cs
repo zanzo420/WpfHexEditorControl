@@ -11,8 +11,8 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using WpfHexaEditor.Core;
+using WpfHexEditor.Sample.MVVM.Contracts.App;
 using WpfHexaEditor.Core.Interfaces;
-using WpfHexEditor.Sample.MVVM.Contracts;
 using WpfHexEditor.Sample.MVVM.Helpers;
 using WpfHexEditor.Sample.MVVM.Models;
 
@@ -64,7 +64,7 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
             (_loadedCommand = new DelegateCommand(
                 () => {
 #if DEBUG
-                    //Stream = File.OpenRead("E://FeiQ.1060559168.exe");
+                    Stream = File.OpenRead("E://FeiQ.1060559168.exe");
 #endif
                 }
             ));
@@ -101,7 +101,7 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
                 }
             ));
 
-
+        
         private Stream _stream;
         public Stream Stream {
             get => _stream;
@@ -279,6 +279,7 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
                 dataObject => {
                     if(Stream != null) {
                         Stream.Dispose();
+                        Stream = null;
                     }
 
                     if(dataObject == null) {
@@ -316,14 +317,15 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
             DataToolTips.Add(_valToolTip);
         }
 
-        private ToolTipItemModel _valToolTip = new ToolTipItemModel();
-        private ToolTipItemModel _positionToolTip = new ToolTipItemModel();
+        private ToolTipItemDataModel _valToolTip = new ToolTipItemDataModel();
+        private ToolTipItemDataModel _positionToolTip = new ToolTipItemDataModel();
 
         private long _hoverPosition;
         public long HoverPosition {
             get => _hoverPosition;
             set {
                 SetProperty(ref _hoverPosition, value);
+                RaisePropertyChanged(nameof(HoverByte));
                 if (Stream?.CanRead ?? false) {
                     if(_hoverPosition >= Stream.Length) {
                         return;
@@ -336,16 +338,24 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
             }
         }
         
-        public ObservableCollection<ToolTipItemModel> DataToolTips { get; set; } = new ObservableCollection<ToolTipItemModel>();
+        public byte HoverByte {
+            get {
+                if(Stream != null) {
+                    Stream.Position = HoverPosition;
+                    return (byte)Stream.ReadByte();
+                }
+                return 0;
+            }
+        }
 
-
-        private ToolTipItemModel _selectedToolTipItem;
-        public ToolTipItemModel SelectedToolTipItem {
+        public ObservableCollection<ToolTipItemDataModel> DataToolTips { get; set; } = new ObservableCollection<ToolTipItemDataModel>();
+        
+        private ToolTipItemDataModel _selectedToolTipItem;
+        public ToolTipItemDataModel SelectedToolTipItem {
             get => _selectedToolTipItem;
             set => SetProperty(ref _selectedToolTipItem, value);
         }
-
-
+        
         private DelegateCommand _copyKeyCommand;
         public DelegateCommand CopyKeyCommand => _copyKeyCommand ??
             (_copyKeyCommand = new DelegateCommand(
@@ -374,6 +384,7 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
                 () => SelectedToolTipItem != null
             )).ObservesProperty(() => SelectedToolTipItem);
 
+        //public ObservableCollection<(long position,long size,ToolTipItemDataModel toolTipItem)>
     }
 
     

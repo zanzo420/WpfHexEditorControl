@@ -7,7 +7,13 @@ using System.Threading.Tasks;
 
 namespace WpfHexEditor.Sample.MVVM.Models
 {
-    public class ToolTipItemModel:BindableBase
+    
+    //<DockPanel MinWidth = "120" >
+    //                            < TextBlock Text="{Binding KeyName}" DockPanel.Dock="Left"/>
+    //                            <TextBlock Text = "{Binding Value}" DockPanel.Dock="Right"/>
+    //                            <Border/>
+    //                        </DockPanel>
+    public class ToolTipItemDataModel:BindableBase
     {
         private string _keyName;
         public string KeyName {

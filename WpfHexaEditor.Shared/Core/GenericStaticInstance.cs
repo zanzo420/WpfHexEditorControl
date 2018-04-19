@@ -5,6 +5,10 @@
 
 namespace WpfHexaEditor.Core
 {
+    /// <summary>
+    /// This class is designed to simplify getting the instance.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public abstract class GenericStaticInstance<T> where T : class, new()
     {
         private static T _staticInstance;

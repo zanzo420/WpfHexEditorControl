@@ -5,13 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WpfHexEditor.Sample.MVVM.Contracts;
+using WpfHexEditor.Sample.MVVM.Contracts.App;
+using WpfHexEditor.Sample.MVVM.Contracts.Common;
 
 namespace WpfHexEditor.Sample.MVVM.Common {
     /// <summary>
     /// PracticeServiceProvider,本类别连接本地IServiceLocator与Microsoft.Practices.ServiceLocation.IServiceLocator
     /// </summary>
-    public class PracticeServiceProvider : Contracts.IServiceProvider {
-        public PracticeServiceProvider(IServiceLocator serviceLocator) {
+    public class PracticeServiceProviderAdapter : Contracts.Common.IServiceProvider {
+        public PracticeServiceProviderAdapter(IServiceLocator serviceLocator) {
 
             if (serviceLocator == null) {
                 LoggerService.Current?.WriteCallerLine("servicelocator can't be null!");

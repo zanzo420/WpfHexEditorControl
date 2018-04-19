@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WpfHexaEditor;
-using WpfHexEditor.Sample.MVVM.Contracts;
+using WpfHexEditor.Sample.MVVM.Contracts.Shell;
 using WpfHexEditor.Sample.MVVM.ViewModels;
 
 namespace WpfHexEditor.Sample.MVVM.Views {

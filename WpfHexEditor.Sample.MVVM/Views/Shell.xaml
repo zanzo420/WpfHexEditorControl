@@ -9,6 +9,7 @@
         xmlns:hexcore="clr-namespace:WpfHexaEditor.Core;assembly=WPFHexaEditor"
         xmlns:prism="http://prismlibrary.com/"  WindowState="Maximized"
         xmlns:hex="clr-namespace:WpfHexaEditor;assembly=WPFHexaEditor"
+        xmlns:cvts="clr-namespace:WpfHexaEditor.Core.Converters;assembly=WPFHexaEditor"
         x:Name="Window" prism:ViewModelLocator.AutoWireViewModel="True"
         Title="WpfHexEditor-DrawedHexEditor" Height="350" Width="525">
     <!--xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"-->
@@ -247,11 +248,7 @@
                     </i:Interaction.Triggers>
                     <hex:DrawedHexEditor.Resources>
                         <DataTemplate x:Key="DataToolTipTemplate">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding KeyName}"/>
-                                <TextBlock Text=":"/>
-                                <TextBlock Text="{Binding Value}"/>
-                            </StackPanel>
+                            <ContentControl Content="{Binding UIObject}"/>
                         </DataTemplate>
                         <ContextMenu x:Key="DataLayerContextMenu">
                             <MenuItem Header="{DynamicResource CopyKey}" Command="{Binding CopyKeyCommand}"/>
@@ -261,6 +258,42 @@
 
                     </hex:DrawedHexEditor.Resources>
                     <hex:DrawedHexEditor.HexDataToolTip>
+                        <!--<StackPanel Background="NavajoWhite">
+                            <StackPanel Orientation="Horizontal" >
+                                <TextBlock
+                    Width="120"
+                    Text="{DynamicResource ValueString}"
+                    FontWeight="Bold" />
+                                <TextBlock
+                    Width="50"
+                    Text="{DynamicResource ByteString}"
+                    FontWeight="Bold" />
+                                <TextBlock Width="70" Text="{Binding HoverByte}" />
+                                <TextBlock Text="{DynamicResource HexString}" FontWeight="Bold" />
+                                <TextBlock Text="{Binding HoverByte, Converter={x:Static cvts:LongToHexStringConverter.StaticInstance}, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock
+                    Width="120"
+                    Text="{DynamicResource PositionString}"
+                    FontWeight="Bold" />
+                                <Label
+                    Width="50"
+                    Content="{DynamicResource LongString}"
+                    FontWeight="Bold" />
+                                <Label Width="70" Content="{Binding BytePositionInFile, UpdateSourceTrigger=PropertyChanged}" />
+                                <Label Content="{DynamicResource HexString}" FontWeight="Bold" />
+                                <Label Content="{Binding BytePositionInFile, Converter={x:Static cvts:LongToHexStringConverter.StaticInstance}, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
+                            <Separator />
+                            <StackPanel Orientation="Horizontal">
+                                <Label
+                    Width="120"
+                    Content="{DynamicResource ByteActionString}"
+                    FontWeight="Bold" />
+                                <Label Content="{Binding Action, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
+                        </StackPanel>-->
                         <ListBox ItemsSource="{Binding DataToolTips}" FontSize="14" 
                                  ContextMenu="{StaticResource DataLayerContextMenu}"
                                     ItemTemplate="{StaticResource DataToolTipTemplate}" 

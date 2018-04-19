@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using WpfHexEditor.Sample.MVVM.Common;
 using WpfHexEditor.Sample.MVVM.Contracts;
+using WpfHexEditor.Sample.MVVM.Contracts.Common;
+using WpfHexEditor.Sample.MVVM.Contracts.Shell;
 
 namespace WpfHexEditor.Sample.MVVM {
    
@@ -28,7 +30,7 @@ namespace WpfHexEditor.Sample.MVVM {
         }
 
         protected override DependencyObject CreateShell() {
-            ServiceProvider.SetServiceProvider(new PracticeServiceProvider(ServiceLocator.Current));
+            ServiceProvider.SetServiceProvider(new PracticeServiceProviderAdapter(ServiceLocator.Current));
             return this.Container.GetExportedValue<IShell>() as DependencyObject;
         }
 

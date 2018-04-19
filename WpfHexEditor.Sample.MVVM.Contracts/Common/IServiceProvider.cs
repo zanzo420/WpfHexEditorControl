@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WpfHexEditor.Sample.MVVM.Contracts {
+namespace WpfHexEditor.Sample.MVVM.Contracts.Common {
     /// <summary>
     /// This interface is designed for better testability of Application.
     /// </summary>

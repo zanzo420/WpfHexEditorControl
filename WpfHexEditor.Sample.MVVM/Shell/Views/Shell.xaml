@@ -30,7 +30,7 @@
                         Command="{Binding OpenFileCommand}"
                         Header="Open...">
                         <MenuItem.Icon>
-                            <Image Source=".././Resources/Icon/Open-File-Icon.ico" />
+                            <Image Source="/WpfHexEditor.Sample.MVVM;component/Resources/Icon/Open-File-Icon.ico" />
                         </MenuItem.Icon>
                     </MenuItem>
                     <Separator />
@@ -39,7 +39,7 @@
                         Command="{Binding SubmitChangesCommand}"
                         Header="Save">
                         <MenuItem.Icon>
-                            <Image Source=".././Resources/Icon/Save-Icon.ico" />
+                            <Image Source="/WpfHexEditor.Sample.MVVM;component/Resources/Icon/Save-Icon.ico" />
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem
@@ -52,7 +52,7 @@
                         Command="{Binding CloseCommand}"
                         Header="Close file">
                         <MenuItem.Icon>
-                            <Image Source=".././Resources/Icon/Save-Icon.ico" />
+                            <Image Source="/WpfHexEditor.Sample.MVVM;component/Resources/Icon/Save-Icon.ico" />
                         </MenuItem.Icon>
                     </MenuItem>
                     <Separator />
@@ -258,7 +258,8 @@
 
                     </hex:DrawedHexEditor.Resources>
                     <hex:DrawedHexEditor.HexDataToolTip>
-                        <ListBox ItemsSource="{Binding DataToolTips}" FontSize="14" 
+                        <ListBox ItemsSource="{Binding DataToolTips}" FontSize="14" BorderThickness="1"
+                                 BorderBrush="Black"
                                  ContextMenu="{StaticResource DataLayerContextMenu}"
                                     ItemTemplate="{StaticResource DataToolTipTemplate}" 
                                  SelectedItem="{Binding SelectedToolTipItem}" 

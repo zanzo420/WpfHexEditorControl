@@ -86,6 +86,12 @@
     <Compile Include="TestPopup.xaml.cs">
       <DependentUpon>TestPopup.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TestToolTip.xaml.cs">
+      <DependentUpon>TestToolTip.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ToolTipItem.xaml.cs">
+      <DependentUpon>ToolTipItem.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -107,6 +113,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="TestPopup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TestToolTip.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ToolTipItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

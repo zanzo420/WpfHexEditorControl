@@ -15,9 +15,6 @@ namespace WpfHexaEditor
 {
     public static class ToolTipExtension
     {
-        private static readonly Dictionary<FrameworkElement, Popup> _toolTipDics =
-            new Dictionary<FrameworkElement, Popup>();
-
         public static UIElement GetOperatableToolTip(DependencyObject obj) => 
             (UIElement) obj.GetValue(OperatableToolTipProperty);
 
@@ -26,16 +23,17 @@ namespace WpfHexaEditor
 
         public static void SetToolTipOpen(this FrameworkElement elem, bool open, Point? point = null)
         {
-            if (!_toolTipDics.ContainsKey(elem))
-                throw new InvalidOperationException($"{nameof(_toolTipDics)} doesn't contain the {nameof(elem)}.");
+            var toolPopup = GetToolTipPopup(elem);
+            if (toolPopup == null)
+                return;
 
             if (point != null)
             {
-                _toolTipDics[elem].VerticalOffset = point.Value.Y;
-                _toolTipDics[elem].HorizontalOffset = point.Value.X;
+                toolPopup.VerticalOffset = point.Value.Y;
+                toolPopup.HorizontalOffset = point.Value.X;
             }
 
-            _toolTipDics[elem].IsOpen = open;
+            toolPopup.IsOpen = open;
         }
 
         // Using a DependencyProperty as the backing store for OperatableTool.  This enables animation, styling, binding, etc...
@@ -45,13 +43,10 @@ namespace WpfHexaEditor
 
         private static void OperatableToolProperty_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
+            if (!(e.NewValue is UIElement newElem)) return;
             if (!(d is FrameworkElement elem)) return;
 
-            if (_toolTipDics.ContainsKey(elem))
-                _toolTipDics.Remove(elem);
-
-            if (!(e.NewValue is UIElement newElem)) return;
-
+            
             var toolPop = new Popup
             {
                 Child = newElem,
@@ -60,15 +55,12 @@ namespace WpfHexaEditor
                 Placement = PlacementMode.Relative
             };
 
-            toolPop.MouseLeave += Popup_MouseLeave;
-
-            _toolTipDics.Add(elem, toolPop);
+            toolPop.MouseLeave += ToolPop_MouseLeave;
 
             elem.MouseDown += FrameworkElem_MouseDown;
             elem.MouseUp += FrameworkElem_MouseUp;
             elem.MouseEnter += FrameworkElem_MouseEnter;
             elem.MouseLeave += FrameworkElem_MouseLeave;
-            elem.Unloaded += FrameworkElem_Unload;
 
             toolPop.SetBinding(FrameworkElement.DataContextProperty,
                 new Binding(nameof(FrameworkElement.DataContext))
@@ -76,13 +68,25 @@ namespace WpfHexaEditor
                     Source = elem
                 }
             );
+
+            SetToolTipPopup(elem, toolPop);
+        }
+
+        private static void ToolPop_MouseLeave(object sender, MouseEventArgs e) {
+            if (!(sender is Popup pop)) return;
+
+            if ((pop.Child as FrameworkElement)?.ContextMenu?.IsOpen ?? false) return;
+
+            pop.IsOpen = false;
         }
 
         private static void FrameworkElem_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (!(sender is FrameworkElement elem)) return;
 
-            if (!_toolTipDics.ContainsKey(elem)) return;
+            var toolPopup = GetToolTipPopup(elem);
+            if (toolPopup == null)
+                return;
 
             if (GetAutoHide(elem))
                 SetToolTipOpen(elem, false);
@@ -102,33 +106,36 @@ namespace WpfHexaEditor
         {
             if (!(sender is FrameworkElement elem)) return;
 
-            if (!_toolTipDics.ContainsKey(elem)) return;
-
-            var pop = _toolTipDics[elem];
-
-            if (pop.IsMouseOver)
+            var toolPopup = GetToolTipPopup(elem);
+            if (toolPopup == null)
+                return;
+            
+            
+            if (toolPopup.IsMouseOver)
                 return;
 
             if (GetAutoHide(elem))
                 SetToolTipOpen(elem, false);
 
-            _toolTipDics[elem] = pop;
+            
         }
 
         private static void FrameworkElem_MouseEnter(object sender, MouseEventArgs e)
         {
             if (!(sender is FrameworkElement elem)) return;
 
-            if (!_toolTipDics.ContainsKey(elem)) return;
-
+            var toolPopup = GetToolTipPopup(elem);
+            if (toolPopup == null)
+                return;
+            
             if (Mouse.LeftButton == MouseButtonState.Pressed)
                 return;
 
             try
             {
                 var position = Mouse.GetPosition(elem);
-                _toolTipDics[elem].VerticalOffset = position.Y;
-                _toolTipDics[elem].HorizontalOffset = position.X;
+                toolPopup.VerticalOffset = position.Y;
+                toolPopup.HorizontalOffset = position.X;
 
                 if (GetAutoShow(elem))
                     SetToolTipOpen(elem, true);
@@ -139,39 +146,7 @@ namespace WpfHexaEditor
             }
         }
 
-        private static void FrameworkElem_Unload(object sender, RoutedEventArgs e)
-        {
-            if (!(sender is FrameworkElement elem)) return;
-
-            elem.MouseDown -= FrameworkElem_MouseDown;
-            elem.MouseUp -= FrameworkElem_MouseUp;
-            elem.MouseEnter -= FrameworkElem_MouseEnter;
-            elem.MouseLeave -= FrameworkElem_MouseLeave;
-            elem.Unloaded -= FrameworkElem_Unload;
-
-            if (_toolTipDics.ContainsKey(elem))
-            {
-                _toolTipDics[elem].MouseLeave -= Popup_MouseLeave;
-                _toolTipDics.Remove(elem);
-            }
-        }
-
-        private static void Popup_MouseLeave(object sender, MouseEventArgs e)
-        {
-            if (!(sender is Popup pop)) return;
-
-            foreach (var dic in _toolTipDics)
-                if (dic.Value == pop)
-                {
-                    if ((pop.Child as FrameworkElement)?.ContextMenu?.IsOpen ?? false)
-                    {
-                        return;
-                    }
-
-                    SetToolTipOpen(dic.Key, false);
-                    break;
-                }
-        }
+        
 
         //This dp show the popup while the mouse entering the targetElem if set to true;
         public static bool GetAutoShow(DependencyObject obj) => 
@@ -196,6 +171,21 @@ namespace WpfHexaEditor
         public static readonly DependencyProperty AutoHideProperty =
             DependencyProperty.RegisterAttached("AutoHide", typeof(bool), typeof(ToolTipExtension),
                 new PropertyMetadata(true));
+
+
+
+        private static Popup GetToolTipPopup(DependencyObject obj) {
+            return (Popup)obj.GetValue(ToolTipPopupProperty);
+        }
+
+        private static void SetToolTipPopup(DependencyObject obj, Popup value) {
+            obj.SetValue(ToolTipPopupProperty, value);
+        }
+
+        // Using a DependencyProperty as the backing store for ToolTipPopup.  This enables animation, styling, binding, etc...
+        private static readonly DependencyProperty ToolTipPopupProperty =
+            DependencyProperty.RegisterAttached("ToolTipPopup", typeof(Popup), typeof(ToolTipExtension), new PropertyMetadata(null));
+
 
     }
 

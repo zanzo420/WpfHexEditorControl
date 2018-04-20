@@ -15,11 +15,11 @@ using WpfHexEditor.Sample.MVVM.Helpers;
 using WpfHexEditor.Sample.MVVM.Contracts.ToolTip;
 using WpfHexEditor.Sample.MVVM.Shell;
 
-#if DEBUG
+
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-#endif
+
 
 namespace WpfHexEditor.Sample.MVVM.ViewModels {
     [Export]

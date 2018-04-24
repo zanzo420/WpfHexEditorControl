@@ -69,7 +69,7 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
             (_loadedCommand = new DelegateCommand(
                 () => {
 #if DEBUG
-                    //Stream = File.OpenRead("E://FeiQ.1060559168.exe");
+                    Stream = File.OpenRead("E://FeiQ.1060559168.exe");
 #endif
                 }
             ));
@@ -80,11 +80,12 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
         public DelegateCommand TestCommand => _testCommand ??
             (_testCommand = new DelegateCommand(
                 () => {
+                    Position = new Random().Next(1024);
 #if DEBUG
                    if(Stream == null) {
                         return;
                    }
-                    Position = 512;
+                    
             //        var customBacks = new ObservableCollection<(long index, long length, Brush background)> {
 
             //    (0L,4L,Brushes.Yellow),

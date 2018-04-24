@@ -438,27 +438,27 @@ namespace WpfHexaEditor
 
         public long Position
         {
-            get { return (long) GetValue(PositionProperty); }
-            set
-            {
-                SetValue(PositionProperty, value);
-#if DEBUG
-                watch.Restart();
-#endif
-                UpdateContent();
-#if DEBUG
-                watch.Stop();
-                Debug.Print($"REFRESH TIME: {watch.ElapsedMilliseconds} ms");
-#endif
-            }
-
+            get => (long) GetValue(PositionProperty); 
+            set => SetValue(PositionProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for Position.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty PositionProperty =
             DependencyProperty.Register(nameof(Position), typeof(long), typeof(DrawedHexEditor),
-                new FrameworkPropertyMetadata(-1L, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+                new FrameworkPropertyMetadata(-1L,FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
+        private static void PositionProperty_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+            if (!(d is DrawedHexEditor ctrl)) return;
+#if DEBUG
+            ctrl.watch.Restart();
+#endif
+            ctrl.UpdateContent();
+#if DEBUG
+            ctrl.watch.Stop();
+            Debug.Print($"REFRESH TIME: {ctrl.watch.ElapsedMilliseconds} ms");
+#endif
+            
+        }
 
         public IEnumerable<(long index, long length, Brush background)> CustomBackgroundBlocks
         {

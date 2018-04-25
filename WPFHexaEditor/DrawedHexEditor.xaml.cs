@@ -445,7 +445,7 @@ namespace WpfHexaEditor
         // Using a DependencyProperty as the backing store for Position.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty PositionProperty =
             DependencyProperty.Register(nameof(Position), typeof(long), typeof(DrawedHexEditor),
-                new FrameworkPropertyMetadata(-1L,FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+                new FrameworkPropertyMetadata(-1L, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, PositionProperty_Changed));
 
         private static void PositionProperty_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e) {
             if (!(d is DrawedHexEditor ctrl)) return;
@@ -862,6 +862,7 @@ namespace WpfHexaEditor
             if (!(d is DrawedHexEditor ctrl)) return;
             //These methods won't be invoked everytime scrolling.but only when stream is opened or closed.
             ctrl.UpdateInfoes();
+            ctrl.UpdateContent();
         }
 
         #endregion

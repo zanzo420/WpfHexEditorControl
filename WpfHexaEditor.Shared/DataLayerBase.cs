@@ -96,8 +96,14 @@ namespace WpfHexaEditor
             DependencyProperty.Register(nameof(BytePerLine), typeof(int), typeof(DataLayerBase),
                 new FrameworkPropertyMetadata(
                     16,
-                    FrameworkPropertyMetadataOptions.AffectsRender
+                    FrameworkPropertyMetadataOptions.AffectsRender,
+                    BytePerLine_PropertyChanged
                 ));
+
+        private static void BytePerLine_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+            if (!(d is DataLayerBase ctrl) || e.NewValue == e.OldValue) return;
+            ctrl.InvalidateMeasure();
+        }
 
         public Thickness CellPadding { get; set; } = new Thickness(2);
         public Thickness CellMargin { get; set; } = new Thickness(2);

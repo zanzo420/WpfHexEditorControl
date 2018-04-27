@@ -34,7 +34,7 @@ namespace WpfHexaEditor
             DataVisualType = DataVisualType.Decimal;
             InitilizeEvents();
         }
-
+        
         //Cuz xaml designer's didn't support valuetuple,events subscribing will be executed in code-behind.
         private void InitilizeEvents()
         {
@@ -389,7 +389,7 @@ namespace WpfHexaEditor
         private void UpdateColumnHeaderInfo()
         {
             ColumnsOffsetInfoLayer.StartStepIndex = 0;
-            ColumnsOffsetInfoLayer.StepsCount = 16;
+            ColumnsOffsetInfoLayer.StepsCount = BytePerLine;
         }
 
         /// <summary>
@@ -402,7 +402,7 @@ namespace WpfHexaEditor
 
             LinesOffsetInfoLayer.DataVisualType = DataVisualType;
             LinesOffsetInfoLayer.StepLength = BytePerLine;
-
+            
             LinesOffsetInfoLayer.SavedBits = DataVisualType == DataVisualType.Hexadecimal
                 ? ByteConverters.GetHexBits(Stream.Length)
                 : ByteConverters.GetDecimalBits(Stream.Length);
@@ -722,7 +722,7 @@ namespace WpfHexaEditor
         }
 
         public static readonly DependencyProperty BytePerLineProperty =
-            DependencyProperty.Register("BytePerLine", typeof(int), typeof(HexEditor),
+            DependencyProperty.Register("BytePerLine", typeof(int), typeof(DrawedHexEditor),
                 new PropertyMetadata(16, BytePerLine_PropertyChanged));
 
         private static void BytePerLine_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

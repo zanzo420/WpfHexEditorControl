@@ -227,8 +227,8 @@
             </Menu>
             <Grid >
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="59*"/>
-                    <ColumnDefinition Width="114*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <hex:DrawedHexEditor AllowDrop="True" 
                 CellMargin="0,1" 
@@ -240,7 +240,7 @@
                 SelectionStart="{Binding SelectionStart}"
                 SelectionLength="{Binding SelectionLength}"
                 x:Name="HexEdit"
-                Margin="2,2,2.4,2.2" Grid.ColumnSpan="2">
+                Margin="2,2,2.4,2.2">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Drop">
                             <prism:InvokeCommandAction Command="{Binding DropCommand}" TriggerParameterPath="Data"/>

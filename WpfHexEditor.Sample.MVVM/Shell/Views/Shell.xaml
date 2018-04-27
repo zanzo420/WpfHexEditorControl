@@ -278,7 +278,9 @@
                         </ContextMenu>
                     </UserControl.ContextMenu>
                 </hex:DrawedHexEditor>
-
+                <Rectangle Grid.Column="1" Fill="Yellow">
+                    
+                </Rectangle>
             </Grid>
 
 

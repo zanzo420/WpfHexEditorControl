@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>dad85044-539a-427a-8624-c5c54830726c</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>WpfHexEditor.Sample.MVVM.Contracts</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)App\IDialogService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)App\ILoggerService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\IServiceProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\IUIObjectProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Shell\IShell.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ToolTip\IToolTipDataItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ToolTip\IToolTipItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ToolTip\IToolTipItemFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ToolTip\IToolTipObjectItem.cs" />
+  </ItemGroup>
+</Project>

@@ -465,6 +465,14 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
                 DataToolTips.Add(toolTipObjectItem);
             }
         }
+
+
+        private int _bytePerLine = 32;
+        public int BytePerLine {
+            get => _bytePerLine;
+            set => SetProperty(ref _bytePerLine, value);
+        }
+
     }
 
     

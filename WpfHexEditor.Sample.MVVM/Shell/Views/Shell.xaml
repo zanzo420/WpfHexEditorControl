@@ -225,17 +225,14 @@
 
                 </MenuItem>
             </Menu>
-            <Grid >
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <hex:DrawedHexEditor AllowDrop="True" 
+            <DockPanel >
+                <hex:DrawedHexEditor AllowDrop="True" DockPanel.Dock="Left"
                 CellMargin="0,1" 
                 CellPadding="2"
                 FocusPosition="{Binding FocusPosition}"
                 HoverPosition="{Binding HoverPosition}"
                 Position="{Binding Position}"
+                BytePerLine="{Binding BytePerLine}"
                 Stream="{Binding Stream}"
                 SelectionStart="{Binding SelectionStart}"
                 SelectionLength="{Binding SelectionLength}"
@@ -278,10 +275,8 @@
                         </ContextMenu>
                     </UserControl.ContextMenu>
                 </hex:DrawedHexEditor>
-                <Rectangle Grid.Column="1" Fill="Yellow">
-                    
-                </Rectangle>
-            </Grid>
+                <Border/>
+            </DockPanel>
 
 
             <!--AllowByteCount="False"

@@ -117,9 +117,9 @@ namespace WpfHexaEditor
         public event EventHandler SelectionStopChanged;
 
         /// <summary>
-        /// Occurs when the lenght of selection are changed.
+        /// Occurs when the length of selection are changed.
         /// </summary>
-        public event EventHandler SelectionLenghtChanged;
+        public event EventHandler SelectionLengthChanged;
 
         /// <summary>
         /// Occurs when data are copie to clipboard.
@@ -1058,7 +1058,7 @@ namespace WpfHexaEditor
             ctrl.SetScrollMarker(0, ScrollMarker.SelectionStart);
 
             ctrl.SelectionStartChanged?.Invoke(ctrl, new EventArgs());
-            ctrl.SelectionLenghtChanged?.Invoke(ctrl, new EventArgs());
+            ctrl.SelectionLengthChanged?.Invoke(ctrl, new EventArgs());
         }
 
         /// <summary>
@@ -1098,7 +1098,7 @@ namespace WpfHexaEditor
             ctrl.UpdateSelectionLine();
 
             ctrl.SelectionStopChanged?.Invoke(ctrl, new EventArgs());
-            ctrl.SelectionLenghtChanged?.Invoke(ctrl, new EventArgs());
+            ctrl.SelectionLengthChanged?.Invoke(ctrl, new EventArgs());
         }
 
         /// <summary>
@@ -1142,9 +1142,9 @@ namespace WpfHexaEditor
         }
 
         /// <summary>
-        /// Get the lenght of byte are selected (base 1)
+        /// Get the length of byte are selected (base 1)
         /// </summary>
-        public long SelectionLength => ByteProvider.GetSelectionLenght(SelectionStart, SelectionStop);
+        public long SelectionLength => ByteProvider.GetSelectionLength(SelectionStart, SelectionStop);
 
         /// <summary>
         /// Get byte array from current selection
@@ -1293,8 +1293,8 @@ namespace WpfHexaEditor
             var (success, byteArray) = IsHexaByteStringValue(clipBoardText);
 
             #region Expend stream if needed
-            var pastelenght = success ? byteArray.Length : clipBoardText.Length;
-            var needToBeExtent = _provider.Position + pastelenght > _provider.Length;
+            var pastelength = success ? byteArray.Length : clipBoardText.Length;
+            var needToBeExtent = _provider.Position + pastelength > _provider.Length;
             var expend = false;
             if (expendIfneeded && AllowExtend && needToBeExtent)
                 if (AppendNeedConfirmation)
@@ -1360,7 +1360,7 @@ namespace WpfHexaEditor
             if (!ByteProvider.CheckIsOpen(_provider)) return null;
 
             var cstream = new MemoryStream();
-            CopyToStream(cstream, 0, Lenght - 1, true);
+            CopyToStream(cstream, 0, Length - 1, true);
             return cstream.ToArray();
         }
 
@@ -1431,10 +1431,10 @@ namespace WpfHexaEditor
         /// <summary>
         /// Set position of cursor
         /// </summary>
-        public void SetPosition(long position, long byteLenght)
+        public void SetPosition(long position, long byteLength)
         {
             SelectionStart = position;
-            SelectionStop = position + byteLenght - 1;
+            SelectionStop = position + byteLength - 1;
 
             VerticalScrollBar.Value = ByteProvider.CheckIsOpen(_provider) ? GetLineNumber(position) : 0;
         }
@@ -1461,10 +1461,10 @@ namespace WpfHexaEditor
             SetPosition(HexLiteralToLong(hexLiteralPosition).position);
 
         /// <summary>
-        /// Set position in control at position in parameter with specified selected lenght
+        /// Set position in control at position in parameter with specified selected length
         /// </summary>
-        public void SetPosition(string hexLiteralPosition, long byteLenght) =>
-            SetPosition(HexLiteralToLong(hexLiteralPosition).position, byteLenght);
+        public void SetPosition(string hexLiteralPosition, long byteLength) =>
+            SetPosition(HexLiteralToLong(hexLiteralPosition).position, byteLength);
 
         #endregion Set position methods
 
@@ -1636,6 +1636,7 @@ namespace WpfHexaEditor
                 _provider.Undo();
 
             RefreshView();
+
         }
 
         /// <summary>
@@ -1739,9 +1740,9 @@ namespace WpfHexaEditor
         }
 
         /// <summary>
-        /// Get the lenght of file/stream are opened in control
+        /// Get the length of file/stream are opened in control
         /// </summary>
-        public long Lenght => ByteProvider.CheckIsOpen(_provider) ? _provider.Length : -1;
+        public long Length => ByteProvider.CheckIsOpen(_provider) ? _provider.Length : -1;
 
         /// <summary>
         /// Close file and clear control
@@ -3021,22 +3022,22 @@ namespace WpfHexaEditor
             if (StatusBarVisibility == Visibility.Visible)
                 if (ByteProvider.CheckIsOpen(_provider))
                 {
-                    #region Show lenght  TODO:REFRESH ONLY WHEN NEEDED
+                    #region Show length  TODO:REFRESH ONLY WHEN NEEDED
 
                     var mb = false;
                     long deletedBytesCount = _provider.GetByteModifieds(ByteAction.Deleted).Count;
                     long addedBytesCount = _provider.GetByteModifieds(ByteAction.Added).Count;
 
                     //is mega bytes ?
-                    double lenght = (_provider.Length - deletedBytesCount + addedBytesCount) / 1024;
+                    double length = (_provider.Length - deletedBytesCount + addedBytesCount) / 1024;
 
-                    if (lenght > 1024)
+                    if (length > 1024)
                     {
-                        lenght = lenght / 1024;
+                        length = length / 1024;
                         mb = true;
                     }
 
-                    FileLengthKbLabel.Content = Math.Round(lenght, 2) +
+                    FileLengthKbLabel.Content = Math.Round(length, 2) +
                                                 (mb
                                                     ? $" {Properties.Resources.MBTagString}"
                                                     : $" {Properties.Resources.KBTagString}");

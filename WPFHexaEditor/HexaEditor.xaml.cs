@@ -1637,6 +1637,14 @@ namespace WpfHexaEditor
 
             RefreshView();
 
+            //Update focus
+            if (UndoStack.Count == 0) return;
+
+            var position = UndoStack.ElementAt(0).BytePositionInFile;
+            if (!IsBytePositionAreVisible(position))
+                SetPosition(position);
+
+            SetFocusAt(position);
         }
 
         /// <summary>
@@ -2706,19 +2714,18 @@ namespace WpfHexaEditor
         /// <summary>
         /// Return True if SelectionStart are visible in control
         /// </summary>
-        public bool SelectionStartIsVisible
-        {
-            get
-            {
-                var rtn = false;
-                TraverseHexBytes(ctrl =>
-                {
-                    if (ctrl.BytePositionInFile == SelectionStart)
-                        rtn = true;
-                }, ref rtn);
+        public bool SelectionStartIsVisible => IsBytePositionAreVisible(SelectionStart);
 
-                return rtn;
-            }
+        public bool IsBytePositionAreVisible(long bytePosition)
+        {
+            var rtn = false;
+            TraverseHexBytes(ctrl =>
+            {
+                if (ctrl.BytePositionInFile == bytePosition)
+                    rtn = true;
+            }, ref rtn);
+
+            return rtn;
         }
 
         /// <summary>
@@ -2745,15 +2752,20 @@ namespace WpfHexaEditor
         /// <summary>
         /// Set the focus to the selection start
         /// </summary>
-        private void SetFocusAtSelectionStart()
+        private void SetFocusAtSelectionStart() => SetFocusAt(SelectionStart);
+
+        /// <summary>
+        /// Set the focus to the selection start
+        /// </summary>
+        private void SetFocusAt(long bytePosition)
         {
             switch (_firstColor)
             {
                 case FirstColor.HexByteData:
-                    SetFocusHexDataPanel(SelectionStart);
+                    SetFocusHexDataPanel(bytePosition);
                     break;
                 case FirstColor.StringByteData:
-                    SetFocusStringDataPanel(SelectionStart);
+                    SetFocusStringDataPanel(bytePosition);
                     break;
             }
         }

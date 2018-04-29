@@ -2183,7 +2183,8 @@ namespace WpfHexaEditor
             if (e.HeightChanged) RefreshView(true);
         }
 
-        private void VerticalScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => RefreshView();
+        private void VerticalScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) =>
+            RefreshView();
 
         /// <summary>
         /// Update vertical scrollbar with file info
@@ -2215,7 +2216,8 @@ namespace WpfHexaEditor
         public void RefreshView(bool controlResize = false, bool refreshData = true)
         {
 #if DEBUG
-            var start = DateTime.Now;
+            var watch = new Stopwatch();
+            watch.Start();
 #endif
 
             UpdateLinesOffSet();
@@ -2239,7 +2241,8 @@ namespace WpfHexaEditor
                 UpdateHeader(true);
             }
 #if DEBUG
-            Debug.Print($"REFRESH TIME: {(DateTime.Now - start).Milliseconds} ms");
+            watch.Stop();
+            Debug.Print($"REFRESH TIME: {watch.Elapsed.Milliseconds} ms");
 #endif
         }
         

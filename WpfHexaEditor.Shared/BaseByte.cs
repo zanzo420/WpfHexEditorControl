@@ -19,7 +19,6 @@ using WpfHexaEditor.Core.Interfaces;
 
 namespace WpfHexaEditor
 {
-
     /// <summary>
     /// Base class for bytecontrol
     /// </summary>

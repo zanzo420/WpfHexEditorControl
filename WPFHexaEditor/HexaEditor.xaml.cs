@@ -31,6 +31,7 @@ namespace WpfHexaEditor
     public partial class HexEditor : IDisposable
     {
         #region Global class variables
+
         /// <summary>
         /// Byte provider for work with file or stream currently loaded in control.
         /// </summary>
@@ -90,7 +91,7 @@ namespace WpfHexaEditor
         /// <summary>
         /// For detect redondants call when disposing control
         ///  </summary>
-        private bool _disposedValue; 
+        private bool _disposedValue;
 
         /// <summary>
         /// Highlight the header and offset on SelectionStart property
@@ -101,7 +102,7 @@ namespace WpfHexaEditor
         /// Get is the first color...
         /// </summary>
         private FirstColor _firstColor = FirstColor.HexByteData;
-        
+
         #endregion Global Class variables
 
         #region Events
@@ -315,7 +316,7 @@ namespace WpfHexaEditor
         // Using a DependencyProperty as the backing store for ForegroundOffSetHeaderColor.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ForegroundHighLightOffSetHeaderColorProperty =
             DependencyProperty.Register(nameof(ForegroundHighLightOffSetHeaderColor), typeof(Brush), typeof(HexEditor),
-                new FrameworkPropertyMetadata(Brushes.Black, Control_ForegroundOffSetHeaderColorPropertyChanged));        
+                new FrameworkPropertyMetadata(Brushes.Black, Control_ForegroundOffSetHeaderColorPropertyChanged));
 
         public Brush ForegroundOffSetHeaderColor
         {
@@ -328,7 +329,8 @@ namespace WpfHexaEditor
             DependencyProperty.Register(nameof(ForegroundOffSetHeaderColor), typeof(Brush), typeof(HexEditor),
                 new FrameworkPropertyMetadata(Brushes.Gray, Control_ForegroundOffSetHeaderColorPropertyChanged));
 
-        private static void Control_ForegroundOffSetHeaderColorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void Control_ForegroundOffSetHeaderColorPropertyChanged(DependencyObject d,
+            DependencyPropertyChangedEventArgs e)
         {
             if (!(d is HexEditor ctrl) || e.NewValue == e.OldValue) return;
 
@@ -358,7 +360,7 @@ namespace WpfHexaEditor
         /// </summary>
         public Brush ForegroundSecondColor
         {
-            get => (Brush)GetValue(ForegroundSecondColorProperty);
+            get => (Brush) GetValue(ForegroundSecondColorProperty);
             set => SetValue(ForegroundSecondColorProperty, value);
         }
 
@@ -384,7 +386,8 @@ namespace WpfHexaEditor
             DependencyProperty.Register(nameof(Background), typeof(Brush), typeof(HexEditor),
                 new FrameworkPropertyMetadata(Brushes.White, Control_BackgroundColorPropertyChanged));
 
-        private static void Control_BackgroundColorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void Control_BackgroundColorPropertyChanged(DependencyObject d,
+            DependencyPropertyChangedEventArgs e)
         {
             if (d is HexEditor ctrl && e.NewValue != e.OldValue)
                 ctrl.BaseGrid.Background = (Brush) e.NewValue;
@@ -499,7 +502,8 @@ namespace WpfHexaEditor
                 new FrameworkPropertyMetadata(DataVisualType.Hexadecimal,
                     DataStringVisualTypeProperty_PropertyChanged));
 
-        private static void DataStringVisualTypeProperty_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void DataStringVisualTypeProperty_PropertyChanged(DependencyObject d,
+            DependencyPropertyChangedEventArgs e)
         {
             if (!(d is HexEditor ctrl) || e.NewValue == e.OldValue) return;
 
@@ -532,7 +536,8 @@ namespace WpfHexaEditor
                 new FrameworkPropertyMetadata(CharacterTableType.Ascii,
                     TypeOfCharacterTable_PropertyChanged));
 
-        private static void TypeOfCharacterTable_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void TypeOfCharacterTable_PropertyChanged(DependencyObject d,
+            DependencyPropertyChangedEventArgs e)
         {
             if (!(d is HexEditor ctrl)) return;
 
@@ -731,7 +736,7 @@ namespace WpfHexaEditor
         /// </summary>
         public bool IsModified
         {
-            get => (bool)GetValue(IsModifiedProperty);
+            get => (bool) GetValue(IsModifiedProperty);
             internal set => SetValue(IsModifiedProperty, value);
         }
 
@@ -739,7 +744,7 @@ namespace WpfHexaEditor
         public static readonly DependencyProperty IsModifiedProperty =
             DependencyProperty.Register(nameof(IsModified), typeof(bool), typeof(HexEditor),
                 new PropertyMetadata(false));
-        
+
         private void Control_ByteModified(object sender, EventArgs e)
         {
             if (sender is IByteControl ctrl)
@@ -798,10 +803,10 @@ namespace WpfHexaEditor
 
                 if (actualheight < 0) actualheight = 0;
 
-                return (int)(actualheight / LineHeight) + 1;
+                return (int) (actualheight / LineHeight) + 1;
             }
         }
-        
+
         #endregion Lines methods
 
         #region Selection Property/Methods/Event
@@ -1258,7 +1263,7 @@ namespace WpfHexaEditor
 
             SetFocusAtSelectionStart();
         }
-        
+
         private void Control_MovePrevious(object sender, EventArgs e)
         {
             UpdateByteModified();
@@ -1288,11 +1293,12 @@ namespace WpfHexaEditor
         private void Paste(bool expendIfneeded)
         {
             if (!ByteProvider.CheckIsOpen(_provider) || SelectionStart <= -1) return;
-            
+
             var clipBoardText = Clipboard.GetText();
             var (success, byteArray) = IsHexaByteStringValue(clipBoardText);
 
             #region Expend stream if needed
+
             var pastelength = success ? byteArray.Length : clipBoardText.Length;
             var needToBeExtent = _provider.Position + pastelength > _provider.Length;
             var expend = false;
@@ -1306,6 +1312,7 @@ namespace WpfHexaEditor
                 }
                 else
                     expend = true;
+
             #endregion
 
             if (success)
@@ -1388,7 +1395,8 @@ namespace WpfHexaEditor
         /// <summary>
         /// Copy to clipboard
         /// </summary>
-        public void CopyToClipboard(CopyPasteMode copypastemode, long selectionStart, long selectionStop, bool copyChange, TblStream tbl)
+        public void CopyToClipboard(CopyPasteMode copypastemode, long selectionStart, long selectionStop,
+            bool copyChange, TblStream tbl)
         {
             if (!CanCopy()) return;
             if (!ByteProvider.CheckIsOpen(_provider)) return;
@@ -1448,7 +1456,7 @@ namespace WpfHexaEditor
         /// Get the column number of the position
         /// </summary>
         public int GetColumnNumber(long position) => (int) (position - ByteShiftLeft) % BytePerLine;
-        
+
         /// <summary>
         /// Set position in control at position in parameter
         /// </summary>
@@ -1485,8 +1493,8 @@ namespace WpfHexaEditor
                     HexDataVisibility_PropertyChanged,
                     Visibility_CoerceValue));
 
-        private static object Visibility_CoerceValue(DependencyObject d, object baseValue) => 
-            (Visibility)baseValue == Visibility.Hidden ? Visibility.Collapsed : (Visibility)baseValue;
+        private static object Visibility_CoerceValue(DependencyObject d, object baseValue) =>
+            (Visibility) baseValue == Visibility.Hidden ? Visibility.Collapsed : (Visibility) baseValue;
 
         private static void HexDataVisibility_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -1593,7 +1601,7 @@ namespace WpfHexaEditor
         {
             if (!(d is HexEditor ctrl)) return;
 
-            switch ((Visibility)e.NewValue)
+            switch ((Visibility) e.NewValue)
             {
                 case Visibility.Visible:
                     ctrl.StatusBarGrid.Visibility = Visibility.Visible;
@@ -2150,7 +2158,7 @@ namespace WpfHexaEditor
                 new FrameworkPropertyMetadata(16, BytePerLine_PropertyChanged,
                     BytePerLine_CoerceValue));
 
-        private static object BytePerLine_CoerceValue(DependencyObject d, object baseValue) => 
+        private static object BytePerLine_CoerceValue(DependencyObject d, object baseValue) =>
             (int) baseValue < 1 ? 1 : ((int) baseValue > 64 ? 64 : baseValue);
 
         private static void BytePerLine_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -2233,7 +2241,7 @@ namespace WpfHexaEditor
             UpdateStatusBar();
             UpdateVisual();
             UpdateFocus();
-            
+
             CheckProviderIsOnProgress();
 
             if (controlResize)
@@ -2247,7 +2255,7 @@ namespace WpfHexaEditor
             Debug.Print($"REFRESH TIME: {watch.Elapsed.Milliseconds} ms");
 #endif
         }
-        
+
         /// <summary>
         /// Update the selection of byte in hexadecimal panel
         /// </summary>
@@ -2267,7 +2275,7 @@ namespace WpfHexaEditor
                     break;
             }
         }
-        
+
         /// <summary>
         /// Build the stringbyte and hexabyte control used byte hexeditor
         /// </summary>
@@ -2425,7 +2433,8 @@ namespace WpfHexaEditor
 
                 if (LinesInfoStackPanel.Children.Count == 0) return;
 
-                var startPosition = HexLiteralToLong((LinesInfoStackPanel.Children[0] as FastTextLine).Tag.ToString()).position;
+                var startPosition = HexLiteralToLong((LinesInfoStackPanel.Children[0] as FastTextLine).Tag.ToString())
+                    .position;
                 _provider.Position = startPosition;
                 var readSize = _provider.Read(_viewBuffer, 0, bufferlength);
                 var index = 0;
@@ -2499,7 +2508,8 @@ namespace WpfHexaEditor
         {
             if (!ByteProvider.CheckIsOpen(_provider)) return;
 
-            var modifiedBytesDictionary = _provider.GetByteModifieds(ByteAction.All); //TODO: get just bytes from view...
+            var modifiedBytesDictionary =
+                _provider.GetByteModifieds(ByteAction.All); //TODO: get just bytes from view...
 
             TraverseHexAndStringBytes(ctrl =>
             {
@@ -2542,7 +2552,8 @@ namespace WpfHexaEditor
         private void UpdateHighLight()
         {
             if (_markedPositionList.Count > 0)
-                TraverseHexAndStringBytes(ctrl => ctrl.IsHighLight = _markedPositionList.ContainsKey(ctrl.BytePositionInFile));
+                TraverseHexAndStringBytes(ctrl =>
+                    ctrl.IsHighLight = _markedPositionList.ContainsKey(ctrl.BytePositionInFile));
             else //Un highlight all            
                 TraverseHexAndStringBytes(ctrl => ctrl.IsHighLight = false);
         }
@@ -2572,7 +2583,7 @@ namespace WpfHexaEditor
                 {
                     Height = LineHeight,
                     AutoWidth = false,
-                    FontWeight = hlHeader ? FontWeights.Bold: FontWeights.Normal,
+                    FontWeight = hlHeader ? FontWeights.Bold : FontWeights.Normal,
                     Foreground = hlHeader ? ForegroundHighLightOffSetHeaderColor : ForegroundOffSetHeaderColor,
                     RenderPoint = new Point(2, 0),
                     ToolTip = $"Column : {i}"
@@ -2856,7 +2867,7 @@ namespace WpfHexaEditor
             try
             {
                 var position = _provider.FindIndexOf(data, startPosition).ToList().First();
-                    
+
                 SetPosition(position, data.Length);
 
                 if (!highLight) return position;
@@ -3024,7 +3035,7 @@ namespace WpfHexaEditor
         /// Find all occurence of SelectionByteArray in stream. Highlight byte finded
         /// </summary>
         /// <returns>Return null if no occurence found</returns>
-        public IEnumerable<long> FindAllSelection(bool highLight) => 
+        public IEnumerable<long> FindAllSelection(bool highLight) =>
             SelectionLength > 0 ? FindAll(SelectionByteArray, highLight) : null;
 
         #endregion Find methods
@@ -3349,6 +3360,7 @@ namespace WpfHexaEditor
                 }
 
                 #region Disable ctrl
+
                 CopyAsCMenu.IsEnabled = false;
                 CopyAsciicMenu.IsEnabled = false;
                 FindAllCMenu.IsEnabled = false;
@@ -3357,6 +3369,7 @@ namespace WpfHexaEditor
                 DeleteCMenu.IsEnabled = false;
                 FillByteCMenu.IsEnabled = false;
                 CopyTblcMenu.IsEnabled = false;
+
                 #endregion
 
                 if (SelectionLength > 0)
@@ -3444,7 +3457,7 @@ namespace WpfHexaEditor
             {
                 // TODO : add Winform code
             }
-            
+
             if (window.ShowDialog() == true && window.HexTextBox.LongValue <= 255)
                 FillWithByte((byte) window.HexTextBox.LongValue);
         }
@@ -3463,7 +3476,8 @@ namespace WpfHexaEditor
                 // TODO : add Winform code
             }
 
-            if (window.ShowDialog() == true && window.HexTextBox.LongValue <= 255 && window.ReplaceHexTextBox.LongValue <= 255)
+            if (window.ShowDialog() == true && window.HexTextBox.LongValue <= 255 &&
+                window.ReplaceHexTextBox.LongValue <= 255)
                 ReplaceByte((byte) window.HexTextBox.LongValue, (byte) window.ReplaceHexTextBox.LongValue);
         }
 
@@ -3513,7 +3527,7 @@ namespace WpfHexaEditor
                 () => (int) MouseWheelSpeed
             );
         }
-        
+
         private void TopRectangle_MouseEnter(object sender, MouseEventArgs e)
         {
             var curTime = ++_topEnterTimes;
@@ -3609,7 +3623,7 @@ namespace WpfHexaEditor
         #endregion ByteCount Property
 
         #region IDisposable Support
-        
+
         protected virtual void Dispose(bool disposing)
         {
             if (_disposedValue) return;
@@ -3769,11 +3783,12 @@ namespace WpfHexaEditor
         #endregion
 
         #region Append/expend bytes to end of file
+
         /// <summary>
         /// Allow control to append/expend byte at end of file
         /// </summary>
         public bool AllowExtend { get; set; }
-        
+
         /// <summary>
         /// Show a message box is true before append byte at end of file
         /// </summary>
@@ -3820,6 +3835,7 @@ namespace WpfHexaEditor
         private void Control_Drop(object sender, DragEventArgs e)
         {
             #region Text Dropping (Will be supported soon)
+
             //var textDrop = e.Data.GetData(DataFormats.Text);
             //if (textDrop != null && AllowTextDrop)
             //{
@@ -3827,9 +3843,11 @@ namespace WpfHexaEditor
 
             //    return;
             //}
+
             #endregion
 
             #region File dropping (Only open first selected file catched in GetData)
+
             var fileDrop = e.Data.GetData(DataFormats.FileDrop);
             if (fileDrop != null && AllowFileDrop)
             {
@@ -3840,16 +3858,18 @@ namespace WpfHexaEditor
                 else
                 {
                     if (FileDroppingConfirmation && MessageBox.Show(
-                            $"{Properties.Resources.FileDroppingConfirmationString} {Path.GetFileName(filename[0])} ?", ApplicationName,
+                            $"{Properties.Resources.FileDroppingConfirmationString} {Path.GetFileName(filename[0])} ?",
+                            ApplicationName,
                             MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                         FileName = filename[0];
                     else
                         FileName = filename[0];
                 }
             }
+
             #endregion
         }
-        
+
         #endregion
 
         #region Save/Load control state
@@ -3876,6 +3896,7 @@ namespace WpfHexaEditor
         #endregion
 
         #region Shift the first visible byte in the views to the left ...
+
         /// <summary>
         /// Shift the first visible byte in the view to the left. 
         /// Very useful for editing fixed-width tables. Use with BytePerLine to create visual tables ...
@@ -3883,7 +3904,7 @@ namespace WpfHexaEditor
         /// </summary>
         public int ByteShiftLeft
         {
-            get => (int)GetValue(ByteShiftLeftProperty);
+            get => (int) GetValue(ByteShiftLeftProperty);
             set => SetValue(ByteShiftLeftProperty, value);
         }
 
@@ -3898,7 +3919,7 @@ namespace WpfHexaEditor
                 ctrl.RefreshView(true);
         }
 
-        private static object ByteShiftLeft_CoerceValue(DependencyObject d, object basevalue) => 
+        private static object ByteShiftLeft_CoerceValue(DependencyObject d, object basevalue) =>
             (int) basevalue < 0 ? 0 : basevalue;
 
         #endregion
@@ -3944,11 +3965,29 @@ namespace WpfHexaEditor
 
         #region TEST // CustomBackgroundBlock implementation
 
+        /// <summary>
+        /// TEST - EXE custom background block test 
+        /// WILL BE PLACED IN XML FILE WHEN COMPLETED
+        /// http://www.delorie.com/djgpp/doc/exe/
+        /// </summary>
         private List<CustomBackgroundBlock> _cbbList = new List<CustomBackgroundBlock>();
+
+        //private List<CustomBackgroundBlock> _cbbList = new List<CustomBackgroundBlock>
         //{
-        //    new CustomBackgroundBlock(0, 2, Brushes.BlueViolet),
-        //    new CustomBackgroundBlock(8, 6, Brushes.Brown),
-        //    new CustomBackgroundBlock(23, 255, Brushes.SeaGreen),
+        //    new CustomBackgroundBlock(0, 2, Brushes.BlueViolet, "This is the 'magic number' of an EXE file. "),
+        //    new CustomBackgroundBlock(2, 2, Brushes.Brown, "The number of bytes in the last block of the program that are actually used. If this value is zero, that means the entire last block is used"),
+        //    new CustomBackgroundBlock(4, 2, Brushes.SeaGreen, "Number of blocks in the file that are part of the EXE file. If [02-03] is non-zero, only that much of the last block is used."),
+        //    new CustomBackgroundBlock(6, 2, Brushes.CadetBlue, "Number of relocation entries stored after the header. May be zero"),
+        //    new CustomBackgroundBlock(8, 2, Brushes.DarkGoldenrod, "Number of paragraphs in the header. The program's data begins just after the header, and this field can be used to calculate the appropriate file offset. The header includes the relocation entries. Note that some OSs and/or programs may fail if the header is not a multiple of 512 bytes."),
+        //    new CustomBackgroundBlock("0x0A", 2, Brushes.Coral, "Number of paragraphs of additional memory that the program will need. This is the equivalent of the BSS size in a Unix program. The program can't be loaded if there isn't at least this much memory available to it."),
+        //    new CustomBackgroundBlock("0x0C", 2, Brushes.HotPink, "Maximum number of paragraphs of additional memory. Normally, the OS reserves all the remaining conventional memory for your program, but you can limit it with this field."),
+        //    new CustomBackgroundBlock("0x0E", 2, Brushes.Cyan, "Relative value of the stack segment. This value is added to the segment the program was loaded at, and the result is used to initialize the SS register."),
+        //    new CustomBackgroundBlock("0x10", 2, Brushes.IndianRed, "Initial value of the SP register."),
+        //    new CustomBackgroundBlock("0x12", 2, Brushes.LimeGreen, "Word checksum. If set properly, the 16-bit sum of all words in the file should be zero. Usually, this isn't filled in."),
+        //    new CustomBackgroundBlock("0x14", 2, Brushes.PaleTurquoise, "Initial value of the IP register."),
+        //    new CustomBackgroundBlock("0x16", 2, Brushes.DarkOrange, "Initial value of the CS register, relative to the segment the program was loaded at."),
+        //    new CustomBackgroundBlock("0x18", 2, Brushes.Chartreuse, "Offset of the first relocation item in the file."),
+        //    new CustomBackgroundBlock("0x1A", 2, Brushes.DarkSeaGreen, "Overlay number. Normally zero, meaning that it's the main program.")
         //};
 
         internal CustomBackgroundBlock GetCustomBackgroundBlock(long bytePositionInFile) =>

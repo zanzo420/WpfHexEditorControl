@@ -10,6 +10,14 @@ namespace WpfHexaEditor
 
         public CustomBackgroundBlock() { }
 
+        public CustomBackgroundBlock(long start, long length, SolidColorBrush color, string description)
+        {
+            StartOffset = start;
+            Length = length;
+            Color = color;
+            Description = description;
+        }
+
         public CustomBackgroundBlock(long start, long length, SolidColorBrush color)
         {
             StartOffset = start;
@@ -24,6 +32,16 @@ namespace WpfHexaEditor
             StartOffset = srt.success ? srt.position : throw new Exception("Can't convert this string to long");
             Length = length;
             Color = color;
+        }
+
+        public CustomBackgroundBlock(string start, long length, SolidColorBrush color, string description)
+        {
+            var srt = ByteConverters.HexLiteralToLong(start);
+
+            StartOffset = srt.success ? srt.position : throw new Exception("Can't convert this string to long");
+            Length = length;
+            Color = color;
+            Description = description;
         }
 
         /// <summary>

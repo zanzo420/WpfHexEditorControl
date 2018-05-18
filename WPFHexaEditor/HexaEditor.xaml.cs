@@ -101,7 +101,7 @@ namespace WpfHexaEditor
         /// Get is the first color...
         /// </summary>
         private FirstColor _firstColor = FirstColor.HexByteData;
-
+        
         #endregion Global Class variables
 
         #region Events
@@ -2226,13 +2226,14 @@ namespace WpfHexaEditor
                 UpdateViewers(controlResize);
 
             //Update visual of byte control
+            //UpdateCustomBackgroundBlock();
             UpdateByteModified();
             UpdateSelection();
             UpdateHighLight();
             UpdateStatusBar();
             UpdateVisual();
             UpdateFocus();
-
+            
             CheckProviderIsOnProgress();
 
             if (controlResize)
@@ -2240,6 +2241,7 @@ namespace WpfHexaEditor
                 UpdateScrollMarkerPosition();
                 UpdateHeader(true);
             }
+
 #if DEBUG
             watch.Stop();
             Debug.Print($"REFRESH TIME: {watch.Elapsed.Milliseconds} ms");
@@ -3940,5 +3942,19 @@ namespace WpfHexaEditor
 
         #endregion
 
+        #region TEST // CustomBackgroundBlock implementation
+
+        private List<CustomBackgroundBlock> _cbbList = new List<CustomBackgroundBlock>();
+        //{
+        //    new CustomBackgroundBlock(0, 2, Brushes.BlueViolet),
+        //    new CustomBackgroundBlock(8, 6, Brushes.Brown),
+        //    new CustomBackgroundBlock(23, 255, Brushes.SeaGreen),
+        //};
+
+        internal CustomBackgroundBlock GetCustomBackgroundBlock(long bytePositionInFile) =>
+            _cbbList.FirstOrDefault(cbb => bytePositionInFile >= cbb.StartOffset &&
+                                           bytePositionInFile <= cbb.StopOffset);
+
+        #endregion
     }
 }

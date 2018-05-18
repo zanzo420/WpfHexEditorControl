@@ -25,13 +25,11 @@ namespace WpfHexaEditor
     abstract class BaseByte : FrameworkElement, IByteControl
     {
         #region Global class variables
-
         protected readonly HexEditor _parent;
         private bool _isSelected;
         private ByteAction _action = ByteAction.Nothing;
         private byte? _byte;
         private bool _isHighLight;
-
         #endregion global class variables
 
         #region Events
@@ -102,7 +100,7 @@ namespace WpfHexaEditor
         /// <summary>
         /// Used for selection coloring
         /// </summary>
-        public bool FirstSelected { get; set; }
+        public bool FirstSelected { protected get; set; }
 
         /// <summary>
         /// Used to prevent ByteModified event occurc when we dont want! 
@@ -112,7 +110,7 @@ namespace WpfHexaEditor
         /// <summary>
         /// Get or set if control as in read only mode
         /// </summary>
-        public bool ReadOnlyMode { get; set; }
+        public bool ReadOnlyMode { protected get; set; }
 
         /// <summary>
         /// Get or Set if control as selected
@@ -194,7 +192,7 @@ namespace WpfHexaEditor
             set => SetValue(ForegroundProperty, value);
         }
 
-        private static readonly DependencyProperty BackgroundProperty =
+        public static readonly DependencyProperty BackgroundProperty =
             TextElement.BackgroundProperty.AddOwner(typeof(BaseByte),
                 new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender));
 
@@ -271,9 +269,12 @@ namespace WpfHexaEditor
             }
             else
             {
-                FontWeight = _parent.FontWeight;
-                Background = Brushes.Transparent;
+                var cbb = _parent.GetCustomBackgroundBlock(BytePositionInFile);
+
+                Background = cbb != null ? cbb.Color : Brushes.Transparent;
                 Foreground = _parent.GetColumnNumber(BytePositionInFile) % 2 == 0 ? _parent.Foreground : _parent.ForegroundSecondColor;
+
+                FontWeight = _parent.FontWeight;
             }
 
             UpdateAutoHighLiteSelectionByteVisual();
@@ -342,8 +343,10 @@ namespace WpfHexaEditor
 
         protected override void OnMouseEnter(MouseEventArgs e)
         {
-            if (Byte != null && Action != ByteAction.Modified && Action != ByteAction.Deleted &&
-                Action != ByteAction.Added && !IsSelected && !IsHighLight)
+            if (Byte != null && !IsSelected && !IsHighLight &&
+                Action != ByteAction.Modified && 
+                Action != ByteAction.Deleted &&
+                Action != ByteAction.Added)
                 Background = _parent.MouseOverColor;
 
             UpdateAutoHighLiteSelectionByteVisual();
@@ -356,9 +359,19 @@ namespace WpfHexaEditor
 
         protected override void OnMouseLeave(MouseEventArgs e)
         {
-            if (Byte != null && Action != ByteAction.Modified && Action != ByteAction.Deleted &&
-                Action != ByteAction.Added && !IsSelected && !IsHighLight)
+            var cbb = _parent.GetCustomBackgroundBlock(BytePositionInFile);
+            
+            if (Byte != null && !IsSelected && !IsHighLight &&
+                Action != ByteAction.Modified &&
+                Action != ByteAction.Deleted &&
+                Action != ByteAction.Added)
                 Background = Brushes.Transparent;
+
+            if (cbb != null && !IsSelected && !IsHighLight &&
+                Action != ByteAction.Modified &&
+                Action != ByteAction.Deleted &&
+                Action != ByteAction.Added)
+                Background = cbb.Color;
 
             UpdateAutoHighLiteSelectionByteVisual();
 

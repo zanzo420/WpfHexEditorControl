@@ -145,9 +145,10 @@ namespace WpfHexaEditor
             else
             {
                 #region TBL COLORING
+                var cbb = _parent.GetCustomBackgroundBlock(BytePositionInFile);
 
+                Background = cbb != null ? cbb.Color : Brushes.Transparent;
                 FontWeight = _parent.FontWeight;
-                Background = Brushes.Transparent;
                 Foreground = _parent.Foreground;
 
                 if (TypeOfCharacterTable == CharacterTableType.TblFile)

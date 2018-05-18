@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Media;
 using WpfHexaEditor.Core.Bytes;
 
 namespace WpfHexaEditor
@@ -7,29 +8,33 @@ namespace WpfHexaEditor
     {
         private long _length;
 
-        public CustomBackgroundBlock(long start, long length)
+        public CustomBackgroundBlock() { }
+
+        public CustomBackgroundBlock(long start, long length, SolidColorBrush color)
         {
-            Start = start;
+            StartOffset = start;
             Length = length;
+            Color = color;
         }
 
-        public CustomBackgroundBlock(string start, long length)
+        public CustomBackgroundBlock(string start, long length, SolidColorBrush color)
         {
             var srt = ByteConverters.HexLiteralToLong(start);
 
-            Start = srt.success ? srt.position : throw new Exception("Can't convert this string to long");
+            StartOffset = srt.success ? srt.position : throw new Exception("Can't convert this string to long");
             Length = length;
+            Color = color;
         }
 
         /// <summary>
         /// Get or set the start offset
         /// </summary>
-        public long Start { get; set; }
+        public long StartOffset { get; set; }
 
         /// <summary>
         /// Get the stop offset
         /// </summary>
-        public long Stop => Start + Length;
+        public long StopOffset => StartOffset + Length - 1;
 
         /// <summary>
         /// Get or set the lenght of background block
@@ -41,8 +46,10 @@ namespace WpfHexaEditor
         }
 
         /// <summary>
-        /// D
+        /// Description of background block
         /// </summary>
         public string Description { get; set; }
+
+        public SolidColorBrush Color { get; set; } = Brushes.Transparent;
     }
 }

@@ -5,6 +5,7 @@
 //////////////////////////////////////////////
 
 using System;
+using System.Windows.Media;
 
 namespace WpfHexaEditor.Core.Interfaces
 {
@@ -20,8 +21,6 @@ namespace WpfHexaEditor.Core.Interfaces
         byte? Byte { get; set; }
         bool IsHighLight { get; set; }
         bool IsSelected { get; set; }
-        bool FirstSelected { get; set; }
-        bool ReadOnlyMode { get; set; }
         bool InternalChange { get; set; }
 
         //Methods

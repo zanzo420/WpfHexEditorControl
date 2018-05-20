@@ -271,6 +271,8 @@ namespace WpfHexaEditor
             {
                 var cbb = _parent.GetCustomBackgroundBlock(BytePositionInFile);
 
+                Description = cbb != null ? cbb.Description : "";
+
                 Background = cbb != null ? cbb.Color : Brushes.Transparent;
                 Foreground = _parent.GetColumnNumber(BytePositionInFile) % 2 == 0 ? _parent.Foreground : _parent.ForegroundSecondColor;
 
@@ -281,6 +283,8 @@ namespace WpfHexaEditor
 
             InvalidateVisual();
         }
+        
+        public string Description { get; set; }
 
         /// <summary>
         /// Auto highlite SelectionByte

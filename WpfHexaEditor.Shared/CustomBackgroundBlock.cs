@@ -4,7 +4,7 @@ using WpfHexaEditor.Core.Bytes;
 
 namespace WpfHexaEditor
 {
-    internal class CustomBackgroundBlock
+    public class CustomBackgroundBlock
     {
         private long _length;
 

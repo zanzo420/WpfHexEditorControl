@@ -49,6 +49,14 @@
                     FontWeight="Bold" />
                 <Label Content="{Binding Action, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
+            <Separator />
+            <StackPanel Orientation="Horizontal">
+                <Label
+                    Width="120"
+                    Content="{x:Static p:Resources.DescriptionString}"
+                    FontWeight="Bold" />
+                <Label Content="{Binding Description, UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
         </StackPanel>
     </ToolTip>
 

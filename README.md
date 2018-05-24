@@ -4,6 +4,7 @@
 [![NetFramework](https://img.shields.io/badge/.Net%20Framework-4.7-green.svg)](https://www.microsoft.com/net/download/windows)
 [![NetFramework](https://img.shields.io/badge/Language-C%23%207.0-orange.svg)](https://blogs.msdn.microsoft.com/dotnet/2016/08/24/whats-new-in-csharp-7-0/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/abbaye/WpfHexEditorControl/blob/master/LICENSE)
+[![Donate](https://img.shields.io/badge/PayPal-Donate-yellow.svg)](https://www.paypal.me/DTremblay1981)
 
 A fast, fully customisable Wpf user control for editing file or stream as hexadecimal. 
 

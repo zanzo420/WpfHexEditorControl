@@ -147,6 +147,8 @@ namespace WpfHexaEditor
                 #region TBL COLORING
                 var cbb = _parent.GetCustomBackgroundBlock(BytePositionInFile);
 
+                Description = cbb != null ? cbb.Description : "";
+
                 Background = cbb != null ? cbb.Color : Brushes.Transparent;
                 FontWeight = _parent.FontWeight;
                 Foreground = _parent.Foreground;

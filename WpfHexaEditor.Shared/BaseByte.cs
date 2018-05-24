@@ -313,6 +313,7 @@ namespace WpfHexaEditor
             Action = ByteAction.Nothing;
             IsSelected = false;
             InternalChange = false;
+            Description = string.Empty;
         }
 
         #endregion

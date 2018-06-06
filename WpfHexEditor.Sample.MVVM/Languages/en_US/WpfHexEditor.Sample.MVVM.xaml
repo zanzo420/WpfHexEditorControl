@@ -116,8 +116,8 @@
     <sys:String x:Key="KBTagString" xml:space="preserve">
     Kb
   </sys:String>
-    <sys:String x:Key="LenghtString" xml:space="preserve">
-    Lenght
+    <sys:String x:Key="LengthString" xml:space="preserve">
+    Length
   </sys:String>
     <sys:String x:Key="LineStatusBarTagString" xml:space="preserve">
     Ln

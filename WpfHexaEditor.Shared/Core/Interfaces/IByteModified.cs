@@ -15,7 +15,7 @@ namespace WpfHexaEditor.Core.Interfaces
         byte? Byte { get; set; }
         long BytePositionInFile { get; set; }
         bool IsValid { get; }
-        long UndoLenght { get; set; }
+        long UndoLength { get; set; }
 
         //Methods
         void Clear();

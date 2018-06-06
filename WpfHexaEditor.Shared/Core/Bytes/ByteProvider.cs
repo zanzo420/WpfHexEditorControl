@@ -89,7 +89,7 @@ namespace WpfHexaEditor.Core.Bytes
         public ByteProviderStreamType StreamType { get; internal set; } = ByteProviderStreamType.Nothing;
 
         /// <summary>
-        /// Get the lenght of file. Return -1 if file is close.
+        /// Get the length of file. Return -1 if file is close.
         /// </summary>
         public long Length => IsOpen ? _stream.Length : -1;
 
@@ -264,7 +264,7 @@ namespace WpfHexaEditor.Core.Bytes
         public int ReadByte() => IsOpen && _stream?.CanRead == true ? _stream.ReadByte() : -1;
 
         /// <summary>
-        /// Read bytes, lenght of reading are definid with parameter count. Start at position if file CanRead. Return null is file is closed or can be read.
+        /// Read bytes, length of reading are definid with parameter count. Start at position if file CanRead. Return null is file is closed or can be read.
         /// </summary>
         /// <returns></returns>
         public byte[] Read(int count)
@@ -528,7 +528,7 @@ namespace WpfHexaEditor.Core.Bytes
         /// <summary>
         /// Add/Modifiy a ByteModifed in the list of byte have changed
         /// </summary>
-        public void AddByteModified(byte? @byte, long bytePositionInFile, long undoLenght = 1)
+        public void AddByteModified(byte? @byte, long bytePositionInFile, long undoLength = 1)
         {
             var (success, _) = CheckIfIsByteModified(bytePositionInFile);
 
@@ -538,7 +538,7 @@ namespace WpfHexaEditor.Core.Bytes
             var byteModified = new ByteModified
             {
                 Byte = @byte,
-                UndoLenght = undoLenght,
+                UndoLength = undoLength,
                 BytePositionInFile = bytePositionInFile,
                 Action = ByteAction.Modified
             };
@@ -573,7 +573,7 @@ namespace WpfHexaEditor.Core.Bytes
                 var byteModified = new ByteModified
                 {
                     Byte = new byte(),
-                    UndoLenght = length,
+                    UndoLength = length,
                     BytePositionInFile = position,
                     Action = ByteAction.Deleted
                 };
@@ -687,9 +687,9 @@ namespace WpfHexaEditor.Core.Bytes
         #region Copy/Paste/Cut Methods
 
         /// <summary>
-        /// Get the lenght of byte are selected (base 1)
+        /// Get the length of byte are selected (base 1)
         /// </summary>
-        public static long GetSelectionLenght(long selectionStart, long selectionStop)
+        public static long GetSelectionLength(long selectionStart, long selectionStop)
         {
             if (selectionStop == -1 || selectionStop == -1)
                 return 0;
@@ -752,12 +752,12 @@ namespace WpfHexaEditor.Core.Bytes
             //Exclude byte deleted from copy
             if (!copyChange)
             {
-                var buffer = new byte[GetSelectionLenght(selectionStart, selectionStop)];
-                _stream.Read(buffer, 0, Convert.ToInt32(GetSelectionLenght(selectionStart, selectionStop)));
+                var buffer = new byte[GetSelectionLength(selectionStart, selectionStop)];
+                _stream.Read(buffer, 0, Convert.ToInt32(GetSelectionLength(selectionStart, selectionStop)));
                 return buffer;
             }
 
-            for (var i = 0; i < GetSelectionLenght(selectionStart, selectionStop); i++)
+            for (var i = 0; i < GetSelectionLength(selectionStart, selectionStop); i++)
             {
                 var (success, byteModified) = CheckIfIsByteModified(_stream.Position, ByteAction.All);
 
@@ -858,7 +858,7 @@ namespace WpfHexaEditor.Core.Bytes
             //Variables
             var buffer = GetCopyData(selectionStart, selectionStop, copyChange);
             var i = 0;
-            var lenght = GetSelectionLenght(selectionStart, selectionStop);
+            var length = GetSelectionLength(selectionStart, selectionStop);
             var delimiter = language == CodeLanguage.FSharp ? ";" : ",";
 
             var sb = new StringBuilder();
@@ -871,19 +871,19 @@ namespace WpfHexaEditor.Core.Bytes
                 case CodeLanguage.CSharp:
                 case CodeLanguage.Java:
                     sb.Append(
-                        $"/* {FileName} ({DateTime.Now.ToString(CultureInfo.CurrentCulture)}), \r\n StartPosition: 0x{ByteConverters.LongToHex(selectionStart)}, StopPosition: 0x{ByteConverters.LongToHex(selectionStop)}, Lenght: 0x{ByteConverters.LongToHex(lenght)} */");
+                        $"/* {FileName} ({DateTime.Now.ToString(CultureInfo.CurrentCulture)}), \r\n StartPosition: 0x{ByteConverters.LongToHex(selectionStart)}, StopPosition: 0x{ByteConverters.LongToHex(selectionStop)}, Length: 0x{ByteConverters.LongToHex(length)} */");
                     break;
                 case CodeLanguage.Vbnet:
                     sb.Append(
-                        $"' {FileName} ({DateTime.Now.ToString(CultureInfo.CurrentCulture)}), \r\n' StartPosition: &H{ByteConverters.LongToHex(selectionStart)}, StopPosition: &H{ByteConverters.LongToHex(selectionStop)}, Lenght: &H{ByteConverters.LongToHex(lenght)}");
+                        $"' {FileName} ({DateTime.Now.ToString(CultureInfo.CurrentCulture)}), \r\n' StartPosition: &H{ByteConverters.LongToHex(selectionStart)}, StopPosition: &H{ByteConverters.LongToHex(selectionStop)}, Length: &H{ByteConverters.LongToHex(length)}");
                     break;
                 case CodeLanguage.Pascal:
                     sb.Append(
-                        "{ " + $" {FileName} ({DateTime.Now.ToString(CultureInfo.CurrentCulture)}), \r\n   StartPosition: 0x{ByteConverters.LongToHex(selectionStart)}, StopPosition: 0x{ByteConverters.LongToHex(selectionStop)}, Lenght: 0x{ByteConverters.LongToHex(lenght)}" + " }");
+                        "{ " + $" {FileName} ({DateTime.Now.ToString(CultureInfo.CurrentCulture)}), \r\n   StartPosition: 0x{ByteConverters.LongToHex(selectionStart)}, StopPosition: 0x{ByteConverters.LongToHex(selectionStop)}, Length: 0x{ByteConverters.LongToHex(length)}" + " }");
                     break;
                 case CodeLanguage.FSharp:
                     sb.Append(
-                        $"// {FileName} ({DateTime.Now.ToString(CultureInfo.CurrentCulture)}), \r\n// StartPosition: 0x{ByteConverters.LongToHex(selectionStart)}, StopPosition: 0x{ByteConverters.LongToHex(selectionStop)}, Lenght: 0x{ByteConverters.LongToHex(lenght)}");
+                        $"// {FileName} ({DateTime.Now.ToString(CultureInfo.CurrentCulture)}), \r\n// StartPosition: 0x{ByteConverters.LongToHex(selectionStart)}, StopPosition: 0x{ByteConverters.LongToHex(selectionStop)}, Length: 0x{ByteConverters.LongToHex(length)}");
                     break;
             }
 
@@ -925,7 +925,7 @@ namespace WpfHexaEditor.Core.Bytes
                         $"char sDataHex[] =\"{ByteConverters.StringToHex(ByteConverters.BytesToString(buffer))}\";");
                     sb.AppendLine();
                     sb.AppendLine();
-                    sb.Append($"unsigned char rawData[{lenght}] ");
+                    sb.Append($"unsigned char rawData[{length}] ");
                     sb.AppendLine();
                     sb.Append("\t");
                     break;
@@ -1052,15 +1052,15 @@ namespace WpfHexaEditor.Core.Bytes
         /// <param name="expend">If true expend the file if needed, ATTENTION: bytes expended can't be canceled with undo</param>
         public void Paste(long startPosition, string pasteString, bool expend)
         {
-            long pastelenght = pasteString.Length;
+            long pastelength = pasteString.Length;
             Position = startPosition;
             var i = 0;
 
             //Expend if needed
-            if (Position + pastelenght > Length && expend)
+            if (Position + pastelength > Length && expend)
             {
-                var lenghtToExpend = Position - Length + pastelenght;
-                AppendByte(0, lenghtToExpend);
+                var lengthToExpend = Position - Length + pastelength;
+                AppendByte(0, lengthToExpend);
                 Position = startPosition;
             }
 
@@ -1072,7 +1072,7 @@ namespace WpfHexaEditor.Core.Bytes
                     {
                         Position = startPosition + i++;
                         if (GetByte(Position).singleByte != ByteConverters.CharToByte(chr))
-                            AddByteModified(ByteConverters.CharToByte(chr), Position - 1, pastelenght);
+                            AddByteModified(ByteConverters.CharToByte(chr), Position - 1, pastelength);
                     }
                     else
                         break;
@@ -1089,15 +1089,15 @@ namespace WpfHexaEditor.Core.Bytes
         /// <param name="expend">If true expend the file if needed, ATTENTION: bytes expended can't be canceled with undo</param>
         public void Paste(long startPosition, byte[] pasteBytes, bool expend)
         {
-            long pastelenght = pasteBytes.Length;
+            long pastelength = pasteBytes.Length;
             Position = startPosition;
             var i = 0;
 
             //Expend if needed
-            if (Position + pastelenght > Length && expend)
+            if (Position + pastelength > Length && expend)
             {
-                var lenghtToExpend = Position - Length + pastelenght;
-                AppendByte(0, lenghtToExpend);
+                var lengthToExpend = Position - Length + pastelength;
+                AppendByte(0, lengthToExpend);
                 Position = startPosition;
             }
 
@@ -1109,7 +1109,7 @@ namespace WpfHexaEditor.Core.Bytes
                     {
                         Position = startPosition + i++;
                         if (GetByte(Position).singleByte != bt)
-                            AddByteModified(bt, Position - 1, pastelenght);
+                            AddByteModified(bt, Position - 1, pastelength);
                     }
                     else
                         break;
@@ -1158,13 +1158,13 @@ namespace WpfHexaEditor.Core.Bytes
             {
                 var last = UndoStack.Pop();
                 var bytePositionList = new List<long>();
-                var undoLenght = last.UndoLenght;
+                var undoLength = last.UndoLength;
 
                 bytePositionList.Add(last.BytePositionInFile);
                 _byteModifiedDictionary.Remove(last.BytePositionInFile);
 
-                if (undoLenght > 1)
-                    for (var i = 0; i < undoLenght; i++)
+                if (undoLength > 1)
+                    for (var i = 0; i < undoLength; i++)
                         if (UndoStack.Count > 0)
                         {
                             last = UndoStack.Pop();
@@ -1205,7 +1205,7 @@ namespace WpfHexaEditor.Core.Bytes
         /// Return true if Copy method could be invoked.
         /// </summary>
         public bool CanCopy(long selectionStart, long selectionStop) =>
-            GetSelectionLenght(selectionStart, selectionStop) >= 1 && IsOpen;
+            GetSelectionLength(selectionStart, selectionStop) >= 1 && IsOpen;
 
         /// <summary>
         /// Update a value indicating whether the current stream is supporting writing.

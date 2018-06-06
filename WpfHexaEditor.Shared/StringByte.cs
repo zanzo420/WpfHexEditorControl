@@ -145,9 +145,12 @@ namespace WpfHexaEditor
             else
             {
                 #region TBL COLORING
+                var cbb = _parent.GetCustomBackgroundBlock(BytePositionInFile);
 
+                Description = cbb != null ? cbb.Description : "";
+
+                Background = cbb != null ? cbb.Color : Brushes.Transparent;
                 FontWeight = _parent.FontWeight;
-                Background = Brushes.Transparent;
                 Foreground = _parent.Foreground;
 
                 if (TypeOfCharacterTable == CharacterTableType.TblFile)
@@ -259,7 +262,7 @@ namespace WpfHexaEditor
                     Byte = ByteConverters.CharToByte(Text[0]);
 
                     //Insert byte at end of file
-                    if (_parent.Lenght == BytePositionInFile + 1)
+                    if (_parent.Length == BytePositionInFile + 1)
                     {
                         byte[] byteToAppend = { 0 };
                         _parent.AppendByte(byteToAppend);

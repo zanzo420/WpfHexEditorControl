@@ -14,7 +14,7 @@ namespace HexEditUnitTest
         {
             var bp = new ByteProvider(@"C:\TEST\TEST.xls");
 
-            var lenght = bp.Length;
+            var length = bp.Length;
 
             var watch = new Stopwatch();
 
@@ -23,9 +23,9 @@ namespace HexEditUnitTest
             watch.Stop();
 
             Console.WriteLine($@"duration {watch.Elapsed}");
-            Console.WriteLine($@"File lenght {lenght}");
+            Console.WriteLine($@"File length {length}");
 
-            Assert.AreEqual(lenght, byteCount, "The number of byte need to be equal!");
+            Assert.AreEqual(length, byteCount, "The number of byte need to be equal!");
         }
     }
 }

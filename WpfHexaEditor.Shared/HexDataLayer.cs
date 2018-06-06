@@ -23,15 +23,21 @@ namespace WpfHexaEditor
         {
             var chs = ByteConverters.ByteToHexCharArray(bt);
 
-            for (int chIndex = 0; chIndex < 2; chIndex++)
+            for (var chIndex = 0; chIndex < 2; chIndex++)
             {
 #if NET451
-                var text = new FormattedText(
+                var text = new FormattedText
+                (
                     chs[chIndex].ToString(), CultureInfo.CurrentCulture,
                     FlowDirection.LeftToRight, TypeFace, FontSize,
-                    foreground);
+                    foreground
+                );
+
                 startPoint.X += CharSize.Width * chIndex;
-                drawingContext.DrawText(text,
+
+                drawingContext.DrawText
+                (
+                    text,
                     startPoint
                 );
 

@@ -254,13 +254,13 @@ namespace WPFHexaEditorExample
             //var rnd = new Random();
             //for (var i = 0; i < 200; i++)
             //{
-            //    HexEdit.SetPosition(rnd.Next(0, (int)HexEdit.Lenght));
+            //    HexEdit.SetPosition(rnd.Next(0, (int)HexEdit.Length));
             //    //HexEdit.BytePerLine = rnd.Next(1, 16);
             //    Application.Current.DoEvents();
             //}
             #endregion
 
-            ///// BYTE SHIFTING TEST FOR FIXED LENGHT EDITOR
+            ///// BYTE SHIFTING TEST FOR FIXED length EDITOR
             //HexEdit.ByteShiftLeft = 9;
             //HexEdit.RefreshView(true);
             //HexEdit.BytePerLine = 9;

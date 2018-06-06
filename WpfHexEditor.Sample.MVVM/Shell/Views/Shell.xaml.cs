@@ -12,15 +12,15 @@ namespace WpfHexEditor.Sample.MVVM.Views {
     public partial class Shell : Window,IShell {
         public Shell() {
             InitializeComponent();
-            
-            //Cuz xaml designer doesn't support generic type binding;We have to set the some bindings(valuetuple) in codebehind :(;
-            HexEdit.SetBinding(DrawedHexEditor.CustomBackgroundBlocksProperty, new Binding(nameof(HexEdit.CustomBackgroundBlocks)));
-            //CustomBackgroundBlocks = "{Binding CustomBackgroundBlocks}"
-            //(this.DataContext as ShellViewModel).FileEditor = HexEdit;
         }
 
-       
-
-      
+        private void MenuItem_Click(object sender, RoutedEventArgs e) {
+            dock.Children.Clear();
+            for (int i = 0; i < 2; i++) {
+                System.GC.Collect();
+                System.GC.WaitForPendingFinalizers();
+            }
+            
+        }
     }
 }

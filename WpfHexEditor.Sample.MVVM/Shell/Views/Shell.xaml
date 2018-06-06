@@ -7,6 +7,7 @@
         xmlns:local="clr-namespace:WpfHexEditor.Sample.MVVM"
         xmlns:properties="clr-namespace:WpfHexEditor.Sample.MVVM.Properties"
         xmlns:hexcore="clr-namespace:WpfHexaEditor.Core;assembly=WPFHexaEditor"
+        xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
         xmlns:prism="http://prismlibrary.com/"  WindowState="Maximized"
         xmlns:hex="clr-namespace:WpfHexaEditor;assembly=WPFHexaEditor"
         xmlns:cvts="clr-namespace:WpfHexaEditor.Core.Converters;assembly=WPFHexaEditor"
@@ -176,7 +177,7 @@
                         <TextBox
                             Width="75"
                             VerticalContentAlignment="Center"
-                            Text="{Binding BytePerLine, ElementName=HexEdit, UpdateSourceTrigger=LostFocus}"
+                            Text="{Binding BytePerLine,UpdateSourceTrigger=LostFocus}"
                             TextWrapping="Wrap" />
                         <Label Content="(Lost focus)" />
                     </StackPanel>
@@ -221,14 +222,16 @@
                         IsCheckable="True"
                         IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=HeaderVisibility, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                 </MenuItem>
-                <MenuItem Header="Test" Command="{Binding TestCommand}">
-
+                <MenuItem Header="Test" >
+                    <MenuItem Header="TestBackground" Command="{Binding TestCommand}"/>
+                    <MenuItem Header="TestGC" Click="MenuItem_Click" />
                 </MenuItem>
             </Menu>
-            <DockPanel >
+            <DockPanel x:Name="dock">
                 <hex:DrawedHexEditor AllowDrop="True" DockPanel.Dock="Left"
                 CellMargin="0,1" 
                 CellPadding="2"
+                CustomBackgroundBlocks="{Binding CustomBackgroundBlocks}"
                 FocusPosition="{Binding FocusPosition}"
                 HoverPosition="{Binding HoverPosition}"
                 Position="{Binding Position}"
@@ -236,13 +239,16 @@
                 Stream="{Binding Stream}"
                 SelectionStart="{Binding SelectionStart}"
                 SelectionLength="{Binding SelectionLength}"
-                x:Name="HexEdit"
                 Margin="2,2,2.4,2.2">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Drop">
                             <prism:InvokeCommandAction Command="{Binding DropCommand}" TriggerParameterPath="Data"/>
                         </i:EventTrigger>
+                        <prism:InteractionRequestTrigger SourceObject="{Binding UpdateBackgroundRequest}">
+                            <ei:CallMethodAction MethodName="UpdateBackgroundBlocks"/>
+                        </prism:InteractionRequestTrigger>
                     </i:Interaction.Triggers>
+                    
                     <hex:DrawedHexEditor.Resources>
                         <DataTemplate x:Key="DataToolTipTemplate">
                             <ContentControl Content="{Binding UIObject}"/>

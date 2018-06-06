@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -364,6 +365,7 @@ namespace WpfHexaEditor
             //RestoreSelection;
             SelectionStart = -1;
             SelectionLength = 0;
+            
         }
 
         #region These methods won't be invoked everytime scrolling.but only when stream is opened or closed,byteperline changed(UpdateInfo).
@@ -459,22 +461,7 @@ namespace WpfHexaEditor
 #endif
             
         }
-
-        public IEnumerable<(long index, long length, Brush background)> CustomBackgroundBlocks
-        {
-            get => (IEnumerable<(long index, long length, Brush background)>) GetValue(
-                CustomBackgroundBlocksProperty);
-            set => SetValue(CustomBackgroundBlocksProperty, value);
-        }
-
-        // Using a DependencyProperty as the backing store for CustomBackgroundBlocks.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty CustomBackgroundBlocksProperty =
-            DependencyProperty.Register(nameof(CustomBackgroundBlocks),
-                typeof(IEnumerable<(long index, long length, Brush background)>),
-                typeof(DrawedHexEditor),
-                new PropertyMetadata(null));
-
-
+        
         public Thickness CellMargin
         {
             get => (Thickness) GetValue(CellMarginProperty);
@@ -607,7 +594,7 @@ namespace WpfHexaEditor
 
         #region Data Backgrounds
 
-        private void UpdateBackgroundBlocks()
+        public void UpdateBackgroundBlocks()
         {
             //ClearBackgroundBlocks;
             HexDataLayer.BackgroundBlocks = null;
@@ -628,7 +615,7 @@ namespace WpfHexaEditor
             if (Stream == null)
                 return;
 
-            //Check whether Selection is in sight;
+            //Check whether the backgroundblock is in visible;
             if (!(index + length >= Position && index < Position + MaxVisibleLength))
                 return;
 
@@ -640,15 +627,7 @@ namespace WpfHexaEditor
 
         private void AddSelectionBackgroundBlocks() =>
             AddBackgroundBlock(SelectionStart, SelectionLength, SelectionBrush);
-
-        private void AddCustomBackgroundBlocks()
-        {
-            if (CustomBackgroundBlocks == null) return;
-
-            foreach (var (index, length, background) in CustomBackgroundBlocks)
-                AddBackgroundBlock(index, length, background);
-        }
-
+        
         private void AddFocusPositionBlock()
         {
             if (FocusPosition >= 0)
@@ -926,9 +905,7 @@ namespace WpfHexaEditor
                 });
             });
         }
-
-
-
+        
         public FrameworkElement HexDataToolTip
         {
             get => (FrameworkElement) GetValue(HexDataToolTipProperty);
@@ -982,4 +959,37 @@ namespace WpfHexaEditor
             DependencyProperty.Register(nameof(HoverPosition), typeof(long), typeof(DrawedHexEditor),
                 new FrameworkPropertyMetadata(-1L, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
     }
+
+    /// <summary>
+    /// CustomBackgroundBlocks Part;
+    /// </summary>
+    public partial class DrawedHexEditor {
+        public IEnumerable<ICustomBackgroundBlock> CustomBackgroundBlocks {
+            get => (IEnumerable<ICustomBackgroundBlock>)GetValue(
+                CustomBackgroundBlocksProperty);
+            set => SetValue(CustomBackgroundBlocksProperty, value);
+        }
+
+        // Using a DependencyProperty as the backing store for CustomBackgroundBlocks.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty CustomBackgroundBlocksProperty =
+            DependencyProperty.Register(nameof(CustomBackgroundBlocks),
+                typeof(IEnumerable<ICustomBackgroundBlock>),
+                typeof(DrawedHexEditor));
+        
+        private void AddCustomBackgroundBlocks() {
+            if (CustomBackgroundBlocks == null) return;
+
+            foreach (var block in CustomBackgroundBlocks)
+                AddBackgroundBlock(block.StartOffset, block.Length, block.Background);
+        }
+    }
+
+    
+#if DEBUG
+    public partial class DrawedHexEditor {
+        ~DrawedHexEditor() {
+
+        }
+    }
+#endif
 }

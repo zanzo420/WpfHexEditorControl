@@ -36,7 +36,18 @@ namespace WpfHexaEditor
             CharSize.Width + CellPadding.Left + CellPadding.Right,
             CharSize.Height + CellPadding.Top + CellPadding.Bottom);
 
-        public int SavedBits { get; set; } = 2;
+        
+        public int SavedBits {
+            get { return (int)GetValue(SavedBitsProperty); }
+            set { SetValue(SavedBitsProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for SaveBits.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty SavedBitsProperty =
+            DependencyProperty.Register(nameof(SavedBits), typeof(int), typeof(CellStepsLayer),
+                new FrameworkPropertyMetadata(2, FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure));
+
+
 
         public Orientation Orientation
         {
@@ -160,7 +171,7 @@ namespace WpfHexaEditor
         protected override Size MeasureOverride(Size availableSize)
         {
             availableSize = base.MeasureOverride(availableSize);
-
+            
             if (Orientation == Orientation.Horizontal)
             {
                 availableSize.Height = CellMargin.Top + CellMargin.Bottom + CellSize.Height;

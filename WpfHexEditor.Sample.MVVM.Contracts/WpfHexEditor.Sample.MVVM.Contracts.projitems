@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)App\ILoggerService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\IServiceProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\IUIObjectProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hex\ICustomBackgroundFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shell\IShell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ToolTip\IToolTipDataItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ToolTip\IToolTipItem.cs" />

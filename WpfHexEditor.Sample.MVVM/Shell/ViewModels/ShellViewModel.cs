@@ -19,7 +19,7 @@ using WpfHexEditor.Sample.MVVM.Shell;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-
+using WpfHexEditor.Sample.MVVM.Contracts.Hex;
 
 namespace WpfHexEditor.Sample.MVVM.ViewModels {
     [Export]
@@ -60,9 +60,8 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
         }
 
 
-        public ObservableCollection<(long index, long length, Brush background)> CustomBackgroundBlocks { get; set; } = new ObservableCollection<(long index, long length, Brush background)>();
+        public ObservableCollection<WpfHexaEditor.Core.Interfaces.ICustomBackgroundBlock> CustomBackgroundBlocks { get; set; } = new ObservableCollection<WpfHexaEditor.Core.Interfaces.ICustomBackgroundBlock>();
         
-
 
         private DelegateCommand _loadedCommand;
         public DelegateCommand LoadedCommand => _loadedCommand ??
@@ -74,34 +73,36 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
                 }
             ));
 
+        public InteractionRequest<Notification> UpdateBackgroundRequest { get; set; } = new InteractionRequest<Notification>();
 
 
         private DelegateCommand _testCommand;
         public DelegateCommand TestCommand => _testCommand ??
             (_testCommand = new DelegateCommand(
                 () => {
-                    Position = new Random().Next(1024);
+                   if(CustomBackgroundBlocks.Count != 0) {
+                        var rand = new Random();
+                        var brush = new SolidColorBrush(Color.FromRgb((byte)rand.Next(byte.MaxValue), (byte)rand.Next(byte.MaxValue), (byte)rand.Next(byte.MaxValue)));
+                        foreach (var block in CustomBackgroundBlocks) {
+                            block.Background = brush;
+                        }
+                        UpdateBackgroundRequest.Raise(new Notification());
+                        return;
+                    }
 #if DEBUG
                    if(Stream == null) {
                         return;
                    }
-                    
-            //        var customBacks = new ObservableCollection<(long index, long length, Brush background)> {
-
-            //    (0L,4L,Brushes.Yellow),
-
-            //    (4L,4L,Brushes.Red),
-
-            //    (8L,16L,Brushes.Brown)
-
-            //};
-
-                    for (int i = 0; i < 200; i++) {
-
-                        CustomBackgroundBlocks.Add((24 + i, 1, Brushes.Chocolate));
-
+                   for (int i = 0; i < 200; i++) {
+                        var block = CustomBackgroundFactory.CreateNew();
+                        block.StartOffset = 24 + i;
+                        block.Length = 1;
+                        block.Background = Brushes.Chocolate;
+                        CustomBackgroundBlocks.Add(block);
+                        UpdateBackgroundRequest.Raise(new Notification());
                     }
 
+                   
                     //CustomBackgroundBlocks = customBacks;
 #endif
                 }
@@ -323,7 +324,7 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
             
             //Test DataToolTips;
             CustomDataToolTipItems.Add((0, 8, "Test Key", "Test Value"));
-            CustomBackgroundBlocks.Add((0, 8, Brushes.Chocolate));
+            //CustomBackgroundBlocks.Add((0, 8, Brushes.Chocolate));
 
             //Test ObjectToolTips;
             var testObjectDataToolTip = ToolTipItemFactory.CreateToolTipObjectItem();
@@ -334,7 +335,7 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
             //    Text = "Test ToolTip"
             //};
             CustomObjectToolTipItems.Add((8, 8, testObjectDataToolTip));
-            CustomBackgroundBlocks.Add((8, 8, Brushes.Blue));
+            //CustomBackgroundBlocks.Add((8, 8, Brushes.Blue));
 #endif
         }
 
@@ -467,7 +468,7 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
         }
 
 
-        private int _bytePerLine = 32;
+        private int _bytePerLine = 16;
         public int BytePerLine {
             get => _bytePerLine;
             set => SetProperty(ref _bytePerLine, value);

@@ -15,7 +15,12 @@ namespace WpfHexEditor.Sample.MVVM.Views {
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e) {
-            dock.Children.Clear();
+            if(hexEdit == null) {
+                return;
+            }
+
+            grid.Children.Remove(hexEdit);
+            hexEdit = null;
             for (int i = 0; i < 2; i++) {
                 System.GC.Collect();
                 System.GC.WaitForPendingFinalizers();

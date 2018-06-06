@@ -19,9 +19,13 @@
             <i:InvokeCommandAction Command="{Binding LoadedCommand}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
-    <Grid>
-        <DockPanel>
-            <Menu DockPanel.Dock="Top">
+    <Grid x:Name="grid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Menu >
                 <MenuItem
                     Height="26"
                     Header="{DynamicResource FileMenuText}"
@@ -227,8 +231,7 @@
                     <MenuItem Header="TestGC" Click="MenuItem_Click" />
                 </MenuItem>
             </Menu>
-            <DockPanel x:Name="dock">
-                <hex:DrawedHexEditor AllowDrop="True" DockPanel.Dock="Left"
+        <hex:DrawedHexEditor AllowDrop="True" Grid.Row="1" x:Name="hexEdit"
                 CellMargin="0,1" 
                 CellPadding="2"
                 CustomBackgroundBlocks="{Binding CustomBackgroundBlocks}"
@@ -240,60 +243,112 @@
                 SelectionStart="{Binding SelectionStart}"
                 SelectionLength="{Binding SelectionLength}"
                 Margin="2,2,2.4,2.2">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Drop">
-                            <prism:InvokeCommandAction Command="{Binding DropCommand}" TriggerParameterPath="Data"/>
-                        </i:EventTrigger>
-                        <prism:InteractionRequestTrigger SourceObject="{Binding UpdateBackgroundRequest}">
-                            <ei:CallMethodAction MethodName="UpdateBackgroundBlocks"/>
-                        </prism:InteractionRequestTrigger>
-                    </i:Interaction.Triggers>
-                    
-                    <hex:DrawedHexEditor.Resources>
-                        <DataTemplate x:Key="DataToolTipTemplate">
-                            <ContentControl Content="{Binding UIObject}"/>
-                        </DataTemplate>
-                        <ContextMenu x:Key="DataLayerContextMenu">
-                            <MenuItem Header="{DynamicResource CopyKey}" Command="{Binding CopyKeyCommand}"/>
-                            <MenuItem Header="{DynamicResource CopyValue}" Command="{Binding CopyValueCommand}"/>
-                            <MenuItem Header="{DynamicResource CopyExpression}" Command="{Binding CopyExpressionCommand}"/>
-                        </ContextMenu>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Drop">
+                    <prism:InvokeCommandAction Command="{Binding DropCommand}" TriggerParameterPath="Data"/>
+                </i:EventTrigger>
+                <prism:InteractionRequestTrigger SourceObject="{Binding UpdateBackgroundRequest}">
+                    <ei:CallMethodAction MethodName="UpdateBackgroundBlocks"/>
+                </prism:InteractionRequestTrigger>
+            </i:Interaction.Triggers>
 
-                    </hex:DrawedHexEditor.Resources>
-                    <hex:DrawedHexEditor.HexDataToolTip>
-                        <ListBox ItemsSource="{Binding DataToolTips}" FontSize="14" BorderThickness="1"
+            <hex:DrawedHexEditor.Resources>
+                <DataTemplate x:Key="DataToolTipTemplate">
+                    <ContentControl Content="{Binding UIObject}"/>
+                </DataTemplate>
+                <ContextMenu x:Key="DataLayerContextMenu">
+                    <MenuItem Header="{DynamicResource CopyKey}" Command="{Binding CopyKeyCommand}"/>
+                    <MenuItem Header="{DynamicResource CopyValue}" Command="{Binding CopyValueCommand}"/>
+                    <MenuItem Header="{DynamicResource CopyExpression}" Command="{Binding CopyExpressionCommand}"/>
+                </ContextMenu>
+
+            </hex:DrawedHexEditor.Resources>
+            <hex:DrawedHexEditor.HexDataToolTip>
+                <ListBox ItemsSource="{Binding DataToolTips}" FontSize="14" BorderThickness="1"
                                  BorderBrush="Black"
                                  ContextMenu="{StaticResource DataLayerContextMenu}"
                                     ItemTemplate="{StaticResource DataToolTipTemplate}" 
                                  SelectedItem="{Binding SelectedToolTipItem}" 
                                   />
-                    </hex:DrawedHexEditor.HexDataToolTip>
-                    <hex:DrawedHexEditor.StringDataToolTip>
-                        <ListBox ItemsSource="{Binding DataToolTips}" 
+            </hex:DrawedHexEditor.HexDataToolTip>
+            <hex:DrawedHexEditor.StringDataToolTip>
+                <ListBox ItemsSource="{Binding DataToolTips}" 
                                  FontSize="14" SelectedItem="{Binding SelectedToolTipItem}"
                                  ItemTemplate="{StaticResource DataToolTipTemplate}" 
                                  ContextMenu="{StaticResource DataLayerContextMenu}"/>
-                    </hex:DrawedHexEditor.StringDataToolTip>
-                    <UserControl.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Header="{DynamicResource SetAsStartPosition}" Command="{Binding SetAsStartCommand}"/>
-                            <MenuItem Header="{DynamicResource SetAsEndPosition}" Command="{Binding SetAsEndCommand}"/>
-                        </ContextMenu>
-                    </UserControl.ContextMenu>
-                </hex:DrawedHexEditor>
-                <Border/>
-            </DockPanel>
-
-
-            <!--AllowByteCount="False"
-                AppendNeedConfirmation="False"
-                ByteGrouping="FourByte"
-                ByteSpacerPositioning="HexBytePanel"
-                ByteSpacerVisualStyle="Dash"
-                ByteSpacerWidthTickness="Normal"
-                DataStringVisual="Hexadecimal"-->
-
-        </DockPanel>
+            </hex:DrawedHexEditor.StringDataToolTip>
+            <UserControl.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="{DynamicResource SetAsStartPosition}" Command="{Binding SetAsStartCommand}"/>
+                    <MenuItem Header="{DynamicResource SetAsEndPosition}" Command="{Binding SetAsEndCommand}"/>
+                </ContextMenu>
+            </UserControl.ContextMenu>
+        </hex:DrawedHexEditor>
+        <StatusBar Height="27" Grid.Row="2">
+                <StatusBarItem Width="90" Padding="0">
+                    <StackPanel Orientation="Horizontal">
+                        <Label
+                            Padding="5,5,0,5"
+                            Content="{DynamicResource LineStatusBarTagString}"
+                            FontWeight="Bold" />
+                        <Label Content="{Binding SelectionLine, UpdateSourceTrigger=PropertyChanged, Converter={x:Static cvts:LongToHexStringConverter.StaticInstance}}">
+                            <Label.ToolTip>
+                                <StackPanel Orientation="Horizontal">
+                                    <Label Content="Line :" FontWeight="Bold" />
+                                    <Label Content="{Binding SelectionLine, UpdateSourceTrigger=PropertyChanged}" />
+                                    <Label Content="{Binding SelectionLine, UpdateSourceTrigger=PropertyChanged, Converter={x:Static cvts:LongToHexStringConverter.StaticInstance}}" />
+                                </StackPanel>
+                            </Label.ToolTip>
+                        </Label>
+                    </StackPanel>
+                </StatusBarItem>
+                <Separator />
+                <StatusBarItem Width="125" Padding="0">
+                    <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                            Padding="5,5,0,5"
+                            Text="{DynamicResource PositionString}"
+                            FontWeight="Bold" />
+                    <TextBlock Text="{Binding FocusPosition, UpdateSourceTrigger=PropertyChanged,Converter={x:Static cvts:LongToHexStringConverter.StaticInstance}}">
+                        <TextBlock.ToolTip>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{DynamicResource PositionString}" FontWeight="Bold" />
+                                <TextBlock Text="{Binding SelectionStart, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Text="{Binding SelectionStart, UpdateSourceTrigger=PropertyChanged, Converter={x:Static cvts:LongToHexStringConverter.StaticInstance}}" />
+                            </StackPanel>
+                        </TextBlock.ToolTip>
+                    </TextBlock>
+                </StackPanel>
+                </StatusBarItem>
+                <Separator />
+                <StatusBarItem Width="125" Padding="0">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock
+                            Padding="5,5,0,5"
+                            Text="{DynamicResource LengthString}"
+                            FontWeight="Bold" />
+                        <TextBlock x:Name="FileLengthKbLabel" Text="{Binding SelectionLength}"  />
+                    </StackPanel>
+                </StatusBarItem>
+                <Separator />
+                <StatusBarItem
+                    x:Name="ByteCountPanel"
+                    Padding="0"
+                    Visibility="Collapsed">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock
+                            Padding="5,5,0,5"
+                            Text="{DynamicResource CountOfString}"
+                            FontWeight="Bold" />
+                        <TextBlock x:Name="CountOfByteLabel" ToolTip="Byte at position start" />
+                        <TextBlock Padding="0,5" Text=":" />
+                        <TextBlock
+                            x:Name="CountOfByteSumLabel"
+                            ToolTip="Count of Byte at position start" />
+                    </StackPanel>
+                </StatusBarItem>
+            </StatusBar>
+        
     </Grid>
 
 </Window>

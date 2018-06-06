@@ -3,189 +3,165 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
     <sys:String x:Key="FileMenuText">File</sys:String>
     
-    <sys:String x:Key="AppendByteConfirmationString" xml:space="preserve">
+    <sys:String x:Key="AppendByteConfirmationString" >
     You have reached the end of file. Do you want append one byte ? This operation cannot be canceled if you continue.
   </sys:String>
     <sys:String x:Key="SetAsStartPosition">Set as start</sys:String>
     <sys:String x:Key="SetAsEndPosition">Set as end</sys:String>
-    <sys:String x:Key="BookmarksString" xml:space="preserve">
+    <sys:String x:Key="BookmarksString" >
     Bookmarks
   </sys:String>
-    <sys:String x:Key="ByteActionString" xml:space="preserve">
+    <sys:String x:Key="ByteActionString" >
     Byte action
   </sys:String>
-    <sys:String x:Key="ByteString" xml:space="preserve">
+    <sys:String x:Key="ByteString" >
     Byte
   </sys:String>
-    <sys:String x:Key="CancelLongProcessString" xml:space="preserve">
+    <sys:String x:Key="CancelLongProcessString" >
     Cancel long process
   </sys:String>
-    <sys:String x:Key="CancelLongProcessToolTipString" xml:space="preserve">
+    <sys:String x:Key="CancelLongProcessToolTipString" >
     Click to cancel long process.
   </sys:String>
-    <sys:String x:Key="CancelString" xml:space="preserve">
+    <sys:String x:Key="CancelString" >
     Cancel
   </sys:String>
-    <sys:String x:Key="ClearBookMarkString" xml:space="preserve">
+    <sys:String x:Key="ClearBookMarkString" >
     Clear bookmark
   </sys:String>
-    <sys:String x:Key="ClearString" xml:space="preserve">
+    <sys:String x:Key="ClearString" >
     Clear
   </sys:String>
-    <sys:String x:Key="ClickToGoAtPositionString" xml:space="preserve">
+    <sys:String x:Key="ClickToGoAtPositionString" >
     Click to go to at position.
   </sys:String>
-    <sys:String x:Key="CloseString" xml:space="preserve">
+    <sys:String x:Key="CloseString" >
     Close
   </sys:String>
-    <sys:String x:Key="CopyAsASCIIString" xml:space="preserve">
+    <sys:String x:Key="CopyAsASCIIString" >
     Copy as ASCII
   </sys:String>
-    <sys:String x:Key="CopyAsDecimalString" xml:space="preserve">
+    <sys:String x:Key="CopyAsDecimalString" >
     Copy as decimal
   </sys:String>
-    <sys:String x:Key="CopyAsHexadecimalString" xml:space="preserve">
+    <sys:String x:Key="CopyAsHexadecimalString" >
     Copy as hexadecimal
   </sys:String>
-    <sys:String x:Key="CopyAsTBLString" xml:space="preserve">
+    <sys:String x:Key="CopyAsTBLString" >
     TBL string (character file loaded)
   </sys:String>
-    <sys:String x:Key="CopySelectionAsString" xml:space="preserve">
+    <sys:String x:Key="CopySelectionAsString" >
     Copy selection as ...
   </sys:String>
-    <sys:String x:Key="CountOfString" xml:space="preserve">
+    <sys:String x:Key="CountOfString" >
     Count of
   </sys:String>
-    <sys:String x:Key="DefaultTBLString" xml:space="preserve">
+    <sys:String x:Key="DefaultTBLString" >
     Default TBL
   </sys:String>
-    <sys:String x:Key="DeleteString" xml:space="preserve">
+    <sys:String x:Key="DeleteString" >
     Delete
   </sys:String>
-    <sys:String x:Key="DescriptionString" xml:space="preserve">
+    <sys:String x:Key="DescriptionString" >
     Description
   </sys:String>
-    <sys:String x:Key="EndTagString" xml:space="preserve">
+    <sys:String x:Key="EndTagString" >
     &lt;end&gt;
   </sys:String>
-    <sys:String x:Key="EnterHexValueMsgString" xml:space="preserve">
+    <sys:String x:Key="EnterHexValueMsgString" >
     Enter hexadecimal value ...
   </sys:String>
-    <sys:String x:Key="FileDroppingConfirmationString" xml:space="preserve">
+    <sys:String x:Key="FileDroppingConfirmationString" >
     Do you want close the current file and open : 
   </sys:String>
-    <sys:String x:Key="FillSelectionAloneString" xml:space="preserve">
+    <sys:String x:Key="FillSelectionAloneString" >
     Fill selection with byte
   </sys:String>
-    <sys:String x:Key="FillSelectionString" xml:space="preserve">
+    <sys:String x:Key="FillSelectionString" >
     Fill selection with byte...
   </sys:String>
-    <sys:String x:Key="FindAllString" xml:space="preserve">
+    <sys:String x:Key="FindAllString" >
     Find All
   </sys:String>
-    <sys:String x:Key="FindAndReplaceString" xml:space="preserve">
+    <sys:String x:Key="FindAndReplaceString" >
     Find and Replace
   </sys:String>
-    <sys:String x:Key="FindByteString" xml:space="preserve">
+    <sys:String x:Key="FindByteString" >
     Byte to search
   </sys:String>
-    <sys:String x:Key="FindFirstString" xml:space="preserve">
+    <sys:String x:Key="FindFirstString" >
     Find First
   </sys:String>
-    <sys:String x:Key="FindLastString" xml:space="preserve">
+    <sys:String x:Key="FindLastString" >
     Find Last
   </sys:String>
-    <sys:String x:Key="FindNextString" xml:space="preserve">
+    <sys:String x:Key="FindNextString" >
     Find Next
   </sys:String>
-    <sys:String x:Key="FindSelectionString" xml:space="preserve">
+    <sys:String x:Key="FindSelectionString" >
     Find all occurence of selection
   </sys:String>
-    <sys:String x:Key="FindString" xml:space="preserve">
+    <sys:String x:Key="FindString" >
     Find
   </sys:String>
-    <sys:String x:Key="FindWhatString" xml:space="preserve">
+    <sys:String x:Key="FindWhatString" >
     Find what:
   </sys:String>
-    <sys:String x:Key="FirstByteString" xml:space="preserve">
+    <sys:String x:Key="FirstByteString" >
     First byte
   </sys:String>
-    <sys:String x:Key="HexString" xml:space="preserve">
+    <sys:String x:Key="HexString" >
     Hex
   </sys:String>
-    <sys:String x:Key="KBTagString" xml:space="preserve">
+    <sys:String x:Key="KBTagString" >
     Kb
   </sys:String>
-    <sys:String x:Key="LengthString" xml:space="preserve">
+    <sys:String x:Key="LengthString" >
     Length
   </sys:String>
-    <sys:String x:Key="LineStatusBarTagString" xml:space="preserve">
+    <sys:String x:Key="LineStatusBarTagString" >
     Ln
   </sys:String>
-    <sys:String x:Key="LineTagString" xml:space="preserve">
+    <sys:String x:Key="LineTagString" >
     &lt;ln&gt;
   </sys:String>
-    <sys:String x:Key="LongString" xml:space="preserve">
+    <sys:String x:Key="LongString" >
     Long
   </sys:String>
-    <sys:String x:Key="MBTagString" xml:space="preserve">
+    <sys:String x:Key="MBTagString" >
     Mb
   </sys:String>
-    <sys:String x:Key="OkString" xml:space="preserve">
+    <sys:String x:Key="OkString" >
     Ok
   </sys:String>
-    <sys:String x:Key="PasteExtendByteConfirmationString" xml:space="preserve">
+    <sys:String x:Key="PasteExtendByteConfirmationString" >
     Paste operation reached the end of file. Do you want extend the file for complete operation ? This operation cannot be canceled if you continue.
   </sys:String>
-    <sys:String x:Key="PasteFromClipboardString" xml:space="preserve">
+    <sys:String x:Key="PasteFromClipboardString" >
     Paste from clipboard
   </sys:String>
-    <sys:String x:Key="PasteNotInsertString" xml:space="preserve">
+    <sys:String x:Key="PasteNotInsertString" >
     Paste without inserting
   </sys:String>
-    <sys:String x:Key="PositionString" xml:space="preserve">
-    Position
-  </sys:String>
-    <sys:String x:Key="ReplaceAllString" xml:space="preserve">
-    Replace All
-  </sys:String>
-    <sys:String x:Key="ReplaceByByteString" xml:space="preserve">
-    Replace by byte
-  </sys:String>
-    <sys:String x:Key="ReplaceNextString" xml:space="preserve">
-    Replace Next
-  </sys:String>
-    <sys:String x:Key="ReplaceSelectionString" xml:space="preserve">
-    Replace byte in selection...
-  </sys:String>
-    <sys:String x:Key="ReplaceString" xml:space="preserve">
-    Replace
-  </sys:String>
-    <sys:String x:Key="ReplaceWithByteString" xml:space="preserve">
-    Replace with byte
-  </sys:String>
-    <sys:String x:Key="ReplaceWithString" xml:space="preserve">
-    Replace with:
-  </sys:String>
-    <sys:String x:Key="SelectAllString" xml:space="preserve">
-    Select all
-  </sys:String>
-    <sys:String x:Key="SetBookMarkString" xml:space="preserve">
-    Set bookmark
-  </sys:String>
-    <sys:String x:Key="TBLString" xml:space="preserve">
-    TBL
-  </sys:String>
-    <sys:String x:Key="ThisStringAreNotHexString" xml:space="preserve">
-    This string are not hex
-  </sys:String>
-    <sys:String x:Key="UndoString" xml:space="preserve">
+    <sys:String x:Key="PositionString" >Position</sys:String>
+    <sys:String x:Key="ReplaceAllString" >Replace All</sys:String>
+    <sys:String x:Key="ReplaceByByteString" >Replace by byte</sys:String>
+    <sys:String x:Key="ReplaceNextString" >Replace Next</sys:String>
+    <sys:String x:Key="ReplaceSelectionString" >Replace byte in selection...</sys:String>
+    <sys:String x:Key="ReplaceString" >Replace</sys:String>
+    <sys:String x:Key="ReplaceWithByteString" >Replace with byte</sys:String>
+    <sys:String x:Key="ReplaceWithString" >Replace with:</sys:String>
+    <sys:String x:Key="SelectAllString" >Select all</sys:String>
+    <sys:String x:Key="SetBookMarkString" >Set bookmark</sys:String>
+    <sys:String x:Key="TBLString" >TBL</sys:String>
+    <sys:String x:Key="ThisStringAreNotHexString" >This string are not hex</sys:String>
+    <sys:String x:Key="UndoString" >
     Undo
   </sys:String>
-    <sys:String x:Key="ValueString" xml:space="preserve">
+    <sys:String x:Key="ValueString" >
     Value
   </sys:String>
-    <sys:String x:Key="WritingErrorExeptionString" xml:space="preserve">
+    <sys:String x:Key="WritingErrorExeptionString" >
         An error is occurs when writing.
     </sys:String>
     

@@ -847,7 +847,9 @@ namespace WpfHexaEditor
         #endregion
     }
 
-    //Tooltip being worked;...
+    /// <summary>
+    /// Hex/String ToolTip parts.
+    /// </summary>
     public partial class DrawedHexEditor
     {
         private void InitializeTooltipEvents()

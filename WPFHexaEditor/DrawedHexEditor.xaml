@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:WpfHexaEditor"
              xmlns:cvts="clr-namespace:WpfHexaEditor.Core.Converters"
              mc:Ignorable="d" MouseWheel="Control_MouseWheel"
-             Focusable="True"
+             Focusable="True" x:Name="hexEditor"
              d:DesignHeight="300" >
     <Grid
         x:Name="BaseGrid"
@@ -20,22 +20,22 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="30" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="287*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <!--#endregion-->
 
         <!--#region Data/Infos StackPanel-->
-        <local:CellStepsLayer        Orientation="Vertical"
-            Grid.Row="1"
-            Margin="2,0,0,0" SavedBits="8"
+        <local:CellStepsLayer   Orientation="Vertical"
+            Grid.Row="1" FontSize="{Binding }"
+            Margin="2,0,2,0" SavedBits="8"
             x:Name="LinesOffsetInfoLayer"
             />
-
+        
         <local:HexDataLayer 
             x:Name="HexDataLayer"
-            Grid.Row="1"
+            Grid.Row="1" 
             Grid.Column="1"
             Margin="5,0" local:ToolTipExtension.AutoShow="False"  >
         </local:HexDataLayer>
@@ -43,46 +43,17 @@
             Orientation="Horizontal"
             Grid.Row="0" 
             Grid.Column="1"
-            Margin="5,0" />
+            Margin="5,2" />
         <local:StringDataLayer
             x:Name="StringDataLayer"
             Grid.Row="1"
             Grid.Column="2"
-            Margin="5,0,0,0"
+            Margin="5,0,5,0"
             local:ToolTipExtension.AutoShow="False"
             >
         </local:StringDataLayer>
         
-        <!--<local:OperatableToolTip x:Name="ToolTipBorder" PlacementTarget="{Binding ElementName=HexDataLayer}"
-                                 Grid.ColumnSpan="2" Grid.Row="1" Grid.Column="1">
-            <Border Background="Blue" >
-                <ListBox MaxHeight="90" x:Name="lb" >
-                    
-                    <ListBoxItem>Item1</ListBoxItem>
-                    <ListBoxItem>Item2</ListBoxItem>
-                    <ListBoxItem>Item3</ListBoxItem>
-                    <ListBoxItem>Item1</ListBoxItem>
-                    <ListBoxItem>Item2</ListBoxItem>
-                    <ListBoxItem>Item3</ListBoxItem>
-                    <ListBoxItem>Item1</ListBoxItem>
-                    <ListBoxItem>Item2</ListBoxItem>
-                    <ListBoxItem>Item3</ListBoxItem>
-                    <ListBox.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Header="31231" />
-                        </ContextMenu>
-                    </ListBox.ContextMenu>
-                </ListBox>
-            </Border>
-            
-        </local:OperatableToolTip>-->
-        <!--<Border x:Name="ToolTipBorder" VerticalAlignment="Top" HorizontalAlignment="Left" 
-                Grid.Row="1" Visibility="Hidden" Grid.ColumnSpan="2" Padding="6" Background="Transparent"
-            Grid.Column="1">
-            
-            
-        </Border>-->
-        <!--#endregion-->
+      
         <!--#region Scrollbar, marker, and move rectangle-->
         <ScrollBar
             x:Name="VerticalScrollBar"
@@ -113,21 +84,12 @@
             Opacity="0" />
         <!--#endregion-->
 
-
-        <!--  TODO: ADD TEXTBLOCK FOR DETAIL  -->
-
-        <Label
-            x:Name="TblLabel"
-            Grid.Row="2"
-            Grid.RowSpan="2"
-            Grid.Column="2"
-            Grid.ColumnSpan="2"
-            Margin="0,1,05,1"
-            HorizontalAlignment="Right"
-            Content="{DynamicResource  TBLString}"
-            FontWeight="Bold"
-            Visibility="Collapsed" />
-        <!--#endregion-->
+        <Rectangle Grid.RowSpan="2" HorizontalAlignment="Right" x:Name="seperatorLineLeft" />
+        <Rectangle Grid.ColumnSpan="3" VerticalAlignment="Bottom" x:Name="seperatorLineTop"  />
+        <Rectangle Grid.Column="1" Grid.RowSpan="2" HorizontalAlignment="Right" x:Name="seperatorLineRight" />
+        <Border x:Name="BlockLinesContainer" Grid.Row="1" Grid.ColumnSpan="3">
+            
+        </Border>
 
     </Grid>
 

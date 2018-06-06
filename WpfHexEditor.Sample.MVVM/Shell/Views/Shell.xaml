@@ -65,11 +65,11 @@
                         x:Name="ExitMenu"
                         Command="{Binding ExitCommand}"
                         Header="Exit" >
-                        <!--<i:Interaction.Triggers>
+                        <i:Interaction.Triggers>
                             <prism:InteractionRequestTrigger SourceObject="{Binding ExitRequest}">
                                 <ei:CallMethodAction MethodName="Close" TargetObject="{Binding ElementName=Window}"/>
                             </prism:InteractionRequestTrigger>
-                        </i:Interaction.Triggers>-->
+                        </i:Interaction.Triggers>
                     </MenuItem>
                 </MenuItem>
                 <MenuItem Header="Edit">

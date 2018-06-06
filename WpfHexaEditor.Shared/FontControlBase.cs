@@ -24,7 +24,7 @@ namespace WpfHexaEditor
             DependencyProperty.Register(nameof(FontSize), typeof(double), typeof(FontControlBase),
                 new FrameworkPropertyMetadata(
                     12.0D,
-                    FrameworkPropertyMetadataOptions.AffectsRender,
+                    FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure,
                     FontSize_PropertyChanged
                 ));
 
@@ -37,14 +37,16 @@ namespace WpfHexaEditor
             dataLB.OnFontSizeChanged((double) e.OldValue, (double) e.NewValue);
         }
 
-        protected virtual void OnFontSizeChanged(double oldFontSize, double newFontSize) => 
+        protected virtual void OnFontSizeChanged(double oldFontSize, double newFontSize) {
             OnUpdateSizes();
+        }
+          
 
         /// <summary>
         /// Update CharSize...
         /// </summary>
-        protected virtual void OnUpdateSizes() => 
-            _charSize = null;
+        protected virtual void OnUpdateSizes() => _charSize = null;
+
 
 
         public FontFamily FontFamily

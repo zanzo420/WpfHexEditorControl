@@ -9,11 +9,14 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Shapes;
 using WpfHexaEditor.Core;
 using WpfHexaEditor.Core.Bytes;
 using WpfHexaEditor.Core.Interfaces;
@@ -30,10 +33,14 @@ namespace WpfHexaEditor
         public DrawedHexEditor()
         {
             InitializeComponent();
-            FontSize = 8;
+
+            FontSize = 16;
+            
             FontFamily = new FontFamily("Courier New");
             DataVisualType = DataVisualType.Decimal;
+
             InitilizeEvents();
+            InitializeBindings();
         }
         
         //Cuz xaml designer's didn't support valuetuple,events subscribing will be executed in code-behind.
@@ -51,8 +58,47 @@ namespace WpfHexaEditor
 
             initialCellsLayer(HexDataLayer);
             initialCellsLayer(StringDataLayer);
-
+            
             InitializeTooltipEvents();
+        }
+
+        /// <summary>
+        /// To reduce the memory consuming,avoid recreating the same binding objects;
+        /// </summary>
+        private void InitializeBindings() {
+            InitializeFontBindings();
+            InitializeSeperatorBindings();
+        }
+
+        Binding GetBindingToSelf(string propName) {
+            var binding = new Binding() {
+                Path = new PropertyPath(propName),
+                Source = this
+            };
+            return binding;
+        }
+
+        private void InitializeFontBindings() {
+            var fontSizeBinding = GetBindingToSelf(nameof(FontSize));
+            var fontFamilyBinding = GetBindingToSelf(nameof(FontFamily));
+            var fontWeightBinding = GetBindingToSelf(nameof(FontWeight));
+
+            void SetFontControlBindings(IEnumerable< FontControlBase> fontControls) {
+                foreach (var fontCtrl in fontControls) {
+                    fontCtrl.SetBinding(FontControlBase.FontSizeProperty, fontSizeBinding);
+                    fontCtrl.SetBinding(FontControlBase.FontFamilyProperty, fontFamilyBinding);
+                    fontCtrl.SetBinding(FontControlBase.FontWeightProperty, fontWeightBinding);
+                }
+            };
+
+            IEnumerable<FontControlBase> GetFontControls() {
+                yield return HexDataLayer;
+                yield return StringDataLayer;
+                yield return ColumnsOffsetInfoLayer;
+                yield return LinesOffsetInfoLayer;
+            };
+
+            SetFontControlBindings(GetFontControls());
         }
 
         /// <summary>
@@ -984,9 +1030,89 @@ namespace WpfHexaEditor
             foreach (var block in CustomBackgroundBlocks)
                 AddBackgroundBlock(block.StartOffset, block.Length, block.Background);
         }
+
+
     }
 
-    
+    /// <summary>
+    /// Seperator Lines Part;
+    /// </summary>
+    public partial class DrawedHexEditor {
+        public double SeperatorLineWidth {
+            get { return (double)GetValue(SperatorLineWidthProperty); }
+            set { SetValue(SperatorLineWidthProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for SperatorLineWidth.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty SperatorLineWidthProperty =
+            DependencyProperty.Register(nameof(SeperatorLineWidth), typeof(double), typeof(DrawedHexEditor), new PropertyMetadata(0.5d));
+        
+        public Visibility SeperatorLineVisibility {
+            get { return (Visibility)GetValue(SeperatorLineVisibilityProperty); }
+            set { SetValue(SeperatorLineVisibilityProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for MyProperty.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty SeperatorLineVisibilityProperty =
+            DependencyProperty.Register(nameof(SeperatorLineVisibility), typeof(Visibility), typeof(DrawedHexEditor), new PropertyMetadata(Visibility.Visible));
+        
+        public Brush SeperatorLineBrush {
+            get { return (Brush)GetValue(SeperatorLineBrushProperty); }
+            set { SetValue(SeperatorLineBrushProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for SeperatorLineBrush.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty SeperatorLineBrushProperty =
+            DependencyProperty.Register(nameof(SeperatorLineBrush), typeof(Brush), typeof(DrawedHexEditor), 
+                new PropertyMetadata(new SolidColorBrush(Color.FromRgb(0xC8,0xC8,0xC8))));
+
+        private List<Rectangle> _horizontalLinesCache = new List<Rectangle>();
+        private void UpdateHorizontalLines() {
+            if(SeperatorLineVisibility != Visibility.Visible) {
+                return;
+            }
+            
+            //To Evaluate how many lines are visible;
+            //var linesCount = 
+        }
+        
+        public int BlockSize {
+            get { return (int)GetValue(BlockSizeProperty); }
+            set { SetValue(BlockSizeProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for BlockSize.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty BlockSizeProperty =
+            DependencyProperty.Register(nameof(BlockSize), typeof(int), typeof(DrawedHexEditor), new PropertyMetadata(512));
+
+        private void InitializeSeperatorBindings() {
+            var spVisibilityBinding = GetBindingToSelf(nameof(Visibility));
+            var spLineBrushBinding = GetBindingToSelf(nameof(SeperatorLineBrush));
+            var spWidthBinding = GetBindingToSelf(nameof(SeperatorLineWidth));
+
+            void SetSeperatorBindings(IEnumerable<(Shape seperator,Orientation orientation)> seperatorTuples) {
+                foreach (var item in seperatorTuples) {
+                    item.seperator.SetBinding(VisibilityProperty, spVisibilityBinding);
+                    item.seperator.SetBinding(Shape.FillProperty, spLineBrushBinding);
+                    if(item.orientation == Orientation.Horizontal) {
+                        item.seperator.SetBinding(HeightProperty, spWidthBinding);
+                    }
+                    else {
+                        item.seperator.SetBinding(WidthProperty, spWidthBinding);
+                    }
+                }
+            }
+
+            IEnumerable<(Shape seperator, Orientation orientation)> GetSeperatorTuples() {
+                yield return (seperatorLineLeft, Orientation.Vertical);
+                yield return (seperatorLineTop, Orientation.Horizontal);
+                yield return (seperatorLineRight, Orientation.Vertical);
+            }
+
+            SetSeperatorBindings(GetSeperatorTuples());
+        }
+    }
+
 #if DEBUG
     public partial class DrawedHexEditor {
         ~DrawedHexEditor() {

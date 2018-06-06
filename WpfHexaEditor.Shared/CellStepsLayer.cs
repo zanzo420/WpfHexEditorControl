@@ -35,7 +35,6 @@ namespace WpfHexaEditor
             ((DataVisualType == DataVisualType.Hexadecimal ? 2 : 0) + SavedBits) * 
             CharSize.Width + CellPadding.Left + CellPadding.Right,
             CharSize.Height + CellPadding.Top + CellPadding.Bottom);
-
         
         public int SavedBits {
             get { return (int)GetValue(SavedBitsProperty); }
@@ -46,9 +45,7 @@ namespace WpfHexaEditor
         public static readonly DependencyProperty SavedBitsProperty =
             DependencyProperty.Register(nameof(SavedBits), typeof(int), typeof(CellStepsLayer),
                 new FrameworkPropertyMetadata(2, FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure));
-
-
-
+        
         public Orientation Orientation
         {
             get => (Orientation) GetValue(OrientationProperty);
@@ -84,7 +81,6 @@ namespace WpfHexaEditor
             DependencyProperty.Register(nameof(StepsCount), typeof(int), typeof(CellStepsLayer),
                 new FrameworkPropertyMetadata(0, FrameworkPropertyMetadataOptions.AffectsRender));
         
-
         public int StepLength
         {
             get => (int) GetValue(StepLengthProperty);
@@ -137,8 +133,8 @@ namespace WpfHexaEditor
                 DrawSteps(step =>
                     new Point
                     (
-                        (CellMargin.Left + CellMargin.Right + CellSize.Width) *
-                        step + CellMargin.Left + CellPadding.Left, CellMargin.Top + CellPadding.Top
+                        (CellMargin.Left + CellMargin.Right + CellSize.Width) * step + CellMargin.Left + CellPadding.Left,
+                        CellMargin.Top + CellPadding.Top
                     )
                 );
 
@@ -150,8 +146,7 @@ namespace WpfHexaEditor
 #endif
                 DrawSteps(step => new Point(
                     CellMargin.Left + CellPadding.Left,
-                    (CellMargin.Top + CellMargin.Bottom + CellSize.Height) *
-                    step + CellMargin.Top + CellPadding.Top));
+                    (CellMargin.Top + CellMargin.Bottom + CellSize.Height) * step + CellMargin.Top + CellPadding.Top));
 
                 {
 

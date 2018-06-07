@@ -553,7 +553,7 @@ namespace WpfHexaEditor
         }
 
         /**/
-
+        
         /// <summary>
         /// Refresh currentview of hexeditor
         /// </summary>
@@ -1087,41 +1087,34 @@ namespace WpfHexaEditor
 
             var rowPerblock = BlockSize / BytePerLine;
             long lastVisbleRowIndexWithLine = (firstRowIndex + maxRowCount) / rowPerblock * rowPerblock;
-            long visibleRowIndexWithLine = lastVisbleRowIndexWithLine;
+            long firstVisibleRowIndexWithLine = firstRowIndex % rowPerblock == 0 ? (firstRowIndex / rowPerblock * rowPerblock) : (firstRowIndex / rowPerblock * rowPerblock) + 1;
+            long rowIndexWithLine = lastVisbleRowIndexWithLine;
 
-            var lineCount = (lastVisbleRowIndexWithLine - firstRowIndex) / rowPerblock + 1;
+            var lineCount = (lastVisbleRowIndexWithLine - firstVisibleRowIndexWithLine + 1) / rowPerblock;
             var lineHeight = HexDataLayer.CellSize.Height + HexDataLayer.CellMargin.Top + HexDataLayer.CellMargin.Bottom;
+           
+
             //If line count is larger than the count of cached seperators,fill the rest;
-            
-            while(BlockLinesContainer.Children.Count < lineCount) {
+            while (BlockLinesContainer.Children.Count < lineCount) {
                 var seperator = new Rectangle {
                     VerticalAlignment = VerticalAlignment.Top
                 };
                 SetSeperatorBinding(seperator, Orientation.Horizontal);
                 BlockLinesContainer.Children.Add(seperator);
             }
-            
             var lineIndex = 0;
-            while(visibleRowIndexWithLine >= firstRowIndex) {
+            while (rowIndexWithLine > firstRowIndex) {
                 var seperator = (Rectangle)BlockLinesContainer.Children[lineIndex];
                 seperator.Opacity = 1;
 
                 //(visibleRowIndexWithLine - firstRowIndex) * lineHeight
-                seperator.Margin = new Thickness(0, (visibleRowIndexWithLine - firstRowIndex) * lineHeight, 0, 0);
-                visibleRowIndexWithLine -= rowPerblock;
+                seperator.Margin = new Thickness(0, (rowIndexWithLine - firstRowIndex) * lineHeight, 0, 0);
+                rowIndexWithLine -= rowPerblock;
                 lineIndex++;
             }
-
-            //while(lineIndex + 1) {
-
-            //}
-            var blockSize = BlockSize;
-
-            
-            
-            
-            //To Evaluate how many lines are visible;
-            //var linesCount = 
+            for (int i = 0; i < BlockLinesContainer.Children.Count - lineCount; i++) {
+                BlockLinesContainer.Children[BlockLinesContainer.Children.Count - i - 1].Opacity = 0;
+            }
         }
         
         /// <summary>

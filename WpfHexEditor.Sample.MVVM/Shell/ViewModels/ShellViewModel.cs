@@ -9,17 +9,16 @@ using System.ComponentModel.Composition;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
-using WpfHexaEditor.Core;
 using WpfHexEditor.Sample.MVVM.Contracts.App;
 using WpfHexEditor.Sample.MVVM.Helpers;
 using WpfHexEditor.Sample.MVVM.Contracts.ToolTip;
 using WpfHexEditor.Sample.MVVM.Shell;
-
+using WpfHexEditor.Sample.MVVM.Contracts.Hex;
 
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using WpfHexEditor.Sample.MVVM.Contracts.Hex;
+
 
 namespace WpfHexEditor.Sample.MVVM.ViewModels {
     [Export]
@@ -68,7 +67,7 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
             (_loadedCommand = new DelegateCommand(
                 () => {
 #if DEBUG
-                    //Stream = File.OpenRead("E://FeiQ.1060559168.exe");
+                    Stream = File.OpenRead("E://FeiQ.1060559168.exe");
 #endif
                 }
             ));
@@ -200,17 +199,6 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
                 //FileEditor?.Undo();
             }
         ));
-
-        private DelegateCommand<CopyPasteMode?> _copyToClipBoardCommand;
-        public DelegateCommand<CopyPasteMode?> CopyToClipBoardCommand => 
-            _copyToClipBoardCommand ?? 
-            (_copyToClipBoardCommand = new DelegateCommand<CopyPasteMode?>(
-                mode => {
-                    if(mode != null) {
-                        //FileEditor?.CopyToClipboard(mode.Value);
-                    }
-                }
-            ));
 
 
         #endregion

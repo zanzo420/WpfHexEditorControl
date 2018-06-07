@@ -34,7 +34,7 @@ namespace WpfHexaEditor
         {
             InitializeComponent();
 
-            FontSize = 16;
+            FontSize = 18;
             
             FontFamily = new FontFamily("Courier New");
             DataVisualType = DataVisualType.Decimal;
@@ -67,7 +67,7 @@ namespace WpfHexaEditor
         /// </summary>
         private void InitializeBindings() {
             InitializeFontBindings();
-            InitializeSeperatorBindings();
+            InitializeFixedSeperatorsBindings();
         }
 
         Binding GetBindingToSelf(string propName) {
@@ -575,10 +575,12 @@ namespace WpfHexaEditor
             //    UpdateScrollMarkerPosition();
             //    UpdateHeader(true);
             //}
-
+            
             UpdateBackgroundBlocks();
 
             UpdateDataContent();
+
+            UpdateBlockLines();
         }
 
 
@@ -1065,17 +1067,67 @@ namespace WpfHexaEditor
         public static readonly DependencyProperty SeperatorLineBrushProperty =
             DependencyProperty.Register(nameof(SeperatorLineBrush), typeof(Brush), typeof(DrawedHexEditor), 
                 new PropertyMetadata(new SolidColorBrush(Color.FromRgb(0xC8,0xC8,0xC8))));
-
-        private List<Rectangle> _horizontalLinesCache = new List<Rectangle>();
-        private void UpdateHorizontalLines() {
+        
+        private void UpdateBlockLines() {
             if(SeperatorLineVisibility != Visibility.Visible) {
                 return;
             }
+
+            if(BlockSize <= 0) {
+                return;
+            }
+
+            if(BytePerLine <= 0) {
+                return;
+            }
+
+            //Local variables is faster than Dependency Property,we storage the size below;
+            long firstRowIndex = this.Position / BytePerLine;
+            long maxRowCount = MaxVisibleLength / BytePerLine;
+
+            var rowPerblock = BlockSize / BytePerLine;
+            long lastVisbleRowIndexWithLine = (firstRowIndex + maxRowCount) / rowPerblock * rowPerblock;
+            long visibleRowIndexWithLine = lastVisbleRowIndexWithLine;
+
+            var lineCount = (lastVisbleRowIndexWithLine - firstRowIndex) / rowPerblock + 1;
+            var lineHeight = HexDataLayer.CellSize.Height + HexDataLayer.CellMargin.Top + HexDataLayer.CellMargin.Bottom;
+            //If line count is larger than the count of cached seperators,fill the rest;
+            
+            while(BlockLinesContainer.Children.Count < lineCount) {
+                var seperator = new Rectangle {
+                    VerticalAlignment = VerticalAlignment.Top
+                };
+                SetSeperatorBinding(seperator, Orientation.Horizontal);
+                BlockLinesContainer.Children.Add(seperator);
+            }
+            
+            var lineIndex = 0;
+            while(visibleRowIndexWithLine >= firstRowIndex) {
+                var seperator = (Rectangle)BlockLinesContainer.Children[lineIndex];
+                seperator.Opacity = 1;
+
+                //(visibleRowIndexWithLine - firstRowIndex) * lineHeight
+                seperator.Margin = new Thickness(0, (visibleRowIndexWithLine - firstRowIndex) * lineHeight, 0, 0);
+                visibleRowIndexWithLine -= rowPerblock;
+                lineIndex++;
+            }
+
+            //while(lineIndex + 1) {
+
+            //}
+            var blockSize = BlockSize;
+
+            
+            
             
             //To Evaluate how many lines are visible;
             //var linesCount = 
         }
         
+        /// <summary>
+        /// This property indicates how big a block area is,which may effect the vertical offset position of blocklines;
+        /// </summary>
+        /// <remarks>The value should be divisible to BytePerLine</remarks>
         public int BlockSize {
             get { return (int)GetValue(BlockSizeProperty); }
             set { SetValue(BlockSizeProperty, value); }
@@ -1083,33 +1135,57 @@ namespace WpfHexaEditor
 
         // Using a DependencyProperty as the backing store for BlockSize.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty BlockSizeProperty =
-            DependencyProperty.Register(nameof(BlockSize), typeof(int), typeof(DrawedHexEditor), new PropertyMetadata(512));
+            DependencyProperty.Register(nameof(BlockSize), typeof(int), typeof(DrawedHexEditor), new PropertyMetadata(512, BlockSize_PropertyChanged));
 
-        private void InitializeSeperatorBindings() {
-            var spVisibilityBinding = GetBindingToSelf(nameof(Visibility));
-            var spLineBrushBinding = GetBindingToSelf(nameof(SeperatorLineBrush));
-            var spWidthBinding = GetBindingToSelf(nameof(SeperatorLineWidth));
-
-            void SetSeperatorBindings(IEnumerable<(Shape seperator,Orientation orientation)> seperatorTuples) {
-                foreach (var item in seperatorTuples) {
-                    item.seperator.SetBinding(VisibilityProperty, spVisibilityBinding);
-                    item.seperator.SetBinding(Shape.FillProperty, spLineBrushBinding);
-                    if(item.orientation == Orientation.Horizontal) {
-                        item.seperator.SetBinding(HeightProperty, spWidthBinding);
-                    }
-                    else {
-                        item.seperator.SetBinding(WidthProperty, spWidthBinding);
-                    }
-                }
+        private static void BlockSize_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+            if(!(d is DrawedHexEditor ctrl)) {
+                return;
+            }
+            var newBlSize = (int)e.NewValue;
+            if (newBlSize <= 0) {
+                throw new ArgumentOutOfRangeException(nameof(BlockSize));
+            }
+            
+            if(ctrl.BytePerLine <= 0) {
+                return;
             }
 
-            IEnumerable<(Shape seperator, Orientation orientation)> GetSeperatorTuples() {
+            if(newBlSize % ctrl.BytePerLine != 0) {
+                throw new ArgumentException($"{nameof(BlockSize)} is not a available argument due to the unmatched {nameof(BytePerLine)}:{ctrl.BytePerLine}");
+            }
+        }
+
+        private void InitializeFixedSeperatorsBindings() {
+            IEnumerable<(Rectangle seperator, Orientation orientation)> GetFixedSeperatorTuples() {
                 yield return (seperatorLineLeft, Orientation.Vertical);
                 yield return (seperatorLineTop, Orientation.Horizontal);
                 yield return (seperatorLineRight, Orientation.Vertical);
             }
 
-            SetSeperatorBindings(GetSeperatorTuples());
+            SetSeperatorBindings(GetFixedSeperatorTuples());
+        }
+
+        private Binding _spVisibilityBinding;
+        private Binding _spLineBrushBinding;
+        private Binding _spWidthBinding;
+        private Binding SpVisibilityBinding => _spVisibilityBinding??GetBindingToSelf(nameof(Visibility));
+        private Binding SpLineBrushBinding => _spLineBrushBinding ?? GetBindingToSelf(nameof(SeperatorLineBrush));
+        private Binding SpWidthBinding => _spWidthBinding ?? GetBindingToSelf(nameof(SeperatorLineWidth));
+
+        private void SetSeperatorBinding(Rectangle seperator, Orientation orientation) {
+            seperator.SetBinding(VisibilityProperty, SpVisibilityBinding);
+            seperator.SetBinding(Rectangle.FillProperty, SpLineBrushBinding);
+            if (orientation == Orientation.Horizontal) {
+                seperator.SetBinding(HeightProperty, SpWidthBinding);
+            }
+            else {
+                seperator.SetBinding(WidthProperty, SpWidthBinding);
+            }
+        }
+        private void SetSeperatorBindings(IEnumerable<(Rectangle seperator, Orientation orientation)> seperatorTuples) {
+            foreach (var item in seperatorTuples) {
+                SetSeperatorBinding(item.seperator, item.orientation);
+            }
         }
     }
 

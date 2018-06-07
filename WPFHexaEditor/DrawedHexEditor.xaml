@@ -84,13 +84,16 @@
             Opacity="0" />
         <!--#endregion-->
 
+        <!--#region Seperators-->
         <Rectangle Grid.RowSpan="2" HorizontalAlignment="Right" x:Name="seperatorLineLeft" />
         <Rectangle Grid.ColumnSpan="3" VerticalAlignment="Bottom" x:Name="seperatorLineTop"  />
         <Rectangle Grid.Column="1" Grid.RowSpan="2" HorizontalAlignment="Right" x:Name="seperatorLineRight" />
-        <Border x:Name="BlockLinesContainer" Grid.Row="1" Grid.ColumnSpan="3">
+        
+        <!--This container should be filled with seperator(Rectangle) typed instances only.-->
+        <Grid x:Name="BlockLinesContainer" Grid.Row="1" Grid.ColumnSpan="3">
             
-        </Border>
-
+        </Grid>
+        <!--#endregion-->
     </Grid>
 
 

@@ -33,7 +33,7 @@
                     <MenuItem
                         x:Name="OpenMenu"
                         Command="{Binding OpenFileCommand}"
-                        Header="Open...">
+                        Header="Open File">
                         <MenuItem.Icon>
                             <Image Source="/WpfHexEditor.Sample.MVVM;component/Resources/Icon/Open-File-Icon.ico" />
                         </MenuItem.Icon>

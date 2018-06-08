@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>WpfHexaeditor.DevBranch</id>
-    <version>0.1.2.1</version>
+    <version>0.1.5.0</version>
     <authors>Janus</authors>
     <owners>Janus</owners>
     <!-- <licenseUrl>http://LICENSE_URL_HERE_OR_DELETE_THIS_LINE</licenseUrl> -->
@@ -10,7 +10,7 @@
     <!-- <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl> -->
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Wpf hexaeditor</description>
-    <releaseNotes>bug fixed.</releaseNotes>
+    <releaseNotes>BlockLine Added</releaseNotes>
     <copyright>Copyright 2017</copyright>
     <!-- <tags>Tag1 Tag2</tags> -->
     <dependencies>

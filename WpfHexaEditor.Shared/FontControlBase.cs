@@ -60,7 +60,7 @@ namespace WpfHexaEditor
             DependencyProperty.Register(nameof(FontFamily), typeof(FontFamily), typeof(FontControlBase),
                 new FrameworkPropertyMetadata(
                     new FontFamily("Microsoft YaHei"),
-                    FrameworkPropertyMetadataOptions.AffectsRender,
+                    FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure,
                     FontFamily_PropertyChanged
                 ));
 
@@ -101,7 +101,7 @@ namespace WpfHexaEditor
             DependencyProperty.Register(nameof(FontWeight), typeof(FontWeight), typeof(FontControlBase),
                 new FrameworkPropertyMetadata(
                     new FontWeight(),
-                    FrameworkPropertyMetadataOptions.AffectsRender,
+                    FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure,
                     FontWeight_PropertyChanged
                 ));
 

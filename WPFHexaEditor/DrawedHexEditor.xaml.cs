@@ -34,7 +34,7 @@ namespace WpfHexaEditor
         {
             InitializeComponent();
 
-            FontSize = 18;
+            FontSize = 16;
             
             FontFamily = new FontFamily("Courier New");
             DataVisualType = DataVisualType.Decimal;

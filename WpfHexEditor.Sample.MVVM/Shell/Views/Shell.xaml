@@ -242,7 +242,7 @@
                 Stream="{Binding Stream}"
                 SelectionStart="{Binding SelectionStart}"
                 SelectionLength="{Binding SelectionLength}"
-                Margin="2,2,2.4,2.2">
+                Margin="2,2,2.4,2.2" >
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="Drop">
                     <prism:InvokeCommandAction Command="{Binding DropCommand}" TriggerParameterPath="Data"/>

@@ -157,8 +157,8 @@ namespace WpfHexaEditor
         private readonly Stopwatch watch = new Stopwatch();
 #endif
 
-        private readonly List<BrushBlock> dataBackgroundBlocks =
-            new List<BrushBlock>();
+        private readonly List<IBrushBlock> dataBackgroundBlocks =
+            new List<IBrushBlock>();
 
         //To avoid endless looping of ScrollBar_ValueChanged and Position_PropertyChanged.
         private bool _scrollBarValueUpdating;
@@ -1018,7 +1018,7 @@ namespace WpfHexaEditor
     /// </summary>
     public partial class DrawedHexEditor {
         public IEnumerable<IBrushBlock> CustomBackgroundBlocks {
-            get => (IEnumerable<BrushBlock>)GetValue(
+            get => (IEnumerable<IBrushBlock>)GetValue(
                 CustomBackgroundBlocksProperty);
             set => SetValue(CustomBackgroundBlocksProperty, value);
         }

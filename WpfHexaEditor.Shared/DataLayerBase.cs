@@ -10,7 +10,6 @@ using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using WpfHexaEditor.Core;
 using WpfHexaEditor.Core.Interfaces;
 
 namespace WpfHexaEditor
@@ -57,7 +56,7 @@ namespace WpfHexaEditor
 
         public IEnumerable<IBrushBlock> ForegroundBlocks
         {
-            get => (IEnumerable<BrushBlock>) GetValue(ForegroundBlocksProperty);
+            get => (IEnumerable<IBrushBlock>) GetValue(ForegroundBlocksProperty);
             set => SetValue(ForegroundBlocksProperty, value);
         }
 
@@ -73,7 +72,7 @@ namespace WpfHexaEditor
 
         public IEnumerable<IBrushBlock> BackgroundBlocks
         {
-            get => (IEnumerable<BrushBlock>) GetValue(BackgroundBlocksProperty);
+            get => (IEnumerable<IBrushBlock>) GetValue(BackgroundBlocksProperty);
             set => SetValue(BackgroundBlocksProperty, value);
         }
 

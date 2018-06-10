@@ -79,7 +79,7 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
             (_loadedCommand = new DelegateCommand(
                 () => {
 #if DEBUG
-                    Stream = File.OpenRead("E://123.txt");
+                    //Stream = File.OpenRead("E://123.txt");
 #endif
                 }
             ));

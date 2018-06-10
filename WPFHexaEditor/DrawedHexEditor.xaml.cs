@@ -661,7 +661,7 @@ namespace WpfHexaEditor
             StringDataLayer.BackgroundBlocks = dataBackgroundBlocks;
         }
 
-        private void AddBackgroundBlock(BrushBlock brushBlock)
+        private void AddBackgroundBlock(IBrushBlock brushBlock)
         {
             if (Stream == null)
                 return;
@@ -1017,7 +1017,7 @@ namespace WpfHexaEditor
     /// CustomBackgroundBlocks Part;
     /// </summary>
     public partial class DrawedHexEditor {
-        public IEnumerable<BrushBlock> CustomBackgroundBlocks {
+        public IEnumerable<IBrushBlock> CustomBackgroundBlocks {
             get => (IEnumerable<BrushBlock>)GetValue(
                 CustomBackgroundBlocksProperty);
             set => SetValue(CustomBackgroundBlocksProperty, value);
@@ -1026,7 +1026,7 @@ namespace WpfHexaEditor
         // Using a DependencyProperty as the backing store for CustomBackgroundBlocks.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty CustomBackgroundBlocksProperty =
             DependencyProperty.Register(nameof(CustomBackgroundBlocks),
-                typeof(IEnumerable<BrushBlock>),
+                typeof(IEnumerable<IBrushBlock>),
                 typeof(DrawedHexEditor));
         
         private void AddCustomBackgroundBlocks() {

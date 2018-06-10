@@ -55,7 +55,7 @@ namespace WpfHexaEditor
         private void RefreshRender(object sender, NotifyCollectionChangedEventArgs e) =>
             InvalidateVisual();
 
-        public IEnumerable<BrushBlock> ForegroundBlocks
+        public IEnumerable<IBrushBlock> ForegroundBlocks
         {
             get => (IEnumerable<BrushBlock>) GetValue(ForegroundBlocksProperty);
             set => SetValue(ForegroundBlocksProperty, value);
@@ -64,14 +64,14 @@ namespace WpfHexaEditor
         // Using a DependencyProperty as the backing store for ForegroundBlocks.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ForegroundBlocksProperty =
             DependencyProperty.Register(nameof(ForegroundBlocks),
-                typeof(IEnumerable<BrushBlock>),
+                typeof(IEnumerable<IBrushBlock>),
                 typeof(DataLayerBase),
                 new FrameworkPropertyMetadata(
                     null,
                     FrameworkPropertyMetadataOptions.AffectsRender
                 ));
 
-        public IEnumerable<BrushBlock> BackgroundBlocks
+        public IEnumerable<IBrushBlock> BackgroundBlocks
         {
             get => (IEnumerable<BrushBlock>) GetValue(BackgroundBlocksProperty);
             set => SetValue(BackgroundBlocksProperty, value);
@@ -80,7 +80,7 @@ namespace WpfHexaEditor
         // Using a DependencyProperty as the backing store for BackgroundBlocks.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty BackgroundBlocksProperty =
             DependencyProperty.Register(nameof(BackgroundBlocks),
-                typeof(IEnumerable<BrushBlock>),
+                typeof(IEnumerable<IBrushBlock>),
                 typeof(DataLayerBase),
                 new FrameworkPropertyMetadata(
                     null,

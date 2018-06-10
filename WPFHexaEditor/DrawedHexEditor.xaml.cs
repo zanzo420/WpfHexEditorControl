@@ -68,6 +68,7 @@ namespace WpfHexaEditor
         private void InitializeBindings() {
             InitializeFontBindings();
             InitializeFixedSeperatorsBindings();
+            InitializeEncodingBinding();
         }
 
         Binding GetBindingToSelf(string propName) {
@@ -156,8 +157,8 @@ namespace WpfHexaEditor
         private readonly Stopwatch watch = new Stopwatch();
 #endif
 
-        private readonly List<(int index, int length, Brush background)> dataBackgroundBlocks =
-            new List<(int index, int length, Brush background)>();
+        private readonly List<BrushBlock> dataBackgroundBlocks =
+            new List<BrushBlock>();
 
         //To avoid endless looping of ScrollBar_ValueChanged and Position_PropertyChanged.
         private bool _scrollBarValueUpdating;
@@ -601,6 +602,8 @@ namespace WpfHexaEditor
             }
 
             Stream.Position = Position / BytePerLine * BytePerLine;
+            HexDataLayer.DataOffsetInOriginalStream = Position / BytePerLine * BytePerLine;
+            StringDataLayer.DataOffsetInOriginalStream = Position / BytePerLine * BytePerLine;
 
             if (_viewBuffer == null || _viewBuffer.Length != MaxVisibleLength)
                 _viewBuffer = new byte[MaxVisibleLength];
@@ -658,28 +661,28 @@ namespace WpfHexaEditor
             StringDataLayer.BackgroundBlocks = dataBackgroundBlocks;
         }
 
-        private void AddBackgroundBlock(long index, long length, Brush background)
+        private void AddBackgroundBlock(BrushBlock brushBlock)
         {
             if (Stream == null)
                 return;
 
             //Check whether the backgroundblock is in visible;
-            if (!(index + length >= Position && index < Position + MaxVisibleLength))
+            if (!(brushBlock.StartOffset + brushBlock.Length >= Position && brushBlock.StartOffset < Position + MaxVisibleLength))
                 return;
 
-            var maxIndex = Math.Max(index, Position);
-            var minEnd = Math.Min(index + length, Position + MaxVisibleLength);
+            var maxIndex = Math.Max(brushBlock.StartOffset, Position);
+            var minEnd = Math.Min(brushBlock.StartOffset + brushBlock.Length, Position + MaxVisibleLength);
 
-            dataBackgroundBlocks.Add(((int) (maxIndex - Position), (int) (minEnd - maxIndex), background));
+            dataBackgroundBlocks.Add(new BrushBlock { StartOffset = maxIndex - Position, Length = minEnd - maxIndex, Brush = brushBlock.Brush });
         }
 
         private void AddSelectionBackgroundBlocks() =>
-            AddBackgroundBlock(SelectionStart, SelectionLength, SelectionBrush);
+            AddBackgroundBlock(new BrushBlock { StartOffset = SelectionStart, Length = SelectionLength, Brush = SelectionBrush });
         
         private void AddFocusPositionBlock()
         {
             if (FocusPosition >= 0)
-                AddBackgroundBlock(FocusPosition, 1, FocusBrush);
+                AddBackgroundBlock(new BrushBlock { StartOffset = FocusPosition, Length = 1, Brush = FocusBrush });
         }
 
         #endregion
@@ -1014,8 +1017,8 @@ namespace WpfHexaEditor
     /// CustomBackgroundBlocks Part;
     /// </summary>
     public partial class DrawedHexEditor {
-        public IEnumerable<ICustomBackgroundBlock> CustomBackgroundBlocks {
-            get => (IEnumerable<ICustomBackgroundBlock>)GetValue(
+        public IEnumerable<BrushBlock> CustomBackgroundBlocks {
+            get => (IEnumerable<BrushBlock>)GetValue(
                 CustomBackgroundBlocksProperty);
             set => SetValue(CustomBackgroundBlocksProperty, value);
         }
@@ -1023,14 +1026,14 @@ namespace WpfHexaEditor
         // Using a DependencyProperty as the backing store for CustomBackgroundBlocks.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty CustomBackgroundBlocksProperty =
             DependencyProperty.Register(nameof(CustomBackgroundBlocks),
-                typeof(IEnumerable<ICustomBackgroundBlock>),
+                typeof(IEnumerable<BrushBlock>),
                 typeof(DrawedHexEditor));
         
         private void AddCustomBackgroundBlocks() {
             if (CustomBackgroundBlocks == null) return;
 
             foreach (var block in CustomBackgroundBlocks)
-                AddBackgroundBlock(block.StartOffset, block.Length, block.Background);
+                AddBackgroundBlock(block);
         }
 
 
@@ -1181,7 +1184,31 @@ namespace WpfHexaEditor
             }
         }
     }
+    /// <summary>
+    /// String encoding part.
+    /// </summary>
+    public partial class DrawedHexEditor {
+        public IBytesToCharEncoding BytesToCharEncoding {
+            get { return (IBytesToCharEncoding)GetValue(BytesToCharEncodingProperty); }
+            set { SetValue(BytesToCharEncodingProperty, value); }
+        }
 
+        // Using a DependencyProperty as the backing store for BytesToCharEncoding.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty BytesToCharEncodingProperty =
+            DependencyProperty.Register(nameof(BytesToCharEncoding), typeof(IBytesToCharEncoding), typeof(DrawedHexEditor), new PropertyMetadata(BytesToCharEncodings.ASCII));
+
+        private void InitializeEncodingBinding() {
+#if DEBUG
+            //BytesToCharEncoding = BytesToCharEncodings.UTF8;
+#endif
+            var encodingBinding = new Binding {
+                Path = new PropertyPath(nameof(BytesToCharEncoding)) ,
+                Source = this
+            };
+
+            StringDataLayer.SetBinding(StringDataLayer.BytesToCharEncodingProperty, encodingBinding);
+        }
+    }
 #if DEBUG
     public partial class DrawedHexEditor {
         ~DrawedHexEditor() {

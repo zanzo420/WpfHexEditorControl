@@ -10,7 +10,7 @@ using WpfHexEditor.Sample.MVVM.Contracts.Hex;
 namespace WpfHexEditor.Sample.MVVM.Hex {
     [Export(typeof(ICustomBackgroundFactory))]
     class CustomBackgroundFactoryImpl : ICustomBackgroundFactory {
-        public ICustomBackgroundBlock CreateNew() => new CustomBackgroundBlock();
+        public BrushBlock CreateNew() => new CustomBackgroundBlock();
     }
 
 }

@@ -27,7 +27,7 @@ namespace WpfHexaEditor
             get => (byte[]) GetValue(DataProperty);
             set => SetValue(DataProperty, value);
         }
-
+        
         // Using a DependencyProperty as the backing store for DataProperty.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty DataProperty =
             DependencyProperty.Register(
@@ -48,36 +48,38 @@ namespace WpfHexaEditor
 
             ctrl.InitializeMouseState();
         }
-
+        
+        public long DataOffsetInOriginalStream { get; set; }
+        
         private void RefreshRender(object sender, NotifyCollectionChangedEventArgs e) =>
             InvalidateVisual();
 
-        public IEnumerable<(int index, int length, Brush foreground)> ForegroundBlocks
+        public IEnumerable<BrushBlock> ForegroundBlocks
         {
-            get => (IEnumerable<(int index, int length, Brush background)>) GetValue(ForegroundBlocksProperty);
+            get => (IEnumerable<BrushBlock>) GetValue(ForegroundBlocksProperty);
             set => SetValue(ForegroundBlocksProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for ForegroundBlocks.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ForegroundBlocksProperty =
             DependencyProperty.Register(nameof(ForegroundBlocks),
-                typeof(IEnumerable<(int index, int length, Brush foreground)>),
+                typeof(IEnumerable<BrushBlock>),
                 typeof(DataLayerBase),
                 new FrameworkPropertyMetadata(
                     null,
                     FrameworkPropertyMetadataOptions.AffectsRender
                 ));
 
-        public IEnumerable<(int index, int length, Brush background)> BackgroundBlocks
+        public IEnumerable<BrushBlock> BackgroundBlocks
         {
-            get => (IEnumerable<(int index, int length, Brush foreground)>) GetValue(BackgroundBlocksProperty);
+            get => (IEnumerable<BrushBlock>) GetValue(BackgroundBlocksProperty);
             set => SetValue(BackgroundBlocksProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for BackgroundBlocks.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty BackgroundBlocksProperty =
             DependencyProperty.Register(nameof(BackgroundBlocks),
-                typeof(IEnumerable<(int index, int length, Brush background)>),
+                typeof(IEnumerable<BrushBlock>),
                 typeof(DataLayerBase),
                 new FrameworkPropertyMetadata(
                     null,
@@ -136,6 +138,22 @@ namespace WpfHexaEditor
             set => SetValue(BackgroundProperty, value);
         }
 
+        
+
+        protected IEnumerable<byte> GetBytesFromData(int offset,int length) {
+            if (Data == null)
+                yield break;
+
+            for (int index = 0; index < length; index++) {
+                if(index + offset > Data.Length || index + offset < 0) {
+                    yield break;
+                }
+                else {
+                    yield return Data[index + offset];
+                }
+            }
+        }
+
         // Using a DependencyProperty as the backing store for Background.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty BackgroundProperty =
             DependencyProperty.Register(nameof(Background), typeof(Brush), typeof(DataLayerBase),
@@ -159,10 +177,10 @@ namespace WpfHexaEditor
 #if DEBUG
             //double lastY = 0;
 #endif
-            foreach (var (index, length, background) in BackgroundBlocks)
-                for (var i = 0; i < length; i++)
+            foreach (var block in BackgroundBlocks)
+                for (var i = 0; i < block.Length; i++)
                 {
-                    DrawedRects[index + i].background = background;
+                    DrawedRects[block.StartOffset + i].background = block.Brush;
 #if DEBUG
                     //if(this is HexDataLayer && lastY != rect.Y) {
                     //    lastY = rect.Y;
@@ -205,18 +223,20 @@ namespace WpfHexaEditor
                 return;
 
             var index = 0;
+            
+
             foreach (var bt in Data)
             {
                 var col = index % BytePerLine;
                 var row = index / BytePerLine;
-
                 var foreground = Foreground;
+
                 if (ForegroundBlocks != null)
                     foreach (var tuple in ForegroundBlocks)
                     {
-                        if (tuple.index > index || tuple.index + tuple.length < index) continue;
+                        if (tuple.StartOffset > index || tuple.StartOffset + tuple.Length < index) continue;
 
-                        foreground = tuple.foreground;
+                        foreground = tuple.Brush;
                         break;
                     }
 
@@ -233,7 +253,7 @@ namespace WpfHexaEditor
 
         }
 
-        protected abstract void DrawByte(DrawingContext drawingContext, byte bt, Brush foreground, Point startPoint);
+        protected virtual void DrawByte(DrawingContext drawingContext, byte bt, Brush foreground, Point startPoint) { }
 
         protected override void OnRender(DrawingContext drawingContext)
         {

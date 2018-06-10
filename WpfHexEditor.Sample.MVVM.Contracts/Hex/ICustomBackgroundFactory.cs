@@ -8,10 +8,10 @@ namespace WpfHexEditor.Sample.MVVM.Contracts.Hex
 {
     public interface ICustomBackgroundFactory
     {
-        ICustomBackgroundBlock CreateNew();
+        BrushBlock CreateNew();
     }
 
     public class CustomBackgroundFactory : GenericServiceStaticInstance<ICustomBackgroundFactory> {
-        public static ICustomBackgroundBlock CreateNew() => Current.CreateNew();
+        public static BrushBlock CreateNew() => Current.CreateNew();
     }
 }

@@ -40,10 +40,22 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
         private long _focusPosition;
         public long FocusPosition {
             get => _focusPosition;
-            set => SetProperty(ref _focusPosition, value);
+            set {
+                SetProperty(ref _focusPosition, value);
+                RaisePropertyChanged(nameof(SelectionLine));
+            }
+        }
+        public long SelectionLine {
+            get {
+                if(BytePerLine > 0) {
+                    return FocusPosition / BytePerLine;
+                }
+
+                return -1;
+            }
         }
 
-       
+
 
         private long _selectionLength;
         public long SelectionLength {
@@ -59,7 +71,7 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
         }
 
 
-        public ObservableCollection<WpfHexaEditor.Core.Interfaces.ICustomBackgroundBlock> CustomBackgroundBlocks { get; set; } = new ObservableCollection<WpfHexaEditor.Core.Interfaces.ICustomBackgroundBlock>();
+        public ObservableCollection<WpfHexaEditor.Core.Interfaces.BrushBlock> CustomBackgroundBlocks { get; set; } = new ObservableCollection<WpfHexaEditor.Core.Interfaces.BrushBlock>();
         
 
         private DelegateCommand _loadedCommand;
@@ -67,7 +79,7 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
             (_loadedCommand = new DelegateCommand(
                 () => {
 #if DEBUG
-                    //Stream = File.OpenRead("E://FeiQ.1060559168.exe");
+                    Stream = File.OpenRead("E://123.txt");
 #endif
                 }
             ));
@@ -83,7 +95,7 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
                         var rand = new Random();
                         var brush = new SolidColorBrush(Color.FromRgb((byte)rand.Next(byte.MaxValue), (byte)rand.Next(byte.MaxValue), (byte)rand.Next(byte.MaxValue)));
                         foreach (var block in CustomBackgroundBlocks) {
-                            block.Background = brush;
+                            block.Brush = brush;
                         }
                         UpdateBackgroundRequest.Raise(new Notification());
                         return;
@@ -96,7 +108,7 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
                         var block = CustomBackgroundFactory.CreateNew();
                         block.StartOffset = 24 + i;
                         block.Length = 1;
-                        block.Background = Brushes.Chocolate;
+                        block.Brush = Brushes.Chocolate;
                         CustomBackgroundBlocks.Add(block);
                         UpdateBackgroundRequest.Raise(new Notification());
                     }
@@ -462,6 +474,7 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
             set => SetProperty(ref _bytePerLine, value);
         }
 
+        
     }
 
     

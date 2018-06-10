@@ -35,8 +35,8 @@ namespace WpfHexaEditor.Core.Interfaces
     public interface IDataLayer
     {
         byte[] Data { get; set; }
-        IEnumerable<(int index, int length, Brush background)> BackgroundBlocks { get; set; }
-        IEnumerable<(int index, int length, Brush foreground)> ForegroundBlocks { get; set; }
+        IEnumerable<BrushBlock> BackgroundBlocks { get; set; }
+        IEnumerable<BrushBlock> ForegroundBlocks { get; set; }
 
         //int ColumnGroupCount { get; set; }
         //double GroupMargin { get; set; }
@@ -45,5 +45,6 @@ namespace WpfHexaEditor.Core.Interfaces
 
         int BytePerLine { get; set; }
         int AvailableRowsCount { get; }
+        long DataOffsetInOriginalStream { get; set; }
     }
 }

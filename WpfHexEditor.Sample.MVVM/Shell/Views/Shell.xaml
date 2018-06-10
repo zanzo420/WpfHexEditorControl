@@ -287,19 +287,19 @@
         <StatusBar Height="27" Grid.Row="2">
                 <StatusBarItem Width="90" Padding="0">
                     <StackPanel Orientation="Horizontal">
-                        <Label
+                        <TextBlock
                             Padding="5,5,0,5"
-                            Content="{DynamicResource LineStatusBarTagString}"
+                            Text="{DynamicResource LineStatusBarTagString}"
                             FontWeight="Bold" />
-                        <Label Content="{Binding SelectionLine, UpdateSourceTrigger=PropertyChanged, Converter={x:Static cvts:LongToHexStringConverter.StaticInstance}}">
-                            <Label.ToolTip>
+                        <TextBlock VerticalAlignment="Center" Text="{Binding SelectionLine, UpdateSourceTrigger=PropertyChanged, Converter={x:Static cvts:LongToHexStringConverter.StaticInstance}}">
+                            <TextBlock.ToolTip>
                                 <StackPanel Orientation="Horizontal">
                                     <Label Content="Line :" FontWeight="Bold" />
                                     <Label Content="{Binding SelectionLine, UpdateSourceTrigger=PropertyChanged}" />
                                     <Label Content="{Binding SelectionLine, UpdateSourceTrigger=PropertyChanged, Converter={x:Static cvts:LongToHexStringConverter.StaticInstance}}" />
                                 </StackPanel>
-                            </Label.ToolTip>
-                        </Label>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
                     </StackPanel>
                 </StatusBarItem>
                 <Separator />
@@ -309,7 +309,7 @@
                             Padding="5,5,0,5"
                             Text="{DynamicResource PositionString}"
                             FontWeight="Bold" />
-                    <TextBlock Text="{Binding FocusPosition, UpdateSourceTrigger=PropertyChanged,Converter={x:Static cvts:LongToHexStringConverter.StaticInstance}}">
+                    <TextBlock Text="{Binding FocusPosition, UpdateSourceTrigger=PropertyChanged,Converter={x:Static cvts:LongToHexStringConverter.StaticInstance}}" VerticalAlignment="Center">
                         <TextBlock.ToolTip>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{DynamicResource PositionString}" FontWeight="Bold" />
@@ -327,7 +327,7 @@
                             Padding="5,5,0,5"
                             Text="{DynamicResource LengthString}"
                             FontWeight="Bold" />
-                        <TextBlock x:Name="FileLengthKbLabel" Text="{Binding SelectionLength}"  />
+                        <TextBlock x:Name="FileLengthKbLabel" VerticalAlignment="Center" Text="{Binding SelectionLength}"  />
                     </StackPanel>
                 </StatusBarItem>
                 <Separator />

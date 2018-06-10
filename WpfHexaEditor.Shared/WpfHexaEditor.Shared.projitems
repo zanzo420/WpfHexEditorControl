@@ -11,7 +11,9 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)BaseByte.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CellStepsLayer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Core\Interfaces\ICustomBackgroundBlock.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\BytesToCharEncodings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Interfaces\IBytesToCharConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\BrushBlock.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomBackgroundBlock.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DefaultFileHeader\ExeFile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ToolTipExtension.cs" />

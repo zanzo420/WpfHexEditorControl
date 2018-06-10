@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Media;
 
-namespace WpfHexaEditor.Core.Interfaces
+namespace WpfHexaEditor.Core
 {
     public class BrushBlock
     {

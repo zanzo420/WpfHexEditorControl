@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using WpfHexaEditor.Core;
 
 namespace TestDemoUI {
     /// <summary>
@@ -17,8 +18,8 @@ namespace TestDemoUI {
             
             hd.MouseMoveOnCell += Hd_MouseMoveOnCell;
             hd.Background = Brushes.LightBlue;
-            var blocks  = new List<(int index, int length, Brush background)>();
-            blocks.Add((0, 2, Brushes.Orange));
+            var blocks  = new List<BrushBlock>();
+            blocks.Add(new BrushBlock { StartOffset = 0, Length = 2, Brush = Brushes.Orange });
 
             hd.BackgroundBlocks = blocks;
         }

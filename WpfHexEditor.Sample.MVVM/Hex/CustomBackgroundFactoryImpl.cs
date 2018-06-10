@@ -4,6 +4,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WpfHexaEditor.Core;
 using WpfHexaEditor.Core.Interfaces;
 using WpfHexEditor.Sample.MVVM.Contracts.Hex;
 

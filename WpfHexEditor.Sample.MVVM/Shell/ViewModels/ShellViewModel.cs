@@ -71,7 +71,7 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
         }
 
 
-        public ObservableCollection<WpfHexaEditor.Core.Interfaces.BrushBlock> CustomBackgroundBlocks { get; set; } = new ObservableCollection<WpfHexaEditor.Core.Interfaces.BrushBlock>();
+        public ObservableCollection<WpfHexaEditor.Core.BrushBlock> CustomBackgroundBlocks { get; set; } = new ObservableCollection<WpfHexaEditor.Core.BrushBlock>();
         
 
         private DelegateCommand _loadedCommand;

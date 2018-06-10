@@ -144,6 +144,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\WPFHexaEditor\WpfHexaEditor.NET451.csproj">
+      <Project>{0E5330E9-A789-4271-96D4-E8A34D8156C5}</Project>
+      <Name>WpfHexaEditor.NET451</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WPFHexaEditor\WpfHexaEditor.NET47.csproj">
       <Project>{cf6ac02d-02fa-4ee9-a507-bd94f489972e}</Project>
       <Name>WpfHexaEditor.NET47</Name>

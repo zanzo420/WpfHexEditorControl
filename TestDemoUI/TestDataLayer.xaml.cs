@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using WpfHexaEditor.Core;
 using static WpfHexaEditor.ToolTipExtension;
 
 namespace TestDemoUI {
@@ -14,8 +15,8 @@ namespace TestDemoUI {
         }
 
         private void Button_Click(object sender, System.Windows.RoutedEventArgs e) {
-            var blocks = new List<(int index, int length, Brush background)>();
-            blocks.Add((0, 256, Brushes.Red));
+            var blocks = new List<BrushBlock>();
+            blocks.Add(new BrushBlock { StartOffset = 0, Length = 256, Brush = Brushes.Red });
             using (var fs = File.OpenRead("E://InstallShield2018ExpressComp.exe")) {
                 var buffer = new byte[4096];
                 fs.Read(buffer, 0, buffer.Length);

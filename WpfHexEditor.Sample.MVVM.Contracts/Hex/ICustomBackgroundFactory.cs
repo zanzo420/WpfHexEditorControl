@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using WpfHexaEditor.Core;
 using WpfHexaEditor.Core.Interfaces;
 using WpfHexEditor.Sample.MVVM.Contracts.Common;
 

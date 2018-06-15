@@ -18,7 +18,8 @@ using WpfHexEditor.Sample.MVVM.Contracts.Hex;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-
+using WpfHexaEditor.Core.Interfaces;
+using WpfHexaEditor.Core;
 
 namespace WpfHexEditor.Sample.MVVM.ViewModels {
     [Export]
@@ -79,7 +80,8 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
             (_loadedCommand = new DelegateCommand(
                 () => {
 #if DEBUG
-                    //Stream = File.OpenRead("E://123.txt");
+                    //Stream = File.OpenRead("E://backup.ab");
+                    //CustomBackgroundBlocks.Add(new WpfHexaEditor.Core.BrushBlock { Brush = Brushes.AliceBlue, StartOffset = 1024, Length = 16 });
 #endif
                 }
             ));
@@ -473,9 +475,35 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
             get => _bytePerLine;
             set => SetProperty(ref _bytePerLine, value);
         }
-
-        
     }
 
-    
+    /// <summary>
+    /// Encodings
+    /// </summary>
+    public partial class ShellViewModel {
+        private WpfHexaEditor.Core.Interfaces.IBytesToCharEncoding _bytesToCharEncoding =  BytesToCharEncodings.ASCII;
+        public WpfHexaEditor.Core.Interfaces.IBytesToCharEncoding BytesToCharEncoding {
+            get => _bytesToCharEncoding;
+            set => SetProperty(ref _bytesToCharEncoding, value);
+        }
+
+
+
+        private DelegateCommand _ASCIICommand;
+        public DelegateCommand ASCIICommand => _ASCIICommand ??
+            (_ASCIICommand = new DelegateCommand(
+                () => {
+                    BytesToCharEncoding = BytesToCharEncodings.ASCII;
+                }
+            ));
+
+
+        private DelegateCommand _UTF8Command;
+        public DelegateCommand UTF8Command => _UTF8Command ??
+            (_UTF8Command = new DelegateCommand(
+                () => {
+                    BytesToCharEncoding = BytesToCharEncodings.UTF8;
+                }
+            ));
+    }
 }

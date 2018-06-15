@@ -11,8 +11,12 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)App\IDialogService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)App\ILoggerService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)App\ILanguageService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\XmlExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\ICommandItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\IServiceProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\IUIObjectProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hex\IBytesToCharEncoding.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Hex\ICustomBackgroundFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shell\IShell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ToolTip\IToolTipDataItem.cs" />

@@ -182,4 +182,17 @@
     <sys:String x:Key="ValueTag">
         Value
     </sys:String>
+    <sys:String x:Key="Encodings" >
+        Encodings
+    </sys:String>
+    <sys:String x:Key="Encoding_ASCII" >
+        ASCII
+    </sys:String>
+    <sys:String x:Key="Encoding_UTF8" >
+        UTF8
+    </sys:String>
+    <sys:String x:Key="BytesToCharEncodingName_ASCII">ASCII</sys:String>
+    <sys:String x:Key="BytesToCharEncodingName_UTF8">UTF8</sys:String>
+    <sys:String x:Key="BytesToCharEncodingName_UTF16">UTF16</sys:String>
+    <sys:String x:Key="BytesToCharEncodingName_GBK">GBK(Simplified Chinese)</sys:String>
 </ResourceDictionary>

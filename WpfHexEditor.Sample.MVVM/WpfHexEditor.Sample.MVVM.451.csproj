@@ -79,13 +79,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="App\Constants.cs" />
     <Compile Include="App\DialogServiceImpl.cs" />
+    <Compile Include="App\LanguageServiceImpl.cs" />
     <Compile Include="Common\PracticeServiceProviderAdapter.cs" />
     <Compile Include="BootStrapper.cs" />
     <Compile Include="Dummy.cs" />
+    <Compile Include="Hex\BytesToCharEncodings.cs" />
+    <Compile Include="Hex\Constants.cs" />
     <Compile Include="Hex\CustomBackgroundBlock.cs" />
     <Compile Include="Hex\CustomBackgroundFactoryImpl.cs" />
     <Compile Include="Shell\Constants.cs" />
+    <Compile Include="Shell\Models\BytesToCharEncodingWrapper.cs" />
     <Compile Include="Shell\ViewModels\Shell2ViewModel.cs" />
     <Compile Include="Shell\ViewModels\ShellViewModel.cs" />
     <Compile Include="Shell\Views\Shell.xaml.cs">
@@ -154,7 +159,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Languages\zh_CN\" />
-    <Folder Include="Shell\Models\" />
     <Folder Include="ToolTip\Models\" />
   </ItemGroup>
   <ItemGroup>

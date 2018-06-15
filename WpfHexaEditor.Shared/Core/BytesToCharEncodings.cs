@@ -20,7 +20,7 @@ namespace WpfHexaEditor.Core
         }
     }
 
-    class Utf8BytesToCharEncoding : GenericStaticInstance<Utf8BytesToCharEncoding>, IBytesToCharEncoding {
+    class UTF8BytesToCharEncoding : GenericStaticInstance<UTF8BytesToCharEncoding>, IBytesToCharEncoding {
         public int BytePerChar => 3;
 
         public char Convert(byte[] bytesToConvert) {
@@ -34,10 +34,10 @@ namespace WpfHexaEditor.Core
             return Encoding.UTF8.GetChars(bytesToConvert)[0];
         }
     }
-
+    
     public static class BytesToCharEncodings {
         public static IBytesToCharEncoding ASCII => ASCIIBytesToCharEncoding.StaticInstance;
-        public static IBytesToCharEncoding UTF8 => Utf8BytesToCharEncoding.StaticInstance;
+        public static IBytesToCharEncoding UTF8 => UTF8BytesToCharEncoding.StaticInstance;
     }
 
 }

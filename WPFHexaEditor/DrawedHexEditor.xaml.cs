@@ -947,6 +947,9 @@ namespace WpfHexaEditor
                 {
                     if (Mouse.LeftButton == MouseButtonState.Pressed)
                         return;
+                    if(Mouse.DirectlyOver != dataLayer) {
+                        return;
+                    }
 
                     dataLayer.SetToolTipOpen(true, new Point
                     {

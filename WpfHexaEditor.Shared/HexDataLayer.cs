@@ -32,16 +32,8 @@ namespace WpfHexaEditor
                     FlowDirection.LeftToRight, TypeFace, FontSize,
                     foreground
                 );
-
-                startPoint.X += CharSize.Width * chIndex;
-
-                drawingContext.DrawText
-                (
-                    text,
-                    startPoint
-                );
-
 #endif
+                
 #if NET47
                 var text = new FormattedText
                 (
@@ -49,6 +41,7 @@ namespace WpfHexaEditor
                     FlowDirection.LeftToRight, TypeFace, FontSize,
                     foreground, PixelPerDip
                 );
+#endif
 
                 startPoint.X += CharSize.Width * chIndex;
 
@@ -57,7 +50,7 @@ namespace WpfHexaEditor
                     text,
                     startPoint
                 );
-#endif
+
             }
         }
     }

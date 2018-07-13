@@ -18,8 +18,9 @@ namespace TestDemoUI {
             
             hd.MouseMoveOnCell += Hd_MouseMoveOnCell;
             hd.Background = Brushes.LightBlue;
-            var blocks  = new List<BrushBlock>();
-            blocks.Add(new BrushBlock { StartOffset = 0, Length = 2, Brush = Brushes.Orange });
+            var blocks = new List<BrushBlock> {
+                new BrushBlock { StartOffset = 0, Length = 2, Brush = Brushes.Orange }
+            };
 
             hd.BackgroundBlocks = blocks;
         }

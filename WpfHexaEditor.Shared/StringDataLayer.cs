@@ -83,8 +83,6 @@ namespace WpfHexaEditor
         // Using a DependencyProperty as the backing store for BytesToCharConverterProperty.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty BytesToCharEncodingProperty =
             DependencyProperty.Register(nameof(BytesToCharEncoding), typeof(IBytesToCharEncoding), typeof(StringDataLayer), new FrameworkPropertyMetadata(BytesToCharEncodings.ASCII, FrameworkPropertyMetadataOptions.AffectsRender));
-
-
-
+        
     }
 }

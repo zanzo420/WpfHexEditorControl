@@ -1078,7 +1078,7 @@ namespace WpfHexaEditor
             if(SeperatorLineVisibility != Visibility.Visible) {
                 return;
             }
-
+            
             if(BlockSize <= 0) {
                 return;
             }

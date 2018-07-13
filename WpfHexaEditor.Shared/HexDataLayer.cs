@@ -54,4 +54,6 @@ namespace WpfHexaEditor
             }
         }
     }
+
+
 }

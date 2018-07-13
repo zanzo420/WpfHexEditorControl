@@ -38,7 +38,7 @@ namespace WpfHexaEditor.Core.Interfaces
         IEnumerable<IBrushBlock> BackgroundBlocks { get; set; }
         IEnumerable<IBrushBlock> ForegroundBlocks { get; set; }
 
-        //int ColumnGroupCount { get; set; }
+        //int ColumnGroupSize { get; set; }
         //double GroupMargin { get; set; }
 
         Brush Foreground { get; }

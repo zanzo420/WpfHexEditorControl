@@ -174,19 +174,10 @@ namespace WpfHexaEditor
             for (var i = 0; i < Data.Length; i++)
                 DrawedRects[i].background = Brushes.Transparent;
 
-#if DEBUG
-            //double lastY = 0;
-#endif
             foreach (var block in BackgroundBlocks)
                 for (var i = 0; i < block.Length; i++)
                 {
                     DrawedRects[block.StartOffset + i].background = block.Brush;
-#if DEBUG
-                    //if(this is HexDataLayer && lastY != rect.Y) {
-                    //    lastY = rect.Y;
-                    //    System.Diagnostics.Debug.WriteLine(rect.Y);
-                    //}
-#endif
                 }
 
             drawingContext.DrawRectangle(Background, null, new Rect
@@ -264,9 +255,8 @@ namespace WpfHexaEditor
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            //availableSize = base.MeasureOverride(availableSize);
             availableSize.Width = (CellSize.Width + CellMargin.Left + CellMargin.Right) * BytePerLine;
-
+            
             if (double.IsInfinity(availableSize.Height))
                 availableSize.Height = 0;
 

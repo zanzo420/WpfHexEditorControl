@@ -859,7 +859,6 @@ namespace WpfHexaEditor
 
             _dataForegroundBlocks.Add(new BrushBlock { StartOffset = maxIndex - Position, Length = minEnd - maxIndex, Brush = brushBlock.Brush });
         }
-
     }
 
     /// <summary>

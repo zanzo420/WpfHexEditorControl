@@ -80,7 +80,7 @@ namespace WpfHexEditor.Sample.MVVM.ViewModels {
             (_loadedCommand = new DelegateCommand(
                 () => {
 #if DEBUG
-                    //Stream = File.OpenRead("E://backup.ab");
+                    Stream = File.OpenRead("E://backup.ab");
                     //CustomBackgroundBlocks.Add(new WpfHexaEditor.Core.BrushBlock { Brush = Brushes.AliceBlue, StartOffset = 1024, Length = 16 });
 #endif
                 }

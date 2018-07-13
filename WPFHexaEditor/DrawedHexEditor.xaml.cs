@@ -6,10 +6,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -110,7 +108,7 @@ namespace WpfHexaEditor
 
         private byte[] _viewBuffer2;
 
-        //To avoid resigning buffer everytime and to notify the UI to rerender,
+        //To avoid resigning buffer everytime and notify the UI to rerender,
         //we're gonna switch from one to another while refreshing.
         private byte[] _realViewBuffer;
 
@@ -157,7 +155,9 @@ namespace WpfHexaEditor
         private readonly Stopwatch watch = new Stopwatch();
 #endif
 
-        private readonly List<IBrushBlock> dataBackgroundBlocks =
+        private readonly List<IBrushBlock> _dataBackgroundBlocks =
+            new List<IBrushBlock>();
+        private readonly List<IBrushBlock> _dataForegroundBlocks =
             new List<IBrushBlock>();
 
         //To avoid endless looping of ScrollBar_ValueChanged and Position_PropertyChanged.
@@ -562,23 +562,8 @@ namespace WpfHexaEditor
         {
             UpdateOffsetLinesContent();
             UpdateScrollBarContent();
-            //Update visual of byte control
-            //UpdateByteModified();
-
-            //UpdateHighLight();
-            //UpdateStatusBar();
-            //UpdateVisual();
-            //UpdateFocus();
-
-            //CheckProviderIsOnProgress();
-
-            //if (controlResize) {
-            //    UpdateScrollMarkerPosition();
-            //    UpdateHeader(true);
-            //}
-            
             UpdateBackgroundBlocks();
-
+            UpdateForegroundBlocks();
             UpdateDataContent();
 
             UpdateBlockLines();
@@ -642,60 +627,9 @@ namespace WpfHexaEditor
             VerticalScrollBar.Value = Position / BytePerLine;
             _scrollBarValueUpdating = false;
         }
-
-        #region Data Backgrounds
-
-        public void UpdateBackgroundBlocks()
-        {
-            //ClearBackgroundBlocks;
-            HexDataLayer.BackgroundBlocks = null;
-            StringDataLayer.BackgroundBlocks = null;
-
-            dataBackgroundBlocks.Clear();
-
-            AddCustomBackgroundBlocks();
-            AddSelectionBackgroundBlocks();
-            AddFocusPositionBlock();
-
-            HexDataLayer.BackgroundBlocks = dataBackgroundBlocks;
-            StringDataLayer.BackgroundBlocks = dataBackgroundBlocks;
-        }
-
-        private void AddBackgroundBlock(IBrushBlock brushBlock)
-        {
-            if (Stream == null)
-                return;
-
-            //Check whether the backgroundblock is in visible;
-            if (!(brushBlock.StartOffset + brushBlock.Length >= Position && brushBlock.StartOffset < Position + MaxVisibleLength))
-                return;
-
-            var maxIndex = Math.Max(brushBlock.StartOffset, Position);
-            var minEnd = Math.Min(brushBlock.StartOffset + brushBlock.Length, Position + MaxVisibleLength);
-
-            dataBackgroundBlocks.Add(new BrushBlock { StartOffset = maxIndex - Position, Length = minEnd - maxIndex, Brush = brushBlock.Brush });
-        }
-
-        private void AddSelectionBackgroundBlocks() =>
-            AddBackgroundBlock(new BrushBlock { StartOffset = SelectionStart, Length = SelectionLength, Brush = SelectionBrush });
         
-        private void AddFocusPositionBlock()
-        {
-            if (FocusPosition >= 0)
-                AddBackgroundBlock(new BrushBlock { StartOffset = FocusPosition, Length = 1, Brush = FocusBrush });
-        }
-
         #endregion
-
-        private void UpdateForegroundBlocks()
-        {
-
-        }
-
-        #endregion
-
-
-
+        
         private void VerticalScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (_scrollBarValueUpdating)
@@ -767,98 +701,7 @@ namespace WpfHexaEditor
 
         #endregion
 
-        public long SelectionStart
-        {
-            get => (long) GetValue(SelectionStartProperty);
-            set => SetValue(SelectionStartProperty, value);
-        }
-
-        // Using a DependencyProperty as the backing store for SelectionStart.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty SelectionStartProperty =
-            DependencyProperty.Register(nameof(SelectionStart), typeof(long), typeof(DrawedHexEditor),
-                new FrameworkPropertyMetadata(-1L, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
-                    SelectionStart_PropertyChanged));
-
-        private static void SelectionStart_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (!(d is DrawedHexEditor ctrl))
-                return;
-
-            ctrl.UpdateBackgroundBlocks();
-        }
-
-        public long SelectionLength
-        {
-            get => (long) GetValue(SelectionLengthProperty);
-            set => SetValue(SelectionLengthProperty, value);
-        }
-
-
-        // Using a DependencyProperty as the backing store for SelectionLength.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty SelectionLengthProperty =
-            DependencyProperty.Register(nameof(SelectionLength), typeof(long), typeof(DrawedHexEditor),
-                new FrameworkPropertyMetadata(0L, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
-                    SelectionLengthProperty_Changed));
-
-        private static void SelectionLengthProperty_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (!(d is DrawedHexEditor ctrl))
-                return;
-
-            ctrl.UpdateBackgroundBlocks();
-        }
-
-        public long FocusPosition
-        {
-            get => (long) GetValue(FocusPositionProperty);
-            set => SetValue(FocusPositionProperty, value);
-        }
-
-        // Using a DependencyProperty as the backing store for FocusPosition.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty FocusPositionProperty =
-            DependencyProperty.Register(nameof(FocusPosition), typeof(long), typeof(DrawedHexEditor),
-                new FrameworkPropertyMetadata(-1L, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
-                    FocusPositionProperty_Changed));
-
-        private static void FocusPositionProperty_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (!(d is DrawedHexEditor ctrl))
-                return;
-
-            ctrl.UpdateBackgroundBlocks();
-
-            if ((long) e.NewValue == -1) return;
-
-            ctrl.Focusable = true;
-            ctrl.Focus();
-        }
-
-
-
-        public Brush FocusBrush
-        {
-            get => (Brush) GetValue(FocusBrushProperty);
-            set => SetValue(FocusBrushProperty, value);
-        }
-
-        // Using a DependencyProperty as the backing store for FocusBrush.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty FocusBrushProperty =
-            DependencyProperty.Register(nameof(FocusBrush), typeof(Brush), typeof(DrawedHexEditor),
-                new PropertyMetadata(Brushes.Blue));
-
-
-
-        public Brush SelectionBrush
-        {
-            get => (Brush) GetValue(SelectionBrushProperty);
-            set => SetValue(SelectionBrushProperty, value);
-        }
-
-        // Using a DependencyProperty as the backing store for SelectionBrush.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty SelectionBrushProperty =
-            DependencyProperty.Register(nameof(SelectionBrush), typeof(Brush), typeof(DrawedHexEditor),
-                new PropertyMetadata(new SolidColorBrush(Color.FromRgb(0xe0, 0xe0, 0xff))));
-
+        
 
         public MouseWheelSpeed MouseWheelSpeed
         {
@@ -897,127 +740,9 @@ namespace WpfHexaEditor
 
         #endregion
     }
-
+    
     /// <summary>
-    /// Hex/String ToolTip parts.
-    /// </summary>
-    public partial class DrawedHexEditor
-    {
-        private void InitializeTooltipEvents()
-        {
-            HexDataLayer.MouseMoveOnCell += Datalayer_MouseMoveOnCell;
-            StringDataLayer.MouseMoveOnCell += Datalayer_MouseMoveOnCell;
-        }
-
-        private long mouseOverLevel;
-
-        private void Datalayer_MouseMoveOnCell(object sender, (int cellIndex, MouseEventArgs e) arg)
-        {
-            var index = arg.cellIndex;
-            if (!(sender is DataLayerBase dataLayer))
-                return;
-
-            if (_contextMenuShowing)
-                return;
-
-            var popPoint = dataLayer.GetCellLocation(index);
-            if (popPoint == null)
-                return;
-
-            var pointValue = popPoint.Value;
-            if (Mouse.LeftButton == MouseButtonState.Pressed)
-                return;
-
-            HoverPosition = Position / BytePerLine * BytePerLine + arg.cellIndex;
-
-            if (ToolTipExtension.GetOperatableToolTip(dataLayer) == null)
-                return;
-
-            dataLayer.SetToolTipOpen(false);
-            var thisLevel = mouseOverLevel++;
-
-            //Delay is designed to improve the experience;
-            ThreadPool.QueueUserWorkItem(cb =>
-            {
-                Thread.Sleep(500);
-                if (mouseOverLevel > thisLevel + 1)
-                    return;
-
-                Dispatcher.Invoke(() =>
-                {
-                    if (Mouse.LeftButton == MouseButtonState.Pressed)
-                        return;
-                    if(Mouse.DirectlyOver != dataLayer) {
-                        return;
-                    }
-
-                    dataLayer.SetToolTipOpen(true, new Point
-                    {
-                        X = pointValue.X + dataLayer.CellMargin.Left + dataLayer.CharSize.Width +
-                            dataLayer.CellPadding.Left,
-                        Y = pointValue.Y + dataLayer.CharSize.Height + dataLayer.CellPadding.Top +
-                            dataLayer.CellMargin.Top
-                    });
-                });
-            });
-        }
-        
-        public FrameworkElement HexDataToolTip
-        {
-            get => (FrameworkElement) GetValue(HexDataToolTipProperty);
-            set => SetValue(HexDataToolTipProperty, value);
-        }
-
-        // Using a DependencyProperty as the backing store for HexDataToolTip.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty HexDataToolTipProperty =
-            DependencyProperty.Register(nameof(HexDataToolTip), typeof(FrameworkElement), typeof(DrawedHexEditor),
-                new PropertyMetadata(null,
-                    HexDataToolTip_PropertyChanged));
-
-        private static void HexDataToolTip_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (!(d is DrawedHexEditor ctrl))
-                return;
-
-            if (e.NewValue is FrameworkElement newElem)
-                ToolTipExtension.SetOperatableToolTip(ctrl.HexDataLayer, newElem);
-        }
-
-        public FrameworkElement StringDataToolTip
-        {
-            get => (FrameworkElement) GetValue(HexDataToolTipProperty);
-            set => SetValue(HexDataToolTipProperty, value);
-        }
-
-        // Using a DependencyProperty as the backing store for HexDataToolTip.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty StringDataToolTipProperty =
-            DependencyProperty.Register(nameof(StringDataToolTip), typeof(FrameworkElement), typeof(DrawedHexEditor),
-                new PropertyMetadata(null,
-                    StringDataToolTip_PropertyChanged));
-
-        private static void StringDataToolTip_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (!(d is DrawedHexEditor ctrl))
-                return;
-
-            if (e.NewValue is FrameworkElement newElem)
-                ToolTipExtension.SetOperatableToolTip(ctrl.StringDataLayer, newElem);
-        }
-
-        public long HoverPosition
-        {
-            get => (long) GetValue(HoverPositionProperty);
-            set => SetValue(HoverPositionProperty, value);
-        }
-
-        // Using a DependencyProperty as the backing store for HoverPosition.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty HoverPositionProperty =
-            DependencyProperty.Register(nameof(HoverPosition), typeof(long), typeof(DrawedHexEditor),
-                new FrameworkPropertyMetadata(-1L, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
-    }
-
-    /// <summary>
-    /// CustomBackgroundBlocks Part;
+    /// BackgroundBlocks Part;
     /// </summary>
     public partial class DrawedHexEditor {
         public IEnumerable<IBrushBlock> CustomBackgroundBlocks {
@@ -1032,6 +757,21 @@ namespace WpfHexaEditor
                 typeof(IEnumerable<IBrushBlock>),
                 typeof(DrawedHexEditor));
         
+        public void UpdateBackgroundBlocks() {
+            //ClearBackgroundBlocks;
+            HexDataLayer.BackgroundBlocks = null;
+            StringDataLayer.BackgroundBlocks = null;
+
+            _dataBackgroundBlocks.Clear();
+
+            AddCustomBackgroundBlocks();
+            AddSelectionBackgroundBlocks();
+            AddFocusPositionBackgroundBlock();
+
+            HexDataLayer.BackgroundBlocks = _dataBackgroundBlocks;
+            StringDataLayer.BackgroundBlocks = _dataBackgroundBlocks;
+        }
+
         private void AddCustomBackgroundBlocks() {
             if (CustomBackgroundBlocks == null) return;
 
@@ -1039,7 +779,205 @@ namespace WpfHexaEditor
                 AddBackgroundBlock(block);
         }
 
+        private void AddBackgroundBlock(IBrushBlock brushBlock) {
+            if (Stream == null)
+                return;
 
+            //Check whether the backgroundblock is in visible;
+            if (!(brushBlock.StartOffset + brushBlock.Length >= Position && brushBlock.StartOffset < Position + MaxVisibleLength))
+                return;
+
+            var maxIndex = Math.Max(brushBlock.StartOffset, Position);
+            var minEnd = Math.Min(brushBlock.StartOffset + brushBlock.Length, Position + MaxVisibleLength);
+
+            _dataBackgroundBlocks.Add(new BrushBlock { StartOffset = maxIndex - Position, Length = minEnd - maxIndex, Brush = brushBlock.Brush });
+        }
+
+        private void AddSelectionBackgroundBlocks() =>
+            AddBackgroundBlock(new BrushBlock { StartOffset = SelectionStart, Length = SelectionLength, Brush = SelectionBrush });
+
+        private void AddFocusPositionBackgroundBlock() {
+            if (FocusPosition >= 0)
+                AddBackgroundBlock(new BrushBlock { StartOffset = FocusPosition, Length = 1, Brush = FocusBrush });
+        }
+        
+    }
+
+    /// <summary>
+    /// ForegroundBlockParts;
+    /// </summary>
+    public partial class DrawedHexEditor {
+        public IEnumerable<IBrushBlock> CustomForegroundBlocks {
+            get { return (IEnumerable<IBrushBlock>)GetValue(CustomForegroundBlocksProperty); }
+            set { SetValue(CustomForegroundBlocksProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for CustomForegroundBlocks.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty CustomForegroundBlocksProperty =
+            DependencyProperty.Register(nameof(CustomForegroundBlocks), typeof(IEnumerable<IBrushBlock>), typeof(DrawedHexEditor));
+        
+        private void UpdateForegroundBlocks() {
+            HexDataLayer.ForegroundBlocks = null;
+            StringDataLayer.ForegroundBlocks = null;
+            
+            _dataForegroundBlocks.Clear();
+
+            AddCustomForegroundBlocks();
+            AddSelectionForegroundBlocks();
+            AddFocusForegroundBlock();
+
+            HexDataLayer.ForegroundBlocks = _dataForegroundBlocks;
+            StringDataLayer.ForegroundBlocks = _dataForegroundBlocks;
+        }
+
+        private void AddCustomForegroundBlocks() {
+            if (CustomForegroundBlocks == null) return;
+
+            foreach (var block in CustomForegroundBlocks)
+                AddForegroundBlock(block);
+        }
+
+        private void AddFocusForegroundBlock() {
+            if (FocusPosition >= 0)
+                AddForegroundBlock(new BrushBlock { StartOffset = FocusPosition, Length = 1, Brush = FocusForeground });
+        }
+
+
+        private void AddSelectionForegroundBlocks() =>
+            AddForegroundBlock(new BrushBlock { StartOffset = SelectionStart, Length = SelectionLength, Brush = SelectionForeground });
+
+        private void AddForegroundBlock(IBrushBlock brushBlock) {
+            if (Stream == null)
+                return;
+
+            //Check whether the backgroundblock is in visible;
+            if (!(brushBlock.StartOffset + brushBlock.Length >= Position && brushBlock.StartOffset < Position + MaxVisibleLength))
+                return;
+
+            var maxIndex = Math.Max(brushBlock.StartOffset, Position);
+            var minEnd = Math.Min(brushBlock.StartOffset + brushBlock.Length, Position + MaxVisibleLength);
+
+            _dataForegroundBlocks.Add(new BrushBlock { StartOffset = maxIndex - Position, Length = minEnd - maxIndex, Brush = brushBlock.Brush });
+        }
+
+    }
+
+    /// <summary>
+    /// Selection Part;
+    /// </summary>
+    public partial class DrawedHexEditor {
+
+        public long SelectionStart {
+            get => (long)GetValue(SelectionStartProperty);
+            set => SetValue(SelectionStartProperty, value);
+        }
+
+        // Using a DependencyProperty as the backing store for SelectionStart.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty SelectionStartProperty =
+            DependencyProperty.Register(nameof(SelectionStart), typeof(long), typeof(DrawedHexEditor),
+                new FrameworkPropertyMetadata(-1L, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+                    SelectionStart_PropertyChanged));
+
+        private static void SelectionStart_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+            if (!(d is DrawedHexEditor ctrl))
+                return;
+
+            ctrl.UpdateBackgroundBlocks();
+            ctrl.UpdateForegroundBlocks();
+        }
+
+        public long SelectionLength {
+            get => (long)GetValue(SelectionLengthProperty);
+            set => SetValue(SelectionLengthProperty, value);
+        }
+
+
+        // Using a DependencyProperty as the backing store for SelectionLength.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty SelectionLengthProperty =
+            DependencyProperty.Register(nameof(SelectionLength), typeof(long), typeof(DrawedHexEditor),
+                new FrameworkPropertyMetadata(0L, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+                    SelectionLengthProperty_Changed));
+
+        private static void SelectionLengthProperty_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+            if (!(d is DrawedHexEditor ctrl))
+                return;
+
+            ctrl.UpdateBackgroundBlocks();
+            ctrl.UpdateForegroundBlocks();
+        }
+
+        public Brush SelectionBrush {
+            get => (Brush)GetValue(SelectionBrushProperty);
+            set => SetValue(SelectionBrushProperty, value);
+        }
+
+        // Using a DependencyProperty as the backing store for SelectionBrush.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty SelectionBrushProperty =
+            DependencyProperty.Register(nameof(SelectionBrush), typeof(Brush), typeof(DrawedHexEditor),
+                new PropertyMetadata(new SolidColorBrush(Color.FromRgb(0xe0, 0xe0, 0xff))));
+
+
+
+        public Brush SelectionForeground {
+            get { return (Brush)GetValue(SelectionForegroundProperty); }
+            set { SetValue(SelectionForegroundProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for SelectionForeground.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty SelectionForegroundProperty =
+            DependencyProperty.Register(nameof(SelectionForeground), typeof(Brush), typeof(DrawedHexEditor),
+                new PropertyMetadata(Brushes.Azure));
+
+
+    }
+
+    /// <summary>
+    /// Focus Part;
+    /// </summary>
+    public partial class DrawedHexEditor {
+        public long FocusPosition {
+            get => (long)GetValue(FocusPositionProperty);
+            set => SetValue(FocusPositionProperty, value);
+        }
+
+        // Using a DependencyProperty as the backing store for FocusPosition.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty FocusPositionProperty =
+            DependencyProperty.Register(nameof(FocusPosition), typeof(long), typeof(DrawedHexEditor),
+                new FrameworkPropertyMetadata(-1L, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+                    FocusPositionProperty_Changed));
+
+        private static void FocusPositionProperty_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+            if (!(d is DrawedHexEditor ctrl))
+                return;
+
+            ctrl.UpdateBackgroundBlocks();
+            ctrl.UpdateForegroundBlocks();
+
+            if ((long)e.NewValue == -1) return;
+
+            ctrl.Focusable = true;
+            ctrl.Focus();
+        }
+
+        public Brush FocusBrush {
+            get => (Brush)GetValue(FocusBrushProperty);
+            set => SetValue(FocusBrushProperty, value);
+        }
+
+        // Using a DependencyProperty as the backing store for FocusBrush.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty FocusBrushProperty =
+            DependencyProperty.Register(nameof(FocusBrush), typeof(Brush), typeof(DrawedHexEditor),
+                new PropertyMetadata(Brushes.Blue));
+
+        public Brush FocusForeground {
+            get { return (Brush)GetValue(FocusForegroundProperty); }
+            set { SetValue(FocusForegroundProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for FocusForeground.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty FocusForegroundProperty =
+            DependencyProperty.Register(nameof(FocusForeground), typeof(Brush), typeof(DrawedHexEditor),
+                new PropertyMetadata(Brushes.White));
     }
 
     /// <summary>
@@ -1187,6 +1125,7 @@ namespace WpfHexaEditor
             }
         }
     }
+
     /// <summary>
     /// String encoding part.
     /// </summary>
@@ -1212,6 +1151,114 @@ namespace WpfHexaEditor
             StringDataLayer.SetBinding(StringDataLayer.BytesToCharEncodingProperty, encodingBinding);
         }
     }
+
+    /// <summary>
+    /// Hex/String ToolTip parts.
+    /// </summary>
+    public partial class DrawedHexEditor {
+        private void InitializeTooltipEvents() {
+            HexDataLayer.MouseMoveOnCell += Datalayer_MouseMoveOnCell;
+            StringDataLayer.MouseMoveOnCell += Datalayer_MouseMoveOnCell;
+        }
+
+        private long _mouseOverLevel;
+
+        private void Datalayer_MouseMoveOnCell(object sender, (int cellIndex, MouseEventArgs e) arg) {
+            var index = arg.cellIndex;
+            if (!(sender is DataLayerBase dataLayer))
+                return;
+
+            if (_contextMenuShowing)
+                return;
+
+            var popPoint = dataLayer.GetCellLocation(index);
+            if (popPoint == null)
+                return;
+
+            var pointValue = popPoint.Value;
+            if (Mouse.LeftButton == MouseButtonState.Pressed)
+                return;
+
+            HoverPosition = Position / BytePerLine * BytePerLine + arg.cellIndex;
+
+            if (ToolTipExtension.GetOperatableToolTip(dataLayer) == null)
+                return;
+
+            dataLayer.SetToolTipOpen(false);
+            var thisLevel = _mouseOverLevel++;
+
+            //Delay is designed to improve the experience;
+            ThreadPool.QueueUserWorkItem(cb => {
+                Thread.Sleep(200);
+                if (_mouseOverLevel > thisLevel + 1)
+                    return;
+
+                Dispatcher.Invoke(() => {
+                    if (Mouse.LeftButton == MouseButtonState.Pressed)
+                        return;
+                    if (Mouse.DirectlyOver != dataLayer) {
+                        return;
+                    }
+
+                    dataLayer.SetToolTipOpen(true, new Point {
+                        X = pointValue.X + dataLayer.CellMargin.Left + dataLayer.CharSize.Width +
+                            dataLayer.CellPadding.Left,
+                        Y = pointValue.Y + dataLayer.CharSize.Height + dataLayer.CellPadding.Top +
+                            dataLayer.CellMargin.Top
+                    });
+                });
+            });
+        }
+
+        public FrameworkElement HexDataToolTip {
+            get => (FrameworkElement)GetValue(HexDataToolTipProperty);
+            set => SetValue(HexDataToolTipProperty, value);
+        }
+
+        // Using a DependencyProperty as the backing store for HexDataToolTip.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty HexDataToolTipProperty =
+            DependencyProperty.Register(nameof(HexDataToolTip), typeof(FrameworkElement), typeof(DrawedHexEditor),
+                new PropertyMetadata(null,
+                    HexDataToolTip_PropertyChanged));
+
+        private static void HexDataToolTip_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+            if (!(d is DrawedHexEditor ctrl))
+                return;
+
+            if (e.NewValue is FrameworkElement newElem)
+                ToolTipExtension.SetOperatableToolTip(ctrl.HexDataLayer, newElem);
+        }
+
+        public FrameworkElement StringDataToolTip {
+            get => (FrameworkElement)GetValue(HexDataToolTipProperty);
+            set => SetValue(HexDataToolTipProperty, value);
+        }
+
+        // Using a DependencyProperty as the backing store for HexDataToolTip.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty StringDataToolTipProperty =
+            DependencyProperty.Register(nameof(StringDataToolTip), typeof(FrameworkElement), typeof(DrawedHexEditor),
+                new PropertyMetadata(null,
+                    StringDataToolTip_PropertyChanged));
+
+        private static void StringDataToolTip_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+            if (!(d is DrawedHexEditor ctrl))
+                return;
+
+            if (e.NewValue is FrameworkElement newElem)
+                ToolTipExtension.SetOperatableToolTip(ctrl.StringDataLayer, newElem);
+        }
+
+        public long HoverPosition {
+            get => (long)GetValue(HoverPositionProperty);
+            set => SetValue(HoverPositionProperty, value);
+        }
+
+        // Using a DependencyProperty as the backing store for HoverPosition.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty HoverPositionProperty =
+            DependencyProperty.Register(nameof(HoverPosition), typeof(long), typeof(DrawedHexEditor),
+                new FrameworkPropertyMetadata(-1L, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+    }
+
 #if DEBUG
     public partial class DrawedHexEditor {
         ~DrawedHexEditor() {

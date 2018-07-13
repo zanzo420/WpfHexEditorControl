@@ -21,7 +21,7 @@ namespace WpfHexaEditor
         public event EventHandler<(int cellIndex, MouseButtonEventArgs e)> MouseLeftUpOnCell;
         public event EventHandler<(int cellIndex, MouseEventArgs e)> MouseMoveOnCell;
         public event EventHandler<(int cellIndex, MouseButtonEventArgs e)> MouseRightDownOnCell;
-
+        
         public byte[] Data
         {
             get => (byte[]) GetValue(DataProperty);
@@ -208,44 +208,8 @@ namespace WpfHexaEditor
 
         }
 
-        protected virtual void DrawText(DrawingContext drawingContext)
-        {
-            if (Data == null)
-                return;
-
-            var index = 0;
-            
-
-            foreach (var bt in Data)
-            {
-                var col = index % BytePerLine;
-                var row = index / BytePerLine;
-                var foreground = Foreground;
-
-                if (ForegroundBlocks != null)
-                    foreach (var tuple in ForegroundBlocks)
-                    {
-                        if (tuple.StartOffset > index || tuple.StartOffset + tuple.Length < index) continue;
-
-                        foreground = tuple.Brush;
-                        break;
-                    }
-
-                DrawByte(drawingContext, bt, foreground,
-                    new Point
-                    (
-                        (CellMargin.Right + CellMargin.Left + CellSize.Width) * col + CellPadding.Left + CellMargin.Left,
-                        (CellMargin.Top + CellMargin.Bottom + CellSize.Height) * row + CellPadding.Top + CellMargin.Top
-                    )
-                );
-
-                index++;
-            }
-
-        }
-
-        protected virtual void DrawByte(DrawingContext drawingContext, byte bt, Brush foreground, Point startPoint) { }
-
+        protected abstract void DrawText(DrawingContext drawingContext);
+        
         protected override void OnRender(DrawingContext drawingContext)
         {
             base.OnRender(drawingContext);

@@ -43,11 +43,9 @@ namespace WpfHexaEditor
                 var foreground = Foreground;
 
                 if (ForegroundBlocks != null)
-                    foreach (var block in ForegroundBlocks) {
-                        if (block.StartOffset > btIndex || block.StartOffset + block.Length < btIndex) continue;
-
-                        foreground = block.Brush;
-                        break;
+                    foreach (var brushBlock in ForegroundBlocks) {
+                        if (brushBlock.StartOffset <= btIndex && brushBlock.StartOffset + brushBlock.Length - 1 >= btIndex)
+                            foreground = brushBlock.Brush;
                     }
                 
                 Buffer.BlockCopy(Data, btIndex + firstVisibleBtIndex , _drawCharBuffer, 0, BytesToCharEncoding.BytePerChar);

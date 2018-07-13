@@ -19,7 +19,7 @@ namespace WpfHexaEditor
             CellPadding.Top + CellPadding.Bottom + CharSize.Height
         );
 
-        protected override void DrawByte(DrawingContext drawingContext, byte bt, Brush foreground, Point startPoint)
+        protected void DrawByte(DrawingContext drawingContext, byte bt, Brush foreground, Point startPoint)
         {
             var chs = ByteConverters.ByteToHexCharArray(bt);
 
@@ -51,6 +51,35 @@ namespace WpfHexaEditor
                     startPoint
                 );
 
+            }
+        }
+
+        protected override void DrawText(DrawingContext drawingContext) {
+            if (Data == null)
+                return;
+
+            var index = 0;
+
+            foreach (var bt in Data) {
+                var col = index % BytePerLine;
+                var row = index / BytePerLine;
+                var foreground = Foreground;
+
+                if (ForegroundBlocks != null)
+                    foreach (var brushBlock in ForegroundBlocks) {
+                        if (brushBlock.StartOffset <= index && brushBlock.StartOffset + brushBlock.Length - 1 >= index)
+                            foreground = brushBlock.Brush;
+                    }
+
+                DrawByte(drawingContext, bt, foreground,
+                    new Point
+                    (
+                        (CellMargin.Right + CellMargin.Left + CellSize.Width) * col + CellPadding.Left + CellMargin.Left,
+                        (CellMargin.Top + CellMargin.Bottom + CellSize.Height) * row + CellPadding.Top + CellMargin.Top
+                    )
+                );
+
+                index++;
             }
         }
     }

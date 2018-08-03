@@ -154,11 +154,7 @@ namespace WpfHexaEditor
 #if DEBUG
         private readonly Stopwatch watch = new Stopwatch();
 #endif
-
-        private readonly List<IBrushBlock> _dataBackgroundBlocks =
-            new List<IBrushBlock>();
-        private readonly List<IBrushBlock> _dataForegroundBlocks =
-            new List<IBrushBlock>();
+        
 
         //To avoid endless looping of ScrollBar_ValueChanged and Position_PropertyChanged.
         private bool _scrollBarValueUpdating;
@@ -745,6 +741,9 @@ namespace WpfHexaEditor
     /// BackgroundBlocks Part;
     /// </summary>
     public partial class DrawedHexEditor {
+        private readonly List<IBrushBlock> _dataBackgroundBlocks =
+            new List<IBrushBlock>();
+
         public IEnumerable<IBrushBlock> CustomBackgroundBlocks {
             get => (IEnumerable<IBrushBlock>)GetValue(
                 CustomBackgroundBlocksProperty);
@@ -783,10 +782,10 @@ namespace WpfHexaEditor
             if (Stream == null)
                 return;
 
-            //Check whether the backgroundblock is in visible;
+            //Check whether the backgroundblock is in sight;
             if (!(brushBlock.StartOffset + brushBlock.Length >= Position && brushBlock.StartOffset < Position + MaxVisibleLength))
                 return;
-
+            
             var maxIndex = Math.Max(brushBlock.StartOffset, Position);
             var minEnd = Math.Min(brushBlock.StartOffset + brushBlock.Length, Position + MaxVisibleLength);
 
@@ -807,6 +806,8 @@ namespace WpfHexaEditor
     /// ForegroundBlockParts;
     /// </summary>
     public partial class DrawedHexEditor {
+        private readonly List<IBrushBlock> _dataForegroundBlocks =
+            new List<IBrushBlock>();
         public IEnumerable<IBrushBlock> CustomForegroundBlocks {
             get { return (IEnumerable<IBrushBlock>)GetValue(CustomForegroundBlocksProperty); }
             set { SetValue(CustomForegroundBlocksProperty, value); }
@@ -955,7 +956,6 @@ namespace WpfHexaEditor
             if ((long)e.NewValue == -1) return;
 
             ctrl.Focusable = true;
-            ctrl.Focus();
         }
 
         public Brush FocusBrush {

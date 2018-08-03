@@ -82,6 +82,10 @@ namespace WpfHexaEditor
                 index++;
             }
         }
+
+
+        
+
     }
 
 
